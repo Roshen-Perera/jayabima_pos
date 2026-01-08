@@ -31,6 +31,7 @@ import {
 import Link from "next/link";
 import { use } from "react";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 // Menu items.
 const items = [
@@ -79,9 +80,11 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="#">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                {/* <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <Home className="size-5" />
-                  {/* Or use an icon: <Home className="size-4" /> */}
+                </div> */}
+                <div>
+                  <Image src="/logo.png" alt="Logo" width={32} height={32} />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">Your App Name</span>
