@@ -78,7 +78,7 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <Link href="#">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <Home className="size-5" />
                   {/* Or use an icon: <Home className="size-4" /> */}
@@ -87,7 +87,7 @@ export function AppSidebar() {
                   <span className="truncate font-semibold">Your App Name</span>
                   <span className="truncate text-xs">Enterprise</span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -98,19 +98,14 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link
-                      className={`flex items-center p-2 rounded-md transition-colors duration-200 ${
-                        item.url === pathName
-                          ? "text-orange-500 bg-black/10"
-                          : "text-gray-700 hover:bg-gray-200"
-                      }`}
-                      href={item.url}
-                    >
-                      <item.icon className="mr-2" />{" "}
-                      {/* Add margin to the right of the icon */}
-                      <span className="font-medium">{item.title}</span>{" "}
-                      {/* Make text bold */}
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathName === item.url}
+                    className="data-[active=true]:bg-orange-500/10 data-[active=true]:text-orange-500"
+                  >
+                    <Link href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
