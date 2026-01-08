@@ -14,6 +14,7 @@ import {
   Truck,
   UserCog,
   Users,
+  Wrench,
 } from "lucide-react";
 
 import {
@@ -69,30 +70,35 @@ const items = [
 export function AppSidebar() {
   // Determine the active page based on the current URL path.
   const pathName = usePathname();
-  
 
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
-          {/* <SidebarGroupLabel className="my-5">
-            <span className="text-xl font-semibold">POS System</span>
-          </SidebarGroupLabel> */}
+          <SidebarGroupLabel>
+            <div className="flex items-center">
+              <span className="font-bold text-lg text-sidebar-foreground">
+                Jayabima
+              </span>
+            </div>
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <Link
-                      className={
+                      className={`flex items-center p-2 rounded-md transition-colors duration-200 ${
                         item.url === pathName
                           ? "text-orange-500 bg-black/10"
-                          : ""
-                      } // Apply orange background if active
+                          : "text-gray-700 hover:bg-gray-200"
+                      }`}
                       href={item.url}
                     >
-                      <item.icon />
-                      <span>{item.title}</span>
+                      <item.icon className="mr-2" />{" "}
+                      {/* Add margin to the right of the icon */}
+                      <span className="font-medium">{item.title}</span>{" "}
+                      {/* Make text bold */}
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
