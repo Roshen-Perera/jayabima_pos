@@ -1,4 +1,18 @@
-import { Calendar, Home, Inbox, Search, Settings, ShoppingCart } from "lucide-react";
+import {
+  Calendar,
+  ChartColumn,
+  FileText,
+  Home,
+  Inbox,
+  LayoutDashboard,
+  Package,
+  Search,
+  Settings,
+  ShoppingCart,
+  Truck,
+  UserCog,
+  Users,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -16,28 +30,35 @@ const items = [
   {
     title: "Dashboard",
     url: "#",
-    icon: Home,
+    icon: LayoutDashboard,
   },
   {
     title: "POS / Billing",
     url: "#",
-    icon: Inbox,
+    icon: ShoppingCart,
+  },
+  {
+    title: "Orders",
+    url: "#",
+    icon: FileText,
   },
   {
     title: "Inventory",
     url: "#",
-    icon: ShoppingCart,
+    icon: Package,
   },
   {
-    title: "Search",
+    title: "Customers",
     url: "#",
-    icon: Search,
+    icon: Users,
   },
   {
-    title: "Settings",
+    title: "Suppliers",
     url: "#",
-    icon: Settings,
+    icon: Truck,
   },
+  { title: "Employees", url: "#", icon: UserCog },
+  { title: "Reports", url: "#", icon: ChartColumn },
 ];
 
 export function AppSidebar() {
@@ -45,7 +66,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="mb-5">
+          <SidebarGroupLabel className="my-5">
             <span className="text-xl font-semibold">POS System</span>
           </SidebarGroupLabel>
           <SidebarGroupContent>
