@@ -75,9 +75,9 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="my-5">
+          {/* <SidebarGroupLabel className="my-5">
             <span className="text-xl font-semibold">POS System</span>
-          </SidebarGroupLabel>
+          </SidebarGroupLabel> */}
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
