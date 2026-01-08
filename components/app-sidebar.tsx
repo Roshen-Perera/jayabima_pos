@@ -72,7 +72,7 @@ export function AppSidebar() {
   
 
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="my-5">
