@@ -84,11 +84,15 @@ export function AppSidebar() {
                   <Home className="size-5" />
                 </div> */}
                 <div>
-                  <Image src="/logo.png" alt="Logo" width={32} height={32} />
+                  <Image
+                    src="/jayabima-icon.png"
+                    alt="Logo"
+                    width={45}
+                    height={45}
+                  />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Your App Name</span>
-                  <span className="truncate text-xs">Enterprise</span>
+                  <span className="truncate font-semibold">JAYABIMA HARDWARE</span>
                 </div>
               </Link>
             </SidebarMenuButton>
