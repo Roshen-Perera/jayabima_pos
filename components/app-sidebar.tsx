@@ -1,13 +1,8 @@
 import {
-  Calendar,
   ChartColumn,
   FileText,
-  Home,
-  Inbox,
   LayoutDashboard,
   Package,
-  Search,
-  Settings,
   ShoppingCart,
   Truck,
   UserCog,
@@ -63,6 +58,8 @@ const items = [
 ];
 
 export function AppSidebar() {
+  const activePage = "Dashboard"; // Set the active page here
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -75,7 +72,12 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link href={item.url}>
+                    <Link
+                      className={
+                        item.title === activePage ? "bg-orange-500" : ""
+                      } // Apply orange background if active
+                      href={item.url}
+                    >
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
