@@ -83,12 +83,12 @@ export function AppSidebar() {
                 {/* <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <Home className="size-5" />
                 </div> */}
-                <div>
+                <div className="flex items-center">
                   <Image
-                    src="/jayabima-icon.png"
+                    src="/dashboardicon.png"
                     alt="Logo"
-                    width={45}
-                    height={45}
+                    width={40}
+                    height={40}
                   />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
