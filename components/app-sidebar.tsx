@@ -1,8 +1,13 @@
 import {
+  Calendar,
   ChartColumn,
   FileText,
+  Home,
+  Inbox,
   LayoutDashboard,
   Package,
+  Search,
+  Settings,
   ShoppingCart,
   Truck,
   UserCog,
@@ -20,45 +25,49 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { use } from "react";
+import { usePathname } from "next/navigation";
 
 // Menu items.
 const items = [
   {
     title: "Dashboard",
-    url: "#",
+    url: "/",
     icon: LayoutDashboard,
   },
   {
     title: "POS / Billing",
-    url: "#",
+    url: "/pos",
     icon: ShoppingCart,
   },
   {
     title: "Orders",
-    url: "#",
+    url: "/orders",
     icon: FileText,
   },
   {
     title: "Inventory",
-    url: "#",
+    url: "/inventory",
     icon: Package,
   },
   {
     title: "Customers",
-    url: "#",
+    url: "/customers",
     icon: Users,
   },
   {
     title: "Suppliers",
-    url: "#",
+    url: "/suppliers",
     icon: Truck,
   },
-  { title: "Employees", url: "#", icon: UserCog },
-  { title: "Reports", url: "#", icon: ChartColumn },
+  { title: "Employees", url: "/employees", icon: UserCog },
+  { title: "Reports", url: "/reports", icon: ChartColumn },
 ];
 
 export function AppSidebar() {
-  const activePage = "Dashboard"; // Set the active page here
+  // Determine the active page based on the current URL path.
+  const pathName = usePathname();
+  
 
   return (
     <Sidebar>
@@ -74,7 +83,9 @@ export function AppSidebar() {
                   <SidebarMenuButton asChild>
                     <Link
                       className={
-                        item.title === activePage ? "bg-orange-500" : ""
+                        item.url === pathName
+                          ? "text-orange-500 bg-black/10"
+                          : ""
                       } // Apply orange background if active
                       href={item.url}
                     >
