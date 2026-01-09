@@ -21,8 +21,10 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <SidebarProvider>
             <AppSidebar />
-            <Header />
-            <main>{children}</main>
+            <main className="flex flex-1 flex-col w-full">
+              <Header />
+              <div className="flex-1 p-6">{children}</div>
+            </main>
           </SidebarProvider>
         </ThemeProvider>
       </body>
