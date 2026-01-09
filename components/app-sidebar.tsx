@@ -34,6 +34,7 @@ import Link from "next/link";
 import { use } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import { CustomSidebarTrigger } from "./CustomSidebarTrigger";
 
 // Menu items.
 const items = [
@@ -127,7 +128,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <SidebarTrigger/>
+        <CustomSidebarTrigger/>
 
       </SidebarFooter>
     </Sidebar>
