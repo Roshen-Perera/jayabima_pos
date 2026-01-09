@@ -116,7 +116,7 @@ export function AppSidebar() {
                     className="data-[active=true]:bg-orange-500/10 data-[active=true]:text-orange-500"
                   >
                     <Link href={item.url}>
-                      <item.icon />
+                      <item.icon  />
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
@@ -127,7 +127,8 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <SidebarTrigger />
+        <SidebarTrigger/>
+
       </SidebarFooter>
     </Sidebar>
   );
