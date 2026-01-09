@@ -1,17 +1,6 @@
 "use client";
 
 import {
-  ChartColumn,
-  FileText,
-  LayoutDashboard,
-  Package,
-  ShoppingCart,
-  Truck,
-  UserCog,
-  Users,
-} from "lucide-react";
-
-import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
