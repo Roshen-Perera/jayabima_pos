@@ -1,8 +1,10 @@
 import { Search, Sun, Moon, Bell, Badge, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { SidebarTrigger } from "./ui/sidebar";
+import { useTheme } from "next-themes";
 
 const Header = () => {
+  const { theme, setTheme } = useTheme();
   return (
     <>
       <header className="h-16 w-full bg-card border-b border-border px-6 flex items-center justify-between sticky top-0 z-40">
