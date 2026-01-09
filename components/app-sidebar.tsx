@@ -28,6 +28,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { use } from "react";
@@ -93,7 +94,9 @@ export function AppSidebar() {
                   />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">JAYABIMA HARDWARE</span>
+                  <span className="truncate font-semibold">
+                    JAYABIMA HARDWARE
+                  </span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -123,7 +126,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        Test
+        <SidebarTrigger />
       </SidebarFooter>
     </Sidebar>
   );
