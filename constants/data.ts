@@ -1,7 +1,7 @@
 import { LayoutDashboard, ShoppingCart, FileText, Package, Users, Truck, UserCog, ChartColumn } from "lucide-react";
 
 // Menu items.
-export const items = [
+export const navItems = [
     {
         title: "Dashboard",
         url: "/",
