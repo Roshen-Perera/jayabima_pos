@@ -1,7 +1,10 @@
+"use client";
+
 import { Search, Sun, Moon, Bell, Badge, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { SidebarTrigger } from "./ui/sidebar";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 const Header = () => {
   const { theme, setTheme } = useTheme();
@@ -17,18 +20,18 @@ const Header = () => {
 
         {/* Right Actions */}
         <div className="flex items-center gap-3">
-          {/* <Button
+          <Button
             variant="ghost"
             size="icon"
-            onClick={() => dispatch(toggleTheme())}
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className="text-muted-foreground hover:text-foreground"
-            >
+          >
             {theme === "dark" ? (
-                <Sun className="w-5 h-5" />
+              <Sun className="h-5 w-5" />
             ) : (
-                <Moon className="w-5 h-5" />
+              <Moon className="h-5 w-5" />
             )}
-            </Button> */}
+          </Button>
           <Button
             variant="ghost"
             size="icon"
