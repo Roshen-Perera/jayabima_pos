@@ -129,7 +129,6 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter>
         <CustomSidebarTrigger/>
-
       </SidebarFooter>
     </Sidebar>
   );
