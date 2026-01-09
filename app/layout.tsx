@@ -16,14 +16,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-      >
+      <body>
         <SidebarProvider>
           <AppSidebar />
-          <main>
-            <Header />
-            {children}
-          </main>
+          <Header />
+          <main>{children}</main>
         </SidebarProvider>
       </body>
     </html>
