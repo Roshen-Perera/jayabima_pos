@@ -91,7 +91,6 @@ export function AppSidebar() {
                     alt="Logo"
                     width={32}
                     height={32}
-                    className="rounded-lg"
                   />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
