@@ -1,14 +1,20 @@
 "use client";
 
 import {
+  Calendar,
   ChartColumn,
   FileText,
+  Home,
+  Inbox,
   LayoutDashboard,
   Package,
+  Search,
+  Settings,
   ShoppingCart,
   Truck,
   UserCog,
   Users,
+  Wrench,
 } from "lucide-react";
 
 import {
@@ -22,8 +28,10 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { use } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { CustomSidebarTrigger } from "./CustomSidebarTrigger";
@@ -60,37 +68,31 @@ const items = [
     url: "/suppliers",
     icon: Truck,
   },
-  {
-    title: "Employees",
-    url: "/employees",
-    icon: UserCog,
-  },
-  {
-    title: "Reports",
-    url: "/reports",
-    icon: ChartColumn,
-  },
+  { title: "Employees", url: "/employees", icon: UserCog },
+  { title: "Reports", url: "/reports", icon: ChartColumn },
 ];
 
 export function AppSidebar() {
-  const pathname = usePathname();
+  // Determine the active page based on the current URL path.
+  const pathName = usePathname();
 
   return (
-    <Sidebar
-      collapsible="icon"
-      className="border-r" // Optional: add border for better separation
-    >
+    <Sidebar collapsible="icon">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link href="/">
-                <div className="flex aspect-square size-8 items-center justify-center">
+              <Link href="#">
+                {/* <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                  <Home className="size-5" />
+                </div> */}
+                <div className="flex items-center">
                   <Image
                     src="/dashboardicon.png"
                     alt="Logo"
-                    width={32}
-                    height={32}
+                    width={40}
+                    height={40}
+                    className="ml-1"
                   />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -103,7 +105,6 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
@@ -112,9 +113,8 @@ export function AppSidebar() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    isActive={pathname === item.url}
+                    isActive={pathName === item.url}
                     className="data-[active=true]:bg-orange-500/10 data-[active=true]:text-orange-500"
-                    tooltip={item.title} // 👈 Important: Shows tooltip when collapsed
                   >
                     <Link href={item.url}>
                       <item.icon />
@@ -127,10 +127,6 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-
-      <SidebarFooter>
-        <CustomSidebarTrigger />
-      </SidebarFooter>
     </Sidebar>
   );
 }
