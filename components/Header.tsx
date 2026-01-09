@@ -6,9 +6,13 @@ import { SidebarTrigger } from "./ui/sidebar";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { Separator } from "./ui/separator";
+import { navItems } from "@/constants/data";
+import { usePathname } from "next/navigation";
 
 const Header = () => {
   const { theme, setTheme } = useTheme();
+  const pathname = usePathname();
+
   return (
     <>
       <header className="flex h-15 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -18,7 +22,10 @@ const Header = () => {
             orientation="vertical"
             className="mx-2 data-[orientation=vertical]:h-4"
           />
-          <h1 className="text-base font-medium">Documents</h1>
+          <h1 className="text-base font-medium">
+            {navItems.find((item) => item.url === pathname)
+              ?.title || "Dashboard"}
+          </h1>
           <div className="ml-auto flex items-center gap-2">
             {/* Right Actions */}
             <div className="flex items-center gap-3">
