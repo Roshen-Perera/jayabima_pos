@@ -25,41 +25,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 
-// Menu items.
-const items = [
-  {
-    title: "Dashboard",
-    url: "/",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "POS / Billing",
-    url: "/pos",
-    icon: ShoppingCart,
-  },
-  {
-    title: "Orders",
-    url: "/orders",
-    icon: FileText,
-  },
-  {
-    title: "Inventory",
-    url: "/inventory",
-    icon: Package,
-  },
-  {
-    title: "Customers",
-    url: "/customers",
-    icon: Users,
-  },
-  {
-    title: "Suppliers",
-    url: "/suppliers",
-    icon: Truck,
-  },
-  { title: "Employees", url: "/employees", icon: UserCog },
-  { title: "Reports", url: "/reports", icon: ChartColumn },
-];
 
 export function AppSidebar() {
   // Determine the active page based on the current URL path.
