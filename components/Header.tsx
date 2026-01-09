@@ -12,7 +12,7 @@ const Header = () => {
     <>
       <header className="h-16 w-full bg-card border-b border-border px-6 flex items-center justify-between sticky top-0 z-40">
         {/* Search */}
-        <div className="flex items-center gap-4 flex-1 max-w-xl">
+        <div className="flex items-center gap-4 flex-1">
           <div className="relative flex-1">
             <SidebarTrigger />
           </div>
