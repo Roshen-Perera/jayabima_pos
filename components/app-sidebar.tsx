@@ -14,21 +14,16 @@ import {
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { use } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { CustomSidebarTrigger } from "./CustomSidebarTrigger";
 
 // Menu items.
 const items = [
