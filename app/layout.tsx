@@ -20,6 +20,7 @@ export default function RootLayout({
         <SidebarProvider>
           <AppSidebar />
           <main>
+            <Header />
             {children}
           </main>
         </SidebarProvider>
