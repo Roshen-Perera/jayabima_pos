@@ -1,20 +1,14 @@
 "use client";
 
 import {
-  Calendar,
   ChartColumn,
   FileText,
-  Home,
-  Inbox,
   LayoutDashboard,
   Package,
-  Search,
-  Settings,
   ShoppingCart,
   Truck,
   UserCog,
   Users,
-  Wrench,
 } from "lucide-react";
 
 import {
