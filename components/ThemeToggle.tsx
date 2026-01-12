@@ -1,14 +1,15 @@
 "use client";
 
 import { Sun, Moon, Bell } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "./ui/button";
 import { useTheme } from "next-themes";
 
 const ThemeToggle = () => {
   const { theme, setTheme } = useTheme();
+
   return (
-    <div>
+    <>
       <Button
         variant="ghost"
         size="icon"
@@ -30,7 +31,7 @@ const ThemeToggle = () => {
         <Bell className="w-5 h-5" />
         <span className="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full" />
       </Button>
-    </div>
+    </>
   );
 };
 
