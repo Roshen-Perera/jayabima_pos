@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Sun, Moon, Bell, Badge, User } from "lucide-react";
+import { User } from "lucide-react";
 import { Button } from "./ui/button";
 import { SidebarTrigger } from "./ui/sidebar";
 import { Separator } from "./ui/separator";
@@ -20,14 +20,12 @@ const Header = () => {
             className="mx-2 data-[orientation=vertical]:h-4"
           />
           <h1 className="text-base font-medium">
-            {navItems.find((item) => item.url === pathname)
-              ?.title || "Dashboard"}
+            {navItems.find((item) => item.url === pathname)?.title ||
+              "Dashboard"}
           </h1>
           <div className="ml-auto flex items-center gap-2">
             {/* Right Actions */}
             <div className="flex items-center gap-3">
-            
-
               {/* User Menu */}
               <div className="flex items-center gap-3 pl-3 border-l border-border">
                 {/* <div className="text-right hidden sm:block">
