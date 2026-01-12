@@ -1,7 +1,6 @@
 "use client";
 
-import { Sun, Moon, Bell } from "lucide-react";
-import React, { useEffect } from "react";
+import { Sun, Moon } from "lucide-react";
 import { Button } from "./ui/button";
 import { useTheme } from "next-themes";
 
