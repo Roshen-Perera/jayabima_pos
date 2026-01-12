@@ -53,7 +53,6 @@ const customers = [
 
 const page = () => {
   const totalCredit = customers.reduce((sum, c) => sum + c.creditBalance, 0);
-  const vipCount = customers.filter((c) => c.status === "vip").length;
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -73,7 +72,7 @@ const page = () => {
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Card>
           <CardContent className="p-4">
             <p className="text-sm text-muted-foreground">Total Customers</p>
@@ -86,18 +85,6 @@ const page = () => {
             <p className="text-2xl font-bold text-destructive">
               Rs. {totalCredit.toLocaleString()}
             </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <p className="text-sm text-muted-foreground">VIP Customers</p>
-            <p className="text-2xl font-bold text-primary">{vipCount}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <p className="text-sm text-muted-foreground">Active Today</p>
-            <p className="text-2xl font-bold">12</p>
           </CardContent>
         </Card>
       </div>
