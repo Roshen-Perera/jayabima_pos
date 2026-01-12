@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Download, Plus, Plus } from 'lucide-react';
+import { Download, Plus } from 'lucide-react';
 import React from 'react'
 
 const page = () => {
