@@ -10,7 +10,6 @@ import { navItems } from "@/constants/data";
 import { usePathname } from "next/navigation";
 
 const Header = () => {
-  const { theme, setTheme } = useTheme();
   const pathname = usePathname();
 
   return (
