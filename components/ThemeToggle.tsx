@@ -1,3 +1,5 @@
+"use client";
+
 import { Sun, Moon, Bell } from "lucide-react";
 import React from "react";
 import { Button } from "./ui/button";
