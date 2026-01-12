@@ -12,7 +12,6 @@ const customers = [
     creditBalance: 45000,
     loyaltyPoints: 1250,
     totalPurchases: 285000,
-    status: "active",
   },
   {
     id: "2",
@@ -22,7 +21,6 @@ const customers = [
     creditBalance: 0,
     loyaltyPoints: 890,
     totalPurchases: 156000,
-    status: "active",
   },
   {
     id: "3",
@@ -32,7 +30,6 @@ const customers = [
     creditBalance: 12500,
     loyaltyPoints: 2100,
     totalPurchases: 420000,
-    status: "active",
   },
   {
     id: "4",
@@ -42,7 +39,6 @@ const customers = [
     creditBalance: 78000,
     loyaltyPoints: 560,
     totalPurchases: 95000,
-    status: "active",
   },
   {
     id: "5",
@@ -52,7 +48,6 @@ const customers = [
     creditBalance: 0,
     loyaltyPoints: 3200,
     totalPurchases: 650000,
-    status: "vip",
   },
 ];
 
