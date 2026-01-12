@@ -20,10 +20,6 @@ const Header = () => {
             orientation="vertical"
             className="mx-2 data-[orientation=vertical]:h-4"
           />
-          <h1 className="text-base font-medium">
-            {navItems.find((item) => item.url === pathname)?.title ||
-              "Dashboard"}
-          </h1>
           <div className="ml-auto flex items-center gap-2">
             {/* Right Actions */}
             <div className="flex items-center gap-3">
