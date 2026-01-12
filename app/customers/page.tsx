@@ -76,13 +76,13 @@ const page = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <Card variant="stat">
+        <Card>
           <CardContent className="p-4">
             <p className="text-sm text-muted-foreground">Total Customers</p>
             <p className="text-2xl font-bold">{customers.length}</p>
           </CardContent>
         </Card>
-        <Card variant="stat">
+        <Card>
           <CardContent className="p-4">
             <p className="text-sm text-muted-foreground">Outstanding Credit</p>
             <p className="text-2xl font-bold text-destructive">
@@ -90,13 +90,13 @@ const page = () => {
             </p>
           </CardContent>
         </Card>
-        <Card variant="stat">
+        <Card>
           <CardContent className="p-4">
             <p className="text-sm text-muted-foreground">VIP Customers</p>
             <p className="text-2xl font-bold text-primary">{vipCount}</p>
           </CardContent>
         </Card>
-        <Card variant="stat">
+        <Card>
           <CardContent className="p-4">
             <p className="text-sm text-muted-foreground">Active Today</p>
             <p className="text-2xl font-bold">12</p>
