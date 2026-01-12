@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
-import { Download, Plus } from 'lucide-react';
-import React from 'react'
+import { Button } from "@/components/ui/button";
+import { Download, Plus } from "lucide-react";
+import React from "react";
 
 const page = () => {
   return (
@@ -19,11 +19,11 @@ const page = () => {
           <Button variant="default" className="gap-2">
             <Plus className="w-4 h-4" />
             Add Customer
-          </  Button>
+          </Button>
         </div>
       </div>
     </div>
   );
-}
+};
 
-export default page
+export default page;
