@@ -1,9 +1,11 @@
-import { navItems } from '@/constants/data';
-import { usePathname } from 'next/navigation';
-import React from 'react'
+"use client"
+
+import { navItems } from "@/constants/data";
+import { usePathname } from "next/navigation";
+import React from "react";
 
 const DynamicTitle = () => {
-    const pathname = usePathname();
+  const pathname = usePathname();
   return (
     <div>
       <h1 className="text-base font-medium">
@@ -11,6 +13,6 @@ const DynamicTitle = () => {
       </h1>
     </div>
   );
-}
+};
 
-export default DynamicTitle
+export default DynamicTitle;
