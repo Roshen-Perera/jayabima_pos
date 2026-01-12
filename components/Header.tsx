@@ -3,13 +3,10 @@
 import { User } from "lucide-react";
 import { Button } from "./ui/button";
 import { SidebarTrigger } from "./ui/sidebar";
-import { Separator } from "./ui/separator";
-import { navItems } from "@/constants/data";
-import { usePathname } from "next/navigation";
+import { Separator } from "./ui/separator";=
 import ThemeToggle from "./ThemeToggle";
 
 const Header = () => {
-  const pathname = usePathname();
 
   return (
     <>
