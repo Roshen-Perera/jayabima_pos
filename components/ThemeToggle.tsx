@@ -1,8 +1,10 @@
-import { Sun, Moon, Bell } from 'lucide-react';
-import React from 'react'
-import { Button } from './ui/button';
+import { Sun, Moon, Bell } from "lucide-react";
+import React from "react";
+import { Button } from "./ui/button";
+import { useTheme } from "next-themes";
 
 const ThemeToggle = () => {
+  const { theme, setTheme } = useTheme();
   return (
     <div>
       <Button
@@ -27,6 +29,6 @@ const ThemeToggle = () => {
       </Button>
     </div>
   );
-}
+};
 
-export default ThemeToggle
+export default ThemeToggle;
