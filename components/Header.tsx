@@ -1,3 +1,5 @@
+"use client";
+
 import { User } from "lucide-react";
 import { Button } from "./ui/button";
 import { SidebarTrigger } from "./ui/sidebar";
