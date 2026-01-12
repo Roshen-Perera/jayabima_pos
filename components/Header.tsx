@@ -3,11 +3,11 @@
 import { User } from "lucide-react";
 import { Button } from "./ui/button";
 import { SidebarTrigger } from "./ui/sidebar";
-import { Separator } from "./ui/separator";=
+import { Separator } from "./ui/separator";
 import ThemeToggle from "./ThemeToggle";
+import DynamicTitle from "./DynamicTitle";
 
 const Header = () => {
-
   return (
     <>
       <header className="flex h-15 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -17,6 +17,7 @@ const Header = () => {
             orientation="vertical"
             className="mx-2 data-[orientation=vertical]:h-4"
           />
+          <DynamicTitle />
           <div className="ml-auto flex items-center gap-2">
             {/* Right Actions */}
             <div className="flex items-center gap-3">
