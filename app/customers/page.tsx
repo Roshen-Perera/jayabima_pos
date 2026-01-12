@@ -53,6 +53,17 @@ const customers = [
 
 const page = () => {
   const totalCredit = customers.reduce((sum, c) => sum + c.creditBalance, 0);
+  const bestCustomer = customers.map((c) => c.loyaltyPoints).sort((a, b) => b - a)[0];
+  const bestCustomerDetails = customers.length
+    ? customers.reduce(
+        (best, current) =>
+          current.loyaltyPoints > best.loyaltyPoints ? current : best,
+        customers[0]
+      )
+    : null;
+
+  const bestCustomerName = bestCustomerDetails?.name ?? "—";
+
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -84,6 +95,14 @@ const page = () => {
             <p className="text-sm text-muted-foreground">Outstanding Credit</p>
             <p className="text-2xl font-bold text-destructive">
               Rs. {totalCredit.toLocaleString()}
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <p className="text-sm text-muted-foreground">Outstanding Credit</p>
+            <p className="text-2xl font-bold text-destructive">
+              {bestCustomerName}
             </p>
           </CardContent>
         </Card>
