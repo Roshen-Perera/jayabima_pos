@@ -57,6 +57,8 @@ const customers = [
 ];
 
 const page = () => {
+  const totalCredit = customers.reduce((sum, c) => sum + c.creditBalance, 0);
+  const vipCount = customers.filter((c) => c.status === "vip").length;
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
