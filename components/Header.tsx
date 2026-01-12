@@ -6,6 +6,7 @@ import { SidebarTrigger } from "./ui/sidebar";
 import { Separator } from "./ui/separator";
 import { navItems } from "@/constants/data";
 import { usePathname } from "next/navigation";
+import ThemeToggle from "./ThemeToggle";
 
 const Header = () => {
   const pathname = usePathname();
@@ -26,6 +27,7 @@ const Header = () => {
           <div className="ml-auto flex items-center gap-2">
             {/* Right Actions */}
             <div className="flex items-center gap-3">
+              <ThemeToggle />
               {/* User Menu */}
               <div className="flex items-center gap-3 pl-3 border-l border-border">
                 {/* <div className="text-right hidden sm:block">
