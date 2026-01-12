@@ -1,4 +1,4 @@
-import { User } from "lucide-react";
+import { Bell, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { SidebarTrigger } from "./ui/sidebar";
 import { Separator } from "./ui/separator";
