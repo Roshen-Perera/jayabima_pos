@@ -32,7 +32,7 @@ export function AppSidebar() {
                 </div> */}
                 <div className="flex items-center">
                   <Image
-                    src="/dashboardicon.png"
+                    src="/sideButton.png"
                     alt="Logo"
                     width={40}
                     height={40}
