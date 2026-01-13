@@ -49,7 +49,7 @@ export function CustomerForm() {
               <Input
                 id="phone"
                 name="phone"
-                type="tel"
+                type="number"
                 placeholder="0777123456"
               />
             </div>
