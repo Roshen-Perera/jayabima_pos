@@ -1,4 +1,5 @@
 import CustomerHeader from "@/components/CustomerHeader";
+import CustomerList from "@/components/CustomerList";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -54,7 +55,7 @@ const page = () => {
           </CardContent>
         </Card>
       </div>
-      
+      <CustomerList />
     </div>
   );
 };
