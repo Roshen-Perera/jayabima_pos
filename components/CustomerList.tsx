@@ -2,6 +2,7 @@ import { Users, MoreVertical, Mail } from 'lucide-react';
 import React from 'react'
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
+import { customers } from '@/data/data';
 
 const CustomerList = () => {
   return (
