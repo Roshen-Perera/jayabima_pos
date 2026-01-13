@@ -1,7 +1,7 @@
-import React from 'react'
-import { Download, Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { CustomerForm } from './CustomerForm';
+import React from "react";
+import { Download, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { CustomerForm } from "./CustomerForm";
 
 const CustomerHeader = () => {
   return (
@@ -22,6 +22,6 @@ const CustomerHeader = () => {
       </div>
     </div>
   );
-}
+};
 
-export default CustomerHeader
+export default CustomerHeader;
