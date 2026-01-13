@@ -1,3 +1,4 @@
+import CustomerHeader from "@/components/CustomerHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -20,7 +21,7 @@ const page = () => {
 
   return (
     <div className="flex flex-col gap-3">
-      
+      <CustomerHeader />
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-4">
