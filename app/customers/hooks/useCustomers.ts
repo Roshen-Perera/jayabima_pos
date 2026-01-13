@@ -1,9 +1,9 @@
 import { useState, useMemo } from "react";
 import { Customer } from "../types/customer.types";
-import { customers } from "@/data/data";
+import { dummyCustomers } from "@/data/data";
 
 export function useCustomers() {
-    const [customers, setCustomers] = useState<Customer[]>(customers);
+    const [customers, setCustomers] = useState<Customer[]>(dummyCustomers);
     const [search, setSearch] = useState("");
 
     const filteredCustomers = useMemo(() => {
