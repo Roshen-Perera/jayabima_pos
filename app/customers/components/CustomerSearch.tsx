@@ -7,7 +7,7 @@ interface Props {
   onChange: (value: string) => void;
 }
 
-const CustomerSearch = () => {
+const CustomerSearch = ({ value, onChange }: Props) => {
   return (
     <div>
       <div className="relative max-w-md">
