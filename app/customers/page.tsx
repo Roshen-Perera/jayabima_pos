@@ -4,16 +4,18 @@ import CustomerHeader from "./components/CustomerHeader";
 import CustomerList from "./components/CustomerList";
 import CustomerStats from "./components/CustomerStats";
 import CustomerSearch from "./components/CustomerSearch";
+import { useCustomers } from "./hooks/useCustomers";
 
-const page = () => {
+const Page = () => {
+    const { customers, filteredCustomers, search, setSearch } = useCustomers();
   return (
     <div className="flex flex-col gap-3">
       <CustomerHeader />
       <CustomerStats />
-      <CustomerSearch />
+      <CustomerSearch value={search} onChange={setSearch} />
       <CustomerList />
     </div>
   );
 };
 
-export default page;
+export default Page;
