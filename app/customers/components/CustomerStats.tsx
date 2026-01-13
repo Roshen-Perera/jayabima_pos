@@ -1,7 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import React from 'react'
 
-const CustomerDataCards = () => {
+const CustomerStats = () => {
   return (
     <div>
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
@@ -36,4 +36,4 @@ const CustomerDataCards = () => {
   );
 }
 
-export default CustomerDataCards
+export default CustomerStats;
