@@ -1,8 +1,8 @@
 // app/customers/_lib/actions.ts
 "use server";
 
-import { customerSchema } from "./validations";
 import { revalidatePath } from "next/cache";
+import { customerSchema } from "./validation";
 
 export async function createCustomer(formData: FormData) {
     // Parse form data
