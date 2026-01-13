@@ -1,11 +1,11 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { customers } from '@/data/data';
+import { dummyCustomers } from "@/data/data";
 import React from 'react'
 
 const CustomerStats = () => {
-  const newCustomers = customers.slice(-5); // Assuming last 5 are new customers
-  const totalCredit = customers.reduce((sum, c) => sum + c.creditBalance, 0);
-  const outStandingCustomers = customers.filter(
+  const newCustomers = dummyCustomers.slice(-5); // Assuming last 5 are new customers
+  const totalCredit = dummyCustomers.reduce((sum, c) => sum + c.creditBalance, 0);
+  const outStandingCustomers = dummyCustomers.filter(
     (c) => c.creditBalance > 0
   ).length;
   return (
@@ -20,7 +20,7 @@ const CustomerStats = () => {
         <Card>
           <CardContent className="p-4">
             <p className="text-sm text-muted-foreground">Total Customers</p>
-            <p className="text-2xl font-bold">{customers.length}</p>
+            <p className="text-2xl font-bold">{dummyCustomers.length}</p>
           </CardContent>
         </Card>
         <Card>
