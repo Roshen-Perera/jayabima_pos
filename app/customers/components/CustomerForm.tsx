@@ -33,7 +33,7 @@ export function CustomerForm() {
           <div className="grid gap-4">
             <div className="grid gap-3">
               <Label htmlFor="name">Name</Label>
-              <Input id="name" name="name" defaultValue="Nalin Perera" />
+              <Input id="name" name="name" placeholder="Nalin Perera" />
             </div>
             <div className="grid gap-3">
               <Label htmlFor="email">Username</Label>
@@ -41,7 +41,7 @@ export function CustomerForm() {
                 id="email"
                 name="email"
                 type="email"
-                defaultValue="nalinperera@gmail.com"
+                placeholder="nalinperera@gmail.com"
               />
             </div>
             <div className="grid gap-3">
@@ -50,7 +50,7 @@ export function CustomerForm() {
                 id="phone"
                 name="phone"
                 type="tel"
-                defaultValue="0777123456"
+                placeholder="0777123456"
               />
             </div>
             <div className="grid gap-3">
@@ -59,7 +59,7 @@ export function CustomerForm() {
                 id="address"
                 name="address"
                 type="tel"
-                defaultValue="0777123456"
+                placeholder="0777123456"
               />
             </div>
           </div>
