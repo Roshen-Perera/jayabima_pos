@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useMemo } from "react";
 import { Customer } from "../types/customer.types";
 import { dummyCustomers } from "@/data/data";
