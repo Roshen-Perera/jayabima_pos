@@ -47,7 +47,7 @@ const page = () => {
         <Card>
           <CardContent className="p-4">
             <p className="text-sm text-muted-foreground">Total Customers</p>
-            <p className="text-2xl font-bold">{customers.length}</p>
+            <p className="text-2xl font-bold">10</p>
           </CardContent>
         </Card>
         <Card>
@@ -56,7 +56,7 @@ const page = () => {
               Outstanding Customers
             </p>
             <p className="text-2xl font-bold text-destructive">
-              {outStandingCustomers.toLocaleString()}
+              3
             </p>
           </CardContent>
         </Card>
@@ -64,7 +64,7 @@ const page = () => {
           <CardContent className="p-4">
             <p className="text-sm text-muted-foreground">Outstanding Credit</p>
             <p className="text-2xl font-bold text-destructive">
-              Rs. {totalCredit.toLocaleString()}
+              Rs. 0
             </p>
           </CardContent>
         </Card>
