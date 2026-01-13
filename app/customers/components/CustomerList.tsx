@@ -3,6 +3,11 @@ import React from 'react'
 import { dummyCustomers } from '@/data/data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Customer } from '../types/customer.types';
+
+interface Props {
+  customers: Customer[];
+}
 
 const CustomerList = () => {
   return (
