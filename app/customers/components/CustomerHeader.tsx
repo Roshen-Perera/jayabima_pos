@@ -1,6 +1,6 @@
 import React from 'react'
-import { Button } from './ui/button';
 import { Download, Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const CustomerHeader = () => {
   return (
