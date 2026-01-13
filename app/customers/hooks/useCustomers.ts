@@ -15,7 +15,9 @@ export function useCustomers() {
         return customers.filter((c) =>
             c.name.toLowerCase().includes(keyword) ||
             c.email.toLowerCase().includes(keyword) ||
+            c.address.toLowerCase().includes(keyword) ||
             c.phone.includes(keyword)
+            
         );
     }, [customers, search]);
 
