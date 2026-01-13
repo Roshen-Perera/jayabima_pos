@@ -1,17 +1,6 @@
 import CustomerDataCards from "@/components/CustomerDataCards";
 import CustomerHeader from "@/components/CustomerHeader";
 import CustomerList from "@/components/CustomerList";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Badge,
-  Download,
-  Mail,
-  MoreVertical,
-  Plus,
-  Star,
-  Users,
-} from "lucide-react";
 import React from "react";
 
 const page = () => {
