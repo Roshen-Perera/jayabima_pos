@@ -1,6 +1,7 @@
 import React from 'react'
 import { Download, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { CustomerForm } from './CustomerForm';
 
 const CustomerHeader = () => {
   return (
@@ -16,10 +17,7 @@ const CustomerHeader = () => {
             <Download className="w-4 h-4" />
             Export
           </Button>
-          <Button variant="default" className="gap-2">
-            <Plus className="w-4 h-4" />
-            Add Customer
-          </Button>
+          <CustomerForm />
         </div>
       </div>
     </div>
