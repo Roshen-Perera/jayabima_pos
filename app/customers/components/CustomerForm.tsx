@@ -29,6 +29,7 @@ export function CustomerForm() {
     reset,
   } = useForm<CustomerFormData>({
     resolver: zodResolver(customerSchema),
+    mode: "onChange"
   });
 
   const onSubmit = async (data: CustomerFormData) => {
@@ -55,7 +56,7 @@ export function CustomerForm() {
           Add Customer
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-106.25">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>Add Customer</DialogTitle>
