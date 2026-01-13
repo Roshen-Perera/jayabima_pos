@@ -1,5 +1,5 @@
+import { Card, CardContent } from '@/components/ui/card';
 import React from 'react'
-import { Card, CardContent } from './ui/card';
 
 const CustomerDataCards = () => {
   return (
