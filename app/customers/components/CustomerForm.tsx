@@ -59,7 +59,7 @@ export function CustomerForm() {
                 id="address"
                 name="address"
                 type="tel"
-                placeholder="0777123456"
+                placeholder="Avissawella"
               />
             </div>
           </div>
