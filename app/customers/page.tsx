@@ -53,7 +53,12 @@ const customers = [
 
 const page = () => {
   const totalCredit = customers.reduce((sum, c) => sum + c.creditBalance, 0);
-  const bestCustomer = customers.map((c) => c.loyaltyPoints).sort((a, b) => b - a)[0];
+  const outStandingCustomers = customers.filter((c) => c.creditBalance > 0).length;
+  
+
+  const bestCustomer = customers
+    .map((c) => c.loyaltyPoints)
+    .sort((a, b) => b - a)[0];
   const bestCustomerDetails = customers.length
     ? customers.reduce(
         (best, current) =>
@@ -83,11 +88,19 @@ const page = () => {
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-3 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-4">
             <p className="text-sm text-muted-foreground">Total Customers</p>
             <p className="text-2xl font-bold">{customers.length}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <p className="text-sm text-muted-foreground">Outstanding Customers</p>
+            <p className="text-2xl font-bold text-destructive">
+              Rs. {totalCredit.toLocaleString()}
+            </p>
           </CardContent>
         </Card>
         <Card>
