@@ -1,5 +1,5 @@
-import { Card, CardContent } from '@/components/ui/card';
-import React from 'react'
+import { Card, CardContent } from "@/components/ui/card";
+import React from "react";
 
 interface Props {
   customers: {
@@ -21,7 +21,9 @@ const CustomerStats = ({ customers }: Props) => {
         <Card>
           <CardContent className="p-4">
             <p className="text-sm text-muted-foreground">New Customers</p>
-            <p className="text-2xl font-bold text-destructive">{newCustomers.length}</p>
+            <p className="text-2xl font-bold text-destructive">
+              {newCustomers.length}
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -35,18 +37,22 @@ const CustomerStats = ({ customers }: Props) => {
             <p className="text-sm text-muted-foreground">
               Outstanding Customers
             </p>
-            <p className="text-2xl font-bold text-destructive">{outStandingCustomers}</p>
+            <p className="text-2xl font-bold text-destructive">
+              {outStandingCustomers}
+            </p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
             <p className="text-sm text-muted-foreground">Outstanding Credit</p>
-            <p className="text-2xl font-bold text-destructive">Rs. {totalCredit.toLocaleString()}</p>
+            <p className="text-2xl font-bold text-destructive">
+              Rs. {totalCredit.toLocaleString()}
+            </p>
           </CardContent>
         </Card>
       </div>
     </div>
   );
-}
+};
 
 export default CustomerStats;
