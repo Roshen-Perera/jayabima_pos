@@ -1,7 +1,8 @@
-import CustomerDataCards from "@/components/CustomerDataCards";
-import CustomerHeader from "@/components/CustomerHeader";
-import CustomerList from "@/components/CustomerList";
+
 import React from "react";
+import CustomerDataCards from "./components/CustomerDataCards";
+import CustomerHeader from "./components/CustomerHeader";
+import CustomerList from "./components/CustomerList";
 
 const page = () => {
   // const newCustomers = customers.slice(-5); // Assuming last 5 are new customers
