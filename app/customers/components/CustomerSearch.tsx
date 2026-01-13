@@ -1,6 +1,12 @@
 import { Search } from 'lucide-react';
 import React from 'react'
 
+
+interface Props {
+  value: string;
+  onChange: (value: string) => void;
+}
+
 const CustomerSearch = () => {
   return (
     <div>
