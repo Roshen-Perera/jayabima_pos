@@ -1,4 +1,4 @@
-import { Users, MoreVertical, Mail } from 'lucide-react';
+import { Users, MoreVertical, Mail, MapPin } from 'lucide-react';
 import React from 'react'
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -38,6 +38,10 @@ const CustomerList = ({ customers }: Props) => {
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Mail className="w-4 h-4" />
                   {customer.email}
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <MapPin className="w-4 h-4" />
+                  {customer.address}
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 pt-3 border-t border-border">
