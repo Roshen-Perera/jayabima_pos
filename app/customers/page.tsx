@@ -1,8 +1,8 @@
 
 import React from "react";
-import CustomerDataCards from "./components/CustomerDataCards";
 import CustomerHeader from "./components/CustomerHeader";
 import CustomerList from "./components/CustomerList";
+import CustomerStats from "./components/CustomerStats";
 
 const page = () => {
   // const newCustomers = customers.slice(-5); // Assuming last 5 are new customers
@@ -14,7 +14,7 @@ const page = () => {
   return (
     <div className="flex flex-col gap-3">
       <CustomerHeader />
-      <CustomerDataCards />
+      <CustomerStats />
       <CustomerList />
     </div>
   );
