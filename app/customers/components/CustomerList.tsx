@@ -1,6 +1,6 @@
 import { Users, MoreVertical, Mail } from 'lucide-react';
 import React from 'react'
-import { customers } from '@/data/data';
+import { dummyCustomers } from '@/data/data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -8,7 +8,7 @@ const CustomerList = () => {
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {customers.map((customer) => (
+        {dummyCustomers.map((customer) => (
           <Card key={customer.id}>
             <CardContent>
               <div className="flex items-start justify-between mb-4">
