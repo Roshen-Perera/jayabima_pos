@@ -1,6 +1,5 @@
-import { Search } from 'lucide-react';
-import React from 'react'
-
+import { Search } from "lucide-react";
+import React from "react";
 
 interface Props {
   value: string;
@@ -15,12 +14,13 @@ const CustomerSearch = ({ value, onChange }: Props) => {
         <input
           type="text"
           placeholder="Search customers..."
-            value={value}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
           className="w-full h-10 pl-10 pr-4 rounded-lg bg-card border border-input text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
         />
       </div>
     </div>
   );
-}
+};
 
-export default CustomerSearch
+export default CustomerSearch;
