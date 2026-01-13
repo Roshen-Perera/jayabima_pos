@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
 
-export function DialogDemo() {
+export function CustomerForm() {
   return (
     <Dialog>
       <form>
@@ -25,20 +25,42 @@ export function DialogDemo() {
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Edit profile</DialogTitle>
+            <DialogTitle>Add Customer</DialogTitle>
             <DialogDescription>
-              Make changes to your profile here. Click save when you&apos;re
-              done.
+              Add a new customer to manage their credits and loyalty points.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4">
             <div className="grid gap-3">
-              <Label htmlFor="name-1">Name</Label>
-              <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
+              <Label htmlFor="name">Name</Label>
+              <Input id="name" name="name" defaultValue="Nalin Perera" />
             </div>
             <div className="grid gap-3">
-              <Label htmlFor="username-1">Username</Label>
-              <Input id="username-1" name="username" defaultValue="@peduarte" />
+              <Label htmlFor="email">Username</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                defaultValue="nalinperera@gmail.com"
+              />
+            </div>
+            <div className="grid gap-3">
+              <Label htmlFor="phone">Contact No.</Label>
+              <Input
+                id="phone"
+                name="phone"
+                type="tel"
+                defaultValue="0777123456"
+              />
+            </div>
+            <div className="grid gap-3">
+              <Label htmlFor="address">Address</Label>
+              <Input
+                id="address"
+                name="address"
+                type="tel"
+                defaultValue="0777123456"
+              />
             </div>
           </div>
           <DialogFooter>
