@@ -27,7 +27,7 @@ const CustomerStats = ({ customers }: Props) => {
         <Card>
           <CardContent className="p-4">
             <p className="text-sm text-muted-foreground">Total Customers</p>
-            <p className="text-2xl font-bold">{dummyCustomers.length}</p>
+            <p className="text-2xl font-bold">{customers.length}</p>
           </CardContent>
         </Card>
         <Card>
