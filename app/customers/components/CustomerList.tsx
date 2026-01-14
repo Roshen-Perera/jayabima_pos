@@ -1,12 +1,11 @@
-import { Users, MoreVertical, Mail, MapPin } from 'lucide-react';
-import React from 'react'
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { useCustomerStore } from '@/store/customerStore';
-
+import { Users, MoreVertical, Mail, MapPin } from "lucide-react";
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { useCustomerStore } from "@/store/customerStore";
 
 const CustomerList = () => {
-  const customers = useCustomerStore((state) => state.customers); 
+  const customers = useCustomerStore((state) => state.customers);
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -82,6 +81,6 @@ const CustomerList = () => {
       </div>
     </div>
   );
-}
+};
 
-export default CustomerList
+export default CustomerList;
