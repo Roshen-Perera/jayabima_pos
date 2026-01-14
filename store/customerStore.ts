@@ -1,4 +1,5 @@
 import { Customer } from '@/app/customers/types/customer.types';
+import { dummyCustomers } from '@/data/data';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -20,7 +21,7 @@ export const useCustomerStore = create<CustomerStore>()(
     persist(
         (set, get) => ({
             // Initial state (your dummyCustomers)
-            customers: [],
+            customers: dummyCustomers,
             search: '',
 
             // Actions
