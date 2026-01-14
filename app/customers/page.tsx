@@ -13,7 +13,7 @@ const Page = () => {
       <CustomerHeader />
       <CustomerStats  />
       <CustomerSearch value={search} onChange={setSearch} />
-      <CustomerList customers={filteredCustomers} />
+      <CustomerList />
     </div>
   );
 };
