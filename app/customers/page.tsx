@@ -5,10 +5,9 @@ import CustomerHeader from "./components/CustomerHeader";
 import CustomerList from "./components/CustomerList";
 import CustomerStats from "./components/CustomerStats";
 import CustomerSearch from "./components/CustomerSearch";
-import { useCustomers } from "./hooks/useCustomers";
 
 const Page = () => {
-    const { customers, filteredCustomers, search, setSearch } = useCustomers();
+    
   return (
     <div className="flex flex-col gap-3">
       <CustomerHeader />
