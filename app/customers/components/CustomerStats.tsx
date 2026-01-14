@@ -1,18 +1,15 @@
 import { Card, CardContent } from "@/components/ui/card";
+import { useCustomerStore } from "@/store/customerStore";
 import React from "react";
 
-interface Props {
-  customers: {
-    id: string;
-    name: string;
-    creditBalance: number;
-  }[];
-}
+const CustomerStats = () => {
+  // 👇 Get customers from Zustand instead of props
+  const customers = useCustomerStore((state) => state.customers);
 
-const CustomerStats = ({ customers }: Props) => {
-  const newCustomers = customers.slice(-5); // Assuming last 5 are new customers
+  // Your existing calculations - no changes needed!
+  const newCustomers = customers.slice(-5); // Last 5 are new customers
   const totalCredit = customers.reduce((sum, c) => sum + c.creditBalance, 0);
-  const outStandingCustomers = customers.filter(
+  const outstandingCustomers = customers.filter(
     (c) => c.creditBalance > 0
   ).length;
   return (
@@ -38,7 +35,7 @@ const CustomerStats = ({ customers }: Props) => {
               Outstanding Customers
             </p>
             <p className="text-2xl font-bold text-destructive">
-              {outStandingCustomers}
+              {outstandingCustomers}
             </p>
           </CardContent>
         </Card>

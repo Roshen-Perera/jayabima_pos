@@ -11,7 +11,7 @@ const Page = () => {
   return (
     <div className="flex flex-col gap-3">
       <CustomerHeader />
-      <CustomerStats customers={customers} />
+      <CustomerStats  />
       <CustomerSearch value={search} onChange={setSearch} />
       <CustomerList customers={filteredCustomers} />
     </div>
