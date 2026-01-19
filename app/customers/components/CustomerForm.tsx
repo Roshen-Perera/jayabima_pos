@@ -18,9 +18,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { CustomerFormData, customerSchema } from "../lib/validation";
+import { useCustomerStore } from "@/store/customerStore";
 
 export function CustomerForm() {
   const [open, setOpen] = useState(false);
+
+  const addCustomer = useCustomerStore((state) => state.addCustomer);
+  
 
   const {
     register,
@@ -35,6 +39,7 @@ export function CustomerForm() {
   const onSubmit = async (data: CustomerFormData) => {
     try {
       console.log("Form data:", data);
+
       // TODO: Add your save logic here
       // await createCustomer(data);
 
