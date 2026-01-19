@@ -24,7 +24,6 @@ export function CustomerForm() {
   const [open, setOpen] = useState(false);
 
   const addCustomer = useCustomerStore((state) => state.addCustomer);
-  
 
   const {
     register,
@@ -39,6 +38,11 @@ export function CustomerForm() {
   const onSubmit = async (data: CustomerFormData) => {
     try {
       console.log("Form data:", data);
+
+      addCustomer({
+        ...data,
+        totalPurchases: 0,
+      });
 
       // TODO: Add your save logic here
       // await createCustomer(data);
@@ -56,7 +60,7 @@ export function CustomerForm() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default" className="gap-2">
+        <Button variant="default" className="gap-2" onClick={() => setOpen(true)}>
           <Plus className="w-4 h-4" />
           Add Customer
         </Button>
