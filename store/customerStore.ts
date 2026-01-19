@@ -36,6 +36,7 @@ export const useCustomerStore = create<CustomerStore>()(
                             ...customerData,
                             loyaltyPoints: 0,
                             creditBalance: 0,
+                            totalPurchases: 0,
                         },
                     ],
                 })),
