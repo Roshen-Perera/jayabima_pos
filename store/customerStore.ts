@@ -13,6 +13,7 @@ interface CustomerStore {
     deleteCustomer: (id: string) => void;
     setSearch: (search: string) => void;
 
+    getFilteredCustomers: () => Customer[];
     // Computed (like your useMemo)
 }
 
