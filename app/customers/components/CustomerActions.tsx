@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useCustomerStore } from "@/store/customerStore";
 import { useState } from "react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 interface CustomerActionsProps {
   customerId: string;
@@ -42,13 +43,38 @@ const CustomerActions = ({
               <Pencil className="w-3 h-3 mr-4" />
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem className="flex text-destructive" onClick={handleDelete}>
+            <DropdownMenuItem
+              className="flex text-destructive"
+              onClick={() => setShowDeleteAlert(true)}
+            >
               <Trash2 className="w-3 h-3 mr-4 text-destructive" />
               Delete
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete{" "}
+              <span className="font-semibold">{customerName}</span> from your
+              customer list. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete Customer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };
