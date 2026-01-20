@@ -5,8 +5,21 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useCustomerStore } from "@/store/customerStore";
 
 const CustomerList = () => {
-  const filteredCustomers = useCustomerStore((state) => state.getFilteredCustomers());
+    const customers = useCustomerStore((s) => s.customers);
+    const search = useCustomerStore((s) => s.search);
 
+    const filteredCustomers = React.useMemo(() => {
+      if (!search) return customers;
+
+      const keyword = search.toLowerCase();
+      return customers.filter(
+        (c) =>
+          c.name.toLowerCase().includes(keyword) ||
+          c.email.toLowerCase().includes(keyword) ||
+          c.address.toLowerCase().includes(keyword) ||
+          c.phone.includes(keyword)
+      );
+    }, [customers, search]);
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
