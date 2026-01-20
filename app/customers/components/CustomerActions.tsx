@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useCustomerStore } from "@/store/customerStore";
+import { useState } from "react";
 
 interface CustomerActionsProps {
   customerId: string;
@@ -20,12 +21,13 @@ const CustomerActions = ({
   customerName,
 }: CustomerActionsProps) => {
   const deleteCustomer = useCustomerStore((s) => s.deleteCustomer);
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
 
   const handleDelete = () => {
-    if (window.confirm(`Are you sure you want to delete ${customerName}?`)) {
-      deleteCustomer(customerId);
-    }
+    deleteCustomer(customerId);
+    setShowDeleteAlert(false);
   };
+
   return (
     <>
       <DropdownMenu modal={false}>
