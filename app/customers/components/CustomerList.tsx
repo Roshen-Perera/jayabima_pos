@@ -41,7 +41,7 @@ const CustomerList = () => {
                     </p>
                   </div>
                 </div>
-                <CustomerActions />
+                <CustomerActions customerId={customer.id} customerName={customer.name}/>
               </div>
 
               <div className="space-y-3">
