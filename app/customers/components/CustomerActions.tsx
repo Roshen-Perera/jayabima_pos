@@ -22,9 +22,11 @@ const CustomerActions = ({
   const deleteCustomer = useCustomerStore((s) => s.deleteCustomer);
 
   const handleDelete = () => {
-    if (window.confirm(`Are you sure you want to delete ${customerName}?`)) {
-      deleteCustomer(customerId);
-    }
+    return(
+        <>
+        
+        </>
+    )
   };
   return (
     <>
