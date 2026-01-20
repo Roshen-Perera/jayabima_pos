@@ -9,6 +9,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+interface CustomerActionsProps {
+    customerId: string;
+    customerName: string;
+}
+
 const CustomerActions = () => {
   return (
     <>
