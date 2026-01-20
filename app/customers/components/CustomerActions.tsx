@@ -18,10 +18,10 @@ const CustomerActions = () => {
             <MoreVertical className="w-4 h-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-40" align="end">
+        <DropdownMenuContent className="w-20" align="end">
           <DropdownMenuGroup>
             <DropdownMenuItem className="flex">
-              <Pencil className="w-4 h-4 mr-2" />
+              <Pencil className="w-3 h-3 mr-2"/>
               Edit
             </DropdownMenuItem>
             <DropdownMenuItem>Delete</DropdownMenuItem>
