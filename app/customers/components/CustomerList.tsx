@@ -5,10 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useCustomerStore } from "@/store/customerStore";
 
 const CustomerList = () => {
-  const customers = useCustomerStore(
-    React.useCallback((s) => s.getFilteredCustomers(), [])
-  );
-
+  const customers = useCustomerStore((state) => state.getFilteredCustomers());
 
   return (
     <div>
