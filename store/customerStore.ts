@@ -14,7 +14,6 @@ interface CustomerStore {
     setSearch: (search: string) => void;
 
     // Computed (like your useMemo)
-    getFilteredCustomers: () => Customer[];
 }
 
 export const useCustomerStore = create<CustomerStore>()(
