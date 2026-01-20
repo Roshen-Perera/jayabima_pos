@@ -16,7 +16,7 @@ const Page = () => {
       <CustomerHeader />
       <CustomerStats  />
       <CustomerSearch value={search} onChange={setSearch} />
-      <CustomerList />
+      <CustomerList customers={customers} />
     </div>
   );
 };
