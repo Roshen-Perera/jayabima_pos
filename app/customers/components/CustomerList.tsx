@@ -3,13 +3,9 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCustomerStore } from "@/store/customerStore";
-import { Customer } from "../types/customer.types";
 
-interface Props {
- customers: Customer[];
-}
-
-const CustomerList = ({ customers }: Props) => {
+const CustomerList = () => {
+  const customers = useCustomerStore((state) => state.customers);
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
