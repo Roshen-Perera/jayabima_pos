@@ -8,11 +8,14 @@ import CustomerSearch from "./components/CustomerSearch";
 import { useCustomerStore } from "@/store/customerStore";
 
 const Page = () => {
+  const customers = useCustomerStore((s) => s.getFilteredCustomers());
+  const search = useCustomerStore((s) => s.search);
+  const setSearch = useCustomerStore((s) => s.setSearch);
   return (
     <div className="flex flex-col gap-3">
       <CustomerHeader />
       <CustomerStats  />
-      <CustomerSearch />
+      <CustomerSearch value={search} onChange={setSearch} />
       <CustomerList />
     </div>
   );
