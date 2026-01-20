@@ -43,10 +43,6 @@ export function CustomerForm() {
         ...data,
         totalPurchases: 0,
       });
-
-      // TODO: Add your save logic here
-      // await createCustomer(data);
-
       // For now, just simulate success
       alert("Customer created successfully!");
       reset(); // Clear form
