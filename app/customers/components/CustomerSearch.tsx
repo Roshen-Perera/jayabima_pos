@@ -1,12 +1,10 @@
+import { useCustomerStore } from "@/store/customerStore";
 import { Search } from "lucide-react";
 import React from "react";
 
-interface Props {
-  value: string;
-  onChange: (value: string) => void;
-}
-
-const CustomerSearch = ({ value, onChange }: Props) => {
+const CustomerSearch = () => {
+    const search = useCustomerStore((s) => s.search);
+    const setSearch = useCustomerStore((s) => s.setSearch);
   return (
     <div>
       <div className="relative max-w-md">
@@ -14,8 +12,8 @@ const CustomerSearch = ({ value, onChange }: Props) => {
         <input
           type="text"
           placeholder="Search customers..."
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
           className="w-full h-10 pl-10 pr-4 rounded-lg bg-card border border-input text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
         />
       </div>
