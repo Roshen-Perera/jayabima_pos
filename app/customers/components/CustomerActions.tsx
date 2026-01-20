@@ -6,7 +6,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -20,7 +19,6 @@ const CustomerActions = () => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-40" align="end">
-          <DropdownMenuLabel>File Actions</DropdownMenuLabel>
           <DropdownMenuGroup>
             <DropdownMenuItem>New File...</DropdownMenuItem>
             <DropdownMenuItem>Share...</DropdownMenuItem>
