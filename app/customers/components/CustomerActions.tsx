@@ -25,6 +25,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 const CustomerActions = () => {
+  const [showNewDialog, setShowNewDialog] = useState(false);
+  const [showShareDialog, setShowShareDialog] = useState(false);
   return (
     <>
       <DropdownMenu modal={false}>
