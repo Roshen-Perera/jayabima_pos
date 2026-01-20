@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCustomerStore } from "@/store/customerStore";
+import CustomerActions from "./CustomerActions";
 
 const CustomerList = () => {
     const customers = useCustomerStore((s) => s.customers);
@@ -40,9 +41,7 @@ const CustomerList = () => {
                     </p>
                   </div>
                 </div>
-                <Button variant="ghost" size="icon" className="w-8 h-8">
-                  <MoreVertical className="w-4 h-4" />
-                </Button>
+                <CustomerActions />
               </div>
 
               <div className="space-y-3">
