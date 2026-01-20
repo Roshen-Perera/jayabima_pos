@@ -4,7 +4,6 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface CustomerStore {
-    getFilteredCustomers(): any;
     customers: Customer[];
     search: string;
 
