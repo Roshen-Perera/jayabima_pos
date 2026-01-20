@@ -1,5 +1,5 @@
 "use client";
-import { MoreHorizontalIcon } from "lucide-react";
+import { MoreHorizontalIcon, MoreVertical, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -16,18 +16,14 @@ const CustomerActions = () => {
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" aria-label="Open menu" size="icon-sm">
-            <MoreHorizontalIcon />
+            <MoreVertical className="w-4 h-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-40" align="end">
           <DropdownMenuLabel>File Actions</DropdownMenuLabel>
           <DropdownMenuGroup>
-            <DropdownMenuItem>
-              New File...
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              Share...
-            </DropdownMenuItem>
+            <DropdownMenuItem>New File...</DropdownMenuItem>
+            <DropdownMenuItem>Share...</DropdownMenuItem>
             <DropdownMenuItem disabled>Download</DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
