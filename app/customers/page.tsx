@@ -5,7 +5,6 @@ import CustomerHeader from "./components/CustomerHeader";
 import CustomerList from "./components/CustomerList";
 import CustomerStats from "./components/CustomerStats";
 import CustomerSearch from "./components/CustomerSearch";
-import { useCustomerStore } from "@/store/customerStore";
 
 const Page = () => {
   return (
