@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useCustomerStore } from "@/store/customerStore";
+import CustomerAlert from "./CustomerAlert";
 
 interface CustomerActionsProps {
   customerId: string;
@@ -24,7 +25,7 @@ const CustomerActions = ({
   const handleDelete = () => {
     return(
         <>
-            
+            <CustomerAlert />
         </>
     )
   };
