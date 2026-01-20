@@ -9,8 +9,7 @@ import { useCustomerStore } from "@/store/customerStore";
 
 const Page = () => {
   const customers = useCustomerStore((s) => s.getFilteredCustomers());
-  const search = useCustomerStore((s) => s.search);
-  const setSearch = useCustomerStore((s) => s.setSearch);
+
   return (
     <div className="flex flex-col gap-3">
       <CustomerHeader />
