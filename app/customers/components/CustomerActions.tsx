@@ -24,7 +24,7 @@ const CustomerActions = ({
   const handleDelete = () => {
     return(
         <>
-        
+            
         </>
     )
   };
