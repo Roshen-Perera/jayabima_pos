@@ -25,7 +25,7 @@ const CustomerActions = () => {
               Edit
             </DropdownMenuItem>
             <DropdownMenuItem className="flex text-destructive">
-              <Trash2 className="w-3 h-3 mr-4" />
+              <Trash2 className="w-3 h-3 mr-4 text-destructive" />
               Delete
             </DropdownMenuItem>
           </DropdownMenuGroup>
