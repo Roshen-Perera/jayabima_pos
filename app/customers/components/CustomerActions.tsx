@@ -20,9 +20,8 @@ const CustomerActions = () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-40" align="end">
           <DropdownMenuGroup>
-            <DropdownMenuItem>New File...</DropdownMenuItem>
-            <DropdownMenuItem>Share...</DropdownMenuItem>
-            <DropdownMenuItem disabled>Download</DropdownMenuItem>
+            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem>Delete</DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
