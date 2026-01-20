@@ -12,7 +12,7 @@ const Page = () => {
     <div className="flex flex-col gap-3">
       <CustomerHeader />
       <CustomerStats  />
-      {/* <CustomerSearch value={search} onChange={setSearch} /> */}
+      <CustomerSearch />
       <CustomerList />
     </div>
   );
