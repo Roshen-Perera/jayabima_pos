@@ -14,7 +14,7 @@ interface CustomerActionsProps {
     customerName: string;
 }
 
-const CustomerActions = () => {
+const CustomerActions = ({ customerId, customerName }: CustomerActionsProps) => {
   return (
     <>
       <DropdownMenu modal={false}>
