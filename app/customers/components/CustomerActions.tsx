@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useCustomerStore } from "@/store/customerStore";
 
 interface CustomerActionsProps {
     customerId: string;
@@ -15,6 +16,7 @@ interface CustomerActionsProps {
 }
 
 const CustomerActions = ({ customerId, customerName }: CustomerActionsProps) => {
+    const deleteCustomer = useCustomerStore((s) => s.deleteCustomer);
   return (
     <>
       <DropdownMenu modal={false}>
