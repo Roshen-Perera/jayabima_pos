@@ -1,5 +1,5 @@
 "use client";
-import { MoreVertical } from "lucide-react";
+import { MoreVertical, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -20,7 +20,10 @@ const CustomerActions = () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-40" align="end">
           <DropdownMenuGroup>
-            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem className="flex">
+              <Pencil className="w-4 h-4 mr-2" />
+              Edit
+            </DropdownMenuItem>
             <DropdownMenuItem>Delete</DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
