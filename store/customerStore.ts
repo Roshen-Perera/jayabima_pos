@@ -12,14 +12,12 @@ interface CustomerStore {
     addCustomer: (customer: Omit<Customer, 'id' | 'loyaltyPoints' | 'creditBalance'>) => void;
     deleteCustomer: (id: string) => void;
     setSearch: (search: string) => void;
-
-    getFilteredCustomers: () => Customer[];
     // Computed (like your useMemo)
 }
 
 export const useCustomerStore = create<CustomerStore>()(
     persist(
-        (set, get) => ({
+        (set) => ({
             // Initial state (your dummyCustomers)
             customers: dummyCustomers,
             search: '',
@@ -47,21 +45,6 @@ export const useCustomerStore = create<CustomerStore>()(
                 })),
 
             setSearch: (search) => set({ search }),
-
-            // Computed value (replaces your useMemo)
-            getFilteredCustomers: () => {
-                const { customers, search } = get();
-                if (!search) return customers;
-
-                const keyword = search.toLowerCase();
-                return customers.filter(
-                    (c) =>
-                        c.name.toLowerCase().includes(keyword) ||
-                        c.email.toLowerCase().includes(keyword) ||
-                        c.address.toLowerCase().includes(keyword) ||
-                        c.phone.includes(keyword)
-                );
-            },
         }),
         {
             name: 'customer-storage', // Persists to localStorage!
