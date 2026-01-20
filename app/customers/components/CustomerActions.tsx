@@ -11,12 +11,15 @@ import {
 import { useCustomerStore } from "@/store/customerStore";
 
 interface CustomerActionsProps {
-    customerId: string;
-    customerName: string;
+  customerId: string;
+  customerName: string;
 }
 
-const CustomerActions = ({ customerId, customerName }: CustomerActionsProps) => {
-    const deleteCustomer = useCustomerStore((s) => s.deleteCustomer);
+const CustomerActions = ({
+  customerId,
+  customerName,
+}: CustomerActionsProps) => {
+  const deleteCustomer = useCustomerStore((s) => s.deleteCustomer);
   return (
     <>
       <DropdownMenu modal={false}>
