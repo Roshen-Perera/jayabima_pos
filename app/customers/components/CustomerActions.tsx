@@ -40,7 +40,7 @@ const CustomerActions = ({
               <Pencil className="w-3 h-3 mr-4" />
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem className="flex text-destructive">
+            <DropdownMenuItem className="flex text-destructive" onClick={handleDelete}>
               <Trash2 className="w-3 h-3 mr-4 text-destructive" />
               Delete
             </DropdownMenuItem>
