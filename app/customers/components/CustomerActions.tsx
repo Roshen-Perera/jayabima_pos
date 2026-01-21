@@ -21,6 +21,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Customer } from "../types/customer.types";
+import { CustomerForm } from "./CustomerForm";
 
 interface CustomerActionsProps {
   customerId: string;
@@ -69,6 +70,13 @@ const CustomerActions = ({
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <CustomerForm
+        customer={customer}
+        mode="edit"
+        open={showEditDialog}
+        onOpenChange={setShowEditDialog}
+      />
 
       <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
         <AlertDialogContent>
