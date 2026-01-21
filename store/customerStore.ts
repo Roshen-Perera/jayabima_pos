@@ -16,38 +16,33 @@ interface CustomerStore {
 }
 
 export const useCustomerStore = create<CustomerStore>()(
-    persist(
-        (set) => ({
-            // Initial state (your dummyCustomers)
-            customers: dummyCustomers,
-            search: '',
+    (set) => ({
+        // Initial state (your dummyCustomers)
+        customers: dummyCustomers,
+        search: '',
 
-            // Actions
-            setCustomers: (customers) => set({ customers }),
+        // Actions
+        setCustomers: (customers) => set({ customers }),
 
-            addCustomer: (customerData) =>
-                set((state) => ({
-                    customers: [
-                        ...state.customers,
-                        {
-                            id: Date.now().toString(),
-                            ...customerData,
-                            loyaltyPoints: 0,
-                            creditBalance: 0,
-                            totalPurchases: 0,
-                        },
-                    ],
-                })),
+        addCustomer: (customerData) =>
+            set((state) => ({
+                customers: [
+                    ...state.customers,
+                    {
+                        id: Date.now().toString(),
+                        ...customerData,
+                        loyaltyPoints: 0,
+                        creditBalance: 0,
+                        totalPurchases: 0,
+                    },
+                ],
+            })),
 
-            deleteCustomer: (id) =>
-                set((state) => ({
-                    customers: state.customers.filter((c) => c.id !== id),
-                })),
+        deleteCustomer: (id) =>
+            set((state) => ({
+                customers: state.customers.filter((c) => c.id !== id),
+            })),
 
-            setSearch: (search) => set({ search }),
-        }),
-        {
-            name: 'customer-storage', // Persists to localStorage!
-        }
-    )
+        setSearch: (search) => set({ search }),
+    }),
 );
