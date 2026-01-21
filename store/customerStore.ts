@@ -9,6 +9,7 @@ interface CustomerStore {
     setCustomers: (customers: Customer[]) => void;
     addCustomer: (customer: Omit<Customer, 'id' | 'loyaltyPoints' | 'creditBalance'>) => void;
     deleteCustomer: (id: string) => void;
+    updateCustomer: (id: string, updatedData: Partial<Customer>) => void;
     setSearch: (search: string) => void;
     // Computed (like your useMemo)
 }
@@ -42,5 +43,11 @@ export const useCustomerStore = create<CustomerStore>()(
             })),
 
         setSearch: (search) => set({ search }),
+        updateCustomer: (id, updatedData) =>
+            set((state) => ({
+                customers: state.customers.map((customer) =>
+                    customer.id === id ? { ...customer, ...updatedData } : customer
+                ),
+            })),
     }),
 );
