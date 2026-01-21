@@ -1,8 +1,6 @@
 import { Customer } from '@/app/customers/types/customer.types';
 import { dummyCustomers } from '@/data/data';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-
 interface CustomerStore {
     customers: Customer[];
     search: string;
