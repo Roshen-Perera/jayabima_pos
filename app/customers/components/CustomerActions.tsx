@@ -24,14 +24,10 @@ import { Customer } from "../types/customer.types";
 import { CustomerForm } from "./CustomerForm";
 
 interface CustomerActionsProps {
-  customerId: string;
-  customerName: string;
   customer: Customer;
 }
 
 const CustomerActions = ({
-  customerId,
-  customerName,
   customer,
 }: CustomerActionsProps) => {
   const deleteCustomer = useCustomerStore((s) => s.deleteCustomer);
@@ -39,7 +35,7 @@ const CustomerActions = ({
   const [showEditDialog, setShowEditDialog] = useState(false);
 
   const handleDelete = () => {
-    deleteCustomer(customerId);
+    deleteCustomer(customer.id);
     setShowDeleteAlert(false);
   };
 
@@ -84,7 +80,7 @@ const CustomerActions = ({
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
               This will permanently delete{" "}
-              <span className="font-semibold">{customerName}</span> from your
+              <span className="font-semibold">{customer.name}</span> from your
               customer list. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
