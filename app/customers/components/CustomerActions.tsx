@@ -11,15 +11,18 @@ import {
 import { useCustomerStore } from "@/store/customerStore";
 import { useState } from "react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Customer } from "../types/customer.types";
 
 interface CustomerActionsProps {
   customerId: string;
   customerName: string;
+  customer: Customer;
 }
 
 const CustomerActions = ({
   customerId,
   customerName,
+  customer,
 }: CustomerActionsProps) => {
   const deleteCustomer = useCustomerStore((s) => s.deleteCustomer);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
