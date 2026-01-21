@@ -20,7 +20,6 @@ import { useState } from "react";
 import { CustomerFormData, customerSchema } from "../lib/validation";
 import { useCustomerStore } from "@/store/customerStore";
 import { Customer } from "../types/customer.types";
-import { custom } from "zod";
 
 interface CustomerFormProps {
   customer?: Customer; // Optional - if provided, we're editing
