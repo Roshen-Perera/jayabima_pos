@@ -19,8 +19,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { CustomerFormData, customerSchema } from "../lib/validation";
 import { useCustomerStore } from "@/store/customerStore";
+import { Customer } from "../types/customer.types";
+import { custom } from "zod";
 
-export function CustomerForm() {
+interface CustomerFormProps {
+  customer?: Customer; // Optional - if provided, we're editing
+  mode: "add" | "edit";
+}
+
+export function CustomerForm({ customer, mode }: CustomerFormProps) {
   const [open, setOpen] = useState(false);
 
   const addCustomer = useCustomerStore((state) => state.addCustomer);
@@ -33,11 +40,11 @@ export function CustomerForm() {
     reset,
   } = useForm<CustomerFormData>({
     resolver: zodResolver(customerSchema),
-    mode: "onChange"
+    mode: "onChange",
   });
 
   const onSubmit = async (data: CustomerFormData) => {
-    if(mode === "add"){
+    if (mode === "add") {
       try {
         console.log("Form data:", data);
 
@@ -53,104 +60,111 @@ export function CustomerForm() {
         console.error("Error:", error);
         alert("Failed to create customer");
       }
-    } else if(mode === "edit"){ {
-      // Implement edit functionality here
-      // Update existing customer
-      updateCustomer(customer.id, data);
-      alert("Customer updated successfully!");
-
+    } else if (mode === "edit" && customer) {
+      {
+        // Implement edit functionality here
+        // Update existing customer
+        updateCustomer(customer.id, data);
+        alert("Customer updated successfully!");
+      }
     }
-  };
 
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="default" className="gap-2" onClick={() => setOpen(true)}>
-          <Plus className="w-4 h-4" />
-          Add Customer
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-106.25">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <DialogHeader>
-            <DialogTitle>Add Customer</DialogTitle>
-            <DialogDescription>
-              Add a new customer to manage their credits and loyalty points.
-            </DialogDescription>
-          </DialogHeader>
+    return (
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button
+            variant="default"
+            className="gap-2"
+            onClick={() => setOpen(true)}
+          >
+            <Plus className="w-4 h-4" />
+            Add Customer
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-106.25">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <DialogHeader>
+              <DialogTitle>Add Customer</DialogTitle>
+              <DialogDescription>
+                Add a new customer to manage their credits and loyalty points.
+              </DialogDescription>
+            </DialogHeader>
 
-          <div className="grid gap-4 py-4">
-            {/* Name Field */}
-            <div className="grid gap-2">
-              <Label htmlFor="name">Name</Label>
-              <Input
-                id="name"
-                placeholder="Nalin Perera"
-                {...register("name")}
-                className={errors.name ? "border-red-500" : ""}
-              />
-              {errors.name && (
-                <p className="text-sm text-red-500">{errors.name.message}</p>
-              )}
+            <div className="grid gap-4 py-4">
+              {/* Name Field */}
+              <div className="grid gap-2">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  placeholder="Nalin Perera"
+                  {...register("name")}
+                  className={errors.name ? "border-red-500" : ""}
+                />
+                {errors.name && (
+                  <p className="text-sm text-red-500">{errors.name.message}</p>
+                )}
+              </div>
+
+              {/* Email Field */}
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="nalinperera@gmail.com"
+                  {...register("email")}
+                  className={errors.email ? "border-red-500" : ""}
+                />
+                {errors.email && (
+                  <p className="text-sm text-red-500">{errors.email.message}</p>
+                )}
+              </div>
+
+              {/* Phone Field */}
+              <div className="grid gap-2">
+                <Label htmlFor="phone">Contact No.</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="0777123456"
+                  {...register("phone")}
+                  className={errors.phone ? "border-red-500" : ""}
+                />
+                {errors.phone && (
+                  <p className="text-sm text-red-500">{errors.phone.message}</p>
+                )}
+              </div>
+
+              {/* Address Field */}
+              <div className="grid gap-2">
+                <Label htmlFor="address">Address</Label>
+                <Input
+                  id="address"
+                  placeholder="Avissawella"
+                  {...register("address")}
+                  className={errors.address ? "border-red-500" : ""}
+                />
+                {errors.address && (
+                  <p className="text-sm text-red-500">
+                    {errors.address.message}
+                  </p>
+                )}
+              </div>
             </div>
 
-            {/* Email Field */}
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="nalinperera@gmail.com"
-                {...register("email")}
-                className={errors.email ? "border-red-500" : ""}
-              />
-              {errors.email && (
-                <p className="text-sm text-red-500">{errors.email.message}</p>
-              )}
-            </div>
-
-            {/* Phone Field */}
-            <div className="grid gap-2">
-              <Label htmlFor="phone">Contact No.</Label>
-              <Input
-                id="phone"
-                type="tel"
-                placeholder="0777123456"
-                {...register("phone")}
-                className={errors.phone ? "border-red-500" : ""}
-              />
-              {errors.phone && (
-                <p className="text-sm text-red-500">{errors.phone.message}</p>
-              )}
-            </div>
-
-            {/* Address Field */}
-            <div className="grid gap-2">
-              <Label htmlFor="address">Address</Label>
-              <Input
-                id="address"
-                placeholder="Avissawella"
-                {...register("address")}
-                className={errors.address ? "border-red-500" : ""}
-              />
-              {errors.address && (
-                <p className="text-sm text-red-500">{errors.address.message}</p>
-              )}
-            </div>
-          </div>
-
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button type="button" variant="outline">
-                Cancel
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button" variant="outline">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Saving..." : "Save changes"}
               </Button>
-            </DialogClose>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Saving..." : "Save changes"}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
-  );
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    );
+  };
 }
