@@ -26,6 +26,7 @@ const CustomerActions = ({
 }: CustomerActionsProps) => {
   const deleteCustomer = useCustomerStore((s) => s.deleteCustomer);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
 
   const handleDelete = () => {
     deleteCustomer(customerId);
