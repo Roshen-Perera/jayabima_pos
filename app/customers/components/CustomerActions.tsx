@@ -10,7 +10,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useCustomerStore } from "@/store/customerStore";
 import { useState } from "react";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Customer } from "../types/customer.types";
 
 interface CustomerActionsProps {
@@ -43,7 +52,10 @@ const CustomerActions = ({
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-20" align="end">
           <DropdownMenuGroup>
-            <DropdownMenuItem className="flex">
+            <DropdownMenuItem
+              className="flex"
+              onClick={() => setShowEditDialog(true)}
+            >
               <Pencil className="w-3 h-3 mr-4" />
               Edit
             </DropdownMenuItem>
