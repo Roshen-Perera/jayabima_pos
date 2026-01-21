@@ -24,6 +24,7 @@ export function CustomerForm() {
   const [open, setOpen] = useState(false);
 
   const addCustomer = useCustomerStore((state) => state.addCustomer);
+  const updateCustomer = useCustomerStore((state) => state.updateCustomer);
 
   const {
     register,
@@ -36,20 +37,28 @@ export function CustomerForm() {
   });
 
   const onSubmit = async (data: CustomerFormData) => {
-    try {
-      console.log("Form data:", data);
+    if(mode === "add"){
+      try {
+        console.log("Form data:", data);
 
-      addCustomer({
-        ...data,
-        totalPurchases: 0,
-      });
-      // For now, just simulate success
-      alert("Customer created successfully!");
-      reset(); // Clear form
-      setOpen(false); // Close dialog
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Failed to create customer");
+        addCustomer({
+          ...data,
+          totalPurchases: 0,
+        });
+        // For now, just simulate success
+        alert("Customer created successfully!");
+        reset(); // Clear form
+        setOpen(false); // Close dialog
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Failed to create customer");
+      }
+    } else if(mode === "edit"){ {
+      // Implement edit functionality here
+      // Update existing customer
+      updateCustomer(customer.id, data);
+      alert("Customer updated successfully!");
+
     }
   };
 
