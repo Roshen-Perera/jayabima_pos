@@ -17,7 +17,7 @@ const CustomerHeader = () => {
             <Download className="w-4 h-4" />
             Export
           </Button>
-          <CustomerForm />
+          <CustomerForm mode="add" />
         </div>
       </div>
     </div>
