@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Customer } from "../types/customer.types";
 import { CustomerForm } from "./CustomerForm";
+import { alert } from "@/lib/alert";
 
 interface CustomerActionsProps {
   customer: Customer;
@@ -36,6 +37,7 @@ const CustomerActions = ({
 
   const handleDelete = () => {
     deleteCustomer(customer.id);
+    alert.success(`Customer ${customer.name} has been deleted.`);
     setShowDeleteAlert(false);
   };
 
