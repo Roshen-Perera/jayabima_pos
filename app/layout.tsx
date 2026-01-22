@@ -4,6 +4,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import Header from "@/components/Header";
 import { ThemeProvider } from "next-themes";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Jayabima POS",
@@ -26,7 +27,10 @@ export default function RootLayout({
             <AppSidebar />
             <main className="flex flex-1 flex-col w-full">
               <Header />
-              <div className="flex-1 p-6">{children}</div>
+              <div className="flex-1 p-6">
+                {children}
+                <Toaster />
+              </div>
             </main>
           </SidebarProvider>
         </ThemeProvider>
