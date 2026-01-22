@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import { CustomerFormData, customerSchema } from "../lib/validation";
 import { useCustomerStore } from "@/store/customerStore";
 import { Customer } from "../types/customer.types";
+import { alert } from "@/lib/alert";
 
 interface CustomerFormProps {
   customer?: Customer; // Optional - if provided, we're editing
@@ -90,21 +91,27 @@ export function CustomerForm({
       if (mode === "edit" && customer) {
         // Update existing customer
         updateCustomer(customer.id, data);
-        alert("Customer updated successfully!");
+        alert.success(
+          "Customer updated!",
+          `${data.name} has been updated successfully.`,
+        );
       } else {
         // Add new customer
         addCustomer({
           ...data,
           totalPurchases: 0,
         });
-        alert("Customer created successfully!");
+        alert.success(
+          "Customer created!",
+          `${data.name} has been created successfully.`,
+        );
       }
 
       reset(); // Clear form
       setOpen(false); // Close dialog
     } catch (error) {
       console.error("Error:", error);
-      alert(`Failed to ${mode} customer`);
+      alert.error("Failed to save", "Something went wrong. Please try again.");
     }
   };
 
