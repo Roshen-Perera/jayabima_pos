@@ -29,7 +29,7 @@ export default function RootLayout({
               <Header />
               <div className="flex-1 p-6">
                 {children}
-                <Toaster />
+                <Toaster position="top-right" />
               </div>
             </main>
           </SidebarProvider>
