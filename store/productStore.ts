@@ -14,3 +14,7 @@ interface ProductStore {
     setSearch: (search: string) => void;
     setCategoryFilter: (category: string) => void;
 }
+
+export const useProductStore = create<ProductStore>((set) => ({
+    
+}));
