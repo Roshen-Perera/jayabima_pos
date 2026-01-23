@@ -29,7 +29,7 @@ export const useProductStore = create<ProductStore>()((set) => ({
             products: [
                 ...state.products,
                 {
-                    id: Date.now().toString(),
+                    id: "ITM-"+Date.now().toString(),
                     ...productData,
                     createdAt: new Date(),
                     updatedAt: new Date(),
