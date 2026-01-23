@@ -28,18 +28,14 @@ interface CustomerActionsProps {
   customer: Customer;
 }
 
-const CustomerActions = ({
-  customer,
-}: CustomerActionsProps) => {
+const CustomerActions = ({ customer }: CustomerActionsProps) => {
   const deleteCustomer = useCustomerStore((s) => s.deleteCustomer);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
 
   const handleDelete = () => {
     deleteCustomer(customer.id);
-    alert.success(
-      `Customer ${customer.name} has been deleted.`,
-    );
+    alert.success(`Customer ${customer.name} has been deleted.`);
 
     setShowDeleteAlert(false);
   };
