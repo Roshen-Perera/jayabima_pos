@@ -95,3 +95,15 @@ export const dummyProducts: Product[] = [
         updatedAt: new Date("2024-01-20"),
     },
 ];
+
+export const productCategories = [
+    "Cement",
+    "Bricks & Blocks",
+    "Plumbing",
+    "Electrical",
+    "Paint & Accessories",
+    "Fasteners",
+    "Hand Tools",
+    "Power Tools",
+    "Hardware & Fittings",
+];
