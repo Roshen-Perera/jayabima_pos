@@ -1,9 +1,11 @@
-import React from 'react'
+import React from "react";
 
 const page = () => {
   return (
-    <div></div>
-  )
-}
+    <>
+      <div className="flex flex-col gap-3"></div>
+    </>
+  );
+};
 
-export default page
+export default page;
