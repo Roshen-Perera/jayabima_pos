@@ -26,9 +26,9 @@ export const dummyProducts: Product[] = [
     },
     {
         id: "2",
-        name: "Marine Cement 50kg",
+        name: "Insee Mahaweli Marine Cement 50kg",
         category: "Cement",
-        sku: "CEM-MR-50",
+        sku: "CEM-MM-50",
         price: 2550,
         cost: 2300,
         stock: 90,
@@ -40,9 +40,9 @@ export const dummyProducts: Product[] = [
     },
     {
         id: "3",
-        name: "PVC Pipe 1 inch (10ft)",
+        name: "PVC Pipe 1 inch (19ft)",
         category: "Plumbing",
-        sku: "PVC-01-10",
+        sku: "PVC-1-19",
         price: 650,
         cost: 500,
         stock: 200,
@@ -82,9 +82,9 @@ export const dummyProducts: Product[] = [
     },
     {
         id: "6",
-        name: "LED Bulb 12W",
+        name: "Orange LED Bulb 12W",
         category: "Electrical",
-        sku: "LED-12W",
+        sku: "ORG-LED-12W",
         price: 680,
         cost: 520,
         stock: 150,
@@ -105,5 +105,5 @@ export const productCategories = [
     "Fasteners",
     "Hand Tools",
     "Power Tools",
-    "Hardware & Fittings",
+    "Other"
 ];
