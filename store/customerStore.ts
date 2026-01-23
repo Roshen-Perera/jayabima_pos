@@ -28,7 +28,7 @@ export const useCustomerStore = create<CustomerStore>()(
                 customers: [
                     ...state.customers,
                     {
-                        id: Date.now().toString(),
+                        id: "CUS-"+Date.now().toString(),
                         ...customerData,
                         loyaltyPoints: 0,
                         creditBalance: 0,
