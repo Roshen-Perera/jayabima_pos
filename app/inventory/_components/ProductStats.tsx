@@ -39,6 +39,7 @@ const ProductStats = () => {
     {
       title: "Low Stock Alert",
       value: stats.lowStockProducts,
+      color: "text-destructive",
     },
     {
       title: "Stock Value",
@@ -55,7 +56,9 @@ const ProductStats = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">{stat.title}</p>
-                  <p className="text-2xl font-bold">{stat.value}</p>
+                  <p className={`text-2xl font-bold ${stat.color || ""}`}>
+                    {stat.value}
+                  </p>
                 </div>
               </div>
             </CardContent>
