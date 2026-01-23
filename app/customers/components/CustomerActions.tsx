@@ -37,7 +37,10 @@ const CustomerActions = ({
 
   const handleDelete = () => {
     deleteCustomer(customer.id);
-    alert.success(`Customer ${customer.name} has been deleted.`);
+    alert.success(
+      `Customer ${customer.name} has been deleted.`,
+    );
+
     setShowDeleteAlert(false);
   };
 
