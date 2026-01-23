@@ -1,4 +1,5 @@
 import { Product } from "@/app/inventory/_types/product.types";
+import { dummyProducts } from "@/data/data";
 import { create } from "zustand";
 
 
@@ -16,7 +17,10 @@ interface ProductStore {
     setCategoryFilter: (category: string) => void;
 }
 
-export const useProductStore = create<ProductStore>(
-    (set) => ({
-        products: 
+export const useProductStore = create<ProductStore>()((set) => ({
+    products: dummyProducts,
+    search: '',
+    categoryFilter: 'all',
+
+
 }));
