@@ -31,26 +31,18 @@ const ProductStats = () => {
     {
       title: "Total Products",
       value: stats.totalProducts,
-      color: "text-blue-600",
-      bgColor: "bg-blue-50",
     },
     {
       title: "Active Products",
       value: stats.activeProducts,
-      color: "text-green-600",
-      bgColor: "bg-green-50",
     },
     {
       title: "Low Stock Alert",
       value: stats.lowStockProducts,
-      color: "text-orange-600",
-      bgColor: "bg-orange-50",
     },
     {
       title: "Stock Value",
       value: `Rs. ${stats.totalStockValue.toLocaleString()}`,
-      color: "text-purple-600",
-      bgColor: "bg-purple-50",
     },
   ];
 
@@ -63,7 +55,7 @@ const ProductStats = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">{stat.title}</p>
-                  <p className="text-2xl font-bold mt-1">{stat.value}</p>
+                  <p className="text-2xl font-bold">{stat.value}</p>
                 </div>
               </div>
             </CardContent>
