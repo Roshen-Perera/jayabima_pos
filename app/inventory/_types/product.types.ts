@@ -7,6 +7,7 @@ export interface Product {
     cost: number;
     stock: number;
     minStock: number;
+    description?: string;
     active: boolean;
     createdAt: Date;
     updatedAt: Date;
