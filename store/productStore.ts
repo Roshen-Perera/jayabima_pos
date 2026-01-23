@@ -22,5 +22,49 @@ export const useProductStore = create<ProductStore>()((set) => ({
     search: '',
     categoryFilter: 'all',
 
+    setProducts: (products) => set({ products }),
 
+    addProduct: (productData) =>
+        set((state) => ({
+            products: [
+                ...state.products,
+                {
+                    id: Date.now().toString(),
+                    ...productData,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                },
+            ],
+        })),
+
+    updateProduct: (id, updates) =>
+        set((state) => ({
+            products: state.products.map((product) =>
+                product.id === id
+                    ? { ...product, ...updates, updatedAt: new Date() }
+                    : product
+            ),
+        })),
+
+    deleteProduct: (id) =>
+        set((state) => ({
+            products: state.products.filter((p) => p.id !== id),
+        })),
+
+    updateStock: (id, quantity) =>
+        set((state) => ({
+            products: state.products.map((product) =>
+                product.id === id
+                    ? {
+                        ...product,
+                        stock: product.stock - quantity,
+                        updatedAt: new Date()
+                    }
+                    : product
+            ),
+        })),
+
+    setSearch: (search) => set({ search }),
+
+    setCategoryFilter: (category) => set({ categoryFilter: category }),
 }));
