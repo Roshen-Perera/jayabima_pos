@@ -2,13 +2,13 @@ import React from "react";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const CustomerHeader = () => {
+const ProductHeader = () => {
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <p className="text-muted-foreground">
-            Manage customers, credits and loyalty points
+            Manage Products and quantity
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -22,4 +22,4 @@ const CustomerHeader = () => {
   );
 };
 
-export default CustomerHeader;
+export default ProductHeader;
