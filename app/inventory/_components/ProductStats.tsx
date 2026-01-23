@@ -56,7 +56,7 @@ const ProductStats = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">{stat.title}</p>
-                  <p className={`text-2xl font-bold ${stat.color || ""}`}>
+                  <p className={`text-2xl font-bold ${stat.color}`}>
                     {stat.value}
                   </p>
                 </div>
