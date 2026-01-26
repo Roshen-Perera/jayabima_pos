@@ -5,6 +5,11 @@ import { useForm } from "react-hook-form";
 import { ProductFormData, productSchema } from "../lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { alert } from "@/lib/alert";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Plus } from "lucide-react";
 
 interface ProductFormProps {
   product?: Product;
@@ -114,7 +119,181 @@ const ProductForm = ({
     }
   };
 
-  return <div></div>;
+  const category = watch("category");
+  const active = watch("active");
+
+  return (
+    <div>
+      <Dialog open={open} onOpenChange={setOpen}>
+        {mode === "add" && (
+          <DialogTrigger asChild>
+            <Button
+              variant="default"
+              className="gap-2"
+              onClick={() => setOpen(true)}
+            >
+              <Plus className="w-4 h-4" />
+              Add Product
+            </Button>
+          </DialogTrigger>
+        )}
+
+        <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <DialogHeader>
+              <DialogTitle>
+                {mode === "edit" ? "Edit Product" : "Add Product"}
+              </DialogTitle>
+              <DialogDescription>
+                {mode === "edit"
+                  ? "Make changes to product information."
+                  : "Add a new product to your inventory."}
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="grid gap-4 py-4">
+              {/* Name Field */}
+              <div className="grid gap-2">
+                <Label htmlFor="name">Product Name</Label>
+                <Input
+                  id="name"
+                  placeholder="Wireless Mouse"
+                  {...register("name")}
+                  className={errors.name ? "border-red-500" : ""}
+                />
+                {errors.name && (
+                  <p className="text-sm text-red-500">{errors.name.message}</p>
+                )}
+              </div>
+
+              {/* Category & SKU */}
+              <div className="grid grid-cols-2 gap-4">
+
+                <div className="grid gap-2">
+                  <Label htmlFor="sku">SKU</Label>
+                  <Input
+                    id="sku"
+                    placeholder="WM-001"
+                    {...register("sku")}
+                    className={errors.sku ? "border-red-500" : ""}
+                  />
+                  {errors.sku && (
+                    <p className="text-sm text-red-500">{errors.sku.message}</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Price & Cost */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="price">Selling Price (Rs.)</Label>
+                  <Input
+                    id="price"
+                    type="number"
+                    placeholder="2500"
+                    {...register("price", { valueAsNumber: true })}
+                    className={errors.price ? "border-red-500" : ""}
+                  />
+                  {errors.price && (
+                    <p className="text-sm text-red-500">
+                      {errors.price.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="cost">Cost Price (Rs.)</Label>
+                  <Input
+                    id="cost"
+                    type="number"
+                    placeholder="1500"
+                    {...register("cost", { valueAsNumber: true })}
+                    className={errors.cost ? "border-red-500" : ""}
+                  />
+                  {errors.cost && (
+                    <p className="text-sm text-red-500">
+                      {errors.cost.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Stock & Min Stock */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="stock">Stock Quantity</Label>
+                  <Input
+                    id="stock"
+                    type="number"
+                    placeholder="45"
+                    {...register("stock", { valueAsNumber: true })}
+                    className={errors.stock ? "border-red-500" : ""}
+                  />
+                  {errors.stock && (
+                    <p className="text-sm text-red-500">
+                      {errors.stock.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="minStock">Min Stock Alert</Label>
+                  <Input
+                    id="minStock"
+                    type="number"
+                    placeholder="10"
+                    {...register("minStock", { valueAsNumber: true })}
+                    className={errors.minStock ? "border-red-500" : ""}
+                  />
+                  {errors.minStock && (
+                    <p className="text-sm text-red-500">
+                      {errors.minStock.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="grid gap-2">
+                <Label htmlFor="description">Description (Optional)</Label>
+                <textarea
+                  id="description"
+                  placeholder="Enter product description..."
+                  {...register("description")}
+                  rows={3}
+                />
+              </div>
+
+              {/* Active Toggle */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label htmlFor="active">Active Product</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Inactive products won&apos;t appear in sales
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button" variant="outline">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting
+                  ? "Saving..."
+                  : mode === "edit"
+                    ? "Save changes"
+                    : "Add Product"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
 };
 
 export default ProductForm;
