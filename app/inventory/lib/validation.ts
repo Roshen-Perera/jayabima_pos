@@ -9,7 +9,7 @@ export const productSchema = z.object({
     stock: z.number().min(0, "Stock cannot be negative"),
     minStock: z.number().min(0, "Minimum stock cannot be negative"),
     description: z.string().optional(),
-    active: z.boolean().default(true),
+    active: z.boolean()
 });
 
 export type ProductFormData = z.infer<typeof productSchema>;
