@@ -1,15 +1,14 @@
 import React from "react";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ProductForm from "./ProductForm";
 
 const ProductHeader = () => {
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <p className="text-muted-foreground">
-            Manage Products and quantity
-          </p>
+          <p className="text-muted-foreground">Manage Products and quantity</p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" className="gap-2">
@@ -18,6 +17,7 @@ const ProductHeader = () => {
           </Button>
         </div>
       </div>
+      <ProductForm mode="add" />
     </div>
   );
 };
