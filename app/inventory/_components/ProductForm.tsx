@@ -16,6 +16,7 @@ const ProductForm = ({
   onOpenChange: externalOnOpenChange,
 }: ProductFormProps) => {
   const [internalOpen, setInternalOpen] = useState(false);
+  const setOpen = externalOnOpenChange || setInternalOpen;
 
   return <div></div>;
 };
