@@ -5,6 +5,7 @@ import React from "react";
 const ProductList = () => {
   const products = useProductStore((s) => s.products);
   const search = useProductStore((s) => s.search);
+  const categoryFilter = useProductStore((s) => s.categoryFilter);
 
   const filteredProducts = React.useMemo(() => {
     let filtered = products;
@@ -19,6 +20,7 @@ const ProductList = () => {
           p.category.toLowerCase().includes(keyword),
       );
     }
+    
     return filtered;
   }, [products, search]);
 
