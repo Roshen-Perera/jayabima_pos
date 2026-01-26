@@ -12,9 +12,10 @@ const ProductForm = ({
   product,
   mode,
   open,
-  onOpenChange,
+  open: externalOpen,
+  onOpenChange: externalOnOpenChange,
 }: ProductFormProps) => {
-      const [internalOpen, setInternalOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
 
   return <div></div>;
 };
