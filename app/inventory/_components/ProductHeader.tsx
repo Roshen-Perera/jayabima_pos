@@ -15,9 +15,9 @@ const ProductHeader = () => {
             <Download className="w-4 h-4" />
             Export
           </Button>
+          <ProductForm mode="add" />
         </div>
       </div>
-      <ProductForm mode="add" />
     </div>
   );
 };
