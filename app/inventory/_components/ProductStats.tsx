@@ -65,7 +65,7 @@ const ProductStats = () => {
                   </p>
                 </div>
                 <div>
-                  <DollarSign />
+                  <stat.icon className="h-8 w-8 text-muted-foreground" />
                 </div>
               </div>
             </CardContent>
