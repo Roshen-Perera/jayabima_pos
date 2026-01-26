@@ -4,6 +4,7 @@ import { useProductStore } from "@/store/productStore";
 import { useForm } from "react-hook-form";
 import { ProductFormData, productSchema } from "../lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { alert } from "@/lib/alert";
 
 interface ProductFormProps {
   product?: Product;
@@ -88,6 +89,30 @@ const ProductForm = ({
       });
     }
   }, [open, product, reset]);
+
+  const onSubmit = async (data: ProductFormData) => {
+    try {
+      if (mode === "edit" && product) {
+        updateProduct(product.id, data);
+        alert.success(
+          "Product updated!",
+          `${data.name} has been updated successfully.`,
+        );
+      } else {
+        addProduct(data);
+        alert.success(
+          "Product added!",
+          `${data.name} has been added successfully.`,
+        );
+      }
+
+      reset();
+      setOpen(false);
+    } catch (error) {
+      console.error("Error:", error);
+      alert.error("Failed to save", "Something went wrong. Please try again.");
+    }
+  };
 
   return <div></div>;
 };
