@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { useProductStore } from "@/store/productStore";
-import { AlertTriangle, Badge, Package } from "lucide-react";
+import { AlertTriangle, Package } from "lucide-react";
 import React from "react";
 import ProductActions from "./ProductActions";
 
@@ -45,7 +46,7 @@ const ProductList = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {filteredProducts.map((product) => {
         const isLowStock = product.stock <= product.minStock;
         const profitMargin =
@@ -58,7 +59,7 @@ const ProductList = () => {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <h3 className="font-semibold text-lg">{product.name}</h3>
-                    {!product.active && <Badge>Inactive</Badge>}
+                    {!product.active && <Badge variant="outline">Inactive</Badge>}
                   </div>
                   <p className="text-sm text-muted-foreground">
                     SKU: {product.sku}
