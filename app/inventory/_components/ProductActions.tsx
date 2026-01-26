@@ -5,7 +5,7 @@ interface ProductActionsProps {
   product: Product;
 }
 
-const ProductActions = () => {
+const ProductActions = ({product}: ProductActionsProps) => {
   return <div></div>;
 };
 
