@@ -31,19 +31,23 @@ const ProductStats = () => {
     {
       title: "Total Products",
       value: stats.totalProducts,
+      icon: Package,
     },
     {
       title: "Active Products",
       value: stats.activeProducts,
+      icon: TrendingUp,
     },
     {
       title: "Low Stock Alert",
       value: stats.lowStockProducts,
       color: "text-destructive",
+      icon: AlertTriangle,
     },
     {
       title: "Stock Value",
       value: `Rs. ${stats.totalStockValue.toLocaleString()}`,
+      icon: DollarSign,
     },
   ];
 
@@ -59,6 +63,9 @@ const ProductStats = () => {
                   <p className={`text-2xl font-bold ${stat.color}`}>
                     {stat.value}
                   </p>
+                </div>
+                <div>
+                  <DollarSign />
                 </div>
               </div>
             </CardContent>
