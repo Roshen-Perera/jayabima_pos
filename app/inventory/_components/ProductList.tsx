@@ -59,7 +59,9 @@ const ProductList = () => {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <h3 className="font-semibold text-lg">{product.name}</h3>
-                    {!product.active && <Badge variant="outline">Inactive</Badge>}
+                    {!product.active && (
+                      <Badge variant="outline">Inactive</Badge>
+                    )}
                   </div>
                   <p className="text-sm text-muted-foreground">
                     SKU: {product.sku}
@@ -71,7 +73,7 @@ const ProductList = () => {
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Category</span>
-                  {product.category}
+                  <Badge variant="outline">{product.category}</Badge>
                 </div>
 
                 <div className="flex items-center justify-between">
