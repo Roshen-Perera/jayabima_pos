@@ -11,11 +11,12 @@ interface ProductFormProps {
 const ProductForm = ({
   product,
   mode,
-  open,
   open: externalOpen,
   onOpenChange: externalOnOpenChange,
 }: ProductFormProps) => {
   const [internalOpen, setInternalOpen] = useState(false);
+
+  const open = externalOpen !== undefined ? externalOpen : internalOpen;
   const setOpen = externalOnOpenChange || setInternalOpen;
 
   return <div></div>;
