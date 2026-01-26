@@ -8,7 +8,12 @@ interface ProductFormProps {
   onOpenChange?: (open: boolean) => void;
 }
 
-const ProductForm = ({ product, mode, open, onOpenChange }: ProductFormProps) => {
+const ProductForm = ({
+  product,
+  mode,
+  open,
+  onOpenChange,
+}: ProductFormProps) => {
   return <div></div>;
 };
 
