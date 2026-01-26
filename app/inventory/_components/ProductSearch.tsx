@@ -1,5 +1,3 @@
-"use client";
-
 import { useProductStore } from "@/store/productStore";
 import { Search } from "lucide-react";
 import React from "react";
