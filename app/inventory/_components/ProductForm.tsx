@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { productCategories } from "@/data/data";
+import { Textarea } from "@/components/ui/textarea";
 
 interface ProductFormProps {
   product?: Product;
@@ -299,7 +300,7 @@ const ProductForm = ({
               {/* Description */}
               <div className="grid gap-2">
                 <Label htmlFor="description">Description (Optional)</Label>
-                <textarea
+                <Textarea
                   id="description"
                   placeholder="Enter product description..."
                   {...register("description")}
