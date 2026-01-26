@@ -26,8 +26,6 @@ const ProductForm = ({
   const addProduct = useProductStore((state) => state.addProduct);
   const updateProduct = useProductStore((state) => state.updateProduct);
 
-  type ProductFormValues = Omit<ProductFormData, "active"> & { active?: boolean };
-
   const {
     register,
     handleSubmit,
@@ -35,7 +33,7 @@ const ProductForm = ({
     reset,
     setValue,
     watch,
-  } = useForm<ProductFormValues>({
+  } = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
     mode: "onChange",
     defaultValues: product
@@ -48,7 +46,7 @@ const ProductForm = ({
           stock: product.stock,
           minStock: product.minStock,
           description: product.description || "",
-          active: product.active ?? true,
+          active: product.active,
         }
       : {
           name: "",
