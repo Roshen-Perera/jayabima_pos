@@ -1,4 +1,4 @@
-
+"use client";
 
 import ProductHeader from "./_components/ProductHeader";
 import ProductStats from "./_components/ProductStats";
