@@ -2,10 +2,28 @@ import React, { useState } from "react";
 import { Product } from "../_types/product.types";
 import { useProductStore } from "@/store/productStore";
 import { alert } from "@/lib/alert";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreVertical, Pencil, Trash2 } from "lucide-react";
 import ProductForm from "./ProductForm";
+import {
+  AlertDialogHeader,
+  AlertDialogFooter,
+} from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@radix-ui/react-alert-dialog";
 
 interface ProductActionsProps {
   product: Product;
@@ -55,22 +73,27 @@ const ProductActions = ({ product }: ProductActionsProps) => {
         onOpenChange={setShowEditDialog}
       />
 
-      <ConfirmationAlert
-        open={showDeleteAlert}
-        onOpenChange={setShowDeleteAlert}
-        onConfirm={handleDelete}
-        title="Are you absolutely sure?"
-        description={
-          <>
-            This will permanently delete{" "}
-            <span className="font-semibold">{product.name}</span> from your
-            inventory. This action cannot be undone.
-          </>
-        }
-        confirmText="Delete Product"
-        cancelText="Cancel"
-        variant="destructive"
-      />
+      <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete{" "}
+              <span className="font-semibold">{product.name}</span> from your
+              inventory. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete Customer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };
