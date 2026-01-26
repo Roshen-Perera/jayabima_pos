@@ -5,11 +5,21 @@ import { useForm } from "react-hook-form";
 import { ProductFormData, productSchema } from "../lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { alert } from "@/lib/alert";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
+import { Select, SelectContent, SelectItem } from "@/components/ui/select";
 
 interface ProductFormProps {
   product?: Product;
@@ -168,6 +178,31 @@ const ProductForm = ({
 
               {/* Category & SKU */}
               <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="category">Category</Label>
+                  <Select
+                    value={category}
+                    onValueChange={(value) => setValue("category", value)}
+                  >
+                    <SelectTrigger
+                      className={errors.category ? "border-red-500" : ""}
+                    >
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {productCategories.map((cat) => (
+                        <SelectItem key={cat} value={cat}>
+                          {cat}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {errors.category && (
+                    <p className="text-sm text-red-500">
+                      {errors.category.message}
+                    </p>
+                  )}
+                </div>
 
                 <div className="grid gap-2">
                   <Label htmlFor="sku">SKU</Label>
@@ -272,6 +307,11 @@ const ProductForm = ({
                     Inactive products won&apos;t appear in sales
                   </p>
                 </div>
+                <Switch
+                  id="active"
+                  checked={active}
+                  onCheckedChange={(checked: boolean) => setValue("active", checked)}
+                />
               </div>
             </div>
 
