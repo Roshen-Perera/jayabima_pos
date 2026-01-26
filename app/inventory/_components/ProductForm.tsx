@@ -19,7 +19,15 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
-import { Select, SelectContent, SelectItem } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { productCategories } from "@/data/data";
 
 interface ProductFormProps {
   product?: Product;
@@ -310,7 +318,9 @@ const ProductForm = ({
                 <Switch
                   id="active"
                   checked={active}
-                  onCheckedChange={(checked: boolean) => setValue("active", checked)}
+                  onCheckedChange={(checked: boolean) =>
+                    setValue("active", checked)
+                  }
                 />
               </div>
             </div>
