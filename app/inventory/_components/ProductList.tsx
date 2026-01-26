@@ -20,9 +20,13 @@ const ProductList = () => {
           p.category.toLowerCase().includes(keyword),
       );
     }
-    
+
+    if (categoryFilter && categoryFilter !== "all") {
+      filtered = filtered.filter((p) => p.category === categoryFilter);
+    }
+
     return filtered;
-  }, [products, search]);
+  }, [products, search, categoryFilter]);
 
   if (filteredProducts.length === 0) {
     return (
@@ -30,7 +34,7 @@ const ProductList = () => {
         <Package className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
         <h3 className="text-lg font-semibold mb-2">No products found</h3>
         <p className="text-muted-foreground">
-          {search  !== "all"
+          {search !== "all"
             ? "Try adjusting your filters"
             : "Add your first product to get started"}
         </p>
