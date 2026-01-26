@@ -1,11 +1,12 @@
-import React from 'react'
+import React from "react";
+import { Product } from "../_types/product.types";
 
-const ProductActions = () => {
-  return (
-    <div>
-      
-    </div>
-  )
+interface ProductActionsProps {
+  product: Product;
 }
 
-export default ProductActions
+const ProductActions = () => {
+  return <div></div>;
+};
+
+export default ProductActions;
