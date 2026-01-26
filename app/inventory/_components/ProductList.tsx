@@ -1,6 +1,8 @@
+import { Card, CardContent } from "@/components/ui/card";
 import { useProductStore } from "@/store/productStore";
-import { Package } from "lucide-react";
+import { AlertTriangle, Badge, Package } from "lucide-react";
 import React from "react";
+import ProductActions from "./ProductActions";
 
 const ProductList = () => {
   const products = useProductStore((s) => s.products);
@@ -41,7 +43,77 @@ const ProductList = () => {
       </div>
     );
   }
-  return <div></div>;
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {filteredProducts.map((product) => {
+        const isLowStock = product.stock <= product.minStock;
+        const profitMargin =
+          ((product.price - product.cost) / product.price) * 100;
+
+        return (
+          <Card key={product.id}>
+            <CardContent className="p-3">
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-semibold text-lg">{product.name}</h3>
+                    {!product.active && <Badge>Inactive</Badge>}
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    SKU: {product.sku}
+                  </p>
+                </div>
+                <ProductActions product={product} />
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Category</span>
+                  <Badge>{product.category}</Badge>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Stock</span>
+                  <div className="flex items-center gap-2">
+                    {isLowStock && (
+                      <AlertTriangle className="w-4 h-4 text-orange-600" />
+                    )}
+                    <span
+                      className={`font-semibold ${
+                        isLowStock ? "text-orange-600" : ""
+                      }`}
+                    >
+                      {product.stock} units
+                    </span>
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-border">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-muted-foreground">Price</span>
+                    <span className="font-semibold text-lg">
+                      Rs. {product.price.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">Cost</span>
+                    <span>Rs. {product.cost.toLocaleString()}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm mt-1">
+                    <span className="text-muted-foreground">Profit Margin</span>
+                    <span className="text-green-600 font-medium">
+                      {profitMargin.toFixed(1)}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })}
+    </div>
+  );
 };
 
 export default ProductList;
