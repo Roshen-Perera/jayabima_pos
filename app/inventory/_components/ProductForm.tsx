@@ -158,6 +158,8 @@ const ProductForm = ({
 
   const category = watch("category");
   const active = watch("active");
+  const currentPrice = watch("price");
+  const currentCost = watch("cost");
 
   return (
     <div>
