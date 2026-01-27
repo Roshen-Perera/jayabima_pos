@@ -52,7 +52,6 @@ const ProductForm = ({
   const [sellingPrice, setSellingPrice] = useState(0);
   const [discountPercentage, setDiscountPercentage] = useState(40);
 
-
   const open = externalOpen !== undefined ? externalOpen : internalOpen;
   const setOpen = externalOnOpenChange || setInternalOpen;
 
