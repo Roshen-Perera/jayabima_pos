@@ -425,16 +425,6 @@ const ProductForm = ({
                         </p>
                       </div>
 
-                      <Button
-                        type="button"
-                        onClick={calculateCostFromDiscount}
-                        variant="secondary"
-                        className="w-full"
-                      >
-                        <Calculator className="w-4 h-4 mr-2" />
-                        Calculate Cost Price
-                      </Button>
-
                       {sellingPrice > 0 && (
                         <div className="bg-primary/10 p-4 rounded-lg space-y-2">
                           <div className="flex items-center justify-between">
