@@ -45,9 +45,9 @@ const ProductForm = ({
 }: ProductFormProps) => {
   const [internalOpen, setInternalOpen] = useState(false);
 
-  const [pricingMode, setPricingMode] = useState<
-    "manual" | "margin" | "supplier"
-  >("manual");
+  const [pricingMode, setPricingMode] = useState<"manual" | "calculator">(
+    "manual",
+  );
 
   const open = externalOpen !== undefined ? externalOpen : internalOpen;
   const setOpen = externalOnOpenChange || setInternalOpen;
