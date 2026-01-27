@@ -364,13 +364,12 @@ const ProductForm = ({
 
                   {/* Reverse Calculator Tab - Price & Discount → Cost */}
                   <TabsContent value="calculator" className="space-y-4">
-                    <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-lg mb-4">
+                    {/* <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-lg mb-4">
                       <p className="text-sm text-blue-900 dark:text-blue-100">
                         💡 Enter your selling price and discount percentage to
                         calculate cost automatically
                       </p>
-                    </div>
-
+                    </div> */}
                     <div className="grid gap-4">
                       <div className="grid gap-2">
                         <Label htmlFor="selling-price">
