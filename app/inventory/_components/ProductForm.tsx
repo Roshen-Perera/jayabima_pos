@@ -49,6 +49,8 @@ const ProductForm = ({
     "manual",
   );
 
+  const [sellingPrice, setSellingPrice] = useState(0);
+
   const open = externalOpen !== undefined ? externalOpen : internalOpen;
   const setOpen = externalOnOpenChange || setInternalOpen;
 
