@@ -94,7 +94,7 @@ const ProductList = () => {
 
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-muted-foreground">Price</span>
-                  <span className="font-semibold text-lg">
+                  <span className="font-semibold text-sm">
                     Rs. {product.price.toLocaleString()}
                   </span>
                 </div>
