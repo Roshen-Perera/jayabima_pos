@@ -140,7 +140,7 @@ const ProductForm = ({
       );
       return;
     }
-    
+
     const calculatedCost = sellingPrice * (1 - discountPercentage / 100);
     const roundedCost = Math.round(calculatedCost);
 
@@ -151,6 +151,17 @@ const ProductForm = ({
       "Cost calculated!",
       `Cost price: Rs. ${roundedCost.toLocaleString()}`,
     );
+  };
+
+  const calculateMargin = () => {
+    const price = getValues("price");
+    const cost = getValues("cost");
+
+    if (price > 0 && cost > 0) {
+      const margin = ((price - cost) / price) * 100;
+      return margin.toFixed(1);
+    }
+    return "0";
   };
 
   const onSubmit = async (data: ProductFormData) => {
