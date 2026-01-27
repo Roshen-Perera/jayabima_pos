@@ -210,7 +210,7 @@ const ProductForm = ({
           </DialogTrigger>
         )}
 
-        <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-137.5 max-h-[90vh] overflow-y-auto">
           <form onSubmit={handleSubmit(onSubmit)}>
             <DialogHeader>
               <DialogTitle>
