@@ -18,7 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Plus } from "lucide-react";
+import { Calculator, Plus } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -29,6 +29,13 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { productCategories } from "@/data/data";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 
 interface ProductFormProps {
   product?: Product;
@@ -281,38 +288,204 @@ const ProductForm = ({
               </div>
 
               {/* Price & Cost */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="price">Selling Price (Rs.)</Label>
-                  <Input
-                    id="price"
-                    type="number"
-                    placeholder="2500"
-                    {...register("price", { valueAsNumber: true })}
-                    className={errors.price ? "border-red-500" : ""}
-                  />
-                  {errors.price && (
-                    <p className="text-sm text-red-500">
-                      {errors.price.message}
-                    </p>
-                  )}
-                </div>
+              {/* Pricing Section with Tabs */}
+              <div className="grid gap-2">
+                <Label>Pricing Method</Label>
+                <Tabs
+                  value={pricingMode}
+                  onValueChange={(v) => setPricingMode(v as any)}
+                >
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="manual">Manual Entry</TabsTrigger>
+                    <TabsTrigger value="calculator">
+                      <Calculator className="w-4 h-4 mr-2" />
+                      Calculator
+                    </TabsTrigger>
+                  </TabsList>
 
-                <div className="grid gap-2">
-                  <Label htmlFor="cost">Cost Price (Rs.)</Label>
-                  <Input
-                    id="cost"
-                    type="number"
-                    placeholder="1500"
-                    {...register("cost", { valueAsNumber: true })}
-                    className={errors.cost ? "border-red-500" : ""}
-                  />
-                  {errors.cost && (
-                    <p className="text-sm text-red-500">
-                      {errors.cost.message}
-                    </p>
-                  )}
-                </div>
+                  {/* Manual Entry Tab */}
+                  <TabsContent value="manual" className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="cost-manual">Cost Price (Rs.)</Label>
+                        <Input
+                          id="cost-manual"
+                          type="number"
+                          placeholder="1500"
+                          {...register("cost", { valueAsNumber: true })}
+                          className={errors.cost ? "border-red-500" : ""}
+                        />
+                        {errors.cost && (
+                          <p className="text-sm text-red-500">
+                            {errors.cost.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="grid gap-2">
+                        <Label htmlFor="price-manual">
+                          Selling Price (Rs.)
+                        </Label>
+                        <Input
+                          id="price-manual"
+                          type="number"
+                          placeholder="2500"
+                          {...register("price", { valueAsNumber: true })}
+                          className={errors.price ? "border-red-500" : ""}
+                        />
+                        {errors.price && (
+                          <p className="text-sm text-red-500">
+                            {errors.price.message}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {currentPrice > 0 && currentCost > 0 && (
+                      <div className="bg-muted p-3 rounded-lg">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">
+                            Profit Margin:
+                          </span>
+                          <span className="font-semibold text-green-600">
+                            {calculateMargin()}%
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between text-sm mt-1">
+                          <span className="text-muted-foreground">
+                            Profit per unit:
+                          </span>
+                          <span className="font-semibold">
+                            Rs. {(currentPrice - currentCost).toLocaleString()}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </TabsContent>
+
+                  {/* Reverse Calculator Tab - Price & Discount → Cost */}
+                  <TabsContent value="calculator" className="space-y-4">
+                    <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-lg mb-4">
+                      <p className="text-sm text-blue-900 dark:text-blue-100">
+                        💡 Enter your selling price and discount percentage to
+                        calculate cost automatically
+                      </p>
+                    </div>
+
+                    <div className="grid gap-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="selling-price">
+                          Selling Price (Rs.)
+                        </Label>
+                        <Input
+                          id="selling-price"
+                          type="number"
+                          placeholder="2500"
+                          value={sellingPrice || ""}
+                          onChange={(e) =>
+                            setSellingPrice(Number(e.target.value))
+                          }
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          The price you want to sell this product for
+                        </p>
+                      </div>
+
+                      <div className="grid gap-2">
+                        <Label htmlFor="discount">
+                          Discount/Margin (%)
+                          <span className="text-muted-foreground ml-2 text-sm">
+                            Current: {discountPercentage}%
+                          </span>
+                        </Label>
+                        <div className="flex gap-2">
+                          <input
+                            id="discount"
+                            type="range"
+                            min="0"
+                            max="80"
+                            step="5"
+                            value={discountPercentage}
+                            onChange={(e) =>
+                              setDiscountPercentage(Number(e.target.value))
+                            }
+                            className="flex-1"
+                          />
+                          <Input
+                            type="number"
+                            min="0"
+                            max="80"
+                            value={discountPercentage}
+                            onChange={(e) =>
+                              setDiscountPercentage(Number(e.target.value))
+                            }
+                            className="w-20"
+                          />
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          Your profit margin percentage
+                        </p>
+                      </div>
+
+                      <Button
+                        type="button"
+                        onClick={calculateCostFromDiscount}
+                        variant="secondary"
+                        className="w-full"
+                      >
+                        <Calculator className="w-4 h-4 mr-2" />
+                        Calculate Cost Price
+                      </Button>
+
+                      {sellingPrice > 0 && (
+                        <div className="bg-primary/10 p-4 rounded-lg space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">
+                              Selling Price:
+                            </span>
+                            <span className="font-semibold text-lg">
+                              Rs. {sellingPrice.toLocaleString()}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">
+                              Discount/Margin:
+                            </span>
+                            <span className="font-semibold text-green-600">
+                              {discountPercentage}%
+                            </span>
+                          </div>
+                          <div className="border-t border-border pt-2 mt-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm font-medium">
+                                Cost Price:
+                              </span>
+                              <span className="text-lg font-bold text-primary">
+                                Rs.{" "}
+                                {Math.round(
+                                  sellingPrice * (1 - discountPercentage / 100),
+                                ).toLocaleString()}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="border-t border-border pt-2 mt-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs text-muted-foreground">
+                                Profit per unit:
+                              </span>
+                              <span className="text-sm font-semibold text-green-600">
+                                Rs.{" "}
+                                {Math.round(
+                                  sellingPrice * (discountPercentage / 100),
+                                ).toLocaleString()}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </TabsContent>
+                </Tabs>
               </div>
 
               {/* Stock & Min Stock */}
