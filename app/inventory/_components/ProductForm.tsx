@@ -29,13 +29,12 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { productCategories } from "@/data/data";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+type PricingMode = "manual" | "calculator";
+
+const isPricingMode = (value: string): value is PricingMode =>
+  value === "manual" || value === "calculator";
 
 interface ProductFormProps {
   product?: Product;
@@ -52,9 +51,7 @@ const ProductForm = ({
 }: ProductFormProps) => {
   const [internalOpen, setInternalOpen] = useState(false);
 
-  const [pricingMode, setPricingMode] = useState<"manual" | "calculator">(
-    "manual",
-  );
+  const [pricingMode, setPricingMode] = useState<PricingMode>("manual");
 
   const [sellingPrice, setSellingPrice] = useState(0);
   const [discountPercentage, setDiscountPercentage] = useState(40);
@@ -293,7 +290,9 @@ const ProductForm = ({
                 <Label>Pricing Method</Label>
                 <Tabs
                   value={pricingMode}
-                  onValueChange={(v) => setPricingMode(v as any)}
+                  onValueChange={(v) => {
+                    if (isPricingMode(v)) setPricingMode(v);
+                  }}
                 >
                   <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="manual">Manual Entry</TabsTrigger>
