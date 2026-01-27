@@ -132,6 +132,27 @@ const ProductForm = ({
     }
   }, [open, product, reset]);
 
+  const calculateCostFromDiscount = () => {
+    if (sellingPrice <= 0) {
+      alert.warning(
+        "Enter selling price first",
+        "Please enter a valid selling price",
+      );
+      return;
+    }
+    
+    const calculatedCost = sellingPrice * (1 - discountPercentage / 100);
+    const roundedCost = Math.round(calculatedCost);
+
+    setValue("price", sellingPrice);
+    setValue("cost", roundedCost);
+
+    alert.success(
+      "Cost calculated!",
+      `Cost price: Rs. ${roundedCost.toLocaleString()}`,
+    );
+  };
+
   const onSubmit = async (data: ProductFormData) => {
     try {
       if (mode === "edit" && product) {
