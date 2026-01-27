@@ -126,6 +126,9 @@ const ProductForm = ({
         description: "",
         active: true,
       });
+      setSellingPrice(0);
+      setDiscountPercentage(40);
+      setPricingMode("manual");
     }
   }, [open, product, reset]);
 
