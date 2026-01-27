@@ -65,7 +65,7 @@ const ProductForm = ({
     reset,
     setValue,
     watch,
-    getValues
+    getValues,
   } = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
     mode: "onChange",
@@ -107,6 +107,13 @@ const ProductForm = ({
         description: product.description || "",
         active: product.active,
       });
+      setSellingPrice(product.price);
+      // Calculate discount from existing cost and price
+      if (product.price > 0 && product.cost > 0) {
+        const calculatedDiscount =
+          ((product.price - product.cost) / product.price) * 100;
+        setDiscountPercentage(Math.round(calculatedDiscount));
+      }
     } else if (open && !product) {
       reset({
         name: "",
