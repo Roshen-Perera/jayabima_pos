@@ -414,6 +414,7 @@ const ProductForm = ({
                           <Input
                             type="number"
                             min="0"
+                            step="0.01"
                             max="80"
                             value={discountPercentage}
                             onChange={(e) =>
