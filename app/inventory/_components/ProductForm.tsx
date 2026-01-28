@@ -136,6 +136,29 @@ const ProductForm = ({
     }
   }, [open, product, reset]);
 
+  const calculateCostFromDiscount = () => {
+    if (sellingPrice <= 0) {
+      alert.warning(
+        "Enter selling price first",
+        "Please enter a valid selling price",
+      );
+      return;
+    }
+
+    // Formula: Cost = Selling Price × (1 - Discount%)
+    // Example: Rs. 2,500 × (1 - 0.40) = Rs. 1,500
+    const calculatedCost = sellingPrice * (1 - discountPercentage / 100);
+    const roundedCost = Math.round(calculatedCost);
+
+    setValue("price", sellingPrice);
+    setValue("cost", roundedCost);
+
+    alert.success(
+      "Cost calculated!",
+      `Cost price: Rs. ${roundedCost.toLocaleString()}`,
+    );
+  };
+
   const calculateMargin = () => {
     const price = getValues("price");
     const cost = getValues("cost");
