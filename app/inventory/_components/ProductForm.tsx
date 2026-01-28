@@ -453,7 +453,7 @@ const ProductForm = ({
                               Discount/Margin:
                             </span>
                             <span className="font-semibold text-green-600">
-                              {discountPercentage}%
+                              {discountPercentage.toFixed(2)}%
                             </span>
                           </div>
                           <div className="border-t border-border pt-2 mt-2">
