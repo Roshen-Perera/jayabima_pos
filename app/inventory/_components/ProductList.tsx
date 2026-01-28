@@ -105,7 +105,7 @@ const ProductList = () => {
                 <div className="flex items-center justify-between text-sm mt-1">
                   <span className="text-muted-foreground">Profit Margin</span>
                   <span className="text-green-600 font-medium">
-                    {profitMargin.toFixed(1)}%
+                    {profitMargin.toFixed(2)}%
                   </span>
                 </div>
               </div>
