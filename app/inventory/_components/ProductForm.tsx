@@ -116,7 +116,7 @@ const ProductForm = ({
       if (product.price > 0 && product.cost > 0) {
         const calculatedDiscount =
           ((product.price - product.cost) / product.price) * 100;
-        setDiscountPercentage(Math.round(calculatedDiscount * 10) / 10);
+        setDiscountPercentage(Math.round(calculatedDiscount * 100) / 100);
       }
     } else if (open && !product) {
       reset({
