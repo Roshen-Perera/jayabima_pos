@@ -395,7 +395,7 @@ const ProductForm = ({
                         <Label htmlFor="discount">
                           Discount/Margin (%)
                           <span className="text-muted-foreground ml-2 text-sm">
-                            Current: {discountPercentage}%
+                            Current: {discountPercentage.toFixed(2)}%
                           </span>
                         </Label>
                         <div className="flex gap-2">
