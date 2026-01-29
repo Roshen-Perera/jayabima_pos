@@ -15,15 +15,13 @@ import ProductForm from "./ProductForm";
 import {
   AlertDialogHeader,
   AlertDialogFooter,
-} from "@/components/ui/alert-dialog";
-import {
   AlertDialog,
-  AlertDialogContent,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogCancel,
   AlertDialogAction,
-} from "@radix-ui/react-alert-dialog";
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface ProductActionsProps {
   product: Product;
