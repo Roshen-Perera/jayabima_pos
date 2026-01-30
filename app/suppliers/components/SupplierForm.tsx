@@ -21,7 +21,9 @@ export const SupplierForm = ({
   onOpenChange: externalOnOpenChange,
 }: SupplierFormProps) => {
   const [internalOpen, setInternalOpen] = useState(false);
+
   const open = externalOpen !== undefined ? externalOpen : internalOpen;
+  const setOpen = externalOnOpenChange || setInternalOpen;
 
   const addSupplier = useSupplierStore((state) => state.addSupplier);
   const updateSupplier = useSupplierStore((state) => state.updateSupplier);
