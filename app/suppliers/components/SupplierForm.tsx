@@ -12,9 +12,10 @@ interface SupplierFormProps {
 export const SupplierForm = ({
   supplier,
   mode,
-  open,
+  open: externalOpen,
   onOpenChange,
 }: SupplierFormProps) => {
   const [internalOpen, setInternalOpen] = useState(open);
+  const open = externalOpen !== undefined ? externalOpen : internalOpen;
   return <div>SupplierForm</div>;
 };
