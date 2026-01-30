@@ -42,10 +42,7 @@ export const SupplierForm = ({
           email: supplier.email,
           phone: supplier.phone,
           address: supplier.address,
-          taxId: supplier.taxId || "",
-          paymentTerms: supplier.paymentTerms,
           active: supplier.active,
-          notes: supplier.notes || "",
         }
       : {
           name: "",
@@ -53,10 +50,7 @@ export const SupplierForm = ({
           email: "",
           phone: "",
           address: "",
-          taxId: "",
-          paymentTerms: "Net 30",
           active: true,
-          notes: "",
         },
   });
   return <div>SupplierForm</div>;
