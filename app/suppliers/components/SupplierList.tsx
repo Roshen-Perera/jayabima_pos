@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useSupplierStore } from "@/store/supplierStore";
 import { Building2, Mail, MapPin, MoreVertical, Phone } from "lucide-react";
 import React from "react";
+import SupplierActions from "./SupplierActions";
 
 const SupplierList = () => {
   const suppliers = useSupplierStore((s) => s.suppliers);
@@ -55,9 +56,7 @@ const SupplierList = () => {
                   {supplier.contactPerson}
                 </p>
               </div>
-              <Button variant="outline" aria-label="Open menu" size="icon-sm">
-                <MoreVertical className="w-4 h-4" />
-              </Button>
+              <SupplierActions supplier={supplier} />
             </div>
 
             <div className="space-y-2">
