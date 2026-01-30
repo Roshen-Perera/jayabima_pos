@@ -103,5 +103,7 @@ export const SupplierForm = ({
     }
   };
 
+  const active = watch("active");
+
   return <div>SupplierForm</div>;
 };
