@@ -4,4 +4,5 @@ interface SupplierFormProps {
     supplier?: Supplier;
     mode: "add" | "edit";
     open: boolean;
+    onOpenChange: (open: boolean) => void;
 }
