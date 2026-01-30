@@ -5,6 +5,7 @@ export interface Supplier {
     email: string;
     phone: string;
     address: string;
+    active?: boolean;
     createdAt: Date;
     updatedAt: Date;
 }
