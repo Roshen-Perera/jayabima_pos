@@ -1,6 +1,6 @@
 import { Supplier } from "../types/supplier.types";
 
-import React from "react";
+import { useState } from "react";
 
 interface SupplierFormProps {
   supplier?: Supplier;
@@ -9,6 +9,12 @@ interface SupplierFormProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export const SupplierForm = ({supplier, mode, open, onOpenChange}: SupplierFormProps) => {
+export const SupplierForm = ({
+  supplier,
+  mode,
+  open,
+  onOpenChange,
+}: SupplierFormProps) => {
+  const [internalOpen, setInternalOpen] = useState(open);
   return <div>SupplierForm</div>;
 };
