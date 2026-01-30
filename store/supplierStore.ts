@@ -4,8 +4,10 @@ import { dummySuppliers } from '@/data/data';
 
 interface SupplierStore {
     suppliers: Supplier[];
+    search: string;
 
     setSuppliers: (suppliers: Supplier[]) => void;
+    setSearch: (search: string) => void;
 }
 
 
@@ -13,4 +15,5 @@ export const useSupplierStore = create<SupplierStore>()((set) => ({
     suppliers: dummySuppliers,
 
     setSuppliers: (suppliers) => set({ suppliers }),
+
 }));
