@@ -1,5 +1,6 @@
 import { Customer } from "@/app/customers/types/customer.types";
 import { Product } from "@/app/inventory/_types/product.types";
+import { Supplier } from "@/app/suppliers/types/supplier.types";
 
 export const dummyCustomers: Customer[] = [
     { id: '1', name: 'Mahesh Silva', phone: '0771234567', email: 'mahesh@gmail.com', address: 'Avissawella', creditBalance: 45000, loyaltyPoints: 1250, totalPurchases: 285000 },
@@ -106,4 +107,47 @@ export const productCategories = [
     "Hand Tools",
     "Power Tools",
     "Other"
+];
+
+export const dummySuppliers: Supplier[] = [
+    {
+        id: "1",
+        name: "Tech Wholesale Ltd",
+        contactPerson: "John Smith",
+        email: "john@techwholesale.com",
+        phone: "0771234567",
+        address: "123 Business Park, Colombo 03",
+        createdAt: new Date("2024-01-10"),
+        updatedAt: new Date("2024-01-10"),
+    },
+    {
+        id: "2",
+        name: "Global Electronics Inc",
+        contactPerson: "Sarah Johnson",
+        email: "sarah@globalelec.com",
+        phone: "0777654321",
+        address: "456 Trade Center, Colombo 02",
+        createdAt: new Date("2024-01-15"),
+        updatedAt: new Date("2024-01-15"),
+    },
+    {
+        id: "3",
+        name: "Local Traders Co",
+        contactPerson: "Anil Perera",
+        email: "anil@localtraders.lk",
+        phone: "0112345678",
+        address: "789 Main Street, Nugegoda",
+        createdAt: new Date("2024-01-20"),
+        updatedAt: new Date("2024-01-20"),
+    },
+    {
+        id: "4",
+        name: "Import Masters",
+        contactPerson: "David Lee",
+        email: "david@importmasters.com",
+        phone: "0773456789",
+        address: "321 Harbor Road, Colombo 15",
+        createdAt: new Date("2023-12-01"),
+        updatedAt: new Date("2024-01-25"),
+    },
 ];
