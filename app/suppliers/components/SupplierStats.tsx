@@ -1,4 +1,4 @@
-import { Card, CardContent, } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useSupplierStore } from "@/store/supplierStore";
 import { Building2, CheckCircle, XCircle } from "lucide-react";
 import React from "react";
