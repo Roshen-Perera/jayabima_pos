@@ -13,7 +13,8 @@ interface SupplierStore {
 
 export const useSupplierStore = create<SupplierStore>()((set) => ({
     suppliers: dummySuppliers,
+    search: '',
 
     setSuppliers: (suppliers) => set({ suppliers }),
-
+    setSearch: (search) => set({ search }),
 }));
