@@ -13,9 +13,11 @@ export const SupplierForm = ({
   supplier,
   mode,
   open: externalOpen,
-  onOpenChange,
+  onOpenChange: externalOnOpenChange,
 }: SupplierFormProps) => {
   const [internalOpen, setInternalOpen] = useState(false);
   const open = externalOpen !== undefined ? externalOpen : internalOpen;
+
+  
   return <div>SupplierForm</div>;
 };
