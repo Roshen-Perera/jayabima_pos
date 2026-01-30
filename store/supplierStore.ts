@@ -7,6 +7,7 @@ interface SupplierStore {
     search: string;
 
     setSuppliers: (suppliers: Supplier[]) => void;
+    addSupplier: (supplier: Omit<Supplier, 'id' | 'createdAt' | 'updatedAt'>) => void;
     setSearch: (search: string) => void;
 }
 
@@ -16,5 +17,13 @@ export const useSupplierStore = create<SupplierStore>()((set) => ({
     search: '',
 
     setSuppliers: (suppliers) => set({ suppliers }),
+    addSupplier: (supplier) => set((state) => ({
+        suppliers: [...state.suppliers, {
+            ...supplier,
+            id: "SUP-" + Date.now().toString(),
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        }]
+    })),
     setSearch: (search) => set({ search }),
 }));
