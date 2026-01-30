@@ -20,5 +20,6 @@ export const SupplierForm = ({
   const open = externalOpen !== undefined ? externalOpen : internalOpen;
 
   const addSupplier = useSupplierStore((state) => state.addSupplier);
+  const updateSupplier = useSupplierStore((state) => state.updateSupplier);
   return <div>SupplierForm</div>;
 };
