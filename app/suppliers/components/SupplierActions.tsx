@@ -8,6 +8,7 @@ interface SupplierActionsProps {
 
 const SupplierActions = ({ supplier }: SupplierActionsProps) => {
   const deleteSupplier = useSupplierStore((state) => state.deleteSupplier);
+  const [showDeleteAlert, setShowDeleteAlert] = React.useState(false);
   return <div>SupplierActions</div>;
 };
 
