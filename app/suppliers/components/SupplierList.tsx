@@ -42,7 +42,7 @@ const SupplierList = () => {
     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
       {filteredSuppliers.map((supplier) => (
         <Card key={supplier.id}>
-          <CardContent className="p-5">
+          <CardContent className="px-5">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
