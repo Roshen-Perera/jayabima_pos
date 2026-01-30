@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useSupplierStore } from "@/store/supplierStore";
 import { Supplier } from "../types/supplier.types";
@@ -8,11 +8,20 @@ import { useForm } from "react-hook-form";
 import { SupplierFormData, supplierSchema } from "../lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { alert } from "@/lib/alert";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
-import { Switch } from "@radix-ui/react-switch";
+import { Switch } from "@/components/ui/switch";
 import { Plus } from "lucide-react";
 
 interface SupplierFormProps {
