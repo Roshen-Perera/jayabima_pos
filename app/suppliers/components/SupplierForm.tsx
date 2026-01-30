@@ -1,7 +1,7 @@
 import { useSupplierStore } from "@/store/supplierStore";
 import { Supplier } from "../types/supplier.types";
 
-import { useState } from "react";
+import { useEffect, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { SupplierFormData, supplierSchema } from "../lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -53,5 +53,28 @@ export const SupplierForm = ({
           active: true,
         },
   });
+
+  useEffect(() => {
+    if (open && supplier) {
+      reset({
+        name: supplier.name,
+        contactPerson: supplier.contactPerson,
+        email: supplier.email,
+        phone: supplier.phone,
+        address: supplier.address,
+        active: supplier.active,
+      });
+    } else if (open && !supplier) {
+      reset({
+        name: "",
+        contactPerson: "",
+        email: "",
+        phone: "",
+        address: "",
+        active: true,
+      });
+    }
+  }, [open, supplier, reset]);
+
   return <div>SupplierForm</div>;
 };
