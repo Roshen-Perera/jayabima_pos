@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useSupplierStore } from "@/store/supplierStore";
-import { Building2, FileText, Mail, MapPin, MoreVertical, Phone } from "lucide-react";
+import { Building2, Mail, MapPin, MoreVertical, Phone } from "lucide-react";
 import React from "react";
 
 const SupplierList = () => {
