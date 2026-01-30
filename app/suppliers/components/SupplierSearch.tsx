@@ -1,3 +1,5 @@
+"use client";
+
 import { useSupplierStore } from "@/store/supplierStore";
 import { Search } from "lucide-react";
 import React from "react";
