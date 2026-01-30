@@ -6,6 +6,7 @@ export const supplierSchema = z.object({
     email: z.string().email("Invalid email address"),
     phone: z.string().min(10, "Phone number must be at least 10 digits"),
     address: z.string().min(5, "Address is required"),
+    active: z.boolean()
 });
 
 export type SupplierFormData = z.infer<typeof supplierSchema>;
