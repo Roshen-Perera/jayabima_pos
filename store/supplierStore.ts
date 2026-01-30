@@ -8,6 +8,7 @@ interface SupplierStore {
 
     setSuppliers: (suppliers: Supplier[]) => void;
     addSupplier: (supplier: Omit<Supplier, 'id' | 'createdAt' | 'updatedAt'>) => void;
+    updateSupplier: (id: string, updatedData: Partial<Supplier>) => void;
     setSearch: (search: string) => void;
 }
 
@@ -25,5 +26,13 @@ export const useSupplierStore = create<SupplierStore>()((set) => ({
             updatedAt: new Date(),
         }]
     })),
+    updateSupplier: (id, updates) =>
+        set((state) => ({
+            suppliers: state.suppliers.map((supplier) =>
+                supplier.id === id
+                    ? { ...supplier, ...updates, updatedAt: new Date() }
+                    : supplier
+            ),
+        })),
     setSearch: (search) => set({ search }),
 }));
