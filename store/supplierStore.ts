@@ -9,6 +9,7 @@ interface SupplierStore {
     setSuppliers: (suppliers: Supplier[]) => void;
     addSupplier: (supplier: Omit<Supplier, 'id' | 'createdAt' | 'updatedAt'>) => void;
     updateSupplier: (id: string, updatedData: Partial<Supplier>) => void;
+    deleteSupplier: (id: string) => void;
     setSearch: (search: string) => void;
 }
 
@@ -33,6 +34,10 @@ export const useSupplierStore = create<SupplierStore>()((set) => ({
                     ? { ...supplier, ...updates, updatedAt: new Date() }
                     : supplier
             ),
+        })),
+    deleteSupplier: (id) =>
+        set((state) => ({
+            suppliers: state.suppliers.filter((s) => s.id !== id),
         })),
     setSearch: (search) => set({ search }),
 }));
