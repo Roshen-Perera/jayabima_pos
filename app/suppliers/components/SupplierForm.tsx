@@ -1,3 +1,5 @@
+"use client"
+
 import { useSupplierStore } from "@/store/supplierStore";
 import { Supplier } from "../types/supplier.types";
 
