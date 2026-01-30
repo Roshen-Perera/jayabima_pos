@@ -1,3 +1,5 @@
+"use client"
+
 import { Card, CardContent } from "@/components/ui/card";
 import { useSupplierStore } from "@/store/supplierStore";
 import { Building2, CheckCircle, XCircle } from "lucide-react";
@@ -42,7 +44,7 @@ const SupplierStats = () => {
         const Icon = stat.icon;
         return (
           <Card key={index}>
-            <CardContent className="p-6">
+            <CardContent className="p-6 max-h-28">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">{stat.title}</p>
