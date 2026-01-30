@@ -1,5 +1,7 @@
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { useSupplierStore } from "@/store/supplierStore";
-import { Building2 } from "lucide-react";
+import { Badge, Building2, FileText, Mail, MapPin, MoreVertical, Phone } from "lucide-react";
 import React from "react";
 
 const SupplierList = () => {
@@ -33,7 +35,47 @@ const SupplierList = () => {
     );
   }
 
-  return <div>SupplierList</div>;
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+      {filteredSuppliers.map((supplier) => (
+        <Card key={supplier.id}>
+          <CardContent className="p-5">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="font-semibold text-lg">{supplier.name}</h3>
+                  {!supplier.active && (
+                    <Badge variant="secondary">Inactive</Badge>
+                  )}
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {supplier.contactPerson}
+                </p>
+              </div>
+              <Button variant="outline" aria-label="Open menu" size="icon-sm">
+                <MoreVertical className="w-4 h-4" />
+              </Button>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Mail className="w-4 h-4" />
+                {supplier.email}
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Phone className="w-4 h-4" />
+                {supplier.phone}
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <MapPin className="w-4 h-4" />
+                {supplier.address}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
 };
 
 export default SupplierList;
