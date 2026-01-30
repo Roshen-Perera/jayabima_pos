@@ -1,3 +1,4 @@
+import { useSupplierStore } from "@/store/supplierStore";
 import { Supplier } from "../types/supplier.types";
 
 import { useState } from "react";
@@ -18,6 +19,6 @@ export const SupplierForm = ({
   const [internalOpen, setInternalOpen] = useState(false);
   const open = externalOpen !== undefined ? externalOpen : internalOpen;
 
-  
+  const addSupplier = useSupplierStore((state) => state.addSupplier);
   return <div>SupplierForm</div>;
 };
