@@ -1,9 +1,9 @@
-import React from 'react'
+import { useSupplierStore } from "@/store/supplierStore";
+import React from "react";
 
 const SupplierStats = () => {
-  return (
-    <div>SupplierStats</div>
-  )
-}
+  const suppliers = useSupplierStore((s) => s.suppliers);
+  return <div>SupplierStats</div>;
+};
 
-export default SupplierStats
+export default SupplierStats;
