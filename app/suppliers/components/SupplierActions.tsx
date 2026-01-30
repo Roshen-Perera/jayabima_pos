@@ -1,9 +1,11 @@
-import React from 'react'
+import React from "react";
+import { Supplier } from "../types/supplier.types";
 
 const SupplierActions = () => {
-  return (
-    <div>SupplierActions</div>
-  )
-}
+  interface SupplierActionsProps {
+    supplier: Supplier;
+  }
+  return <div>SupplierActions</div>;
+};
 
-export default SupplierActions
+export default SupplierActions;
