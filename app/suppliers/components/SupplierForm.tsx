@@ -9,6 +9,6 @@ interface SupplierFormProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export const SupplierForm = () => {
+export const SupplierForm = ({supplier, mode, open, onOpenChange}: SupplierFormProps) => {
   return <div>SupplierForm</div>;
 };
