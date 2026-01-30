@@ -5,6 +5,7 @@ import { useEffect, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { SupplierFormData, supplierSchema } from "../lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { alert } from "@/lib/alert";
 
 interface SupplierFormProps {
   supplier?: Supplier;
@@ -75,6 +76,30 @@ export const SupplierForm = ({
       });
     }
   }, [open, supplier, reset]);
+
+  const onSubmit = async (data: SupplierFormData) => {
+    try {
+      if (mode === "edit" && supplier) {
+        updateSupplier(supplier.id, data);
+        alert.success(
+          "Supplier updated!",
+          `${data.name} has been updated successfully.`,
+        );
+      } else {
+        addSupplier(data);
+        alert.success(
+          "Supplier added!",
+          `${data.name} has been added successfully.`,
+        );
+      }
+
+      reset();
+      setOpen(false);
+    } catch (error) {
+      console.error("Error:", error);
+      alert.error("Failed to save", "Something went wrong. Please try again.");
+    }
+  };
 
   return <div>SupplierForm</div>;
 };
