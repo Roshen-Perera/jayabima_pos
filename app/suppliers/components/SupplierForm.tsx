@@ -16,8 +16,8 @@ import { Plus } from "lucide-react";
 interface SupplierFormProps {
   supplier?: Supplier;
   mode: "add" | "edit";
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export const SupplierForm = ({
