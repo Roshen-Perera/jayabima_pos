@@ -198,6 +198,7 @@ const ProductForm = ({
   };
 
   // eslint-disable-next-line react-hooks/incompatible-library
+  const supplierId = watch("supplierId");
   const category = watch("category");
   const active = watch("active");
   const currentPrice = watch("price");
