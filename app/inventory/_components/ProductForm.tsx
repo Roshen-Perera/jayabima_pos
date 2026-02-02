@@ -315,34 +315,6 @@ const ProductForm = ({
                   )}
                 </div>
               </div>
-              {/* 
-              Supplier Field
-              <div className="grid gap-2">
-                <Label htmlFor="supplier">Supplier (Optional)</Label>
-                <Select
-                  value={supplierId || "none"}
-                  onValueChange={(value) =>
-                    setValue("supplierId", value === "none" ? undefined : value)
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select supplier" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">No Supplier</SelectItem>
-                    {suppliers
-                      .filter((s) => s.active)
-                      .map((supplier) => (
-                        <SelectItem key={supplier.id} value={supplier.id}>
-                          {supplier.name}
-                        </SelectItem>
-                      ))}
-                  </SelectContent>
-                </Select>
-                <p className="text-xs text-muted-foreground">
-                  Select the supplier for this product
-                </p>
-              </div> */}
 
               {/* Price & Cost */}
               {/* Pricing Section with Tabs */}
