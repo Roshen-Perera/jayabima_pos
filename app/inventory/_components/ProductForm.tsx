@@ -249,7 +249,7 @@ const ProductForm = ({
               </div>
 
               {/* Category & SKU */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <div className="grid gap-2">
                   <Label htmlFor="category">Category</Label>
                   <Select
@@ -275,6 +275,32 @@ const ProductForm = ({
                     </p>
                   )}
                 </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="supplier">Supplier (Optional)</Label>
+                  <Select
+                    value={supplierId || "none"}
+                    onValueChange={(value) =>
+                      setValue(
+                        "supplierId",
+                        value === "none" ? undefined : value,
+                      )
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select supplier" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">No Supplier</SelectItem>
+                      {suppliers
+                        .filter((s) => s.active)
+                        .map((supplier) => (
+                          <SelectItem key={supplier.id} value={supplier.id}>
+                            {supplier.name}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
                 <div className="grid gap-2">
                   <Label htmlFor="sku">SKU</Label>
@@ -289,8 +315,8 @@ const ProductForm = ({
                   )}
                 </div>
               </div>
-
-              {/* Supplier Field */}
+              {/* 
+              Supplier Field
               <div className="grid gap-2">
                 <Label htmlFor="supplier">Supplier (Optional)</Label>
                 <Select
@@ -316,7 +342,7 @@ const ProductForm = ({
                 <p className="text-xs text-muted-foreground">
                   Select the supplier for this product
                 </p>
-              </div>
+              </div> */}
 
               {/* Price & Cost */}
               {/* Pricing Section with Tabs */}
