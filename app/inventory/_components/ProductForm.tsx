@@ -249,7 +249,7 @@ const ProductForm = ({
               </div>
 
               {/* Category & SKU */}
-              <div className="grid grid-cols-3 gap-4">
+              <div className="flex justify-between">
                 <div className="grid gap-2">
                   <Label htmlFor="category">Category</Label>
                   <Select
@@ -275,7 +275,7 @@ const ProductForm = ({
                     </p>
                   )}
                 </div>
-                <div className="grid gap-2">
+                <div className="grid gap-2 ">
                   <Label htmlFor="supplier">Supplier (Optional)</Label>
                   <Select
                     value={supplierId || "none"}
