@@ -30,6 +30,7 @@ import { Switch } from "@/components/ui/switch";
 import { productCategories } from "@/data/data";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useSupplierStore } from "@/store/supplierStore";
 
 type PricingMode = "manual" | "calculator";
 
@@ -61,6 +62,8 @@ const ProductForm = ({
 
   const addProduct = useProductStore((state) => state.addProduct);
   const updateProduct = useProductStore((state) => state.updateProduct);
+
+  const suppliers = useSupplierStore((s) => s.suppliers);
 
   const {
     register,
