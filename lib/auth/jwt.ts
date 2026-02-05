@@ -33,3 +33,9 @@ export function verifyToken(token: string): JWTPayload | null {
         return null;
     }
 }
+
+export function generateResetToken(userId: string): string {
+    return jwt.sign({ userId }, secret, {
+        expiresIn: '1h',
+    });
+}
