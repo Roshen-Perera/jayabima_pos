@@ -1,5 +1,6 @@
 import { generateToken } from '@/lib/auth/jwt';
 import { verifyPassword } from '@/lib/auth/password';
+import { setAuthCookie } from '@/lib/auth/session';
 import prisma from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -58,6 +59,7 @@ export async function POST(request: NextRequest) {
             role: user.role,
             username: user.username,
         });
+        await setAuthCookie(token);
     } catch (error) {
 
     }
