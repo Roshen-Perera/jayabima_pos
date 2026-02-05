@@ -39,3 +39,13 @@ export function generateResetToken(userId: string): string {
         expiresIn: '1h',
     });
 }
+
+export function verifyResetToken(token: string): string | null {
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+        return decoded.userId;
+    } catch (error) {
+        console.error('Reset token verification failed:', error);
+        return null;
+    }
+}
