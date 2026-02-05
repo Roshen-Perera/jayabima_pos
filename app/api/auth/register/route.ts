@@ -1,4 +1,4 @@
-import { validatePassword } from '@/lib/auth/password';
+import { hashPassword, validatePassword } from '@/lib/auth/password';
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
