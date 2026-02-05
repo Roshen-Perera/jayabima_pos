@@ -8,7 +8,7 @@ export async function setAuthCookie(token: string): Promise<void> {
     (await cookies()).set(AUTH_COOKIE_NAME, token, {
         httpOnly: true, // Prevent client-side JavaScript from accessing the cookie
         secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-        sameSite: 'lax', // Adjust as needed: 'lax', 'strict', or 'none'
+        sameSite: 'lax', // Adjust as needed: 'lax', 'strict', or 'none'. lax means the cookie is sent on same-site requests and top-level navigation GET requests.
         maxAge: COOKIE_MAX_AGE, // 7 days in seconds
         path: '/', // Cookie is valid for the entire site
     });
