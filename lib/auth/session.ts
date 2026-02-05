@@ -13,3 +13,7 @@ export async function setAuthCookie(token: string): Promise<void> {
         path: '/', // Cookie is valid for the entire site
     });
 }
+
+export async function deleteAuthCookie(): Promise<void> {
+    (await cookies()).delete(AUTH_COOKIE_NAME);
+}
