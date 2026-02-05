@@ -1,3 +1,4 @@
+import { generateToken } from '@/lib/auth/jwt';
 import { hashPassword, validatePassword } from '@/lib/auth/password';
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
@@ -78,6 +79,12 @@ export async function POST(request: NextRequest) {
             },
         });
 
+        const token = generateToken({
+            userId: user.id,
+            email: user.email,
+            role: user.role,
+            username: user.username,
+        });
     } catch (error) {
 
     }
