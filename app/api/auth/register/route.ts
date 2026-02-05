@@ -1,4 +1,5 @@
 import { validatePassword } from '@/lib/auth/password';
+import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -16,7 +17,7 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         const validatedData = registerSchema.parse(body);
         const passwordValidation = validatePassword(validatedData.password);
-        
+
         if (!passwordValidation.valid) {
             return NextResponse.json(
                 {
@@ -27,6 +28,15 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             );
         }
+
+        const existingUser = await prisma.user.findFirst({
+            where: {
+                OR: [
+                    { email: validatedData.email },
+                    { username: validatedData.username },
+                ],
+            },
+        });
     } catch (error) {
 
     }
