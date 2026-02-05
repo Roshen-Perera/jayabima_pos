@@ -60,6 +60,7 @@ export async function POST(request: NextRequest) {
             username: user.username,
         });
         await setAuthCookie(token);
+        const { password: _, ...userWithoutPassword } = user;
     } catch (error) {
 
     }
