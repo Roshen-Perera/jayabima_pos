@@ -38,6 +38,15 @@ export async function POST(request: NextRequest) {
             validatedData.password,
             user.password
         );
+        if (!isPasswordValid) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: 'Invalid email or password',
+                },
+                { status: 401 }
+            );
+        }
     } catch (error) {
 
     }
