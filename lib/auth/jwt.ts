@@ -1,6 +1,13 @@
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET; 
+const secret = (() => {
+    const value = process.env.JWT_SECRET;
+    if (!value) {
+        throw new Error("JWT_SECRET is missing");
+    }
+    return value;
+})();
+
 
 const JWT_EXPIRES_IN = '7d'; // Token expires in 7 days
 
@@ -12,10 +19,7 @@ export interface JWTPayload {
 }
 
 export function generateToken(payload: JWTPayload): string {
-    if (!JWT_SECRET) {
-        throw new Error('JWT_SECRET is not defined in environment variables');
-    }
-    return jwt.sign(payload, JWT_SECRET, {
+    return jwt.sign(payload, secret, {
         expiresIn: JWT_EXPIRES_IN,
     });
 }
