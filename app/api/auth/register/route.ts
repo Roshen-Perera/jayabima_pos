@@ -99,6 +99,16 @@ export async function POST(request: NextRequest) {
             { status: 201 }
         );
     } catch (error) {
+        if (error instanceof z.ZodError) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: 'Validation error',
+                    errors: error.issues.map((e) => e.message),
+                },
+                { status: 400 }
+            );
+        }
 
     }
 }
