@@ -88,6 +88,16 @@ export async function POST(request: NextRequest) {
         });
 
         await setAuthCookie(token);
+
+        return NextResponse.json(
+            {
+                success: true,
+                message: 'Registration successful',
+                user,
+                token,
+            },
+            { status: 201 }
+        );
     } catch (error) {
 
     }
