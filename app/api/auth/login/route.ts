@@ -1,3 +1,4 @@
+import { generateToken } from '@/lib/auth/jwt';
 import { verifyPassword } from '@/lib/auth/password';
 import prisma from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
@@ -50,6 +51,12 @@ export async function POST(request: NextRequest) {
         await prisma.user.update({
             where: { id: user.id },
             data: { lastLogin: new Date() },
+        });
+        const token = generateToken({
+            userId: user.id,
+            email: user.email,
+            role: user.role,
+            username: user.username,
         });
     } catch (error) {
 
