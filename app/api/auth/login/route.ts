@@ -1,3 +1,4 @@
+import prisma from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -11,6 +12,9 @@ export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
         const validatedData = loginSchema.parse(body);
+        const user = await prisma.user.findUnique({
+            where: { email: validatedData.email },
+        });
     } catch (error) {
 
     }
