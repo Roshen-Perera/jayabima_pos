@@ -50,6 +50,9 @@ export async function POST(request: NextRequest) {
                 { status: 409 }
             );
         }
+
+        const hashedPassword = await hashPassword(validatedData.password);
+
     } catch (error) {
 
     }
