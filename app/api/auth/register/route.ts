@@ -110,5 +110,6 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        console.error('Registration error:', error);
     }
 }
