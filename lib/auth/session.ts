@@ -14,6 +14,11 @@ export async function setAuthCookie(token: string): Promise<void> {
     });
 }
 
+export async function getAuthCookie(): Promise<string | undefined> {
+    return (await cookies()).get(AUTH_COOKIE_NAME)?.value;
+}
+
 export async function deleteAuthCookie(): Promise<void> {
     (await cookies()).delete(AUTH_COOKIE_NAME);
 }
+
