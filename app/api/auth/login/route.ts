@@ -6,3 +6,11 @@ const loginSchema = z.object({
     password: z.string().min(1, 'Password is required'),
     rememberMe: z.boolean().optional(),
 });
+
+export async function POST(request: NextRequest) {
+    try {
+
+    } catch (error) {
+
+    }
+}
