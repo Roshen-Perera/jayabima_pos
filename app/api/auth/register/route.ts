@@ -9,3 +9,11 @@ const registerSchema = z.object({
     phone: z.string().optional(),
     role: z.enum(['ADMIN', 'MANAGER', 'CASHIER']).optional(),
 });
+
+export async function POST(request: NextRequest) {
+    try {
+
+    } catch (error) {
+
+    }
+}
