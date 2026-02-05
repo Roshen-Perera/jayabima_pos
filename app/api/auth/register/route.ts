@@ -1,3 +1,4 @@
+import { validatePassword } from '@/lib/auth/password';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
@@ -13,7 +14,8 @@ const registerSchema = z.object({
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const parsedData = registerSchema.parse(body);
+        const validatedData = registerSchema.parse(body);
+
     } catch (error) {
 
     }
