@@ -18,6 +18,7 @@ export async function POST(request: NextRequest) {
         const user = await prisma.user.findUnique({
             where: { email: validatedData.email },
         });
+
         if (!user) {
             return NextResponse.json(
                 {
@@ -27,6 +28,7 @@ export async function POST(request: NextRequest) {
                 { status: 401 }
             );
         }
+
         if (!user.isActive || user.status !== 'ACTIVE') {
             return NextResponse.json(
                 {
@@ -36,10 +38,12 @@ export async function POST(request: NextRequest) {
                 { status: 403 }
             );
         }
+
         const isPasswordValid = await verifyPassword(
             validatedData.password,
             user.password
         );
+
         if (!isPasswordValid) {
             return NextResponse.json(
                 {
@@ -49,18 +53,23 @@ export async function POST(request: NextRequest) {
                 { status: 401 }
             );
         }
+
         await prisma.user.update({
             where: { id: user.id },
             data: { lastLogin: new Date() },
         });
+
         const token = generateToken({
             userId: user.id,
             email: user.email,
             role: user.role,
             username: user.username,
         });
+
         await setAuthCookie(token);
+        
         const { password: _, ...userWithoutPassword } = user;
+
         return NextResponse.json(
             {
                 success: true,
@@ -70,6 +79,7 @@ export async function POST(request: NextRequest) {
             },
             { status: 200 }
         );
+
     } catch (error) {
         if (error instanceof z.ZodError) {
             return NextResponse.json(
@@ -81,7 +91,9 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             );
         }
+
         console.error('Login error:', error);
+        
         return NextResponse.json(
             {
                 success: false,
