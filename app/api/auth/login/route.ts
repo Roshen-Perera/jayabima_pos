@@ -47,6 +47,10 @@ export async function POST(request: NextRequest) {
                 { status: 401 }
             );
         }
+        await prisma.user.update({
+            where: { id: user.id },
+            data: { lastLogin: new Date() },
+        });
     } catch (error) {
 
     }
