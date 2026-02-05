@@ -81,5 +81,6 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             );
         }
+        console.error('Login error:', error);
     }
 }
