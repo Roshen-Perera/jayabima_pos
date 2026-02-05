@@ -61,6 +61,15 @@ export async function POST(request: NextRequest) {
         });
         await setAuthCookie(token);
         const { password: _, ...userWithoutPassword } = user;
+        return NextResponse.json(
+            {
+                success: true,
+                message: 'Login successful',
+                user: userWithoutPassword,
+                token,
+            },
+            { status: 200 }
+        );
     } catch (error) {
 
     }
