@@ -23,3 +23,13 @@ export function generateToken(payload: JWTPayload): string {
         expiresIn: JWT_EXPIRES_IN,
     });
 }
+
+export function verifyToken(token: string): JWTPayload | null {
+    try {
+        const decoded = jwt.verify(token, secret) as JWTPayload;
+        return decoded;
+    } catch (error) {
+        console.error('JWT verification failed:', error);
+        return null;
+    }
+}
