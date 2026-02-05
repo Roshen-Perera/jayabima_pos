@@ -1,3 +1,4 @@
+import { verifyPassword } from '@/lib/auth/password';
 import prisma from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -33,6 +34,10 @@ export async function POST(request: NextRequest) {
                 { status: 403 }
             );
         }
+        const isPasswordValid = await verifyPassword(
+            validatedData.password,
+            user.password
+        );
     } catch (error) {
 
     }
