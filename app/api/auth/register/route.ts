@@ -37,6 +37,19 @@ export async function POST(request: NextRequest) {
                 ],
             },
         });
+
+        if (existingUser) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message:
+                        existingUser.email === validatedData.email
+                            ? 'Email already registered'
+                            : 'Username already taken',
+                },
+                { status: 409 }
+            );
+        }
     } catch (error) {
 
     }
