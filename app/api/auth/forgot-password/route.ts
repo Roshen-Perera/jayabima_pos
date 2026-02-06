@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
             where: { email: validatedData.email },
         });
         if (user) {
-            
+            const resetToken = generateResetToken(user.id);
         }
     } catch (error) {
 
