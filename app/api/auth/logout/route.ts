@@ -12,6 +12,13 @@ export async function POST() {
             { status: 200 }
         );
     } catch (error) {
-
+        console.error('Logout error:', error);
+        return NextResponse.json(
+            {
+                success: false,
+                message: 'Internal server error',
+            },
+            { status: 500 }
+        );
     }
 }
