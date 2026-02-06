@@ -3,7 +3,7 @@ import { deleteAuthCookie } from '@/lib/auth/session';
 
 export async function POST() {
     try {
-
+        await deleteAuthCookie();
     } catch (error) {
 
     }
