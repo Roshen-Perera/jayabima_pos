@@ -6,3 +6,7 @@ import { generateResetToken } from '@/lib/auth/jwt';
 const forgotPasswordSchema = z.object({
     email: z.string().email('Invalid email address'),
 });
+
+export async function POST(request: NextRequest) {
+    
+}
