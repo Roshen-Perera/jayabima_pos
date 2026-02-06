@@ -17,6 +17,7 @@ export async function POST(request: NextRequest) {
         });
         if (user) {
             const resetToken = generateResetToken(user.id);
+            const resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000);
         }
     } catch (error) {
 
