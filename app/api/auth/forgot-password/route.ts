@@ -18,6 +18,13 @@ export async function POST(request: NextRequest) {
         if (user) {
             const resetToken = generateResetToken(user.id);
             const resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour expiry
+            await prisma.user.update({
+                where: { id: user.id },
+                data: {
+                    resetToken,
+                    resetTokenExpiry,
+                },
+            });
         }
     } catch (error) {
 
