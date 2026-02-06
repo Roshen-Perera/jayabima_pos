@@ -12,6 +12,9 @@ export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
         const validatedData = forgotPasswordSchema.parse(body);
+        const user = await prisma.user.findUnique({
+            where: { email: validatedData.email },
+        });
     } catch (error) {
 
     }
