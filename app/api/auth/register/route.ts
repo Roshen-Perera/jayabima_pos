@@ -1,3 +1,5 @@
+// register/route.ts
+
 import { generateToken } from '@/lib/auth/jwt';
 import { hashPassword, validatePassword } from '@/lib/auth/password';
 import { setAuthCookie } from '@/lib/auth/session';
