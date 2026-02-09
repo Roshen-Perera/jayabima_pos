@@ -53,6 +53,14 @@ export async function POST(request: NextRequest) {
             );
         }
         const hashedPassword = await hashPassword(validatedData.password);
+        await prisma.user.update({
+            where: { id: user.id },
+            data: {
+                password: hashedPassword,
+                resetToken: null,
+                resetTokenExpiry: null,
+            },
+        });
 
     } catch (error) {
 
