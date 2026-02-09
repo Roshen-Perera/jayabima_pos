@@ -1,11 +1,12 @@
-export const runtime = 'nodejs'
-
 import { generateToken } from '@/lib/auth/jwt';
 import { hashPassword, validatePassword } from '@/lib/auth/password';
 import { setAuthCookie } from '@/lib/auth/session';
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
 
 const registerSchema = z.object({
     username: z.string().min(3, 'Username must be at least 3 characters'),
