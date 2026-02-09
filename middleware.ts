@@ -14,4 +14,6 @@ export async function middleware(request: NextRequest) {
     // Get token from cookie
     const token = request.cookies.get('auth-token')?.value;
 
+    // Verify token
+    const user = token ? verifyToken(token) : null;
 }
