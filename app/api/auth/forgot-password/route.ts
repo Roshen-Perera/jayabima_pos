@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { generateResetToken } from '@/lib/auth/jwt';
 import { ca } from 'zod/v4/locales';
 
