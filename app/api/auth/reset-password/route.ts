@@ -43,6 +43,16 @@ export async function POST(request: NextRequest) {
                 },
             },
         });
+        if (!user) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: 'Invalid or expired reset token',
+                },
+                { status: 400 }
+            );
+        }
+
     } catch (error) {
 
     }
