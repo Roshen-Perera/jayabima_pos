@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { generateResetToken } from '@/lib/auth/jwt';
+import { sendPasswordResetEmail } from '@/lib/email';
 
 const forgotPasswordSchema = z.object({
     email: z.string().email('Invalid email address'),
@@ -23,6 +24,11 @@ export async function POST(request: NextRequest) {
                     resetToken,
                     resetTokenExpiry,
                 },
+            });
+            await sendPasswordResetEmail({
+                email: user.email,
+                name: user.name,
+                resetToken,
             });
         }
     } catch (error) {
