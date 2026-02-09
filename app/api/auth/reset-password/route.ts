@@ -34,6 +34,15 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             );
         }
+        const user = await prisma.user.findFirst({
+            where: {
+                id: userId,
+                resetToken: validatedData.token,
+                resetTokenExpiry: {
+                    gte: new Date(),
+                },
+            },
+        });
     } catch (error) {
 
     }
