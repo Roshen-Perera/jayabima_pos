@@ -1,7 +1,7 @@
 import { generateToken } from '@/lib/auth/jwt';
 import { verifyPassword } from '@/lib/auth/password';
 import { setAuthCookie } from '@/lib/auth/session';
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
