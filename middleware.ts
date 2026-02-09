@@ -9,5 +9,6 @@ const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-passwor
 const authRoutes = ['/login', '/register'];
 
 export async function middleware(request: NextRequest) {
+    const { pathname } = request.nextUrl;
 
 }
