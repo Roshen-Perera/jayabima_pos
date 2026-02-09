@@ -22,4 +22,9 @@ export async function middleware(request: NextRequest) {
 
     // Check if the route is an auth route
     const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
+
+    // If user is logged in and trying to access auth routes, redirect to dashboard
+    if (user && isAuthRoute) {
+        return NextResponse.redirect(new URL('/dashboard', request.url));
+    }
 }
