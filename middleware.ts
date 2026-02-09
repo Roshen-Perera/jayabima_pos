@@ -16,4 +16,7 @@ export async function middleware(request: NextRequest) {
 
     // Verify token
     const user = token ? verifyToken(token) : null;
+
+    // Check if the route is public
+    const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route));
 }
