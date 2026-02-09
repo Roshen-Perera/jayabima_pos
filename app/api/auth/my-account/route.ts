@@ -31,6 +31,15 @@ export async function GET() {
                 lastLogin: true,
             },
         });
+        if (!user) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: 'User not found',
+                },
+                { status: 404 }
+            );
+        }
     } catch (error) {
 
     }
