@@ -40,6 +40,15 @@ export async function GET() {
                 { status: 404 }
             );
         }
+        if (!user.isActive || user.status !== 'ACTIVE') {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: 'Account is inactive or suspended',
+                },
+                { status: 403 }
+            );
+        }
     } catch (error) {
 
     }
