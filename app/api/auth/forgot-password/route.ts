@@ -30,6 +30,13 @@ export async function POST(request: NextRequest) {
                 name: user.name,
                 resetToken,
             });
+            if (process.env.NODE_ENV === 'development') {
+                console.log('Password reset token:', resetToken);
+                console.log(
+                    'Reset link:',
+                    `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}`
+                );
+            }
         }
     } catch (error) {
 
