@@ -13,6 +13,8 @@ export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
         const validatedData = resetPasswordSchema.parse(body);
+        const passwordValidation = validatePassword(validatedData.password);
+
     } catch (error) {
 
     }
