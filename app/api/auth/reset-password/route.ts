@@ -80,6 +80,12 @@ export async function POST(request: NextRequest) {
             );
         }
         console.error('Reset password error:', error);
-
+        return NextResponse.json(
+            {
+                success: false,
+                message: 'Internal server error',
+            },
+            { status: 500 }
+        );
     }
 }
