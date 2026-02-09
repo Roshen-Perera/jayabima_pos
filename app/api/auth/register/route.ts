@@ -91,7 +91,6 @@ export async function POST(request: NextRequest) {
         });
 
         await setAuthCookie(token);
-        
 
         return NextResponse.json(
             {
