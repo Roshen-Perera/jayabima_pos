@@ -61,7 +61,13 @@ export async function POST(request: NextRequest) {
                 resetTokenExpiry: null,
             },
         });
-
+        return NextResponse.json(
+            {
+                success: true,
+                message: 'Password reset successful',
+            },
+            { status: 200 }
+        );
     } catch (error) {
 
     }
