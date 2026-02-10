@@ -42,8 +42,14 @@ export const useAuthStore = create<AuthState>()(
                         message: 'An error occurred during login',
                     };
                 }
-            }
-        })
+            },
+            register: async (registerData: RegisterData): Promise<AuthResponse> => {
+                try {
+
+                } catch (error) {
+                    
+                }
+            })
 
     )
 
