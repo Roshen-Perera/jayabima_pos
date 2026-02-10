@@ -34,6 +34,8 @@ export const useAuthStore = create<AuthState>()(
                             isLoading: false,
                         });
                     }
+                    return data;
+
                 } catch (error) {
 
                 }
