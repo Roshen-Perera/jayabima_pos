@@ -63,6 +63,16 @@ export async function POST(request: NextRequest) {
 
         // Hash new password
         const hashedPassword = await hashPassword(validatedData.password);
+
+        // Update password and clear reset token
+        await prisma.user.update({
+            where: { id: user.id },
+            data: {
+                password: hashedPassword,
+                resetToken: null,
+                resetTokenExpiry: null,
+            },
+        });
     } catch (error) {
 
     }
