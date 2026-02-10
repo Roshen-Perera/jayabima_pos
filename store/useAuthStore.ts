@@ -87,6 +87,7 @@ export const useAuthStore = create<AuthState>()(
                 try {
                     set({ isLoading: true });
                     const response = await fetch('/api/auth/me');
+                    const data = await response.json();
                 } catch (error) {
 
                 }
