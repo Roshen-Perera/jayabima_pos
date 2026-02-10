@@ -107,6 +107,7 @@ export async function sendPasswordResetEmail({
         });
         console.log('✅ Email sent successfully:', info.messageId);
         console.log('📧 Preview URL:', nodemailer.getTestMessageUrl(info));
+        return { success: true, messageId: info.messageId };
     } catch (error) {
 
     }
