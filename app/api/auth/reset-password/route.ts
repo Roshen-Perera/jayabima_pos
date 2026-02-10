@@ -27,6 +27,8 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             );
         }
+
+        // Verify reset token and get user ID
         const userId = verifyResetToken(validatedData.token);
         if (!userId) {
             return NextResponse.json(
@@ -37,6 +39,17 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             );
         }
+
+        // Find user with matching reset token
+        const user = await prisma.user.findFirst({
+            where: {
+                id: userId,
+                resetToken: validatedData.token,
+                resetTokenExpiry: {
+                    gte: new Date(),
+                },
+            },
+        });
     } catch (error) {
 
     }
