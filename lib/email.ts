@@ -21,3 +21,9 @@ transporter.verify((error) => {
         console.log('✅ Email server is ready to send messages');
     }
 });
+
+interface SendPasswordResetEmailParams {
+    email: string;
+    name: string;
+    resetToken: string;
+}
