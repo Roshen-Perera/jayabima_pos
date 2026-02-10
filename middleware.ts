@@ -25,6 +25,6 @@ export function middleware(request: NextRequest) {
 
     // If user is logged in and trying to access auth routes, redirect to dashboard
     if (user && isAuthRoute) {
-        
+        return NextResponse.redirect(new URL('/dashboard', request.url));
     }
 }
