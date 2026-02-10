@@ -68,7 +68,10 @@ export const useAuthStore = create<AuthState>()(
                         message: 'An error occurred during registration',
                     };
                 }
-            }),
+            },
+            logout: async () => {
+                
+            }
 
     )
 
