@@ -110,5 +110,6 @@ export async function sendPasswordResetEmail({
         console.log('📬 Sent to:', email);
     } catch (error) {
         console.error('❌ Email sending failed:', error);
+        return { success: false, error };
     }
 }
