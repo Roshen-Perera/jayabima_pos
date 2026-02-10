@@ -13,3 +13,11 @@ const transporter = nodemailer.createTransport({
         streamTransport: false, // Set to true to test without sending
     }),
 });
+
+transporter.verify((error) => {
+    if (error) {
+        console.error('❌ Email configuration error:', error);
+    } else {
+        console.log('✅ Email server is ready to send messages');
+    }
+});
