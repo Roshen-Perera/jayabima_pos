@@ -224,5 +224,6 @@ export async function testEmailConfiguration() {
         return { success: true, messageId: info.messageId };
     } catch (error) {
         console.error('❌ Test email failed:', error);
+        return { success: false, error };
     }
 }
