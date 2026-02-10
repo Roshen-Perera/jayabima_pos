@@ -221,6 +221,7 @@ export async function testEmailConfiguration() {
             text: 'If you received this email, your email configuration is working correctly!',
         });
         console.log('✅ Test email sent successfully:', info.messageId);
+        return { success: true, messageId: info.messageId };
     } catch (error) {
 
     }
