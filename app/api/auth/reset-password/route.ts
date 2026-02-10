@@ -28,6 +28,15 @@ export async function POST(request: NextRequest) {
             );
         }
         const userId = verifyResetToken(validatedData.token);
+        if (!userId) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: 'Invalid or expired reset token',
+                },
+                { status: 400 }
+            );
+        }
     } catch (error) {
 
     }
