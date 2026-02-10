@@ -193,5 +193,6 @@ JAYABIMA POS Team
         return { success: true, messageId: info.messageId };
     } catch (error) {
         console.error('❌ Welcome email sending failed:', error);
+        return { success: false, error };
     }
 }
