@@ -9,4 +9,7 @@ const authRoutes = ['/login', '/register'];
 
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
+    
+    // Get token from cookie
+    const token = request.cookies.get('auth-token')?.value;
 }
