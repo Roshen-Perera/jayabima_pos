@@ -12,6 +12,12 @@ if (!EMAIL_USER || !EMAIL_PASSWORD) {
     throw new Error('Email configuration is incomplete. Check your .env file.');
 }
 
+console.log('📧 Email Configuration:');
+console.log('   Host:', EMAIL_HOST);
+console.log('   Port:', EMAIL_PORT);
+console.log('   User:', EMAIL_USER);
+console.log('   Password:', EMAIL_PASSWORD ? '✅ Set' : '❌ Missing')
+
 const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: parseInt(process.env.EMAIL_PORT || '587'),
