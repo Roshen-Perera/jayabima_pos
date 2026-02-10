@@ -196,3 +196,7 @@ JAYABIMA POS Team
         return { success: false, error };
     }
 }
+
+export async function testEmailConfiguration() {
+    
+}
