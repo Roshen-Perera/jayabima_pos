@@ -187,6 +187,8 @@ Best regards,
 JAYABIMA POS Team
       `,
         });
+        console.log('✅ Welcome email sent successfully');
+
     } catch (error) {
 
     }
