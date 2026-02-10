@@ -16,6 +16,10 @@ export const useAuthStore = create<AuthState>()(
                     isLoading: false,
                 });
             },
+
+            login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
+            
+            }
         })
         
     )
