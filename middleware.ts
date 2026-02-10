@@ -6,3 +6,6 @@ const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-passwor
 
 // Define auth routes (redirect to dashboard if already logged in)
 const authRoutes = ['/login', '/register'];
+
+export function middleware(request: NextRequest) {
+}
