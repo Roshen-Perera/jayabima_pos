@@ -1,6 +1,7 @@
 import { generateToken } from '@/lib/auth/jwt';
 import { hashPassword, validatePassword } from '@/lib/auth/password';
 import { setAuthCookie } from '@/lib/auth/session';
+import { sendWelcomeEmail } from '@/lib/email';
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -91,6 +92,14 @@ export async function POST(request: NextRequest) {
         });
 
         await setAuthCookie(token);
+
+        sendWelcomeEmail(user.email, user.name)
+            .then((result) => {
+                if (result.success) {
+                    console.log('✅ Welcome email sent to:', user.email);
+                }
+            })
+            .catch((error) => console.error('❌ Failed to send welcome email:', error));
 
         return NextResponse.json(
             {
