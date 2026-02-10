@@ -192,6 +192,6 @@ JAYABIMA POS Team
         console.log('📬 Sent to:', email);
         return { success: true, messageId: info.messageId };
     } catch (error) {
-
+        console.error('❌ Welcome email sending failed:', error);
     }
 }
