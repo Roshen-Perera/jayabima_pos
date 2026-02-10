@@ -50,6 +50,13 @@ export async function GET() {
                 { status: 403 }
             );
         }
+        return NextResponse.json(
+            {
+                success: true,
+                user,
+            },
+            { status: 200 }
+        );
     } catch (error) {
 
     }
