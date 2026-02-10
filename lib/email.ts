@@ -5,6 +5,13 @@ const EMAIL_PORT = parseInt(process.env.EMAIL_PORT || '587');
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
 
+if (!EMAIL_USER || !EMAIL_PASSWORD) {
+    console.error('❌ Missing email configuration!');
+    console.error('EMAIL_USER:', EMAIL_USER ? '✅ Set' : '❌ Missing');
+    console.error('EMAIL_PASSWORD:', EMAIL_PASSWORD ? '✅ Set' : '❌ Missing');
+    throw new Error('Email configuration is incomplete. Check your .env file.');
+}
+
 const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: parseInt(process.env.EMAIL_PORT || '587'),
