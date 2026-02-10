@@ -114,3 +114,7 @@ export async function sendPasswordResetEmail({
         return { success: false, error };
     }
 }
+
+export async function sendWelcomeEmail(email: string, name: string) {
+
+}
