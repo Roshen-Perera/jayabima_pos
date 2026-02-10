@@ -85,7 +85,7 @@ export const useAuthStore = create<AuthState>()(
             },
             checkAuth: async () => {
                 try {
-
+                    set({ isLoading: true });
                 } catch (error) {
 
                 }
