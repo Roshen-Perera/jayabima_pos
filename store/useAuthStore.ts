@@ -26,6 +26,8 @@ export const useAuthStore = create<AuthState>()(
                         },
                         body: JSON.stringify(credentials),
                     });
+                    const data = await response.json();
+
                 } catch (error) {
 
                 }
