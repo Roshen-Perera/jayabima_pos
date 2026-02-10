@@ -102,7 +102,12 @@ export const useAuthStore = create<AuthState>()(
                         });
                     }
                 } catch (error) {
-
+                    console.error('Check auth error:', error);
+                    set({
+                        user: null,
+                        isAuthenticated: false,
+                        isLoading: false,
+                    });
                 }
             }
         })
