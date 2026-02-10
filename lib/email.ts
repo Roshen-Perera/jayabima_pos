@@ -188,7 +188,7 @@ JAYABIMA POS Team
       `,
         });
         console.log('✅ Welcome email sent successfully');
-
+        console.log('📧 Message ID:', info.messageId);
     } catch (error) {
 
     }
