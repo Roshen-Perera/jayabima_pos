@@ -116,5 +116,9 @@ export async function sendPasswordResetEmail({
 }
 
 export async function sendWelcomeEmail(email: string, name: string) {
+    try {
+         
+    } catch (error) {
 
+    }
 }
