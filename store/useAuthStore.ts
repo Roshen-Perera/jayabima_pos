@@ -35,13 +35,12 @@ export const useAuthStore = create<AuthState>()(
                         });
                     }
                     return data;
-
                 } catch (error) {
 
                 }
             }
         })
-        
+
     )
 
 )
