@@ -80,7 +80,7 @@ export const useAuthStore = create<AuthState>()(
                         isLoading: false,
                     });
                 } catch (error) {
-
+                    console.error('Logout error:', error);
                 }
             }
 
