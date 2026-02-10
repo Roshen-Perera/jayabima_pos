@@ -82,8 +82,10 @@ export const useAuthStore = create<AuthState>()(
                 } catch (error) {
                     console.error('Logout error:', error);
                 }
-            }
+            },
+            checkAuth: async () => {
 
+            }
         })
     )
 
