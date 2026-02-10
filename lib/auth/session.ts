@@ -22,3 +22,12 @@ export async function deleteAuthCookie(): Promise<void> {
     (await cookies()).delete(AUTH_COOKIE_NAME);
 }
 
+export async function getCurrentUser(): Promise<JWTPayload | null> {
+    const token = await getAuthCookie();
+
+    if (!token) {
+        return null;
+    }
+
+    return verifyToken(token);
+}
