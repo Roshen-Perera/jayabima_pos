@@ -198,5 +198,9 @@ JAYABIMA POS Team
 }
 
 export async function testEmailConfiguration() {
-    
+    try {
+
+    } catch (error) {
+
+    }
 }
