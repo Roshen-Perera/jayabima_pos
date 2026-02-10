@@ -5,7 +5,9 @@ import type { AuthState, LoginCredentials, RegisterData, AuthResponse, AuthUser 
 export const useAuthStore = create<AuthState>()(
     persist(
         (set, get) => ({
-
+            user: null,
+            isAuthenticated: false,
+            isLoading: true,
         })
         
     )
