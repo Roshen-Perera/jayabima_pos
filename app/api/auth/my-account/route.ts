@@ -6,5 +6,9 @@ import { verifyResetToken } from '@/lib/auth/jwt';
 
 
 export async function GET() {
-    
+    try {
+
+    } catch (error) {
+
+    }
 }
