@@ -92,5 +92,6 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             );
         }
+        console.error('Reset password error:', error);
     }
 }
