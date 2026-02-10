@@ -223,6 +223,6 @@ export async function testEmailConfiguration() {
         console.log('✅ Test email sent successfully:', info.messageId);
         return { success: true, messageId: info.messageId };
     } catch (error) {
-
+        console.error('❌ Test email failed:', error);
     }
 }
