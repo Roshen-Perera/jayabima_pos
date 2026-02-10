@@ -53,9 +53,15 @@ export const useAuthStore = create<AuthState>()(
                         body: JSON.stringify(registerData),
                     });
                     const data = await response.json();
-
+                    if (data.success && data.user) {
+                        set({
+                            user: data.user,
+                            isAuthenticated: true,
+                            isLoading: false,
+                        });
+                    }
                 } catch (error) {
-                    
+
                 }
             })
 
