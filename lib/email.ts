@@ -117,7 +117,76 @@ export async function sendPasswordResetEmail({
 
 export async function sendWelcomeEmail(email: string, name: string) {
     try {
-         
+        const info = await transporter.sendMail({
+            from: process.env.EMAIL_FROM || '"JAYABIMA POS" <noreply@jayabima.com>',
+            to: email,
+            subject: 'Welcome to JAYABIMA POS!',
+            html: `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+          </head>
+          <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background-color: #f4f4f4; padding: 20px; border-radius: 10px;">
+              <h1 style="color: #2563eb;">Welcome to JAYABIMA POS!</h1>
+              
+              <p>Hi ${name},</p>
+              
+              <p>Thank you for joining JAYABIMA POS. Your account has been successfully created!</p>
+              
+              <p>You can now access all features of our Point of Sale system:</p>
+              
+              <ul style="line-height: 1.8;">
+                <li>✅ Manage Inventory</li>
+                <li>✅ Process Sales</li>
+                <li>✅ Track Customers</li>
+                <li>✅ Generate Reports</li>
+              </ul>
+              
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${process.env.NEXT_PUBLIC_APP_URL}/login" 
+                   style="background-color: #2563eb; 
+                          color: white; 
+                          padding: 12px 30px; 
+                          text-decoration: none; 
+                          border-radius: 5px; 
+                          display: inline-block;
+                          font-weight: bold;">
+                  Login to Your Account
+                </a>
+              </div>
+              
+              <p>If you have any questions, feel free to contact our support team.</p>
+              
+              <p>Best regards,<br>The JAYABIMA POS Team</p>
+              
+              <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+              
+              <p style="font-size: 12px; color: #666;">
+                This is an automated email from JAYABIMA POS.
+              </p>
+            </div>
+          </body>
+        </html>
+      `,
+            text: `
+Hi ${name},
+
+Welcome to JAYABIMA POS! Your account has been successfully created.
+
+You can now access all features:
+- Manage Inventory
+- Process Sales
+- Track Customers
+- Generate Reports
+
+Login at: ${process.env.NEXT_PUBLIC_APP_URL}/login
+
+Best regards,
+JAYABIMA POS Team
+      `,
+        });
     } catch (error) {
 
     }
