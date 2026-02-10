@@ -27,3 +27,9 @@ interface SendPasswordResetEmailParams {
     name: string;
     resetToken: string;
 }
+
+export async function sendPasswordResetEmail({
+    email,
+    name,
+    resetToken,
+}: SendPasswordResetEmailParams) {}
