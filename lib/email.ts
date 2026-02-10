@@ -32,4 +32,7 @@ export async function sendPasswordResetEmail({
     email,
     name,
     resetToken,
-}: SendPasswordResetEmailParams) {}
+}: SendPasswordResetEmailParams) {
+    const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}`;
+
+}
