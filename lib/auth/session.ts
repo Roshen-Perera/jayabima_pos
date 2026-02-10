@@ -36,3 +36,17 @@ export async function isAuthenticated(): Promise<boolean> {
     const user = await getCurrentUser();
     return user !== null;
 }
+
+export async function hasRole(role: string | string[]): Promise<boolean> {
+    const user = await getCurrentUser();
+
+    if (!user) {
+        return false;
+    }
+
+    if (Array.isArray(role)) {
+        return role.includes(user.role);
+    }
+
+    return user.role === role;
+}
