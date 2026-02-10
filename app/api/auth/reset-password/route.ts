@@ -13,7 +13,8 @@ const resetPasswordSchema = z.object({
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-
+        // Validate input
+        const validatedData = resetPasswordSchema.parse(body);
     } catch (error) {
 
     }
