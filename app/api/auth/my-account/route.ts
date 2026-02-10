@@ -59,6 +59,12 @@ export async function GET() {
         );
     } catch (error) {
         console.error('Get current user error:', error);
-
+        return NextResponse.json(
+            {
+                success: false,
+                message: 'Internal server error',
+            },
+            { status: 500 }
+        );
     }
 }
