@@ -19,12 +19,12 @@ console.log('   User:', EMAIL_USER);
 console.log('   Password:', EMAIL_PASSWORD ? '✅ Set' : '❌ Missing')
 
 const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: parseInt(process.env.EMAIL_PORT || '587'),
+    host: EMAIL_HOST,
+    port: EMAIL_PORT,
     secure: false, // true for 465, false for other ports
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
+        user: EMAIL_USER,
+        pass: EMAIL_PASSWORD,
     },
     // For development: log to console instead of sending
     ...(process.env.NODE_ENV === 'development' && {
