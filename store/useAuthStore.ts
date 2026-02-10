@@ -74,6 +74,11 @@ export const useAuthStore = create<AuthState>()(
                     await fetch('/api/auth/logout', {
                         method: 'POST',
                     });
+                    set({
+                        user: null,
+                        isAuthenticated: false,
+                        isLoading: false,
+                    });
                 } catch (error) {
 
                 }
