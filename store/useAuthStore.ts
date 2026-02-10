@@ -62,9 +62,13 @@ export const useAuthStore = create<AuthState>()(
                     }
                     return data;
                 } catch (error) {
-
+                    console.error('Register error:', error);
+                    return {
+                        success: false,
+                        message: 'An error occurred during registration',
+                    };
                 }
-            })
+            }),
 
     )
 
