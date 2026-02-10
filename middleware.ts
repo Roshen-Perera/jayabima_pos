@@ -27,4 +27,11 @@ export function middleware(request: NextRequest) {
     if (user && isAuthRoute) {
         return NextResponse.redirect(new URL('/dashboard', request.url));
     }
+
+    // If user is not logged in and trying to access protected routes, redirect to login
+    if (!user && !isPublicRoute && pathname !== '/') {
+        const loginUrl = new URL('/login', request.url);
+        loginUrl.searchParams.set('redirect', pathname);
+        return NextResponse.redirect(loginUrl);
+    }
 }
