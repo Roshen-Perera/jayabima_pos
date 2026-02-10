@@ -27,6 +27,7 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             );
         }
+        const userId = verifyResetToken(validatedData.token);
     } catch (error) {
 
     }
