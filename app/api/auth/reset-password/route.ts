@@ -15,6 +15,8 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         // Validate input
         const validatedData = resetPasswordSchema.parse(body);
+        // Validate password strength
+        const passwordValidation = validatePassword(validatedData.password);
     } catch (error) {
 
     }
