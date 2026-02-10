@@ -70,7 +70,9 @@ export const useAuthStore = create<AuthState>()(
                 }
             },
             logout: async () => {
-
+                try {
+                } catch (error) {
+                }
             }
 
         })
