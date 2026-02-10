@@ -18,7 +18,11 @@ export const useAuthStore = create<AuthState>()(
             },
 
             login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
-            
+                try {
+
+                } catch (error) {
+                    
+                }
             }
         })
         
