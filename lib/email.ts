@@ -105,9 +105,9 @@ export async function sendPasswordResetEmail({
                 JAYABIMA POS Team
               `,
         });
-        console.log('✅ Email sent successfully:', info.messageId);
-        console.log('📧 Preview URL:', nodemailer.getTestMessageUrl(info));
-        return { success: true, messageId: info.messageId };
+        console.log('✅ Password reset email sent successfully');
+        console.log('📧 Message ID:', info.messageId);
+        console.log('📬 Sent to:', email);
     } catch (error) {
         console.error('❌ Email sending failed:', error);
     }
