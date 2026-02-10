@@ -84,7 +84,11 @@ export const useAuthStore = create<AuthState>()(
                 }
             },
             checkAuth: async () => {
+                try {
 
+                } catch (error) {
+
+                }
             }
         })
     )
