@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { verifyToken } from './lib/auth/jwt';
 
 // Define public routes (don't require authentication)
 const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-password'];
@@ -9,7 +10,10 @@ const authRoutes = ['/login', '/register'];
 
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
-    
+
     // Get token from cookie
     const token = request.cookies.get('auth-token')?.value;
+
+    // Verify token
+    const user = token ? verifyToken(token) : null;
 }
