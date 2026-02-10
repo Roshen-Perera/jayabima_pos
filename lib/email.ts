@@ -199,7 +199,27 @@ JAYABIMA POS Team
 
 export async function testEmailConfiguration() {
     try {
-
+        const info = await transporter.sendMail({
+            from: process.env.EMAIL_FROM,
+            to: process.env.EMAIL_USER, // Send to yourself
+            subject: 'JAYABIMA POS - Email Configuration Test',
+            html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px;">
+          <h1 style="color: #2563eb;">✅ Email Configuration Test</h1>
+          <p>If you received this email, your email configuration is working correctly!</p>
+          <hr>
+          <p><strong>Configuration Details:</strong></p>
+          <ul>
+            <li>Host: ${process.env.EMAIL_HOST}</li>
+            <li>Port: ${process.env.EMAIL_PORT}</li>
+            <li>User: ${process.env.EMAIL_USER}</li>
+            <li>From: ${process.env.EMAIL_FROM}</li>
+          </ul>
+          <p style="color: green; font-weight: bold;">✅ Everything is working!</p>
+        </div>
+      `,
+            text: 'If you received this email, your email configuration is working correctly!',
+        });
     } catch (error) {
 
     }
