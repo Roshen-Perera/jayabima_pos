@@ -45,6 +45,14 @@ export const useAuthStore = create<AuthState>()(
             },
             register: async (registerData: RegisterData): Promise<AuthResponse> => {
                 try {
+                    const response = await fetch('/api/auth/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(registerData),
+                    });
+                    const data = await response.json();
 
                 } catch (error) {
                     
