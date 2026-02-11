@@ -30,6 +30,13 @@ export async function POST(request: NextRequest) {
                 name: user.name,
                 resetToken,
             })
+                .then((result) => {
+                    if (result.success) {
+                        console.log('✅ Password reset email sent to:', user.email);
+                    } else {
+                        console.error('❌ Failed to send password reset email:', result.error);
+                    }
+                })
         }
     } catch (error) {
 
