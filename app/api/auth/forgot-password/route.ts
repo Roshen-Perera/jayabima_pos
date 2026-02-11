@@ -45,6 +45,12 @@ export async function POST(request: NextRequest) {
             },
         });
 
+        sendPasswordResetEmail({
+            email: user.email,
+            name: user.name,
+            resetToken,
+        })
+
         return NextResponse.json(
             {
                 success: true,
