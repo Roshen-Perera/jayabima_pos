@@ -37,6 +37,9 @@ export async function POST(request: NextRequest) {
                         console.error('❌ Failed to send password reset email:', result.error);
                     }
                 })
+                .catch((error) => {
+                    console.error('❌ Email sending error:', error);
+                });
         }
     } catch (error) {
 
