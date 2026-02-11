@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { generateResetToken } from '@/lib/auth/jwt';
@@ -49,6 +49,14 @@ export async function POST(request: NextRequest) {
                 );
             }
         }
+        return NextResponse.json(
+            {
+                success: true,
+                message:
+                    'If an account exists with this email, a password reset link has been sent.',
+            },
+            { status: 200 }
+        );
     } catch (error) {
 
     }
