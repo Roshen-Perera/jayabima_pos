@@ -15,7 +15,16 @@ export async function POST(request: NextRequest) {
         const user = await prisma.user.findUnique({
             where: { email: validatedData.email },
         });
-        
+        if (!user) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: 'No account found with this email address.',
+                },
+                { status: 404 }
+            );
+        }
+
         return NextResponse.json(
             {
                 success: true,
