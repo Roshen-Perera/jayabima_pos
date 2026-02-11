@@ -33,6 +33,10 @@ export async function POST(request: NextRequest) {
                 { status: 403 }
             );
         }
+
+        const resetToken = generateResetToken(user.id);
+        const resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
         return NextResponse.json(
             {
                 success: true,
