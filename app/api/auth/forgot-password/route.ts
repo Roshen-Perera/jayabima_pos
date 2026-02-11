@@ -62,6 +62,13 @@ export async function POST(request: NextRequest) {
             .catch((error) => {
                 console.error('❌ Email sending error:', error);
             });
+        if (process.env.NODE_ENV === 'development') {
+            console.log('🔑 Password reset token:', resetToken);
+            console.log(
+                '🔗 Reset link:',
+                `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}`
+            );
+        }
         return NextResponse.json(
             {
                 success: true,
