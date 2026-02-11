@@ -24,7 +24,15 @@ export async function POST(request: NextRequest) {
                 { status: 404 }
             );
         }
-
+        if (!user.isActive || user.status !== 'ACTIVE') {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: 'This account is inactive or suspended. Please contact support.',
+                },
+                { status: 403 }
+            );
+        }
         return NextResponse.json(
             {
                 success: true,
