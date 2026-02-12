@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Label } from "@radix-ui/react-label";
-import { AlertCircle, Mail, EyeOff, Eye, Link, Loader2, LockIcon, LockIcon } from "lucide-react";
+import { AlertCircle, Mail, EyeOff, Eye, Link, Loader2, LockIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
