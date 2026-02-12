@@ -81,7 +81,7 @@ export const useAuthStore = create<AuthState>()(
                 try {
                     set({ isLoading: true });
 
-                    const response = await fetch('/api/auth/me', {
+                    const response = await fetch('/api/auth/my-account', {
                         credentials: 'include', // ⭐ Important for cookies
                     });
 
