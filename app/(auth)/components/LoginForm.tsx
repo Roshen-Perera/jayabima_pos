@@ -49,8 +49,9 @@ const LoginForm = () => {
           "Login successful!",
           `Welcome back, ${result.user?.name || "User"}!`,
         );
-        // Success! Redirect to dashboard
-        router.push("/dashboard");
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 500);
       } else {
         alert.success(
           'Login successful!',
