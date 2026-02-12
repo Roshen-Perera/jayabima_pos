@@ -1,9 +1,25 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { alert } from "@/lib/alert";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Label } from "@radix-ui/react-label";
-import { AlertCircle, Mail, EyeOff, Eye, Link, Loader2, LockIcon } from "lucide-react";
+import {
+  AlertCircle,
+  Mail,
+  EyeOff,
+  Eye,
+  Link,
+  Loader2,
+  LockIcon,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -17,7 +33,6 @@ const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,14 +73,12 @@ const LoginForm = () => {
 
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
-            {/* Error Alert */}
-            {/* {error && (
-            //   <Alert variant="destructive">
-            //     <AlertCircle className="h-4 w-4" />
-            //     <AlertDescription>{error}</AlertDescription>
-            //   </Alert>
-            )} */}
-
+            {error && (
+              <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-md text-red-800">
+                <AlertCircle className="h-4 w-4" />
+                <span>{error}</span>
+              </div>
+            )}
             {/* Email Field */}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -84,7 +97,6 @@ const LoginForm = () => {
                 />
               </div>
             </div>
-
             {/* Password Field */}
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
@@ -115,7 +127,6 @@ const LoginForm = () => {
                 </button>
               </div>
             </div>
-
             {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
