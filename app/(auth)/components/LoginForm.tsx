@@ -52,7 +52,7 @@ const LoginForm = () => {
           `Welcome back, ${result.user?.name || "User"}!`,
         );
         setTimeout(() => {
-          router.push("/dashboard");
+          router.push("/");
         }, 500);
       } else {
        alert.error(
