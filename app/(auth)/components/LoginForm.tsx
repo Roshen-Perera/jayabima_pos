@@ -20,6 +20,11 @@ const LoginForm = () => {
     setIsLoading(true);
 
     try {
+      const result = await login({
+        email,
+        password,
+        rememberMe,
+      });
     } catch (error) {}
   };
   return <></>;
