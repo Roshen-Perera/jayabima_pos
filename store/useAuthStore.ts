@@ -1,6 +1,18 @@
+import { AuthResponse, AuthUser, LoginCredentials } from '@/types/auth.types';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { AuthState, LoginCredentials, RegisterData, AuthResponse, AuthUser } from '@/types/auth.types';
+
+export type UserRole = 'ADMIN' | 'MANAGER' | 'CASHIER';
+
+interface AuthState {
+    user: AuthUser | null;
+    isAuthenticated: boolean;
+    isLoading: boolean;
+    setUser: (user: AuthUser | null) => void;
+    login: (credentials: LoginCredentials) => Promise<AuthResponse>;
+    logout: () => Promise<void>;
+    checkAuth: () => Promise<void>;
+}
 
 export const useAuthStore = create<AuthState>()(
     persist(
@@ -24,9 +36,12 @@ export const useAuthStore = create<AuthState>()(
                         headers: {
                             'Content-Type': 'application/json',
                         },
+                        credentials: 'include', // ⭐ Important for cookies
                         body: JSON.stringify(credentials),
                     });
+
                     const data = await response.json();
+
                     if (data.success && data.user) {
                         set({
                             user: data.user,
@@ -34,6 +49,7 @@ export const useAuthStore = create<AuthState>()(
                             isLoading: false,
                         });
                     }
+
                     return data;
                 } catch (error) {
                     console.error('Login error:', error);
@@ -43,37 +59,14 @@ export const useAuthStore = create<AuthState>()(
                     };
                 }
             },
-            register: async (registerData: RegisterData): Promise<AuthResponse> => {
-                try {
-                    const response = await fetch('/api/auth/register', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(registerData),
-                    });
-                    const data = await response.json();
-                    if (data.success && data.user) {
-                        set({
-                            user: data.user,
-                            isAuthenticated: true,
-                            isLoading: false,
-                        });
-                    }
-                    return data;
-                } catch (error) {
-                    console.error('Register error:', error);
-                    return {
-                        success: false,
-                        message: 'An error occurred during registration',
-                    };
-                }
-            },
+
             logout: async () => {
                 try {
                     await fetch('/api/auth/logout', {
                         method: 'POST',
+                        credentials: 'include', // ⭐ Important for cookies
                     });
+
                     set({
                         user: null,
                         isAuthenticated: false,
@@ -83,11 +76,17 @@ export const useAuthStore = create<AuthState>()(
                     console.error('Logout error:', error);
                 }
             },
+
             checkAuth: async () => {
                 try {
                     set({ isLoading: true });
-                    const response = await fetch('/api/auth/me');
+
+                    const response = await fetch('/api/auth/me', {
+                        credentials: 'include', // ⭐ Important for cookies
+                    });
+
                     const data = await response.json();
+
                     if (data.success && data.user) {
                         set({
                             user: data.user,
@@ -95,6 +94,7 @@ export const useAuthStore = create<AuthState>()(
                             isLoading: false,
                         });
                     } else {
+                        // ⭐ Auth failed - clear everything
                         set({
                             user: null,
                             isAuthenticated: false,
@@ -103,13 +103,14 @@ export const useAuthStore = create<AuthState>()(
                     }
                 } catch (error) {
                     console.error('Check auth error:', error);
+                    // ⭐ Error checking auth - clear everything
                     set({
                         user: null,
                         isAuthenticated: false,
                         isLoading: false,
                     });
                 }
-            }
+            },
         }),
         {
             name: 'auth-storage',
@@ -119,4 +120,4 @@ export const useAuthStore = create<AuthState>()(
             }),
         }
     )
-)
+);
