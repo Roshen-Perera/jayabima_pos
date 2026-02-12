@@ -20,6 +20,9 @@ const page = () => {
             </p>
           </div>
           <LoginForm />
+          <p className="text-center text-sm text-muted-foreground mt-8">
+            © 2026 JAYABIMA. All rights reserved.
+          </p>
         </div>
       </div>
     </div>
