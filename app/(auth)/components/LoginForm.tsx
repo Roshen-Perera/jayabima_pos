@@ -25,6 +25,13 @@ const LoginForm = () => {
         password,
         rememberMe,
       });
+      if (result.success) {
+        // Success! Redirect to dashboard
+        router.push("/dashboard");
+      } else {
+        // Show error message
+        setError(result.message || "Login failed. Please try again.");
+      }
     } catch (error) {}
   };
   return <></>;
