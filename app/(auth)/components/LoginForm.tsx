@@ -59,7 +59,10 @@ const LoginForm = () => {
        );
       }
     } catch (error) {
-      setError("An unexpected error occurred. Please try again.");
+      alert.error(
+        "Something went wrong",
+        "An unexpected error occurred. Please try again later.",
+      );
       console.error("Login error:", error);
     } finally {
       setIsLoading(false);
