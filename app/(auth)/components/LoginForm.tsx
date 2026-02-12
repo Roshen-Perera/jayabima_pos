@@ -82,12 +82,6 @@ const LoginForm = () => {
 
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
-            {error && (
-              <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-md text-red-800">
-                <AlertCircle className="h-4 w-4" />
-                <span>{error}</span>
-              </div>
-            )}
             {/* Email Field */}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -106,6 +100,7 @@ const LoginForm = () => {
                 />
               </div>
             </div>
+
             {/* Password Field */}
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
@@ -127,6 +122,7 @@ const LoginForm = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
                   disabled={isLoading}
+                  tabIndex={-1}
                 >
                   {showPassword ? (
                     <EyeOff className="h-4 w-4" />
@@ -136,6 +132,7 @@ const LoginForm = () => {
                 </button>
               </div>
             </div>
+
             {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
@@ -158,6 +155,7 @@ const LoginForm = () => {
               <Link
                 href="/forgot-password"
                 className="text-sm text-primary hover:underline"
+                tabIndex={isLoading ? -1 : 0}
               >
                 Forgot password?
               </Link>
@@ -183,6 +181,7 @@ const LoginForm = () => {
               <Link
                 href="/register"
                 className="text-primary font-medium hover:underline"
+                tabIndex={isLoading ? -1 : 0}
               >
                 Sign up
               </Link>
