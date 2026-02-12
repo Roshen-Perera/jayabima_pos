@@ -34,6 +34,7 @@ const LoginForm = () => {
       }
     } catch (error) {
         setError("An unexpected error occurred. Please try again.");
+        console.error("Login error:", error);
     }
   };
   return <></>;
