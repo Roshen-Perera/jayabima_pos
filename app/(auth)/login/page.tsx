@@ -1,4 +1,5 @@
 import React from "react";
+import LoginForm from "../components/LoginForm";
 
 export const metadata = {
   title: "Login | JAYABIMA POS",
@@ -18,6 +19,7 @@ const page = () => {
               Point of Sale Management System
             </p>
           </div>
+          <LoginForm />
         </div>
       </div>
     </div>
