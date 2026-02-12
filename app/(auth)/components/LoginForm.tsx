@@ -32,7 +32,9 @@ const LoginForm = () => {
         // Show error message
         setError(result.message || "Login failed. Please try again.");
       }
-    } catch (error) {}
+    } catch (error) {
+        setError("An unexpected error occurred. Please try again.");
+    }
   };
   return <></>;
 };
