@@ -45,9 +45,17 @@ const LoginForm = () => {
         rememberMe,
       });
       if (result.success) {
+        alert.success(
+          "Login successful!",
+          `Welcome back, ${result.user?.name || "User"}!`,
+        );
         // Success! Redirect to dashboard
         router.push("/dashboard");
       } else {
+        alert.success(
+          'Login successful!',
+          `Welcome back, ${result.user?.name || 'User'}!`
+        );
         // Show error message
         setError(result.message || "Login failed. Please try again.");
       }
