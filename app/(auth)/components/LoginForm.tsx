@@ -7,6 +7,7 @@ const LoginForm = () => {
   const login = useAuthStore((state) => state.login);
 
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   return <></>;
 };
 
