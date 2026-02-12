@@ -53,12 +53,10 @@ const LoginForm = () => {
           router.push("/dashboard");
         }, 500);
       } else {
-        alert.success(
-          'Login successful!',
-          `Welcome back, ${result.user?.name || 'User'}!`
-        );
-        // Show error message
-        setError(result.message || "Login failed. Please try again.");
+       alert.error(
+         "Login failed",
+         result.message || "Invalid email or password. Please try again.",
+       );
       }
     } catch (error) {
       setError("An unexpected error occurred. Please try again.");
