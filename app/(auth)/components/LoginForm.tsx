@@ -18,7 +18,10 @@ const LoginForm = () => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
-  }
+
+    try {
+    } catch (error) {}
+  };
   return <></>;
 };
 
