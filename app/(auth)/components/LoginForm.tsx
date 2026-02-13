@@ -18,12 +18,12 @@ import {
   Mail,
   EyeOff,
   Eye,
-  Link,
   Loader2,
   LockIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import Link from "next/link";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -164,7 +164,7 @@ const LoginForm = () => {
             </div>
           </CardContent>
 
-          <CardFooter className="flex flex-col space-y-4">
+          <CardFooter className="flex flex-col space-y-4 mt-5">
             {/* Login Button */}
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? (
