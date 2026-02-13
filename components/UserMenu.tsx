@@ -50,7 +50,7 @@ const UserMenu = () => {
     <div>
       <DropdownMenu>
         {/* Trigger Button */}
-        <DropdownMenuTrigger asChild>
+        <DropdownMenuTrigger asChild >
           <Button
             variant="ghost"
             className="relative h-10 gap-2 px-2"
