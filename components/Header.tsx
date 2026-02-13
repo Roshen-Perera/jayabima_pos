@@ -6,6 +6,7 @@ import ThemeToggle from "./ThemeToggle";
 import DynamicTitle from "./DynamicTitle";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Badge } from "./ui/badge";
+import UserMenu from "./UserMenu";
 
 const Header = () => {
   const { user } = useAuthStore();
@@ -33,22 +34,7 @@ const Header = () => {
               </Button>
               {/* User Menu */}
               <div className="flex items-center gap-3 pl-3 border-l border-border">
-                <div className="text-right hidden sm:block">
-                  <p className="text-sm font-medium">{user?.name}</p>
-                  <Badge
-                    variant="secondary"
-                    className="text-[10px] px-1.5 py-0"
-                  >
-                    {user?.role}
-                  </Badge>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-full bg-primary/10"
-                >
-                  <User className="w-5 h-5 text-primary" />
-                </Button>
+                <UserMenu />
               </div>
             </div>
           </div>
