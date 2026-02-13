@@ -17,20 +17,24 @@ const UserMenu = () => {
       .slice(0, 2);
   };
 
-    const handleLogout = async () => {
-      setIsLoggingOut(true);
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
 
-      try {
-        await logout();
-        alert.success("Logged out", "You have been successfully logged out.");
-        router.push("/login");
-      } catch (error) {
-        alert.error("Logout failed", "Something went wrong. Please try again.");
-        console.error("Logout error:", error);
-      } finally {
-        setIsLoggingOut(false);
-      }
-    };
+    try {
+      await logout();
+      alert.success("Logged out", "You have been successfully logged out.");
+      router.push("/login");
+    } catch (error) {
+      alert.error("Logout failed", "Something went wrong. Please try again.");
+      console.error("Logout error:", error);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
+  if (!user) {
+    return null;
+  }
   return <div>UserMenu</div>;
 };
 
