@@ -1,10 +1,18 @@
 import { alert } from "@/lib/alert";
 import { useAuthStore } from "@/store/useAuthStore";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "./ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuItem,
+} from "./ui/dropdown-menu";
 import { ChevronDown, User, Settings, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { Button } from "./ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
 
 const UserMenu = () => {
   const router = useRouter();
@@ -49,12 +57,12 @@ const UserMenu = () => {
             disabled={isLoggingOut}
           >
             {/* Avatar */}
-            {/* <Avatar className="h-8 w-8">
+            <Avatar className="h-8 w-8">
               <AvatarImage src={user.avatar || undefined} alt={user.name} />
               <AvatarFallback className="bg-primary text-primary-foreground">
                 {getInitials(user.name)}
               </AvatarFallback>
-            </Avatar> */}
+            </Avatar>
 
             {/* User Name (hidden on mobile) */}
             <div className="hidden md:flex flex-col items-start text-sm">
