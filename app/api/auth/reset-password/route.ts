@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Verify reset token and get user ID
-        const userId = verifyResetToken(validatedData.token);
+        const userId = await verifyResetToken(validatedData.token);
         if (!userId) {
             return NextResponse.json(
                 {

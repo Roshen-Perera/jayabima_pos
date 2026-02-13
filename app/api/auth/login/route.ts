@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
             data: { lastLogin: new Date() },
         });
 
-        const token = generateToken({
+        const token = await generateToken({
             userId: user.id,
             email: user.email,
             role: user.role,
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
         });
 
         await setAuthCookie(token);
-        
+
         const { password: _, ...userWithoutPassword } = user;
 
         return NextResponse.json(
@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
         }
 
         console.error('Login error:', error);
-        
+
         return NextResponse.json(
             {
                 success: false,
