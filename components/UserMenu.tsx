@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
+import { Badge } from "./ui/badge";
 
 const UserMenu = () => {
   const router = useRouter();
@@ -67,7 +68,7 @@ const UserMenu = () => {
             {/* User Name (hidden on mobile) */}
             <div className="hidden md:flex flex-col items-start text-sm">
               <span className="font-medium">{user.name}</span>
-              <span className="text-xs text-muted-foreground">{user.role}</span>
+              <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{user.role}</Badge>
             </div>
 
             {/* Chevron */}
