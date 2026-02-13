@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
-import AuthProvider from "@/providers/AuthProvider"; // ⭐ Import
+import AuthProvider from "@/components/providers/AuthProvider";
+import LayoutWrapper from "@/components/LayoutWrapper";
 
 export const metadata: Metadata = {
   title: "Jayabima POS",
@@ -21,8 +22,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {/* ⭐ Wrap children with AuthProvider */}
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            {/* ⭐ LayoutWrapper handles conditional sidebar */}
+            <LayoutWrapper>{children}</LayoutWrapper>
+          </AuthProvider>
           <Toaster position="top-right" />
         </ThemeProvider>
       </body>
