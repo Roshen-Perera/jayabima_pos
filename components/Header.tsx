@@ -4,8 +4,11 @@ import { SidebarTrigger } from "./ui/sidebar";
 import { Separator } from "./ui/separator";
 import ThemeToggle from "./ThemeToggle";
 import DynamicTitle from "./DynamicTitle";
+import { useAuthStore } from "@/store/useAuthStore";
+import { Badge } from "./ui/badge";
 
 const Header = () => {
+  const { user } = useAuthStore();
   return (
     <>
       <header className="flex h-15 shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -31,11 +34,14 @@ const Header = () => {
               {/* User Menu */}
               <div className="flex items-center gap-3 pl-3 border-l border-border">
                 <div className="text-right hidden sm:block">
-                      <p className="text-sm font-medium">{user?.name}</p>
-                      <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
-                        {user?.role}
-                      </Badge>
-                    </div>
+                  <p className="text-sm font-medium">{user?.name}</p>
+                  <Badge
+                    variant="secondary"
+                    className="text-[10px] px-1.5 py-0"
+                  >
+                    {user?.role}
+                  </Badge>
+                </div>
                 <Button
                   variant="ghost"
                   size="icon"
