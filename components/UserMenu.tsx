@@ -1,6 +1,6 @@
 import { alert } from "@/lib/alert";
 import { useAuthStore } from "@/store/useAuthStore";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "./ui/dropdown-menu";
 import { ChevronDown, User, Settings, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
