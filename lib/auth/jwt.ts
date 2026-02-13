@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { SignJWT, jwtVerify } from 'jose';
 
 const JWT_SECRET = (() => {
     const value = process.env.JWT_SECRET;
