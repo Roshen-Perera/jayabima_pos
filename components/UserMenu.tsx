@@ -8,6 +8,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuItem,
 } from "./ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "./ui/alert-dialog";
 import { ChevronDown, User, Settings, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -19,6 +29,7 @@ const UserMenu = () => {
   const router = useRouter();
   const { user, logout } = useAuthStore();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
 
   const getInitials = (name: string) => {
     return name
@@ -51,7 +62,7 @@ const UserMenu = () => {
     <div>
       <DropdownMenu>
         {/* Trigger Button */}
-        <DropdownMenuTrigger asChild >
+        <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
             className="relative h-10 gap-2 px-2"
@@ -68,7 +79,9 @@ const UserMenu = () => {
             {/* User Name (hidden on mobile) */}
             <div className="hidden md:flex flex-col items-start text-sm">
               <span className="font-medium">{user.name}</span>
-              <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{user.role}</Badge>
+              <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                {user.role}
+              </Badge>
             </div>
 
             {/* Chevron */}
@@ -112,15 +125,42 @@ const UserMenu = () => {
 
           {/* Logout */}
           <DropdownMenuItem
-            onClick={handleLogout}
+            onClick={() => setShowLogoutDialog(true)}
             disabled={isLoggingOut}
             className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950"
           >
             <LogOut className="mr-2 h-4 w-4" />
-            <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
+            <span>Logout</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      {/* Logout Confirmation Dialog */}
+      <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Are you sure you want to logout?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              You will be redirected to the login page and will need to sign in
+              again to access your account.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isLoggingOut}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {isLoggingOut ? "Logging out..." : "Logout"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
