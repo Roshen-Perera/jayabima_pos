@@ -1,9 +1,9 @@
-import React from 'react'
+import { useRouter } from "next/navigation";
+import React from "react";
 
 const UserMenu = () => {
-  return (
-    <div>UserMenu</div>
-  )
-}
+  const router = useRouter();
+  return <div>UserMenu</div>;
+};
 
-export default UserMenu
+export default UserMenu;
