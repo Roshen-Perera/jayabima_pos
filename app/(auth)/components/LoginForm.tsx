@@ -20,6 +20,10 @@ import {
   Eye,
   Loader2,
   LockIcon,
+  EyeIcon,
+  EyeOffIcon,
+  Loader2Icon,
+  MailIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -88,7 +92,7 @@ const LoginForm = () => {
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <MailIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="email"
                   type="email"
@@ -127,9 +131,9 @@ const LoginForm = () => {
                   tabIndex={-1}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
+                    <EyeOffIcon className="h-4 w-4" />
                   ) : (
-                    <Eye className="h-4 w-4" />
+                    <EyeIcon className="h-4 w-4" />
                   )}
                 </button>
               </div>
@@ -153,14 +157,13 @@ const LoginForm = () => {
                   Remember me
                 </Label>
               </div>
-
-              <Link
-                href="/forgot-password"
+              <a
+                href="#forgot-password"
                 className="text-sm text-primary hover:underline"
                 tabIndex={isLoading ? -1 : 0}
               >
                 Forgot password?
-              </Link>
+              </a>
             </div>
           </CardContent>
 
@@ -169,7 +172,7 @@ const LoginForm = () => {
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
                   Signing in...
                 </>
               ) : (
@@ -180,13 +183,13 @@ const LoginForm = () => {
             {/* Register Link */}
             <p className="text-center text-sm text-muted-foreground">
               Don&apos;t have an account?{" "}
-              <Link
-                href="/register"
+              <a
+                href="#register"
                 className="text-primary font-medium hover:underline"
                 tabIndex={isLoading ? -1 : 0}
               >
                 Sign up
-              </Link>
+              </a>
             </p>
           </CardFooter>
         </form>
