@@ -1,7 +1,10 @@
 import { alert } from "@/lib/alert";
 import { useAuthStore } from "@/store/useAuthStore";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
+import { ChevronDown, User, Settings, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { Button } from "./ui/button";
 
 const UserMenu = () => {
   const router = useRouter();
@@ -35,7 +38,82 @@ const UserMenu = () => {
   if (!user) {
     return null;
   }
-  return <div>UserMenu</div>;
+  return (
+    <div>
+      <DropdownMenu>
+        {/* Trigger Button */}
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            className="relative h-10 gap-2 px-2"
+            disabled={isLoggingOut}
+          >
+            {/* Avatar */}
+            {/* <Avatar className="h-8 w-8">
+              <AvatarImage src={user.avatar || undefined} alt={user.name} />
+              <AvatarFallback className="bg-primary text-primary-foreground">
+                {getInitials(user.name)}
+              </AvatarFallback>
+            </Avatar> */}
+
+            {/* User Name (hidden on mobile) */}
+            <div className="hidden md:flex flex-col items-start text-sm">
+              <span className="font-medium">{user.name}</span>
+              <span className="text-xs text-muted-foreground">{user.role}</span>
+            </div>
+
+            {/* Chevron */}
+            <ChevronDown className="h-4 w-4 text-muted-foreground" />
+          </Button>
+        </DropdownMenuTrigger>
+
+        {/* Dropdown Content */}
+        <DropdownMenuContent className="w-56" align="end" forceMount>
+          {/* User Info */}
+          <DropdownMenuLabel className="font-normal">
+            <div className="flex flex-col space-y-1">
+              <p className="text-sm font-medium leading-none">{user.name}</p>
+              <p className="text-xs leading-none text-muted-foreground">
+                {user.email}
+              </p>
+            </div>
+          </DropdownMenuLabel>
+
+          <DropdownMenuSeparator />
+
+          {/* Profile */}
+          <DropdownMenuItem
+            onClick={() => router.push("/profile")}
+            className="cursor-pointer"
+          >
+            <User className="mr-2 h-4 w-4" />
+            <span>Profile</span>
+          </DropdownMenuItem>
+
+          {/* Settings */}
+          <DropdownMenuItem
+            onClick={() => router.push("/settings")}
+            className="cursor-pointer"
+          >
+            <Settings className="mr-2 h-4 w-4" />
+            <span>Settings</span>
+          </DropdownMenuItem>
+
+          <DropdownMenuSeparator />
+
+          {/* Logout */}
+          <DropdownMenuItem
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+            className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950"
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
 };
 
 export default UserMenu;
