@@ -18,7 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
-import { ChevronDown, User, Settings, LogOut } from "lucide-react";
+import { User, Settings, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { Button } from "./ui/button";
@@ -83,9 +83,6 @@ const UserMenu = () => {
                 {user.role}
               </Badge>
             </div>
-
-            {/* Chevron */}
-            <ChevronDown className="h-4 w-4 text-muted-foreground" />
           </Button>
         </DropdownMenuTrigger>
 
