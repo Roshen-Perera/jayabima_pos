@@ -77,6 +77,15 @@ export const usePOSStore = create<POSState>((set, get) => ({
     },
 
     clearCart: () => {
-
+        set({
+            cart: {
+                items: [],
+                subtotal: 0,
+                discount: 0,
+                total: 0,
+            },
+            customerId: undefined,
+            customerName: undefined,
+        });
     }
 }));
