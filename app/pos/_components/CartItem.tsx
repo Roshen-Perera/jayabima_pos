@@ -32,6 +32,12 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
             <span className="text-xs text-muted-foreground">No img</span>
           </div>
         )}
+        <div className="flex-1 min-w-0">
+          <p className="font-medium text-sm truncate">{item.name}</p>
+          <p className="text-xs text-muted-foreground">
+            ${item.price.toFixed(2)}
+          </p>
+        </div>
       </div>
     </div>
   );
