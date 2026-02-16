@@ -22,4 +22,7 @@ export const usePOSStore = create<POSState>((set, get) => ({
         discount: 0,
         total: 0,
     },
+
+    customerId: undefined,
+    customerName: undefined,
 }));
