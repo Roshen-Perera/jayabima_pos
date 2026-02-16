@@ -7,3 +7,11 @@ export interface CartItem {
     image?: string;
     category?: string;
 }
+
+export interface Cart {
+    items: CartItem[];
+    subtotal: number;
+    tax: number;
+    discount: number;
+    total: number;
+}
