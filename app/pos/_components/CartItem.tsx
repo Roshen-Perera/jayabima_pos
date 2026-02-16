@@ -13,6 +13,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
       onUpdateQuantity(item.productId, newQuantity);
     }
   };
+  const itemTotal = item.price * item.quantity;
   return <div>CartItem</div>;
 };
 
