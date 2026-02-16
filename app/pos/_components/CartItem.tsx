@@ -38,6 +38,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
             ${item.price.toFixed(2)}
           </p>
         </div>
+        <div className="flex items-center gap-1"></div>
       </div>
     </div>
   );
