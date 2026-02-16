@@ -14,7 +14,11 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
     }
   };
   const itemTotal = item.price * item.quantity;
-  return <div>CartItem</div>;
+  return (
+    <div>
+      <div className="flex items-center gap-3 py-3 border-b"></div>
+    </div>
+  );
 };
 
 export default CartItem;
