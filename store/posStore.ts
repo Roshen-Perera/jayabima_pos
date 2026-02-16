@@ -54,6 +54,6 @@ export const usePOSStore = create<POSState>((set, get) => ({
     },
     
     removeFromCart: (productId) => {
-        
+        const { cart } = get();
     }
 }));
