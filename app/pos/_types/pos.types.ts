@@ -15,3 +15,22 @@ export interface Cart {
     discount: number;
     total: number;
 }
+
+export type PaymentMethod = 'CASH' | 'CARD' | 'MOBILE' | 'OTHER';
+export type SaleStatus = 'COMPLETED' | 'PENDING' | 'CANCELLED' | 'REFUNDED';
+
+export interface Sale {
+    id: string;
+    items: CartItem[];
+    customerId?: string;
+    customerName?: string;
+    userId: string;
+    userName: string;
+    subtotal: number;
+    tax: number;
+    discount: number;
+    total: number;
+    paymentMethod: PaymentMethod;
+    status: SaleStatus;
+    createdAt: Date;
+}
