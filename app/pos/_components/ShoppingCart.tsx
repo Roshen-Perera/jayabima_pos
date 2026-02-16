@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePOSStore } from "@/store/posStore";
 import { ShoppingCart as CartIcon, Trash2 } from "lucide-react";
 import React from "react";
@@ -33,6 +33,9 @@ const ShoppingCart = ({ onCheckout }: ShoppingCartProps) => {
             )}
           </div>
         </CardHeader>
+        <CardContent className="flex-1 flex flex-col p-4 pt-0">
+            
+        </CardContent>
       </Card>
     </div>
   );
