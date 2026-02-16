@@ -95,5 +95,10 @@ export const usePOSStore = create<POSState>((set, get) => ({
 
     calculateTotals: () => {
         const { cart } = get();
+
+        const subtotal = cart.items.reduce(
+            (sum, item) => sum + item.price * item.quantity,
+            0
+        );
     }
 }));
