@@ -1,3 +1,4 @@
+import { usePOSStore } from "@/store/posStore";
 import React from "react";
 
 interface ShoppingCartProps {
@@ -5,6 +6,7 @@ interface ShoppingCartProps {
 }
 
 const ShoppingCart = ({ onCheckout }: ShoppingCartProps) => {
+  const { cart, updateQuantity, removeFromCart, clearCart } = usePOSStore();
   return <div>ShoppingCart</div>;
 };
 
