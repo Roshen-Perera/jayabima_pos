@@ -1,4 +1,5 @@
 import { Cart } from "@/app/pos/_types/pos.types";
+import { create } from "domain";
 
 interface POSState {
     cart: Cart;
@@ -12,3 +13,13 @@ interface POSState {
     setCustomer: (id?: string, name?: string) => void;
     calculateTotals: () => void;
 }
+
+export const usePOSStore = create<POSState>((set, get) => ({
+    //Initial state
+    cart: {
+        items: [],
+        subtotal: 0,
+        discount: 0,
+        total: 0,
+    },
+}));
