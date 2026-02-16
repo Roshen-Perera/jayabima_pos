@@ -1,6 +1,8 @@
 import React from "react";
 import { CartItem as CartItemType } from "../_types/pos.types";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Minus } from "lucide-react";
 
 interface CartItemProps {
   item: CartItemType;
@@ -38,7 +40,16 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
             ${item.price.toFixed(2)}
           </p>
         </div>
-        <div className="flex items-center gap-1"></div>
+        <div className="flex items-center gap-1">
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-7 w-7"
+            onClick={() => handleQuantityChange(item.quantity - 1)}
+          >
+            <Minus className="h-3 w-3" />
+          </Button>
+        </div>
       </div>
     </div>
   );
