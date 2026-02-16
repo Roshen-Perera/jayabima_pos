@@ -56,6 +56,6 @@ export const usePOSStore = create<POSState>((set, get) => ({
     removeFromCart: (productId) => {
         const { cart } = get();
         const newItems = cart.items.filter((item) => item.productId !== productId);
-
+        set({ cart: { ...cart, items: newItems } });
     }
 }));
