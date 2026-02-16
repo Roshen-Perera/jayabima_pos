@@ -73,5 +73,6 @@ export const usePOSStore = create<POSState>((set, get) => ({
         );
 
         set({ cart: { ...cart, items: newItems } });
+        get().calculateTotals();
     }
 }));
