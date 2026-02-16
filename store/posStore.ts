@@ -68,5 +68,8 @@ export const usePOSStore = create<POSState>((set, get) => ({
             return;
         }
 
+        const newItems = cart.items.map((item) =>
+            item.productId === productId ? { ...item, quantity } : item
+        );
     }
 }));
