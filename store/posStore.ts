@@ -89,7 +89,7 @@ export const usePOSStore = create<POSState>((set, get) => ({
         });
     },
 
-    setCustomer: (id: string, name: string) => {
+    setCustomer: (id, name) => {
         set({ customerId: id, customerName: name });
     },
 
