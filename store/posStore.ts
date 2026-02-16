@@ -62,5 +62,11 @@ export const usePOSStore = create<POSState>((set, get) => ({
 
     updateQuantity: (productId, quantity) => {
         const { cart } = get();
+
+        if (quantity <= 0) {
+            get().removeFromCart(productId);
+            return;
+        }
+
     }
 }));
