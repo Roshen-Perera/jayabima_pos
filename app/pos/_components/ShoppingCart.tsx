@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { usePOSStore } from "@/store/posStore";
 import { ShoppingCart as CartIcon, Trash2 } from "lucide-react";
 import React from "react";
@@ -56,6 +57,42 @@ const ShoppingCart = ({ onCheckout }: ShoppingCartProps) => {
               </div>
             )}
           </div>
+          {!isEmpty && (
+            <>
+              <Separator className="my-4" />
+
+              <div className="space-y-2">
+                {/* Subtotal */}
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Subtotal</span>
+                  <span className="font-medium">
+                    ${cart.subtotal.toFixed(2)}
+                  </span>
+                </div>
+
+                {/* Discount (if any) */}
+                {cart.discount > 0 && (
+                  <div className="flex justify-between text-sm text-green-600">
+                    <span>Discount</span>
+                    <span>-${cart.discount.toFixed(2)}</span>
+                  </div>
+                )}
+
+                <Separator />
+
+                {/* Total (no tax) */}
+                <div className="flex justify-between text-lg font-bold">
+                  <span>Total</span>
+                  <span>${cart.total.toFixed(2)}</span>
+                </div>
+              </div>
+
+              {/* Checkout Button */}
+              <Button className="w-full mt-4" size="lg" onClick={onCheckout}>
+                Proceed to Checkout
+              </Button>
+            </>
+          )}
         </CardContent>
       </Card>
     </div>
