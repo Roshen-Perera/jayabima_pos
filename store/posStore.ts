@@ -57,5 +57,6 @@ export const usePOSStore = create<POSState>((set, get) => ({
         const { cart } = get();
         const newItems = cart.items.filter((item) => item.productId !== productId);
         set({ cart: { ...cart, items: newItems } });
+        get().calculateTotals();
     }
 }));
