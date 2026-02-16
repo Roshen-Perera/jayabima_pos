@@ -1,4 +1,4 @@
-import { Cart } from "@/app/pos/_types/pos.types";
+import { Cart, CartItem } from "@/app/pos/_types/pos.types";
 import { create } from "domain";
 
 interface POSState {
@@ -25,4 +25,13 @@ export const usePOSStore = create<POSState>((set, get) => ({
 
     customerId: undefined,
     customerName: undefined,
+
+    addToCart: (product) => {
+        const { cart } = get();
+        const existingItem = cart.items.find((item) => item.productId === product.productId); 
+
+        let newItems: CartItem[];
+
+        
+    }
 }));
