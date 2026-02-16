@@ -14,9 +14,12 @@ const ShoppingCart = ({ onCheckout }: ShoppingCartProps) => {
     <div>
       <Card className="h-full flex flex-col">
         <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2"><CartIcon className="h-5 w-5" /></CardTitle>
-            </div>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <CartIcon className="h-5 w-5" />
+              Cart ({cart.items.length})
+            </CardTitle>
+          </div>
         </CardHeader>
       </Card>
     </div>
