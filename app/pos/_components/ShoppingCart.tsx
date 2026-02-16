@@ -4,7 +4,7 @@ interface ShoppingCartProps {
   onCheckout: () => void;
 }
 
-const ShoppingCart = () => {
+const ShoppingCart = ({ onCheckout }: ShoppingCartProps) => {
   return <div>ShoppingCart</div>;
 };
 
