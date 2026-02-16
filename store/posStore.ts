@@ -38,7 +38,15 @@ export const usePOSStore = create<POSState>((set, get) => ({
                     : item
             );
         } else {
-
+            const newItem: CartItem = {
+                id: `cart-${Date.now()}`,
+                productId: product.id,
+                name: product.name,
+                price: product.sellingPrice,
+                quantity: 1,
+                image: product.image,
+                category: product.category,
+            };
         }
     }
 }));
