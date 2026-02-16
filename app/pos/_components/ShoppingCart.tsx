@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { usePOSStore } from "@/store/posStore";
 import { ShoppingCart as CartIcon, Trash2 } from "lucide-react";
 import React from "react";
+import CartItem from "./CartItem";
 
 interface ShoppingCartProps {
   onCheckout: () => void;
