@@ -49,5 +49,6 @@ export const usePOSStore = create<POSState>((set, get) => ({
             };
             newItems = [...cart.items, newItem];
         }
+        set({ cart: { ...cart, items: newItems } });
     }
 }));
