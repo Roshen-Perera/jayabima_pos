@@ -34,9 +34,28 @@ const ShoppingCart = ({ onCheckout }: ShoppingCartProps) => {
           </div>
         </CardHeader>
         <CardContent className="flex-1 flex flex-col p-4 pt-0">
-            <div className="flex-1 overflow-y-auto">
-                
-            </div>
+          <div className="flex-1 overflow-y-auto">
+            {isEmpty ? (
+              <div className="flex flex-col items-center justify-center h-full text-center p-8">
+                <CartIcon className="h-16 w-16 text-muted-foreground/30 mb-4" />
+                <p className="text-muted-foreground">Your cart is empty</p>
+                <p className="text-sm text-muted-foreground">
+                  Add products to start a sale
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-0">
+                {cart.items.map((item) => (
+                  <CartItem
+                    key={item.id}
+                    item={item}
+                    onUpdateQuantity={updateQuantity}
+                    onRemove={removeFromCart}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>
