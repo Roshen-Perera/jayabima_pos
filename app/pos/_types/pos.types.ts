@@ -34,3 +34,13 @@ export interface Sale {
     status: SaleStatus;
     createdAt: Date;
 }
+
+export interface SaleItem {
+    id: string;
+    saleId: string;
+    productId: string;
+    productName: string;
+    quantity: number;
+    price: number;
+    subtotal: number;
+}
