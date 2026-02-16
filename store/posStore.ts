@@ -102,5 +102,6 @@ export const usePOSStore = create<POSState>((set, get) => ({
         );
 
         const total = subtotal - cart.discount;
+        set({ cart: { ...cart, subtotal, total } });
     }
 }));
