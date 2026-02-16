@@ -11,7 +11,6 @@ export interface CartItem {
 export interface Cart {
     items: CartItem[];
     subtotal: number;
-    tax: number;
     discount: number;
     total: number;
 }
@@ -27,7 +26,6 @@ export interface Sale {
     userId: string;
     userName: string;
     subtotal: number;
-    tax: number;
     discount: number;
     total: number;
     paymentMethod: PaymentMethod;
