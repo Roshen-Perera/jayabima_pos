@@ -92,4 +92,8 @@ export const usePOSStore = create<POSState>((set, get) => ({
     setCustomer: (id: string, name: string) => {
         set({ customerId: id, customerName: name });
     },
+
+    calculateTotals: () => {
+        const { cart } = get();
+    }
 }));
