@@ -61,6 +61,6 @@ export const usePOSStore = create<POSState>((set, get) => ({
     },
 
     updateQuantity: (productId, quantity) => {
-
+        const { cart } = get();
     }
 }));
