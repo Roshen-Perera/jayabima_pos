@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePOSStore } from "@/store/posStore";
 import { ShoppingCart as CartIcon, Trash2 } from "lucide-react";
@@ -19,6 +20,17 @@ const ShoppingCart = ({ onCheckout }: ShoppingCartProps) => {
               <CartIcon className="h-5 w-5" />
               Cart ({cart.items.length})
             </CardTitle>
+            {!isEmpty && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearCart}
+                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+              >
+                <Trash2 className="h-4 w-4 mr-1" />
+                Clear
+              </Button>
+            )}
           </div>
         </CardHeader>
       </Card>
