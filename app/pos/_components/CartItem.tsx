@@ -68,6 +68,9 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
             <Plus className="h-3 w-3" />
           </Button>
         </div>
+        <div className="text-right w-20">
+          <p className="font-semibold text-sm">${itemTotal.toFixed(2)}</p>
+        </div>
       </div>
     </div>
   );
