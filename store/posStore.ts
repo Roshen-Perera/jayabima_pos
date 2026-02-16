@@ -28,10 +28,17 @@ export const usePOSStore = create<POSState>((set, get) => ({
 
     addToCart: (product) => {
         const { cart } = get();
-        const existingItem = cart.items.find((item) => item.productId === product.productId); 
+        const existingItem = cart.items.find((item) => item.productId === product.productId);
 
         let newItems: CartItem[];
+        if (existingItem) {
+            newItems = cart.items.map((item) =>
+                item.productId === product.id
+                    ? { ...item, quantity: item.quantity + 1 }
+                    : item
+            );
+        } else {
 
-        
+        }
     }
 }));
