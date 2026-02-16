@@ -2,7 +2,7 @@ import React from "react";
 import { CartItem as CartItemType } from "../_types/pos.types";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Minus } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 interface CartItemProps {
@@ -59,6 +59,14 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
             className="h-7 w-12 text-center p-0"
             min={1}
           />
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-7 w-7"
+            onClick={() => handleQuantityChange(item.quantity + 1)}
+          >
+            <Plus className="h-3 w-3" />
+          </Button>
         </div>
       </div>
     </div>
