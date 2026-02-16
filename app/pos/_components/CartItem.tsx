@@ -19,15 +19,19 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
     <div>
       <div className="flex items-center gap-3 py-3 border-b">
         {item.image ? (
-        <div className="relative w-12 h-12 rounded overflow-hidden flex-shrink-0">
-          <Image
-            src={item.image}
-            alt={item.name}
-            fill
-            className="object-cover"
-          />
-        </div>
-      )
+          <div className="relative w-12 h-12 rounded overflow-hidden flex-shrink-0">
+            <Image
+              src={item.image}
+              alt={item.name}
+              fill
+              className="object-cover"
+            />
+          </div>
+        ) : (
+          <div className="w-12 h-12 rounded bg-muted flex items-center justify-center flex-shrink-0">
+            <span className="text-xs text-muted-foreground">No img</span>
+          </div>
+        )}
       </div>
     </div>
   );
