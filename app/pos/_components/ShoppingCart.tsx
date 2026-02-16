@@ -1,5 +1,6 @@
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePOSStore } from "@/store/posStore";
+import { ShoppingCart as CartIcon, Trash2 } from "lucide-react";
 import React from "react";
 
 interface ShoppingCartProps {
