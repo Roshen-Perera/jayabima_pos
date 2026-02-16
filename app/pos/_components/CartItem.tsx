@@ -2,7 +2,7 @@ import React from "react";
 import { CartItem as CartItemType } from "../_types/pos.types";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 interface CartItemProps {
@@ -71,6 +71,14 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
         <div className="text-right w-20">
           <p className="font-semibold text-sm">${itemTotal.toFixed(2)}</p>
         </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-7 w-7 text-red-600 hover:text-red-700 hover:bg-red-50"
+          onClick={() => onRemove(item.productId)}
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   );
