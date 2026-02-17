@@ -1,3 +1,4 @@
+
 export interface Product {
     id: string;
     name: string;
@@ -10,6 +11,7 @@ export interface Product {
     minStock: number;
     description?: string;
     active: boolean;
+    image?: string;
     createdAt: Date;
     updatedAt: Date;
 }
