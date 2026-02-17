@@ -1,6 +1,5 @@
 import React from "react";
 import { CartItem as CartItemType } from "../_types/pos.types";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
