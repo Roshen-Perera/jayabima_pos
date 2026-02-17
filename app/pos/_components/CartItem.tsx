@@ -12,11 +12,6 @@ interface CartItemProps {
 }
 
 const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
-  const handleQuantityChange = (newQuantity: number) => {
-    if (newQuantity >= 1) {
-      onUpdateQuantity(item.productId, newQuantity);
-    }
-  };
   const itemTotal = item.price * item.quantity;
   return (
     <div>
