@@ -24,7 +24,14 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
         </p>
       </div>
       <div className="flex items-center gap-1 flex-shrink-0">
-        
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-7 w-7"
+          onClick={() => onUpdateQuantity(item.productId, item.quantity - 1)}
+        >
+          <Minus className="h-3 w-3" />
+        </Button>
       </div>
     </div>
   );
