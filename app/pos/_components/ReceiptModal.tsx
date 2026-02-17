@@ -18,7 +18,7 @@ interface ReceiptModalProps {
   } | null;
 }
 
-const ReceiptModal = () => {
+const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
   return <div>ReceiptModal</div>;
 };
 
