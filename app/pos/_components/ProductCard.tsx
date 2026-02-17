@@ -34,6 +34,13 @@ const ProductCard = ({
           <Badge variant="secondary" className="absolute top-2 left-2 text-xs">
             {product.category}
           </Badge>
+          {isOutOfStock && (
+            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+              <span className="text-white text-xs font-semibold">
+                Out of Stock
+              </span>
+            </div>
+          )}
         </div>
       </Card>
     </div>
