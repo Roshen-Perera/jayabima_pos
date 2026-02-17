@@ -12,6 +12,10 @@ const ProductGrid = ({ searchQuery, onAddToCart }: ProductGridProps) => {
   useEffect(() => {
     fetchProducts();
   }, [searchQuery]);
+
+  const fetchProducts = async () => {
+    setIsLoading(true);
+  }
   return <div>ProductGrid</div>;
 };
 
