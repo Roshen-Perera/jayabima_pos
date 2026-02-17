@@ -45,7 +45,6 @@ export const usePOSStore = create<POSState>((set, get) => ({
                 name: product.name,
                 price: product.price,
                 quantity: 1,
-                image: product.image,
                 category: product.category,
             };
             newItems = [...cart.items, newItem];
