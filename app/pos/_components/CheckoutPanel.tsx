@@ -95,6 +95,10 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
             <span className="text-muted-foreground">Items</span>
             <span className="font-medium">{cart.items.length}</span>
           </div>
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">Subtotal</span>
+            <span className="font-medium">${cart.subtotal.toFixed(2)}</span>
+          </div>
         </div>
       </Dialog>
     </div>
