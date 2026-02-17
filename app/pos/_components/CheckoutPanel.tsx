@@ -1,3 +1,4 @@
+import { usePOSStore } from "@/store/posStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -11,6 +12,7 @@ interface CheckoutPanelProps {
 const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
   const router = useRouter();
   const { user } = useAuthStore();
+  const { cart, clearCart } = usePOSStore();
   return <div>CheckoutPanel</div>;
 };
 
