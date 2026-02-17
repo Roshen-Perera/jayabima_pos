@@ -58,6 +58,17 @@ const ProductCard = ({
             <p className="text-base font-bold text-primary">
               Rs. {product.price.toLocaleString()}
             </p>
+            <span
+              className={`text-xs font-medium ${
+                isOutOfStock
+                  ? "text-red-500"
+                  : isLowStock
+                    ? "text-orange-500"
+                    : "text-green-600"
+              }`}
+            >
+              {isOutOfStock ? "No stock" : `Stock: ${product.stock}`}
+            </span>
           </div>
         </CardContent>
       </Card>
