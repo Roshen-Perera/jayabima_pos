@@ -1,3 +1,4 @@
+import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -9,6 +10,7 @@ interface CheckoutPanelProps {
 
 const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
   const router = useRouter();
+  const { user } = useAuthStore();
   return <div>CheckoutPanel</div>;
 };
 
