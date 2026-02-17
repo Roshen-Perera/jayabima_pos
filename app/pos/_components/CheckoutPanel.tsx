@@ -60,7 +60,7 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
         status: "COMPLETED",
         createdAt: new Date(),
         userId: user.id,
-        userName: user.name
+        userName: user.name,
       };
 
       await new Promise((resolve) => setTimeout(resolve, 800));
@@ -78,6 +78,17 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
       alert.error("Checkout failed", "An error occurred. Please try again.");
     } finally {
       setIsProcessing(false);
+    }
+  };
+
+  const handleCustomerSelect = (value: string) => {
+    if (value === "walk-in") {
+      setCustomer(undefined, undefined);
+    } else {
+      const customer = customers.find((c) => c.id === value);
+      if (customer) {
+        setCustomer(customer.id, customer.name);
+      }
     }
   };
   return (
