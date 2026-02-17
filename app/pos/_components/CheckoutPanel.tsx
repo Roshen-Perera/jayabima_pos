@@ -63,17 +63,14 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
 
       await new Promise((resolve) => setTimeout(resolve, 800));
 
-      if (result.success) {
-        alert.success("Sale completed!", `Total: $${cart.total.toFixed(2)}`);
-        clearCart();
-        onSuccess(result.sale.id);
-        onClose();
-      } else {
-        alert.error(
-          "Sale failed",
-          result.message || "Could not complete sale.",
-        );
-      }
+      alert.success(
+        "Sale completed!",
+        `Rs. ${cart.total.toLocaleString()} received via ${paymentMethod}`,
+      );
+
+      clearCart();
+      onSuccess(sale);
+      onClose();
     } catch (error) {
       console.error("Checkout error:", error);
       alert.error("Checkout failed", "An error occurred. Please try again.");
