@@ -5,23 +5,12 @@ import { alert } from "@/lib/alert";
 import { DialogContent, DialogTitle, DialogDescription } from "@radix-ui/react-dialog";
 import { Download, Printer, X } from "lucide-react";
 import React from "react";
+import { Sale } from "../_types/pos.types";
 
 interface ReceiptModalProps {
   open: boolean;
   onClose: () => void;
-  sale: {
-    id: string;
-    items: Array<{
-      name: string;
-      quantity: number;
-      price: number;
-    }>;
-    subtotal: number;
-    discount: number;
-    total: number;
-    paymentMethod: string;
-    createdAt: string;
-  } | null;
+  sale: Sale | null;
 }
 
 const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
