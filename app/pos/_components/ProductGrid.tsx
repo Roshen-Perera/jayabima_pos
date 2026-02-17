@@ -1,8 +1,9 @@
-import { Badge, Package } from "lucide-react";
+import { Package } from "lucide-react";
 import React, { useMemo } from "react";
 import ProductCard from "./ProductCard";
 import { Product } from "@/app/inventory/_types/product.types";
 import { CartItem } from "../_types/pos.types";
+import { Badge } from "@/components/ui/badge";
 
 interface ProductGridProps {
   products: Product[];
@@ -71,7 +72,7 @@ const ProductGrid = ({
             <p>No products found</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
             {filteredProducts.map((product) => (
               <button
                 key={product.id}
@@ -92,6 +93,16 @@ const ProductGrid = ({
                   <p className="font-bold text-xs text-primary">
                     Rs. {product.price.toLocaleString()}
                   </p>
+                  <Badge
+                    variant={
+                      product.stock <= product.minStock
+                        ? "destructive"
+                        : "default"
+                    }
+                    className="text-[8px] px-1.5"
+                  >
+                    {product.stock}
+                  </Badge>
                 </div>
               </button>
             ))}
