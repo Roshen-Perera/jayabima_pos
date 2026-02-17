@@ -23,6 +23,9 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
           Rs. {item.price.toLocaleString()} each
         </p>
       </div>
+      <div className="flex items-center gap-1 flex-shrink-0">
+        
+      </div>
     </div>
   );
 };
