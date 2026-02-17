@@ -35,33 +35,6 @@ const ProductGrid = ({ products, searchQuery, categoryFilter, cartItems, onAddTo
       return matchesSearch && matchesCategory;
     });
   }, [products, searchQuery, categoryFilter]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const fetchProducts = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch("/api/inventory/products");
-      const data = await response.json();
-      if (data.success) {
-        // Filter based on search query
-        let filtered = data.products;
-        if (searchQuery) {
-          filtered = data.products.filter(
-            (product: any) =>
-              product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              product.category
-                ?.toLowerCase()
-                .includes(searchQuery.toLowerCase()),
-          );
-        }
-        setProducts(filtered);
-      }
-    } catch (error) {
-      console.error("Failed to fetch products:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   if (isLoading) {
     return (
