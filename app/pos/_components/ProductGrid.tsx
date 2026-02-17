@@ -9,9 +9,6 @@ const ProductGrid = ({ searchQuery, onAddToCart }: ProductGridProps) => {
   const [products, setProducts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    fetchProducts();
-  }, [searchQuery]);
 
   const fetchProducts = async () => {
     setIsLoading(true);
