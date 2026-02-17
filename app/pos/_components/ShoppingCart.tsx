@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { usePOSStore } from "@/store/posStore";
-import { ShoppingCart as CartIcon, Tag, Trash2 } from "lucide-react";
+import { Banknote, ShoppingCart as CartIcon, Check, CreditCard, Edit, Minus, Package, Percent, Plus, QrCode, Tag, Trash2, Users, X } from "lucide-react";
 import React, { useState } from "react";
 import CartItem from "./CartItem";
 import { Label } from "@/components/ui/label";
@@ -64,14 +64,14 @@ const ShoppingCart = ({ onCheckout }: ShoppingCartProps) => {
           {/* Cart Items - Scrollable */}
           <ScrollArea className="flex-1 min-h-0">
             <div className="p-4 space-y-2">
-              {cartItems.length === 0 ? (
+              {cart.items.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
                   <Package className="w-12 h-12 mb-3 opacity-50" />
                   <p className="text-sm font-medium">Cart is empty</p>
                   <p className="text-xs">Click products or scan barcode</p>
                 </div>
               ) : (
-                cartItems.map((item) => (
+                cart.items.map((item) => (
                   <div
                     key={item.id}
                     className="p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
