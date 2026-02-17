@@ -7,6 +7,11 @@ interface ProductSearchProps {
 
 const ProductSearch = ({ onSearch, placeholder }: ProductSearchProps) => {
   const [searchQuery, setSearchQuery] = useState("");
+  const handleSearch = (value: string) => {
+    setSearchQuery(value);
+    onSearch(value);
+  };
+
   return <div>ProductSearch</div>;
 };
 
