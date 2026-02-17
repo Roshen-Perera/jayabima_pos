@@ -55,6 +55,9 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
               </span>
             )}
           </div>
+          <p className="text-xs text-muted-foreground mt-1">
+            Stock: {product.stock}
+          </p>
         </CardContent>
       </Card>
     </div>
