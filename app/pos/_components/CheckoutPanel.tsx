@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { PaymentMethod } from "../_types/pos.types";
 import { alert } from "@/lib/alert";
+import { Dialog } from "@/components/ui/dialog";
 
 interface CheckoutPanelProps {
   open: boolean;
@@ -72,7 +73,11 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
       setIsProcessing(false);
     }
   };
-  return <div>CheckoutPanel</div>;
+  return (
+    <div>
+      <Dialog open={open} onOpenChange={onClose}></Dialog>
+    </div>
+  );
 };
 
 export default CheckoutPanel;
