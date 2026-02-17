@@ -11,6 +11,10 @@ const ProductSearch = ({ onSearch, placeholder }: ProductSearchProps) => {
     setSearchQuery(value);
     onSearch(value);
   };
+  const handleClear = () => {
+    setSearchQuery("");
+    onSearch("");
+  };
 
   return <div>ProductSearch</div>;
 };
