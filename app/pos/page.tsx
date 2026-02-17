@@ -102,7 +102,7 @@ export default function POSPage() {
       </div>
 
       {/* RIGHT SIDE - Cart */}
-      
+      <div className="w-80">
 
       {/* Checkout Dialog */}
       <CheckoutPanel

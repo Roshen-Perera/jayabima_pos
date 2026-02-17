@@ -23,56 +23,29 @@ const ProductCard = ({
   const isMaxReached = quantityInCart >= product.stock;
   return (
     <div>
-      <Card
-        className={`overflow-hidden hover:shadow-md transition-all cursor-pointer ${
-          isOutOfStock ? "opacity-60" : "hover:border-primary"
-        }`}
-        onClick={() => !isOutOfStock && !isMaxReached && onAddToCart(product)}
+      <Button
+        key={product.id}
+        onClick={() => onAddToCart(product)}
+        disabled={isOutOfStock || isMaxReached}
+        className="group p-3 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-lg transition-all duration-200 text-left flex flex-col disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <div className="relative h-24 bg-muted flex items-center justify-center">
-          <Package className="h-10 w-10 text-muted-foreground/30" />
-          <Badge variant="secondary" className="absolute top-2 left-2 text-xs">
-            {product.category}
-          </Badge>
-          {isOutOfStock && (
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-              <span className="text-white text-xs font-semibold">
-                Out of Stock
-              </span>
-            </div>
-          )}
-          {quantityInCart > 0 && (
-            <div className="absolute top-2 right-2 bg-primary text-primary-foreground rounded-full h-6 w-6 flex items-center justify-center text-xs font-bold">
-              {quantityInCart}
-            </div>
-          )}
+        <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center mb-2 group-hover:bg-primary/10 transition-colors">
+          <Package className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
         </div>
-        <CardContent className="p-3">
-          <h3
-            className="font-medium text-sm leading-tight line-clamp-2"
-            title={product.name}
+        <p className="font-medium text-xs line-clamp-2 mb-1">{product.name}</p>
+        <p className="text-[10px] text-muted-foreground mb-2">{product.sku}</p>
+        <div className="mt-auto flex items-center justify-between gap-1">
+          <p className="font-bold text-xs text-primary">
+            Rs. {product.price.toLocaleString()}
+          </p>
+          <Badge
+            variant={isLowStock ? "destructive" : "default"}
+            className="text-[8px] px-1.5"
           >
-            {product.name}
-          </h3>
-          <div className="mt-2 flex items-center justify-between">
-            <p className="text-base font-bold text-primary">
-              Rs. {product.price.toLocaleString()}
-            </p>
-            <span
-              className={`text-xs font-medium ${
-                isOutOfStock
-                  ? "text-red-500"
-                  : isLowStock
-                    ? "text-orange-500"
-                    : "text-green-600"
-              }`}
-            >
-              {isOutOfStock ? "No stock" : `Stock: ${product.stock}`}
-            </span>
-          </div>
-          <p className="text-xs text-muted-foreground mt-1">{product.sku}</p>
-        </CardContent>
-      </Card>
+            {product.stock}
+          </Badge>
+        </div>
+      </Button>
     </div>
   );
 };
