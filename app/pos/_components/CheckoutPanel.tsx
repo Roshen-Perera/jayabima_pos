@@ -27,6 +27,7 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
       alert.error("Cart is empty", "Add products before checkout.");
       return;
     }
+    setIsProcessing(true);
   };
   return <div>CheckoutPanel</div>;
 };
