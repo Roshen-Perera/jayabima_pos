@@ -59,7 +59,17 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
             Stock: {product.stock}
           </p>
         </CardContent>
-        <CardFooter className="p-3 pt-0"></CardFooter>
+        <CardFooter className="p-3 pt-0">
+          <Button
+            className="w-full"
+            size="sm"
+            onClick={() => onAddToCart(product)}
+            disabled={isOutOfStock}
+          >
+            <Plus className="h-4 w-4 mr-1" />
+            Add to Cart
+          </Button>
+        </CardFooter>
       </Card>
     </div>
   );
