@@ -1,4 +1,4 @@
-import { Package } from "lucide-react";
+import { Badge, Package } from "lucide-react";
 import React, { useMemo } from "react";
 import ProductCard from "./ProductCard";
 import { Product } from "@/app/inventory/_types/product.types";
@@ -63,16 +63,42 @@ const ProductGrid = ({
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-      {filteredProducts.map((product) => (
-        <ProductCard
-          key={product.id}
-          product={product}
-          onAddToCart={onAddToCart}
-          quantityInCart={getQuantityInCart(product.id)}
-        />
-      ))}
-    </div>
+    <>
+      <div className="flex-1 overflow-y-auto min-h-0">
+        {filteredProducts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
+            <Package className="w-12 h-12 mb-2 opacity-50" />
+            <p>No products found</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+            {filteredProducts.map((product) => (
+              <button
+                key={product.id}
+                onClick={() => onAddToCart(product)}
+                disabled={product.stock <= 0}
+                className="group p-3 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-lg transition-all duration-200 text-left flex flex-col disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center mb-2 group-hover:bg-primary/10 transition-colors">
+                  <Package className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                </div>
+                <p className="font-medium text-xs line-clamp-2 mb-1">
+                  {product.name}
+                </p>
+                <p className="text-[10px] text-muted-foreground mb-2">
+                  {product.sku}
+                </p>
+                <div className="mt-auto flex items-center justify-between gap-1">
+                  <p className="font-bold text-xs text-primary">
+                    Rs. {product.price.toLocaleString()}
+                  </p>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
