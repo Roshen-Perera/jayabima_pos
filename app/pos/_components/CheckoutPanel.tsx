@@ -90,6 +90,7 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
             Select payment method and confirm the sale
           </DialogDescription>
         </DialogHeader>
+        <div className="space-y-2 py-4"></div>
       </Dialog>
     </div>
   );
