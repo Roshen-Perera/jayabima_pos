@@ -24,76 +24,53 @@ const ProductCard = ({
   return (
     <div>
       <Card
-        className={`group relative overflow-hidden rounded-xl border bg-background transition-all duration-200 
-    hover:shadow-lg hover:-translate-y-0.5 cursor-pointer
-    ${isOutOfStock ? "opacity-70 cursor-not-allowed" : "hover:border-primary/60"}
-  `}
+        className={`overflow-hidden hover:shadow-md transition-all cursor-pointer ${
+          isOutOfStock ? "opacity-60" : "hover:border-primary"
+        }`}
         onClick={() => !isOutOfStock && !isMaxReached && onAddToCart(product)}
       >
-        {/* Top Section */}
-        <div className="relative h-28 bg-muted/40 flex items-center justify-center border-b">
-          <Package className="h-12 w-12 text-muted-foreground/40 group-hover:scale-110 transition-transform duration-200" />
-
-          {/* Category Badge */}
-          <Badge
-            variant="secondary"
-            className="absolute top-2 left-2 text-[10px] px-2 py-0.5 rounded-md"
-          >
+        <div className="relative h-24 bg-muted flex items-center justify-center">
+          <Package className="h-10 w-10 text-muted-foreground/30" />
+          <Badge variant="secondary" className="absolute top-2 left-2 text-xs">
             {product.category}
           </Badge>
-
-          {/* Cart Quantity Bubble */}
-          {quantityInCart > 0 && (
-            <div
-              className="absolute top-2 right-2 bg-primary text-primary-foreground 
-        rounded-full h-7 w-7 flex items-center justify-center text-xs font-semibold shadow"
-            >
-              {quantityInCart}
-            </div>
-          )}
-
-          {/* Out of Stock Overlay */}
           {isOutOfStock && (
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-[1px] flex items-center justify-center">
-              <span className="text-white text-xs font-semibold tracking-wide">
-                OUT OF STOCK
+            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+              <span className="text-white text-xs font-semibold">
+                Out of Stock
               </span>
             </div>
           )}
+          {quantityInCart > 0 && (
+            <div className="absolute top-2 right-2 bg-primary text-primary-foreground rounded-full h-6 w-6 flex items-center justify-center text-xs font-bold">
+              {quantityInCart}
+            </div>
+          )}
         </div>
-
-        {/* Content */}
-        <CardContent className="p-4 space-y-2">
+        <CardContent className="p-3">
           <h3
-            className="font-semibold text-sm leading-tight line-clamp-2 min-h-[36px]"
+            className="font-medium text-sm leading-tight line-clamp-2"
             title={product.name}
           >
             {product.name}
           </h3>
-
-          <div className="flex items-center justify-between">
-            <p className="text-lg font-bold text-primary">
+          <div className="mt-2 flex items-center justify-between">
+            <p className="text-base font-bold text-primary">
               Rs. {product.price.toLocaleString()}
             </p>
-
             <span
-              className={`text-xs font-medium px-2 py-0.5 rounded-full
-          ${
-            isOutOfStock
-              ? "bg-red-100 text-red-600"
-              : isLowStock
-                ? "bg-orange-100 text-orange-600"
-                : "bg-green-100 text-green-600"
-          }
-        `}
+              className={`text-xs font-medium ${
+                isOutOfStock
+                  ? "text-red-500"
+                  : isLowStock
+                    ? "text-orange-500"
+                    : "text-green-600"
+              }`}
             >
-              {isOutOfStock ? "No stock" : `${product.stock} left`}
+              {isOutOfStock ? "No stock" : `Stock: ${product.stock}`}
             </span>
           </div>
-
-          <p className="text-[11px] text-muted-foreground truncate">
-            SKU: {product.sku}
-          </p>
+          <p className="text-xs text-muted-foreground mt-1">{product.sku}</p>
         </CardContent>
       </Card>
     </div>
