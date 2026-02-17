@@ -110,6 +110,7 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
             <span className="text-primary">${cart.total.toFixed(2)}</span>
           </div>
         </div>
+        <div className="space-y-3"></div>
       </Dialog>
     </div>
   );
