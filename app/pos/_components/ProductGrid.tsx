@@ -7,6 +7,7 @@ interface ProductGridProps {
 
 const ProductGrid = ({ searchQuery, onAddToCart }: ProductGridProps) => {
   const [products, setProducts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   return <div>ProductGrid</div>;
 };
 
