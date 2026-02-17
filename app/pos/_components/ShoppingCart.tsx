@@ -32,7 +32,7 @@ const ShoppingCart = ({ onCheckout }: ShoppingCartProps) => {
   return (
     <div>
       <Card className="h-full flex flex-col">
-        <CardHeader className="pb-3 flex-shrink-0">
+        <CardHeader className="pb-3 shrink-0">
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2 text-base">
               <CartIcon className="h-5 w-5" />
@@ -82,7 +82,7 @@ const ShoppingCart = ({ onCheckout }: ShoppingCartProps) => {
             )}
           </div>
           {!isEmpty && (
-            <div className="flex-shrink-0 mt-4 space-y-3">
+            <div className="shrink-0 mt-4 space-y-3">
               {/* Discount Input */}
               <div className="space-y-1">
                 <Label className="text-xs text-muted-foreground flex items-center gap-1">
