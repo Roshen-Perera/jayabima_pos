@@ -31,7 +31,9 @@ const ShoppingCart = ({ onCheckout }: ShoppingCartProps) => {
     <div>
       <Card className="h-full flex flex-col">
         <CardHeader className="pb-3 flex-shrink-0">
-          
+          <div className="flex items-center justify-between">
+            
+          </div>
         </CardHeader>
       </Card>
     </div>
