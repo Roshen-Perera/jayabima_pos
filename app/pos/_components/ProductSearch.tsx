@@ -5,7 +5,7 @@ interface ProductSearchProps {
   placeholder?: string;
 }
 
-const ProductSearch = () => {
+const ProductSearch = ({onSearch, placeholder}: ProductSearchProps) => {
   return <div>ProductSearch</div>;
 };
 
