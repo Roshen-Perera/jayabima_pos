@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -18,9 +18,8 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
-  return (
-    <div>ProductCard</div>
-  )
-}
+  const isOutOfStock = product.stock <= 0;
+  return <div>ProductCard</div>;
+};
 
-export default ProductCard
+export default ProductCard;
