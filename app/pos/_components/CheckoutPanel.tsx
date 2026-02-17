@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { CreditCard, DollarSign } from "lucide-react";
+import { CreditCard, DollarSign, Smartphone } from "lucide-react";
 
 interface CheckoutPanelProps {
   open: boolean;
@@ -136,6 +136,16 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
                 >
                   <CreditCard className="h-4 w-4" />
                   Card
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2 border rounded-lg p-3 cursor-pointer hover:bg-muted">
+                <RadioGroupItem value="MOBILE" id="mobile" />
+                <Label
+                  htmlFor="mobile"
+                  className="flex-1 cursor-pointer flex items-center gap-2"
+                >
+                  <Smartphone className="h-4 w-4" />
+                  Mobile Payment
                 </Label>
               </div>
             </div>
