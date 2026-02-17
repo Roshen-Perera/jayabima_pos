@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from "react";
 
 interface ProductGridProps {
   searchQuery: string;
@@ -6,9 +6,8 @@ interface ProductGridProps {
 }
 
 const ProductGrid = ({ searchQuery, onAddToCart }: ProductGridProps) => {
-  return (
-    <div>ProductGrid</div>
-  )
-}
+  const [products, setProducts] = useState<any[]>([]);
+  return <div>ProductGrid</div>;
+};
 
-export default ProductGrid
+export default ProductGrid;
