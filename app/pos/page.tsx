@@ -7,12 +7,12 @@ import { productCategories } from "@/data/data";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useProductStore } from "@/store/productStore";
-import { ScrollArea } from "radix-ui";
 import CheckoutPanel from "./_components/CheckoutPanel";
 import ProductGrid from "./_components/ProductGrid";
 import ProductSearch from "./_components/ProductSearch";
 import ReceiptModal from "./_components/ReceiptModal";
 import { Sale } from "./_types/pos.types";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import ShoppingCart from "./_components/ShoppingCart";
 
 export default function POSPage() {
