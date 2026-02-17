@@ -23,7 +23,18 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
     <div>
       <Card className="overflow-hidden hover:shadow-md transition-shadow">
         <div className="relative aspect-square bg-muted">
-            
+          {product.image ? (
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              className="object-cover"
+            />
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <Package className="h-12 w-12 text-muted-foreground/30" />
+            </div>
+          )}
         </div>
       </Card>
     </div>
