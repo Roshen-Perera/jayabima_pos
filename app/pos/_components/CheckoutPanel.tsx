@@ -51,6 +51,8 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
         },
         body: JSON.stringify(saleData),
       });
+
+      const result = await response.json();
     } catch (error) {}
   };
   return <div>CheckoutPanel</div>;
