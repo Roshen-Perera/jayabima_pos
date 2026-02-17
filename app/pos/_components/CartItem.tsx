@@ -55,6 +55,14 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
           Rs. {itemTotal.toLocaleString()}
         </p>
       </div>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-7 w-7 text-red-500 hover:text-red-600 hover:bg-red-50 flex-shrink-0"
+        onClick={() => onRemove(item.productId)}
+      >
+        <Trash2 className="h-4 w-4" />
+      </Button>
     </div>
   );
 };
