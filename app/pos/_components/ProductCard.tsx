@@ -48,7 +48,12 @@ const ProductCard = ({
           )}
         </div>
         <CardContent className="p-3">
-          
+          <h3
+            className="font-medium text-sm leading-tight line-clamp-2"
+            title={product.name}
+          >
+            {product.name}
+          </h3>
         </CardContent>
       </Card>
     </div>
