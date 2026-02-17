@@ -8,6 +8,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogHeader,
   DialogTitle,
@@ -161,6 +162,9 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
             </div>
           </RadioGroup>
         </div>
+        <DialogFooter className="gap-2 sm:gap-0">
+            
+        </DialogFooter>
       </Dialog>
     </div>
   );
