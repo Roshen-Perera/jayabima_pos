@@ -5,7 +5,7 @@ interface ProductGridProps {
   onAddToCart: (product: any) => void;
 }
 
-const ProductGrid = () => {
+const ProductGrid = ({ searchQuery, onAddToCart }: ProductGridProps) => {
   return (
     <div>ProductGrid</div>
   )
