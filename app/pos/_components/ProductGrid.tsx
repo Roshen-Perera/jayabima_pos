@@ -44,7 +44,21 @@ const ProductGrid = ({ searchQuery, onAddToCart }: ProductGridProps) => {
       </div>
     );
   }
-  return <div>ProductGrid</div>;
+
+  if (products.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 text-center">
+        <p className="text-muted-foreground">
+          {searchQuery ? "No products found" : "No products available"}
+        </p>
+        {searchQuery && (
+          <p className="text-sm text-muted-foreground mt-1">
+            Try adjusting your search
+          </p>
+        )}
+      </div>
+    );
+  }
 };
 
 export default ProductGrid;
