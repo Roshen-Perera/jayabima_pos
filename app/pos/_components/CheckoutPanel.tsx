@@ -18,10 +18,13 @@ import {
   DollarSign,
   Loader2,
   Smartphone,
+  User,
   Wallet,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCustomerStore } from "@/store/customerStore";
+import { SelectTrigger, SelectValue, SelectContent, SelectItem } from "@radix-ui/react-select";
+import { Separator, Select } from "radix-ui";
 
 interface CheckoutPanelProps {
   open: boolean;
