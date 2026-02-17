@@ -41,6 +41,9 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
             </div>
           )}
         </div>
+        <CardContent className="p-3">
+            
+        </CardContent>
       </Card>
     </div>
   );
