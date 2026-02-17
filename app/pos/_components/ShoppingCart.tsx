@@ -41,6 +41,17 @@ const ShoppingCart = ({ onCheckout }: ShoppingCartProps) => {
                 </span>
               )}
             </CardTitle>
+            {!isEmpty && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearCart}
+                className="text-red-500 hover:text-red-600 hover:bg-red-50 h-8"
+              >
+                <Trash2 className="h-4 w-4 mr-1" />
+                Clear
+              </Button>
+            )}
           </div>
         </CardHeader>
       </Card>
