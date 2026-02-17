@@ -1,6 +1,5 @@
-import { useProductStore } from "@/store/productStore";
-import { Loader2, Package } from "lucide-react";
-import React, { useEffect, useMemo, useState } from "react";
+import { Package } from "lucide-react";
+import React, { useMemo } from "react";
 import ProductCard from "./ProductCard";
 import { Product } from "@/app/inventory/_types/product.types";
 import { CartItem } from "../_types/pos.types";
