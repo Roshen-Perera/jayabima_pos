@@ -35,7 +35,7 @@ import { Separator } from "@/components/ui/separator";
 interface CheckoutPanelProps {
   open: boolean;
   onClose: () => void;
-  onSuccess: (saleId: string) => void;
+  onSuccess: (sale: Sale) => void;
 }
 
 const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
