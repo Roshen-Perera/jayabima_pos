@@ -1,6 +1,6 @@
 import { useProductStore } from "@/store/productStore";
 import { Loader2 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ProductCard from "./ProductCard";
 import { Product } from "@/app/inventory/_types/product.types";
 import { CartItem } from "../_types/pos.types";
@@ -13,8 +13,28 @@ interface ProductGridProps {
   onAddToCart: (product: Product) => void;
 }
 
-const ProductGrid = ({ searchQuery, onAddToCart }: ProductGridProps) => {
-  const [products, setProducts] = useState<any[]>([]);
+const ProductGrid = ({ products, searchQuery, categoryFilter, cartItems, onAddToCart }: ProductGridProps) => {
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) => {
+      // Only show active products
+      if (!product.active) return false;
+
+      // Search filter
+      const matchesSearch =
+        !searchQuery ||
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.category.toLowerCase().includes(searchQuery.toLowerCase());
+
+      // Category filter
+      const matchesCategory =
+        !categoryFilter ||
+        categoryFilter === "all" ||
+        product.category === categoryFilter;
+
+      return matchesSearch && matchesCategory;
+    });
+  }, [products, searchQuery, categoryFilter]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchProducts = async () => {
