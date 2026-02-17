@@ -6,7 +6,7 @@ interface CheckoutPanelProps {
   onSuccess: (saleId: string) => void;
 }
 
-const CheckoutPanel = () => {
+const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
   return <div>CheckoutPanel</div>;
 };
 
