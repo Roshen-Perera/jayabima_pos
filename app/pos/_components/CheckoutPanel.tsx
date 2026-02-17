@@ -23,6 +23,10 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
       alert.error("Not logged in", "Please log in to process sales.");
       return;
     }
+    if (cart.items.length === 0) {
+      alert.error("Cart is empty", "Add products before checkout.");
+      return;
+    }
   };
   return <div>CheckoutPanel</div>;
 };
