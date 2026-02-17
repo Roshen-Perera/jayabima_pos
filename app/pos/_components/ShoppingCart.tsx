@@ -13,8 +13,8 @@ interface ShoppingCartProps {
 }
 
 const ShoppingCart = ({ onCheckout }: ShoppingCartProps) => {
-  const { cart, updateQuantity, removeFromCart, clearCart } = usePOSStore();
-  const isEmpty = cart.items.length === 0;
+  const { cart, updateQuantity, removeFromCart, clearCart, applyDiscount } =
+    usePOSStore();
   return (
     <div>
       <Card className="h-full flex flex-col">
