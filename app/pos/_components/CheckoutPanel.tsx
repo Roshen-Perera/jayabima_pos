@@ -29,10 +29,21 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
     }
     setIsProcessing(true);
     try {
-
-    } catch (error) {
-        
-    }
+      const saleData = {
+        items: cart.items.map((item) => ({
+          productId: item.productId,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+        })),
+        userId: user.id,
+        userName: user.name,
+        subtotal: cart.subtotal,
+        discount: cart.discount,
+        total: cart.total,
+        paymentMethod,
+      };
+    } catch (error) {}
   };
   return <div>CheckoutPanel</div>;
 };
