@@ -1,9 +1,25 @@
-import React from 'react'
+import React from "react";
 
-const ReceiptModal = () => {
-  return (
-    <div>ReceiptModal</div>
-  )
+interface ReceiptModalProps {
+  open: boolean;
+  onClose: () => void;
+  sale: {
+    id: string;
+    items: Array<{
+      name: string;
+      quantity: number;
+      price: number;
+    }>;
+    subtotal: number;
+    discount: number;
+    total: number;
+    paymentMethod: string;
+    createdAt: string;
+  } | null;
 }
 
-export default ReceiptModal
+const ReceiptModal = () => {
+  return <div>ReceiptModal</div>;
+};
+
+export default ReceiptModal;
