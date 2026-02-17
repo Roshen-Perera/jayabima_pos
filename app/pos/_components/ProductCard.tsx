@@ -29,7 +29,7 @@ const ProductCard = ({
         onClick={() => !isOutOfStock && !isMaxReached && onAddToCart(product)}
       >
         <div className="relative h-24 bg-muted flex items-center justify-center">
-          
+          <Package className="h-10 w-10 text-muted-foreground/30" />
         </div>
       </Card>
     </div>
