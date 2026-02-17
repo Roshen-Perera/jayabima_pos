@@ -16,6 +16,7 @@ const ShoppingCart = ({ onCheckout }: ShoppingCartProps) => {
   const { cart, updateQuantity, removeFromCart, clearCart, applyDiscount } =
     usePOSStore();
   const [discountInput, setDiscountInput] = useState("");
+  const isEmpty = cart.items.length === 0;
   return (
     <div>
       <Card className="h-full flex flex-col">
