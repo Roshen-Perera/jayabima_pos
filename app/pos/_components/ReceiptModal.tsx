@@ -1,12 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogHeader } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { alert } from "@/lib/alert";
-import {
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-} from "@radix-ui/react-dialog";
 import { Download, Printer, ShoppingBag, X } from "lucide-react";
 import React from "react";
 import { Sale } from "../_types/pos.types";
