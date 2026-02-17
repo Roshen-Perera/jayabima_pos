@@ -1,3 +1,4 @@
+import { Product } from "@/app/inventory/_types/product.types";
 import { Cart, CartItem } from "@/app/pos/_types/pos.types";
 import { create } from "zustand";
 
@@ -6,7 +7,7 @@ interface POSState {
     customerId?: string;
     customerName?: string;
 
-    addToCart: (product: any) => void;
+    addToCart: (product: Product) => void;
     removeFromCart: (productId: string) => void;
     updateQuantity: (productId: string, quantity: number) => void;
     clearCart: () => void;
