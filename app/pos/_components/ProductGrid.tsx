@@ -13,7 +13,13 @@ interface ProductGridProps {
   onAddToCart: (product: Product) => void;
 }
 
-const ProductGrid = ({ products, searchQuery, categoryFilter, cartItems, onAddToCart }: ProductGridProps) => {
+const ProductGrid = ({
+  products,
+  searchQuery,
+  categoryFilter,
+  cartItems,
+  onAddToCart,
+}: ProductGridProps) => {
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
       // Only show active products
@@ -36,14 +42,10 @@ const ProductGrid = ({ products, searchQuery, categoryFilter, cartItems, onAddTo
     });
   }, [products, searchQuery, categoryFilter]);
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
+  const getQuantityInCart = (productId: string) => {
+    const item = cartItems.find((item) => item.productId === productId);
+    return item ? item.quantity : 0;
+  };
   if (products.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-64 text-center">
