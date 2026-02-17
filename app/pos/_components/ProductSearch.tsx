@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
 
-const ProductSearch = () => {
-  return (
-    <div>ProductSearch</div>
-  )
+interface ProductSearchProps {
+  onSearch: (query: string) => void;
+  placeholder?: string;
 }
 
-export default ProductSearch
+const ProductSearch = () => {
+  return <div>ProductSearch</div>;
+};
+
+export default ProductSearch;
