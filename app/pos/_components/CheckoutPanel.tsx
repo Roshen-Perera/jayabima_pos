@@ -105,6 +105,10 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
               <span>-${cart.discount.toFixed(2)}</span>
             </div>
           )}
+          <div className="flex justify-between text-lg font-bold pt-2 border-t">
+            <span>Total</span>
+            <span className="text-primary">${cart.total.toFixed(2)}</span>
+          </div>
         </div>
       </Dialog>
     </div>
