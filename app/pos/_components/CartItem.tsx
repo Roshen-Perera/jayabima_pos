@@ -22,7 +22,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
           Rs. {item.price.toLocaleString()} each
         </p>
       </div>
-      <div className="flex items-center gap-1 flex-shrink-0">
+      <div className="flex items-center gap-1 shrink-0">
         <Button
           variant="outline"
           size="icon"
@@ -49,7 +49,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
           <Plus className="h-3 w-3" />
         </Button>
       </div>
-      <div className="text-right w-24 flex-shrink-0">
+      <div className="text-right w-24 shrink-0">
         <p className="font-semibold text-sm">
           Rs. {itemTotal.toLocaleString()}
         </p>
@@ -57,7 +57,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
       <Button
         variant="ghost"
         size="icon"
-        className="h-7 w-7 text-red-500 hover:text-red-600 hover:bg-red-50 flex-shrink-0"
+        className="h-7 w-7 text-red-500 hover:text-red-600 hover:bg-red-50 shrink-0"
         onClick={() => onRemove(item.productId)}
       >
         <Trash2 className="h-4 w-4" />
