@@ -54,6 +54,7 @@ const ShoppingCart = ({ onCheckout }: ShoppingCartProps) => {
             )}
           </div>
         </CardHeader>
+        <CardContent className="flex-1 flex flex-col p-4 pt-0 overflow-hidden"></CardContent>
       </Card>
     </div>
   );
