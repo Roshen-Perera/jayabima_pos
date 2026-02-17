@@ -80,7 +80,7 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
       );
 
       clearCart();
-      onSuccess(sale.id);
+      onSuccess(sale);
       onClose();
     } catch (error) {
       console.error("Checkout error:", error);
