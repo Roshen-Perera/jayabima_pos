@@ -17,12 +17,16 @@ const ShoppingCart = ({ onCheckout }: ShoppingCartProps) => {
     usePOSStore();
   const [discountInput, setDiscountInput] = useState("");
   const isEmpty = cart.items.length === 0;
-    const handleApplyDiscount = () => {
-      const discount = parseFloat(discountInput);
-      if (!isNaN(discount) && discount >= 0 && discount <= cart.subtotal) {
-        applyDiscount(discount);
-      }
-    };
+  const handleApplyDiscount = () => {
+    const discount = parseFloat(discountInput);
+    if (!isNaN(discount) && discount >= 0 && discount <= cart.subtotal) {
+      applyDiscount(discount);
+    }
+  };
+  const handleRemoveDiscount = () => {
+    applyDiscount(0);
+    setDiscountInput("");
+  };
   return (
     <div>
       <Card className="h-full flex flex-col">
