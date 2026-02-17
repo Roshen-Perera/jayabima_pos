@@ -49,6 +49,11 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
             <p className="text-lg font-bold text-primary">
               ${product.sellingPrice.toFixed(2)}
             </p>
+            {product.category && (
+              <span className="text-xs text-muted-foreground">
+                {product.category}
+              </span>
+            )}
           </div>
         </CardContent>
       </Card>
