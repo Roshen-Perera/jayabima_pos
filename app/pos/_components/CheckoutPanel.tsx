@@ -28,6 +28,11 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
       return;
     }
     setIsProcessing(true);
+    try {
+
+    } catch (error) {
+        
+    }
   };
   return <div>CheckoutPanel</div>;
 };
