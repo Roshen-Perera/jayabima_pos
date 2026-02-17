@@ -41,6 +41,14 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
           className="h-7 w-12 text-center p-0 text-sm"
           min={1}
         />
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-7 w-7"
+          onClick={() => onUpdateQuantity(item.productId, item.quantity + 1)}
+        >
+          <Plus className="h-3 w-3" />
+        </Button>
       </div>
     </div>
   );
