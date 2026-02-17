@@ -15,7 +15,7 @@ export interface Cart {
     total: number;
 }
 
-export type PaymentMethod = 'CASH' | 'CARD' | 'BANKTRANSFER';
+export type PaymentMethod = 'CASH' | 'CARD' | 'MOBILE' | 'OTHER';
 export type SaleStatus = 'COMPLETED' | 'PENDING' | 'CANCELLED' | 'REFUNDED';
 
 export interface Sale {

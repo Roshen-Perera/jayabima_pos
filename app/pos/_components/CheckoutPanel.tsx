@@ -101,89 +101,184 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
             Select payment method and confirm the sale
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-2 py-4">
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Items</span>
-            <span className="font-medium">{cart.items.length}</span>
-          </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Subtotal</span>
-            <span className="font-medium">${cart.subtotal.toFixed(2)}</span>
-          </div>
-          {cart.discount > 0 && (
-            <div className="flex justify-between text-sm text-green-600">
-              <span>Discount</span>
-              <span>-${cart.discount.toFixed(2)}</span>
+        <div className="space-y-4">
+          {/* Sale Summary */}
+          <div className="bg-muted/50 rounded-lg p-4 space-y-2">
+            <p className="text-sm font-medium">Order Summary</p>
+
+            {/* Items */}
+            <div className="space-y-1 max-h-32 overflow-y-auto">
+              {cart.items.map((item) => (
+                <div key={item.id} className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">
+                    {item.name} × {item.quantity}
+                  </span>
+                  <span>
+                    Rs. {(item.price * item.quantity).toLocaleString()}
+                  </span>
+                </div>
+              ))}
             </div>
-          )}
-          <div className="flex justify-between text-lg font-bold pt-2 border-t">
-            <span>Total</span>
-            <span className="text-primary">${cart.total.toFixed(2)}</span>
-          </div>
-        </div>
-        <div className="space-y-3">
-          <Label>Payment Method</Label>
-          <RadioGroup
-            value={paymentMethod}
-            onValueChange={(value) => setPaymentMethod(value as PaymentMethod)}
-          >
-            <div className="flex items-center space-x-2 border rounded-lg p-3 cursor-pointer hover:bg-muted">
-              <RadioGroupItem value="CASH" id="cash" />
-              <Label
-                htmlFor="cash"
-                className="flex-1 cursor-pointer flex items-center gap-2"
-              >
-                <DollarSign className="h-4 w-4" />
-                Cash
-              </Label>
+
+            <Separator />
+
+            {/* Totals */}
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Subtotal</span>
+              <span>Rs. {cart.subtotal.toLocaleString()}</span>
             </div>
-            <div className="flex items-center space-x-2 border rounded-lg p-3 cursor-pointer hover:bg-muted">
-              <RadioGroupItem value="CARD" id="card" />
-              <Label
-                htmlFor="card"
-                className="flex-1 cursor-pointer flex items-center gap-2"
-              >
-                <CreditCard className="h-4 w-4" />
-                Card
-              </Label>
-            </div>
-            <div className="flex items-center space-x-2 border rounded-lg p-3 cursor-pointer hover:bg-muted">
-              <RadioGroupItem value="MOBILE" id="mobile" />
-              <Label
-                htmlFor="mobile"
-                className="flex-1 cursor-pointer flex items-center gap-2"
-              >
-                <Smartphone className="h-4 w-4" />
-                Mobile Payment
-              </Label>
-            </div>
-            <div className="flex items-center space-x-2 border rounded-lg p-3 cursor-pointer hover:bg-muted">
-              <RadioGroupItem value="OTHER" id="other" />
-              <Label
-                htmlFor="other"
-                className="flex-1 cursor-pointer flex items-center gap-2"
-              >
-                <Wallet className="h-4 w-4" />
-                Other
-              </Label>
-            </div>
-          </RadioGroup>
-        </div>
-        <DialogFooter className="gap-2 sm:gap-0">
-          <Button variant="outline" onClick={onClose} disabled={isProcessing}>
-            Cancel
-          </Button>
-          <Button onClick={handleCheckout} disabled={isProcessing}>
-            {isProcessing ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Processing...
-              </>
-            ) : (
-              `Complete Sale - $${cart.total.toFixed(2)}`
+
+            {cart.discount > 0 && (
+              <div className="flex justify-between text-sm text-green-600">
+                <span>Discount</span>
+                <span>- Rs. {cart.discount.toLocaleString()}</span>
+              </div>
             )}
-          </Button>
-        </DialogFooter>
+
+            <div className="flex justify-between font-bold text-base pt-1">
+              <span>Total</span>
+              <span className="text-primary">
+                Rs. {cart.total.toLocaleString()}
+              </span>
+            </div>
+          </div>
+
+          {/* Customer Selection */}
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <User className="h-4 w-4" />
+              Customer
+            </Label>
+            <Select
+              value={customerId || "walk-in"}
+              onValueChange={handleCustomerSelect}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select customer" />
+              </SelectTrigger>
+              <SelectContent>
+                {/* Walk-in option */}
+                <SelectItem value="walk-in">Walk-in Customer</SelectItem>
+                <Separator className="my-1" />
+                {/* Customer list */}
+                {customers.map((customer) => (
+                  <SelectItem key={customer.id} value={customer.id}>
+                    <div className="flex flex-col">
+                      <span>{customer.name}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {customer.phone}
+                      </span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Payment Method */}
+          <div className="space-y-2">
+            <Label>Payment Method</Label>
+            <RadioGroup
+              value={paymentMethod}
+              onValueChange={(value) =>
+                setPaymentMethod(value as PaymentMethod)
+              }
+              className="grid grid-cols-2 gap-2"
+            >
+              {/* Cash */}
+              <div
+                className={`flex items-center gap-2 border rounded-lg p-3 cursor-pointer hover:bg-muted transition-colors ${
+                  paymentMethod === "CASH" ? "border-primary bg-primary/5" : ""
+                }`}
+              >
+                <RadioGroupItem value="CASH" id="cash" />
+                <Label
+                  htmlFor="cash"
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <DollarSign className="h-4 w-4" />
+                  Cash
+                </Label>
+              </div>
+
+              {/* Card */}
+              <div
+                className={`flex items-center gap-2 border rounded-lg p-3 cursor-pointer hover:bg-muted transition-colors ${
+                  paymentMethod === "CARD" ? "border-primary bg-primary/5" : ""
+                }`}
+              >
+                <RadioGroupItem value="CARD" id="card" />
+                <Label
+                  htmlFor="card"
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <CreditCard className="h-4 w-4" />
+                  Card
+                </Label>
+              </div>
+
+              {/* Mobile */}
+              <div
+                className={`flex items-center gap-2 border rounded-lg p-3 cursor-pointer hover:bg-muted transition-colors ${
+                  paymentMethod === "MOBILE"
+                    ? "border-primary bg-primary/5"
+                    : ""
+                }`}
+              >
+                <RadioGroupItem value="MOBILE" id="mobile" />
+                <Label
+                  htmlFor="mobile"
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <Smartphone className="h-4 w-4" />
+                  Mobile
+                </Label>
+              </div>
+
+              {/* Other */}
+              <div
+                className={`flex items-center gap-2 border rounded-lg p-3 cursor-pointer hover:bg-muted transition-colors ${
+                  paymentMethod === "OTHER" ? "border-primary bg-primary/5" : ""
+                }`}
+              >
+                <RadioGroupItem value="OTHER" id="other" />
+                <Label
+                  htmlFor="other"
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <Wallet className="h-4 w-4" />
+                  Other
+                </Label>
+              </div>
+            </RadioGroup>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-2 pt-2">
+            <Button
+              variant="outline"
+              onClick={onClose}
+              disabled={isProcessing}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleCheckout}
+              disabled={isProcessing}
+              className="flex-1"
+            >
+              {isProcessing ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                `Complete - Rs. ${cart.total.toLocaleString()}`
+              )}
+            </Button>
+          </div>
+        </div>
       </Dialog>
     </div>
   );
