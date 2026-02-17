@@ -47,6 +47,9 @@ const ProductCard = ({
             </div>
           )}
         </div>
+        <CardContent className="p-3">
+          
+        </CardContent>
       </Card>
     </div>
   );
