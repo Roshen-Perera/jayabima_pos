@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { PaymentMethod } from "../_types/pos.types";
 import { alert } from "@/lib/alert";
-import { Dialog } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 interface CheckoutPanelProps {
   open: boolean;
@@ -75,7 +75,11 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
   };
   return (
     <div>
-      <Dialog open={open} onOpenChange={onClose}></Dialog>
+      <Dialog open={open} onOpenChange={onClose}>
+        <DialogContent className="sm:max-w-md">
+            
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
