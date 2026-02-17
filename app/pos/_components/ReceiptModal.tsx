@@ -2,8 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogHeader } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { alert } from "@/lib/alert";
-import { DialogContent, DialogTitle, DialogDescription } from "@radix-ui/react-dialog";
-import { Download, Printer, X } from "lucide-react";
+import {
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@radix-ui/react-dialog";
+import { Download, Printer, ShoppingBag, X } from "lucide-react";
 import React from "react";
 import { Sale } from "../_types/pos.types";
 
@@ -24,42 +28,56 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
   };
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-sm">
         <DialogHeader>
-          <DialogTitle>Sale Receipt</DialogTitle>
-          <DialogDescription>
-            Transaction #{sale.id.slice(0, 8)}
-          </DialogDescription>
+          <DialogTitle className="flex items-center gap-2">
+            <ShoppingBag className="h-5 w-5 text-green-600" />
+            Sale Completed!
+          </DialogTitle>
         </DialogHeader>
 
-        {/* Receipt Content */}
-        <div className="space-y-4" id="receipt">
-          {/* Business Info */}
-          <div className="text-center">
-            <h2 className="text-xl font-bold">JAYABIMA POS</h2>
-            <p className="text-sm text-muted-foreground">
-              Point of Sale System
+        {/* Receipt */}
+        <div className="space-y-3 font-mono text-sm" id="receipt-content">
+          {/* Header */}
+          <div className="text-center space-y-1">
+            <h2 className="text-base font-bold">JAYABIMA</h2>
+            <p className="text-xs text-muted-foreground">
+              Hardware & Construction Supplies
             </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              {new Date(sale.createdAt).toLocaleString()}
+            <p className="text-xs text-muted-foreground">
+              {new Date(sale.createdAt).toLocaleString("en-LK")}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Receipt #{sale.id.slice(-8).toUpperCase()}
             </p>
           </div>
 
           <Separator />
 
+          {/* Customer */}
+          {sale.customerName && (
+            <>
+              <div className="text-xs">
+                <span className="text-muted-foreground">Customer: </span>
+                <span className="font-medium">{sale.customerName}</span>
+              </div>
+              <Separator />
+            </>
+          )}
+
           {/* Items */}
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {sale.items.map((item, index) => (
-              <div key={index} className="flex justify-between text-sm">
-                <div className="flex-1">
-                  <p className="font-medium">{item.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {item.quantity} x ${item.price.toFixed(2)}
-                  </p>
+              <div key={index}>
+                <p className="font-medium text-xs leading-tight">{item.name}</p>
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>
+                    {item.quantity} × Rs. {item.price.toLocaleString()}
+                  </span>
+                  <span className="font-medium text-foreground">
+                    Rs. {(item.quantity * item.price).toLocaleString()}
+                  </span>
                 </div>
-                <p className="font-medium">
-                  ${(item.quantity * item.price).toFixed(2)}
-                </p>
               </div>
             ))}
           </div>
@@ -67,53 +85,45 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
           <Separator />
 
           {/* Totals */}
-          <div className="space-y-1">
-            <div className="flex justify-between text-sm">
+          <div className="space-y-1 text-xs">
+            <div className="flex justify-between">
               <span className="text-muted-foreground">Subtotal</span>
-              <span>${sale.subtotal.toFixed(2)}</span>
+              <span>Rs. {sale.subtotal.toLocaleString()}</span>
             </div>
             {sale.discount > 0 && (
-              <div className="flex justify-between text-sm text-green-600">
+              <div className="flex justify-between text-green-600">
                 <span>Discount</span>
-                <span>-${sale.discount.toFixed(2)}</span>
+                <span>- Rs. {sale.discount.toLocaleString()}</span>
               </div>
             )}
-            <Separator />
-            <div className="flex justify-between font-bold text-lg">
-              <span>Total</span>
-              <span>${sale.total.toFixed(2)}</span>
+            <div className="flex justify-between font-bold text-base pt-1">
+              <span>TOTAL</span>
+              <span>Rs. {sale.total.toLocaleString()}</span>
             </div>
           </div>
 
           <Separator />
 
-          {/* Payment Method */}
-          <div className="text-center">
-            <p className="text-sm text-muted-foreground">
-              Payment Method:{" "}
+          {/* Payment */}
+          <div className="text-xs text-center space-y-1">
+            <p>
+              <span className="text-muted-foreground">Payment: </span>
               <span className="font-medium">{sale.paymentMethod}</span>
             </p>
-          </div>
-
-          {/* Footer */}
-          <div className="text-center text-xs text-muted-foreground">
-            <p>Thank you for your purchase!</p>
-            <p className="mt-1">Receipt ID: {sale.id.slice(0, 8)}</p>
+            <p className="text-muted-foreground mt-2">
+              Thank you for your purchase!
+            </p>
           </div>
         </div>
 
         {/* Actions */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 mt-2">
           <Button variant="outline" className="flex-1" onClick={handlePrint}>
             <Printer className="mr-2 h-4 w-4" />
             Print
           </Button>
-          <Button variant="outline" className="flex-1" onClick={handleDownload}>
-            <Download className="mr-2 h-4 w-4" />
-            Download
-          </Button>
-          <Button variant="outline" onClick={onClose}>
-            <X className="h-4 w-4" />
+          <Button className="flex-1" onClick={onClose}>
+            New Sale
           </Button>
         </div>
       </DialogContent>
