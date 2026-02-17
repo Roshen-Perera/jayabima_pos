@@ -53,6 +53,18 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
       });
 
       const result = await response.json();
+
+      if (result.success) {
+        alert.success("Sale completed!", `Total: $${cart.total.toFixed(2)}`);
+        clearCart();
+        onSuccess(result.sale.id);
+        onClose();
+      } else {
+        alert.error(
+          "Sale failed",
+          result.message || "Could not complete sale.",
+        );
+      }
     } catch (error) {}
   };
   return <div>CheckoutPanel</div>;
