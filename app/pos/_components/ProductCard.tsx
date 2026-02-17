@@ -12,8 +12,10 @@ interface ProductCardProps {
   quantityInCart: number; // ⭐ Shows how many already in cart
 }
 
-const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
+const ProductCard = ({ product, onAddToCart, quantityInCart }: ProductCardProps) => {
   const isOutOfStock = product.stock <= 0;
+  const isLowStock = product.stock <= product.minStock && product.stock > 0;
+  const isMaxReached = quantityInCart >= product.stock;
   return (
     <div>
       <Card className="overflow-hidden hover:shadow-md transition-shadow">
