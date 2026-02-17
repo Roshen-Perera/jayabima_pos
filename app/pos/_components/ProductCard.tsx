@@ -42,7 +42,9 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
           )}
         </div>
         <CardContent className="p-3">
-            
+          <h3 className="font-medium text-sm truncate" title={product.name}>
+            {product.name}
+          </h3>
         </CardContent>
       </Card>
     </div>
