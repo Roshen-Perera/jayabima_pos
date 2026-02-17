@@ -3,14 +3,6 @@ import { useAuthStore } from "@/store/useAuthStore";
 import React, { useState } from "react";
 import { PaymentMethod, Sale } from "../_types/pos.types";
 import { alert } from "@/lib/alert";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
@@ -31,6 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface CheckoutPanelProps {
   open: boolean;
@@ -103,13 +96,13 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
   return (
     <div>
       <Dialog open={open} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-md"></DialogContent>
-        <DialogHeader>
-          <DialogTitle>Complete Sale</DialogTitle>
-          <DialogDescription>
-            Select payment method and confirm the sale
-          </DialogDescription>
-        </DialogHeader>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Complete Sale</DialogTitle>
+            <DialogDescription>
+              Select payment method and confirm the sale
+            </DialogDescription>
+          </DialogHeader>
         <div className="space-y-4">
           {/* Sale Summary */}
           <div className="bg-muted/50 rounded-lg p-4 space-y-2">
@@ -288,6 +281,7 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
             </Button>
           </div>
         </div>
+        </DialogContent>
       </Dialog>
     </div>
   );
