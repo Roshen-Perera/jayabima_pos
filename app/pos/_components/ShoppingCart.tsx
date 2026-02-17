@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { usePOSStore } from "@/store/posStore";
 import { ShoppingCart as CartIcon, Trash2 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import CartItem from "./CartItem";
 
 interface ShoppingCartProps {
@@ -15,6 +15,7 @@ interface ShoppingCartProps {
 const ShoppingCart = ({ onCheckout }: ShoppingCartProps) => {
   const { cart, updateQuantity, removeFromCart, clearCart, applyDiscount } =
     usePOSStore();
+  const [discountInput, setDiscountInput] = useState("");
   return (
     <div>
       <Card className="h-full flex flex-col">
