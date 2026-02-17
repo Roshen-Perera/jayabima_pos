@@ -20,6 +20,9 @@ interface ReceiptModalProps {
 
 const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
   if (!sale) return null;
+  const handlePrint = () => {
+    window.print();
+  };
   return <div>ReceiptModal</div>;
 };
 
