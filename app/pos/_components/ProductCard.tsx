@@ -45,6 +45,9 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
           <h3 className="font-medium text-sm truncate" title={product.name}>
             {product.name}
           </h3>
+          <div className="flex items-baseline gap-2 mt-1">
+            
+          </div>
         </CardContent>
       </Card>
     </div>
