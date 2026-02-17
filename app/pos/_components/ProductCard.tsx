@@ -21,7 +21,11 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
   const isOutOfStock = product.stock <= 0;
   return (
     <div>
-      <Card className="overflow-hidden hover:shadow-md transition-shadow"></Card>
+      <Card className="overflow-hidden hover:shadow-md transition-shadow">
+        <div className="relative aspect-square bg-muted">
+            
+        </div>
+      </Card>
     </div>
   );
 };
