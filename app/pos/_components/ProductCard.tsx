@@ -54,6 +54,11 @@ const ProductCard = ({
           >
             {product.name}
           </h3>
+          <div className="mt-2 flex items-center justify-between">
+            <p className="text-base font-bold text-primary">
+              Rs. {product.price.toLocaleString()}
+            </p>
+          </div>
         </CardContent>
       </Card>
     </div>
