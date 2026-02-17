@@ -7,6 +7,7 @@ import { alert } from "@/lib/alert";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogHeader,
   DialogTitle,
@@ -85,6 +86,9 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
         <DialogContent className="sm:max-w-md"></DialogContent>
         <DialogHeader>
           <DialogTitle>Complete Sale</DialogTitle>
+          <DialogDescription>
+            Select payment method and confirm the sale
+          </DialogDescription>
         </DialogHeader>
       </Dialog>
     </div>
