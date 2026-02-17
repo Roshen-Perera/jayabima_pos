@@ -12,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 
 interface CheckoutPanelProps {
   open: boolean;
@@ -110,7 +111,9 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
             <span className="text-primary">${cart.total.toFixed(2)}</span>
           </div>
         </div>
-        <div className="space-y-3"></div>
+        <div className="space-y-3">
+          <Label>Payment Method</Label>
+        </div>
       </Dialog>
     </div>
   );
