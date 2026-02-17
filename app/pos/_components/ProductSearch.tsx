@@ -1,3 +1,4 @@
+import { Search } from "lucide-react";
 import React, { useState } from "react";
 
 interface ProductSearchProps {
@@ -16,7 +17,11 @@ const ProductSearch = ({ onSearch, placeholder }: ProductSearchProps) => {
     onSearch("");
   };
 
-  return <div>ProductSearch</div>;
+  return (
+    <div className="relative">
+      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+    </div>
+  );
 };
 
 export default ProductSearch;
