@@ -15,6 +15,7 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
   const { user } = useAuthStore();
   const { cart, clearCart } = usePOSStore();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("CASH");
+  const [isProcessing, setIsProcessing] = useState(false);
   return <div>CheckoutPanel</div>;
 };
 
