@@ -66,7 +66,8 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
         );
       }
     } catch (error) {
-        console.error("Checkout error:", error);
+      console.error("Checkout error:", error);
+      alert.error("Checkout failed", "An error occurred. Please try again.");
     }
   };
   return <div>CheckoutPanel</div>;
