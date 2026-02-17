@@ -1,7 +1,7 @@
 import { usePOSStore } from "@/store/posStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import React, { useState } from "react";
-import { PaymentMethod } from "../_types/pos.types";
+import { PaymentMethod, Sale } from "../_types/pos.types";
 import { alert } from "@/lib/alert";
 import {
   Dialog,
@@ -48,19 +48,17 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
     }
     setIsProcessing(true);
     try {
-      const saleData = {
-        items: cart.items.map((item) => ({
-          productId: item.productId,
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price,
-        })),
-        userId: user.id,
-        userName: user.name,
+      const sale: Sale = {
+        id: "SAL-" + Date.now().toString(),
+        items: cart.items,
+        customerId,
+        customerName,
         subtotal: cart.subtotal,
         discount: cart.discount,
         total: cart.total,
         paymentMethod,
+        status: "COMPLETED",
+        createdAt: new Date(),
       };
 
       const response = await fetch("/api/pos/sales", {
