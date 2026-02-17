@@ -1,5 +1,6 @@
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import React, { useState } from "react";
 
 interface ProductSearchProps {
@@ -28,6 +29,16 @@ const ProductSearch = ({ onSearch, placeholder }: ProductSearchProps) => {
         onChange={(e) => handleSearch(e.target.value)}
         className="pl-10 pr-10"
       />
+      {searchQuery && (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
+          onClick={handleClear}
+        >
+          <X className="h-4 w-4" />
+        </Button>
+      )}
     </div>
   );
 };
