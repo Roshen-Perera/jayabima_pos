@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation";
 import React from "react";
 
 interface CheckoutPanelProps {
@@ -7,6 +8,7 @@ interface CheckoutPanelProps {
 }
 
 const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
+  const router = useRouter();
   return <div>CheckoutPanel</div>;
 };
 
