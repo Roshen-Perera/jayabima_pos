@@ -110,7 +110,6 @@ export default function POSPage() {
       <CheckoutPanel
         open={isCheckoutOpen}
         onClose={() => setIsCheckoutOpen(false)}
-        onSuccess={handleCheckoutSuccess}
       />
 
       {/* Receipt Dialog */}
