@@ -50,6 +50,11 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
           <Plus className="h-3 w-3" />
         </Button>
       </div>
+      <div className="text-right w-24 flex-shrink-0">
+        <p className="font-semibold text-sm">
+          Rs. {itemTotal.toLocaleString()}
+        </p>
+      </div>
     </div>
   );
 };
