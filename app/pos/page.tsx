@@ -43,7 +43,7 @@ export default function POSPage() {
       {/* LEFT SIDE - Products */}
       <div className="flex-1 flex flex-col gap-3 overflow-hidden">
         {/* Search */}
-        <ProductSearch value={searchQuery} onChange={setSearchQuery} />
+        <ProductSearch placeholder={searchQuery} onSearch={setSearchQuery} />
 
         {/* Category Filter */}
         <ScrollArea className="w-full whitespace-nowrap">
