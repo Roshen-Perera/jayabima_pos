@@ -27,7 +27,11 @@ const ProductCard = ({
           isOutOfStock ? "opacity-60" : "hover:border-primary"
         }`}
         onClick={() => !isOutOfStock && !isMaxReached && onAddToCart(product)}
-      ></Card>
+      >
+        <div className="relative h-24 bg-muted flex items-center justify-center">
+          
+        </div>
+      </Card>
     </div>
   );
 };
