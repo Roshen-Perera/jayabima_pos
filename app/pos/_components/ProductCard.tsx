@@ -72,6 +72,20 @@ const ProductCard = ({
           </div>
           <p className="text-xs text-muted-foreground mt-1">{product.sku}</p>
         </CardContent>
+        <CardFooter className="p-3 pt-0">
+          <Button
+            className="w-full"
+            size="sm"
+            disabled={isOutOfStock || isMaxReached}
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddToCart(product);
+            }}
+          >
+            <Plus className="h-4 w-4 mr-1" />
+            {isMaxReached ? "Max reached" : "Add to Cart"}
+          </Button>
+        </CardFooter>
       </Card>
     </div>
   );
