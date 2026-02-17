@@ -32,7 +32,15 @@ const ShoppingCart = ({ onCheckout }: ShoppingCartProps) => {
       <Card className="h-full flex flex-col">
         <CardHeader className="pb-3 flex-shrink-0">
           <div className="flex items-center justify-between">
-            
+            <CardTitle className="flex items-center gap-2 text-base">
+              <CartIcon className="h-5 w-5" />
+              Cart
+              {!isEmpty && (
+                <span className="text-sm font-normal text-muted-foreground">
+                  ({cart.items.length} items)
+                </span>
+              )}
+            </CardTitle>
           </div>
         </CardHeader>
       </Card>
