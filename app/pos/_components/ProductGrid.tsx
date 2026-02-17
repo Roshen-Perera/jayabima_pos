@@ -1,6 +1,7 @@
 import { useProductStore } from "@/store/productStore";
 import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import ProductCard from "./ProductCard";
 
 interface ProductGridProps {
   searchQuery: string;
@@ -59,6 +60,18 @@ const ProductGrid = ({ searchQuery, onAddToCart }: ProductGridProps) => {
       </div>
     );
   }
+
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      {products.map((product) => (
+        <ProductCard
+          key={product.id}
+          product={product}
+          onAddToCart={onAddToCart}
+        />
+      ))}
+    </div>
+  );
 };
 
 export default ProductGrid;
