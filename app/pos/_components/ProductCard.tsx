@@ -35,6 +35,11 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
               <Package className="h-12 w-12 text-muted-foreground/30" />
             </div>
           )}
+          {isOutOfStock && (
+            <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+              <span className="text-white font-semibold">Out of Stock</span>
+            </div>
+          )}
         </div>
       </Card>
     </div>
