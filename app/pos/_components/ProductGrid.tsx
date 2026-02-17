@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface ProductGridProps {
   searchQuery: string;
@@ -8,6 +8,10 @@ interface ProductGridProps {
 const ProductGrid = ({ searchQuery, onAddToCart }: ProductGridProps) => {
   const [products, setProducts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [searchQuery]);
   return <div>ProductGrid</div>;
 };
 
