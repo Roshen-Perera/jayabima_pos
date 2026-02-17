@@ -70,6 +70,7 @@ const ProductCard = ({
               {isOutOfStock ? "No stock" : `Stock: ${product.stock}`}
             </span>
           </div>
+          <p className="text-xs text-muted-foreground mt-1">{product.sku}</p>
         </CardContent>
       </Card>
     </div>
