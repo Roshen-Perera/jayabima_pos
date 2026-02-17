@@ -16,3 +16,11 @@ interface ProductCardProps {
   };
   onAddToCart: (product: any) => void;
 }
+
+const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
+  return (
+    <div>ProductCard</div>
+  )
+}
+
+export default ProductCard
