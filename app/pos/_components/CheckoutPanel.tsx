@@ -32,7 +32,8 @@ interface CheckoutPanelProps {
 const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
   const { user } = useAuthStore();
   const { customers } = useCustomerStore();
-  const { cart, clearCart } = usePOSStore();
+  const { cart, customerId, customerName, setCustomer, clearCart } =
+    usePOSStore();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("CASH");
   const [isProcessing, setIsProcessing] = useState(false);
 
