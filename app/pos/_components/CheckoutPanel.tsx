@@ -8,14 +8,20 @@ import {
   DialogContent,
   DialogDescription,
   DialogFooter,
-  
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { CreditCard, DollarSign, Loader2, Smartphone, Wallet } from "lucide-react";
+import {
+  CreditCard,
+  DollarSign,
+  Loader2,
+  Smartphone,
+  Wallet,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCustomerStore } from "@/store/customerStore";
 
 interface CheckoutPanelProps {
   open: boolean;
@@ -25,6 +31,7 @@ interface CheckoutPanelProps {
 
 const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
   const { user } = useAuthStore();
+  const { customers } = useCustomerStore();
   const { cart, clearCart } = usePOSStore();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("CASH");
   const [isProcessing, setIsProcessing] = useState(false);
