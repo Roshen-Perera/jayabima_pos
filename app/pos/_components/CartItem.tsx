@@ -32,6 +32,15 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
         >
           <Minus className="h-3 w-3" />
         </Button>
+        <Input
+          type="number"
+          value={item.quantity}
+          onChange={(e) =>
+            onUpdateQuantity(item.productId, parseInt(e.target.value) || 1)
+          }
+          className="h-7 w-12 text-center p-0 text-sm"
+          min={1}
+        />
       </div>
     </div>
   );
