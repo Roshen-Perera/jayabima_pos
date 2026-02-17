@@ -99,6 +99,12 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
             <span className="text-muted-foreground">Subtotal</span>
             <span className="font-medium">${cart.subtotal.toFixed(2)}</span>
           </div>
+          {cart.discount > 0 && (
+            <div className="flex justify-between text-sm text-green-600">
+              <span>Discount</span>
+              <span>-${cart.discount.toFixed(2)}</span>
+            </div>
+          )}
         </div>
       </Dialog>
     </div>
