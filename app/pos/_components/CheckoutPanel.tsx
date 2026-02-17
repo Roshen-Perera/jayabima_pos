@@ -23,8 +23,13 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCustomerStore } from "@/store/customerStore";
-import { Separator, Select } from "radix-ui";
-import { SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface CheckoutPanelProps {
   open: boolean;
