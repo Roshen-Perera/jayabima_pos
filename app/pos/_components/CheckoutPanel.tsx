@@ -13,6 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { RadioGroup } from "@/components/ui/radio-group";
 
 interface CheckoutPanelProps {
   open: boolean;
@@ -113,6 +114,8 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
         </div>
         <div className="space-y-3">
           <Label>Payment Method</Label>
+        <RadioGroup value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as PaymentMethod)}></RadioGroup>
+
         </div>
       </Dialog>
     </div>
