@@ -46,7 +46,9 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
             {product.name}
           </h3>
           <div className="flex items-baseline gap-2 mt-1">
-            
+            <p className="text-lg font-bold text-primary">
+              ${product.sellingPrice.toFixed(2)}
+            </p>
           </div>
         </CardContent>
       </Card>
