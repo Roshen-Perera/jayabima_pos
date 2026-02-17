@@ -16,6 +16,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CreditCard, DollarSign, Smartphone, Wallet } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface CheckoutPanelProps {
   open: boolean;
@@ -163,7 +164,9 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
           </RadioGroup>
         </div>
         <DialogFooter className="gap-2 sm:gap-0">
-            
+          <Button variant="outline" onClick={onClose} disabled={isProcessing}>
+            Cancel
+          </Button>
         </DialogFooter>
       </Dialog>
     </div>
