@@ -59,6 +59,7 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
             Stock: {product.stock}
           </p>
         </CardContent>
+        <CardFooter className="p-3 pt-0"></CardFooter>
       </Card>
     </div>
   );
