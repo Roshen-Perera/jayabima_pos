@@ -65,7 +65,9 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
           result.message || "Could not complete sale.",
         );
       }
-    } catch (error) {}
+    } catch (error) {
+        console.error("Checkout error:", error);
+    }
   };
   return <div>CheckoutPanel</div>;
 };
