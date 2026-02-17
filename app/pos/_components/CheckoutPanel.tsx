@@ -59,8 +59,8 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
         paymentMethod,
         status: "COMPLETED",
         createdAt: new Date(),
-        userId: "",
-        userName: ""
+        userId: user.id,
+        userName: user.name
       };
 
       await new Promise((resolve) => setTimeout(resolve, 800));
