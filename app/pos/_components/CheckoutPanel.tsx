@@ -61,15 +61,7 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
         createdAt: new Date(),
       };
 
-      const response = await fetch("/api/pos/sales", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(saleData),
-      });
-
-      const result = await response.json();
+      await new Promise((resolve) => setTimeout(resolve, 800));
 
       if (result.success) {
         alert.success("Sale completed!", `Total: $${cart.total.toFixed(2)}`);
