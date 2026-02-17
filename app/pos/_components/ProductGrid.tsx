@@ -97,9 +97,9 @@ const ProductGrid = ({
                     variant={
                       product.stock <= product.minStock
                         ? "destructive"
-                        : "default"
+                        : "outline"
                     }
-                    className="text-[8px] px-1.5"
+                    className="text-[10px] px-1.5"
                   >
                     {product.stock}
                   </Badge>
