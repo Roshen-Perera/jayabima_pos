@@ -13,7 +13,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { RadioGroup } from "@/components/ui/radio-group";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { DollarSign } from "lucide-react";
 
 interface CheckoutPanelProps {
   open: boolean;
@@ -114,8 +115,21 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
         </div>
         <div className="space-y-3">
           <Label>Payment Method</Label>
-        <RadioGroup value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as PaymentMethod)}></RadioGroup>
-
+          <RadioGroup
+            value={paymentMethod}
+            onValueChange={(value) => setPaymentMethod(value as PaymentMethod)}
+          >
+            <div className="flex items-center space-x-2 border rounded-lg p-3 cursor-pointer hover:bg-muted">
+              <RadioGroupItem value="CASH" id="cash" />
+              <Label
+                htmlFor="cash"
+                className="flex-1 cursor-pointer flex items-center gap-2"
+              >
+                <DollarSign className="h-4 w-4" />
+                Cash
+              </Label>
+            </div>
+          </RadioGroup>
         </div>
       </Dialog>
     </div>
