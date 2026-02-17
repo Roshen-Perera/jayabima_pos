@@ -42,7 +42,7 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
           </h3>
           <div className="flex items-baseline gap-2 mt-1">
             <p className="text-lg font-bold text-primary">
-              ${product.sellingPrice.toFixed(2)}
+              ${product.price.toFixed(2)}
             </p>
             {product.category && (
               <span className="text-xs text-muted-foreground">
