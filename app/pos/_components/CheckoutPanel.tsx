@@ -43,6 +43,14 @@ const CheckoutPanel = ({ open, onClose, onSuccess }: CheckoutPanelProps) => {
         total: cart.total,
         paymentMethod,
       };
+
+      const response = await fetch("/api/pos/sales", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(saleData),
+      });
     } catch (error) {}
   };
   return <div>CheckoutPanel</div>;
