@@ -2,10 +2,15 @@ import { useProductStore } from "@/store/productStore";
 import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
+import { Product } from "@/app/inventory/_types/product.types";
+import { CartItem } from "../_types/pos.types";
 
 interface ProductGridProps {
+  products: Product[];
   searchQuery: string;
-  onAddToCart: (product: any) => void;
+  categoryFilter: string;
+  cartItems: CartItem[];
+  onAddToCart: (product: Product) => void;
 }
 
 const ProductGrid = ({ searchQuery, onAddToCart }: ProductGridProps) => {
