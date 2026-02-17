@@ -1,6 +1,7 @@
 "use client";
 
 import { Product } from "@/app/inventory/_types/product.types";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Plus, Package } from "lucide-react";
@@ -30,6 +31,9 @@ const ProductCard = ({
       >
         <div className="relative h-24 bg-muted flex items-center justify-center">
           <Package className="h-10 w-10 text-muted-foreground/30" />
+          <Badge variant="secondary" className="absolute top-2 left-2 text-xs">
+            {product.category}
+          </Badge>
         </div>
       </Card>
     </div>
