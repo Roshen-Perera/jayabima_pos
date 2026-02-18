@@ -66,7 +66,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
   return (
     <Card className="flex-[3] flex flex-col min-w-[320px] max-w-[400px] overflow-hidden h-full border">
       {/* Header */}
-      <CardHeader className="flex-shrink-0 flex flex-row items-center justify-between py-3 px-4 border-b border-border">
+      <CardHeader className="flex-shrink-0 flex flex-row items-center justify-between px-4 border-b border-border">
         <div className="flex items-center gap-2">
           <CardTitle className="text-base">Current Sale</CardTitle>
           <Badge variant="secondary" className="text-xs">
