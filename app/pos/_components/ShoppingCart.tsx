@@ -351,39 +351,39 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                     {/* Inline edit input — shared for both modes */}
                     {edit.mode !== null && (
                       <div className="pt-1 border-t border-border/50 space-y-1">
-                        {/* Label showing what is being entered + derived preview */}
+                        {/* Label + live preview */}
                         <div className="flex items-center justify-between text-xs text-muted-foreground">
                           <span>
                             {edit.mode === "price"
                               ? "New total price (Rs.)"
-                              : "Discount amount (Rs.)"}
+                              : "Discount percentage (%)"}
                           </span>
                           {/* Live derived preview */}
                           {edit.input !== "" &&
                             !isNaN(parseFloat(edit.input)) && (
                               <span className="text-xs font-medium">
                                 {edit.mode === "price"
-                                  ? // Show how much they save
-                                    itemOriginalTotal - parseFloat(edit.input) >
+                                  ? itemOriginalTotal - parseFloat(edit.input) >
                                     0
                                     ? `Save Rs. ${(itemOriginalTotal - parseFloat(edit.input)).toLocaleString()}`
                                     : ""
-                                  : // Show final price after discount
-                                    `Final: Rs. ${(itemOriginalTotal - parseFloat(edit.input)).toLocaleString()}`}
+                                  : parseFloat(edit.input) <= 100
+                                    ? `Final: Rs. ${(itemOriginalTotal * (1 - parseFloat(edit.input) / 100)).toLocaleString()}`
+                                    : ""}
                               </span>
                             )}
                         </div>
 
                         <div className="flex items-center gap-1">
                           <span className="text-xs text-muted-foreground w-8 text-right flex-shrink-0">
-                            {edit.mode === "price" ? "Rs." : "-Rs."}
+                            {edit.mode === "price" ? "Rs." : "%"}
                           </span>
                           <Input
                             type="number"
                             placeholder={
                               edit.mode === "price"
                                 ? `Max ${itemOriginalTotal}`
-                                : `Max ${itemOriginalTotal}`
+                                : "0 - 100"
                             }
                             value={edit.input}
                             onChange={(e) =>
@@ -391,7 +391,9 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                             }
                             className="h-7 text-sm flex-1"
                             min={0}
-                            max={itemOriginalTotal}
+                            max={
+                              edit.mode === "price" ? itemOriginalTotal : 100
+                            }
                             autoFocus
                             onKeyDown={(e) => {
                               if (e.key === "Enter")
