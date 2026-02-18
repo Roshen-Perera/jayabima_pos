@@ -1,9 +1,10 @@
 export interface CartItem {
-    discount: number;
     id: string;
     productId: string;
     name: string;
     price: number;
+    discount: number;
+    overridePrice?: number; 
     quantity: number;
     image?: string;
     category?: string;
