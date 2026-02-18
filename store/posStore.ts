@@ -12,7 +12,6 @@ interface POSState {
     updateQuantity: (productId: string, quantity: number) => void;
     clearCart: () => void;
     applyDiscount: (discount: number) => void;
-    updateItemDiscount: (productId: string, discount: number) => void;
     updateItemPrice: (productId: string, price: number) => void;
     setCustomer: (id?: string, name?: string) => void;
     calculateTotals: () => void;
