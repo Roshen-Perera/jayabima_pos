@@ -38,10 +38,10 @@ export default function POSPage() {
     setIsReceiptOpen(true);
   };
 
-    return (
-    <div className="flex flex-col lg:flex-row h-[calc(100vh-4rem)] gap-4 overflow-hidden p-2 lg:p-4">
+  return (
+    <div className="flex h-[calc(100vh-4rem)] gap-4 overflow-hidden">
       {/* LEFT SIDE - Products */}
-      <div className="flex-1 flex flex-col gap-3 overflow-hidden min-w-0">
+      <div className="flex-1 flex flex-col gap-3 overflow-hidden">
         {/* Search */}
         <ProductSearch placeholder={searchQuery} onSearch={setSearchQuery} />
 
@@ -102,35 +102,9 @@ export default function POSPage() {
       </div>
 
       {/* RIGHT SIDE - Cart */}
-      {/* Desktop: Fixed width sidebar, Mobile: Full-width overlay/drawer */}
-      <div className="hidden lg:flex w-80 flex-shrink-0">
+      <div className="flex-shrink-0">
         <ShoppingCart onCheckout={() => setIsCheckoutOpen(true)} />
       </div>
-
-      {/* Mobile: Cart Button */}
-      <Button
-        onClick={() => setIsCartOpen(!isCartOpen)}
-        className="lg:hidden fixed bottom-6 right-6 z-40 rounded-full w-14 h-14"
-        size="icon"
-      >
-        🛒 {cart.items.length > 0 && <span className="ml-1">{cart.items.length}</span>}
-      </Button>
-
-      {/* Mobile: Cart Overlay */}
-      {isCartOpen && (
-        <>
-          <div
-            className="lg:hidden fixed inset-0 bg-black/50 z-30"
-            onClick={() => setIsCartOpen(false)}
-          />
-          <div className="lg:hidden fixed bottom-0 right-0 w-full sm:w-96 h-3/4 bg-white z-40 rounded-t-lg overflow-y-auto">
-            <ShoppingCart onCheckout={() => {
-              setIsCheckoutOpen(true);
-              setIsCartOpen(false);
-            }} />
-          </div>
-        </>
-      )}
 
       {/* Checkout Dialog */}
       <CheckoutPanel
@@ -148,4 +122,3 @@ export default function POSPage() {
     </div>
   );
 }
-
