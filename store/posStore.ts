@@ -12,7 +12,7 @@ interface POSState {
     updateQuantity: (productId: string, quantity: number) => void;
     clearCart: () => void;
     applyDiscount: (discount: number) => void;
-    updateItemPrice: (productId: string, price: number) => void;
+    updateItemPrice: (productId: string, price: number | undefined) => void;
     setCustomer: (id?: string, name?: string) => void;
     calculateTotals: () => void;
 }
