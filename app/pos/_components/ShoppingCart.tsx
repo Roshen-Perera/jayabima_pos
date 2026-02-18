@@ -30,6 +30,12 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
 
   const [showDiscountInput, setShowDiscountInput] = useState(false);
   const [discountValue, setDiscountValue] = useState("");
+  const [showItemDiscountModal, setShowItemDiscountModal] = useState<
+    string | null
+  >(null);
+  const [showPriceOverrideModal, setShowPriceOverrideModal] = useState<
+    string | null
+  >(null);
 
   const isEmpty = cart.items.length === 0;
 
