@@ -79,16 +79,26 @@ export const usePOSStore = create<POSState>((set, get) => ({
     },
 
     updateItemPrice: (productId, price) =>
-        set((state) => ({
-            cart: {
-                ...state.cart,
-                items: state.cart.items.map((item) =>
-                    item.productId === productId
-                        ? { ...item, overridePrice: price }
-                        : item
-                ),
-            },
-        })),
+        set((state) => {
+            const updatedItems = state.cart.items.map((item) =>
+                item.productId === productId
+                    ? { ...item, overridePrice: price }
+                    : item
+            );
+            const subtotal = updatedItems.reduce(
+                (sum, item) => sum + (item.overridePrice ?? item.price) * item.quantity,
+                0
+            );
+            return {
+                cart: {
+                    ...state.cart,
+                    items: updatedItems,
+                    subtotal,
+                    total: subtotal - (state.cart.discount ?? 0),
+                },
+            };
+        }),
+
 
     clearCart: () => {
         set({
