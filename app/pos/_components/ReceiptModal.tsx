@@ -191,6 +191,31 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
               <span className="text-muted-foreground">Payment: </span>
               <span className="font-medium">{sale.paymentMethod}</span>
             </p>
+
+            {/* Cash paid & change – only for CASH payments */}
+            {sale.paymentMethod === "CASH" &&
+              sale.cashPaid !== undefined &&
+              sale.cashBalance !== undefined && (
+                <div className="text-left space-y-0.5 mt-1">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Cash Paid</span>
+                    <span className="font-medium">
+                      Rs. {sale.cashPaid.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex justify-between font-semibold text-green-700 dark:text-green-400">
+                    <span>Change</span>
+                    <span>
+                      Rs.{" "}
+                      {sale.cashBalance.toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </span>
+                  </div>
+                </div>
+              )}
+
             {sale.userName && (
               <p>
                 <span className="text-muted-foreground">Served by: </span>
