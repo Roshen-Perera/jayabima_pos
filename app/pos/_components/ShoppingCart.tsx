@@ -440,28 +440,55 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
         {!isEmpty && (
           <div className="flex-shrink-0 border-t border-border bg-card">
             <div className="p-4 space-y-2">
+              {/* Original total before any discounts */}
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Subtotal</span>
+                <span className="text-muted-foreground">Original Total</span>
+                <span>
+                  Rs.{" "}
+                  {cart.items
+                    .reduce((sum, i) => sum + i.price * i.quantity, 0)
+                    .toLocaleString()}
+                </span>
+              </div>
+
+              {/* Item-level discounts (price overrides) */}
+              {cart.items.some((i) => i.overridePrice !== undefined) &&
+                (() => {
+                  const totalItemDiscount = cart.items.reduce((sum, i) => {
+                    return (
+                      sum +
+                      (i.price - (i.overridePrice ?? i.price)) * i.quantity
+                    );
+                  }, 0);
+                  const totalOriginal = cart.items.reduce(
+                    (sum, i) => sum + i.price * i.quantity,
+                    0,
+                  );
+                  const discountPct = (
+                    (totalItemDiscount / totalOriginal) *
+                    100
+                  ).toFixed(1);
+
+                  return totalItemDiscount > 0 ? (
+                    <div className="flex justify-between text-sm text-green-600">
+                      <span className="flex items-center gap-1">
+                        Item Discounts
+                        <span className="text-[10px] bg-green-100 text-green-700 px-1 rounded">
+                          -{discountPct}%
+                        </span>
+                      </span>
+                      <span>-Rs. {totalItemDiscount.toLocaleString()}</span>
+                    </div>
+                  ) : null;
+                })()}
+
+              {/* Subtotal = selling price after item discounts */}
+              <div className="flex justify-between text-sm font-medium">
+                <span>Subtotal</span>
                 <span>Rs. {cart.subtotal.toLocaleString()}</span>
               </div>
 
-              {/* Show total item-level savings */}
-              {cart.items.some((i) => i.overridePrice !== undefined) && (
-                <div className="flex justify-between text-sm text-green-600">
-                  <span>Item Discounts</span>
-                  <span>
-                    -Rs.{" "}
-                    {cart.items
-                      .reduce((sum, i) => {
-                        const savings =
-                          (i.price - (i.overridePrice ?? i.price)) * i.quantity;
-                        return sum + savings;
-                      }, 0)
-                      .toLocaleString()}
-                  </span>
-                </div>
-              )}
-
+              {/* Cart-level discount */}
               {cart.discount > 0 && (
                 <div className="flex justify-between text-sm text-green-600">
                   <span>Cart Discount</span>
@@ -469,7 +496,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                 </div>
               )}
 
-              {/* Cart-level discount */}
+              {/* Add Cart Discount button/input */}
               {showCartDiscountInput ? (
                 <div className="space-y-2">
                   <div className="flex gap-2">
@@ -526,6 +553,30 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
 
               <Separator />
 
+              {/* Total savings summary */}
+              {(() => {
+                const totalOriginal = cart.items.reduce(
+                  (sum, i) => sum + i.price * i.quantity,
+                  0,
+                );
+                const totalSavings =
+                  totalOriginal - cart.subtotal + (cart.discount ?? 0);
+                const savingsPct = (
+                  (totalSavings / totalOriginal) *
+                  100
+                ).toFixed(1);
+
+                return totalSavings > 0 ? (
+                  <div className="flex justify-between text-xs text-green-600 bg-green-50 dark:bg-green-950/30 px-2 py-1.5 rounded-md">
+                    <span className="font-medium">Total Savings</span>
+                    <span className="font-medium">
+                      Rs. {totalSavings.toLocaleString()} ({savingsPct}% off)
+                    </span>
+                  </div>
+                ) : null;
+              })()}
+
+              {/* Grand Total */}
               <div className="flex justify-between text-lg font-bold">
                 <span>Total</span>
                 <span className="text-primary">
