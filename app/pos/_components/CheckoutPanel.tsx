@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -5,130 +7,273 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { alert } from "@/lib/alert";
-import { Download, Printer, ShoppingBag, X } from "lucide-react";
-import React from "react";
-import { Sale } from "../_types/pos.types";
+import { usePOSStore } from "@/store/posStore";
+import { useAuthStore } from "@/store/useAuthStore";
+import {
+  Banknote,
+  CreditCard,
+  ShoppingBag,
+  Smartphone,
+  Wallet,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { PaymentMethod, Sale } from "../_types/pos.types";
 
-interface ReceiptModalProps {
+interface CheckoutPanelProps {
   open: boolean;
   onClose: () => void;
-  sale: Sale | null;
+  onSuccess: (sale: Sale) => void;
 }
 
-const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
-  if (!sale) return null;
-  const handlePrint = () => {
-    window.print();
+const PAYMENT_OPTIONS: {
+  value: PaymentMethod;
+  label: string;
+  icon: React.ReactNode;
+}[] = [
+  { value: "CASH", label: "Cash", icon: <Banknote className="w-5 h-5" /> },
+  { value: "CARD", label: "Card", icon: <CreditCard className="w-5 h-5" /> },
+  {
+    value: "MOBILE",
+    label: "Mobile Pay",
+    icon: <Smartphone className="w-5 h-5" />,
+  },
+  { value: "OTHER", label: "Other", icon: <Wallet className="w-5 h-5" /> },
+];
+
+export default function CheckoutPanel({
+  open,
+  onClose,
+  onSuccess,
+}: CheckoutPanelProps) {
+  const { cart, customerId, customerName, clearCart } = usePOSStore();
+  const { user } = useAuthStore();
+
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("CASH");
+  const [cashInput, setCashInput] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  // Reset state when dialog opens
+  useEffect(() => {
+    if (open) {
+      setPaymentMethod("CASH");
+      setCashInput("");
+      setIsProcessing(false);
+    }
+  }, [open]);
+
+  const total = cart.total;
+
+  // Cash-specific derived values
+  const cashPaid = parseFloat(cashInput) || 0;
+  const cashBalance = cashPaid - total;
+  const isCash = paymentMethod === "CASH";
+  const cashInputValid = !isCash || (cashInput !== "" && cashPaid >= total);
+
+  // Quick cash presets (round numbers >= total)
+  const presets = Array.from(
+    new Set([
+      Math.ceil(total / 100) * 100,
+      Math.ceil(total / 500) * 500,
+      Math.ceil(total / 1000) * 1000,
+    ]),
+  ).filter((v) => v >= total);
+
+  const handleCheckout = async () => {
+    if (isCash && cashPaid < total) {
+      alert.error(
+        "Insufficient cash",
+        "Cash paid must be at least the total amount.",
+      );
+      return;
+    }
+
+    setIsProcessing(true);
+
+    try {
+      const originalTotal = cart.items.reduce(
+        (sum, i) => sum + i.price * i.quantity,
+        0,
+      );
+      const itemDiscount = cart.items.reduce(
+        (sum, i) => sum + (i.price - (i.overridePrice ?? i.price)) * i.quantity,
+        0,
+      );
+      const totalSavings = itemDiscount + (cart.discount ?? 0);
+
+      const sale: Sale = {
+        id: `sale-${Date.now()}`,
+        items: cart.items,
+        customerId,
+        customerName,
+        userId: user?.id ?? "unknown",
+        userName: user?.name ?? "Staff",
+        originalTotal,
+        itemDiscount,
+        totalSavings,
+        subtotal: cart.subtotal,
+        discount: cart.discount,
+        total,
+        paymentMethod,
+        ...(isCash && { cashPaid, cashBalance }),
+        status: "COMPLETED",
+        createdAt: new Date(),
+      };
+
+      clearCart();
+      onSuccess(sale);
+      onClose();
+    } catch {
+      alert.error("Checkout failed", "An error occurred. Please try again.");
+    } finally {
+      setIsProcessing(false);
+    }
   };
-  const handleDownload = () => {
-    // TODO: Generate PDF receipt
-    alert.success("PDF download coming soon!");
-  };
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <ShoppingBag className="h-5 w-5 text-green-600" />
-            Sale Completed!
+            <ShoppingBag className="h-5 w-5 text-primary" />
+            Checkout
           </DialogTitle>
         </DialogHeader>
 
-        {/* Receipt */}
-        <div className="space-y-3 font-mono text-sm" id="receipt-content">
-          {/* Header */}
-          <div className="text-center space-y-1">
-            <h2 className="text-base font-bold">JAYABIMA</h2>
-            <p className="text-xs text-muted-foreground">
-              Hardware & Construction Supplies
-            </p>
-            <p className="text-xs text-muted-foreground">
-              {new Date(sale.createdAt).toLocaleString("en-LK")}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Receipt #{sale.id.slice(-8).toUpperCase()}
-            </p>
-          </div>
-
-          <Separator />
-
-          {/* Customer */}
-          {sale.customerName && (
-            <>
-              <div className="text-xs">
-                <span className="text-muted-foreground">Customer: </span>
-                <span className="font-medium">{sale.customerName}</span>
-              </div>
-              <Separator />
-            </>
-          )}
-
-          {/* Items */}
-          <div className="space-y-1.5">
-            {sale.items.map((item, index) => (
-              <div key={index}>
-                <p className="font-medium text-xs leading-tight">{item.name}</p>
-                <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>
-                    {item.quantity} × Rs. {item.price.toLocaleString()}
-                  </span>
-                  <span className="font-medium text-foreground">
-                    Rs. {(item.quantity * item.price).toLocaleString()}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <Separator />
-
-          {/* Totals */}
-          <div className="space-y-1 text-xs">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Subtotal</span>
-              <span>Rs. {sale.subtotal.toLocaleString()}</span>
+        <div className="space-y-4">
+          {/* Order summary */}
+          <div className="rounded-lg bg-muted/50 p-3 space-y-1.5 text-sm">
+            <div className="flex justify-between text-muted-foreground">
+              <span>Items</span>
+              <span>{cart.items.length}</span>
             </div>
-            {sale.discount > 0 && (
+            {cart.discount > 0 && (
               <div className="flex justify-between text-green-600">
                 <span>Discount</span>
-                <span>- Rs. {sale.discount.toLocaleString()}</span>
+                <span>-Rs. {cart.discount.toLocaleString()}</span>
               </div>
             )}
-            <div className="flex justify-between font-bold text-base pt-1">
-              <span>TOTAL</span>
-              <span>Rs. {sale.total.toLocaleString()}</span>
+            <Separator />
+            <div className="flex justify-between font-bold text-base">
+              <span>Total</span>
+              <span className="text-primary">Rs. {total.toLocaleString()}</span>
             </div>
           </div>
 
-          <Separator />
-
-          {/* Payment */}
-          <div className="text-xs text-center space-y-1">
-            <p>
-              <span className="text-muted-foreground">Payment: </span>
-              <span className="font-medium">{sale.paymentMethod}</span>
-            </p>
-            <p className="text-muted-foreground mt-2">
-              Thank you for your purchase!
-            </p>
+          {/* Payment method selector */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Payment Method</Label>
+            <div className="grid grid-cols-2 gap-2">
+              {PAYMENT_OPTIONS.map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => {
+                    setPaymentMethod(opt.value);
+                    setCashInput("");
+                  }}
+                  className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border text-sm font-medium transition-colors
+                    ${
+                      paymentMethod === opt.value
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border bg-background text-muted-foreground hover:border-primary/50 hover:text-foreground"
+                    }`}
+                >
+                  {opt.icon}
+                  {opt.label}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Actions */}
-        <div className="flex gap-2 mt-2">
-          <Button variant="outline" className="flex-1" onClick={handlePrint}>
-            <Printer className="mr-2 h-4 w-4" />
-            Print
-          </Button>
-          <Button className="flex-1" onClick={onClose}>
-            New Sale
+          {/* Cash input — only for CASH */}
+          {isCash && (
+            <div className="space-y-2">
+              <Label htmlFor="cashInput" className="text-sm font-medium">
+                Cash Received (Rs.)
+              </Label>
+
+              {/* Quick preset buttons */}
+              <div className="flex gap-2 flex-wrap">
+                {presets.map((p) => (
+                  <Button
+                    key={p}
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="h-7 text-xs"
+                    onClick={() => setCashInput(String(p))}
+                  >
+                    Rs. {p.toLocaleString()}
+                  </Button>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="h-7 text-xs"
+                  onClick={() => setCashInput(String(total))}
+                >
+                  Exact
+                </Button>
+              </div>
+
+              <Input
+                id="cashInput"
+                type="number"
+                placeholder={`Min Rs. ${total.toLocaleString()}`}
+                value={cashInput}
+                onChange={(e) => setCashInput(e.target.value)}
+                min={total}
+                className={
+                  cashInput !== "" && cashPaid < total
+                    ? "border-destructive focus-visible:ring-destructive"
+                    : ""
+                }
+              />
+
+              {/* Live balance feedback */}
+              {cashInput !== "" && (
+                <div
+                  className={`flex justify-between text-sm font-medium px-3 py-2 rounded-lg ${
+                    cashBalance >= 0
+                      ? "bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-400"
+                      : "bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400"
+                  }`}
+                >
+                  <span>
+                    {cashBalance >= 0 ? "Change / Balance" : "Shortfall"}
+                  </span>
+                  <span>
+                    Rs.{" "}
+                    {Math.abs(cashBalance).toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Confirm button */}
+          <Button
+            className="w-full"
+            size="lg"
+            onClick={handleCheckout}
+            disabled={isProcessing || !cashInputValid}
+          >
+            {isProcessing
+              ? "Processing…"
+              : isCash && cashInput === ""
+                ? "Enter Cash Amount"
+                : `Confirm Payment · Rs. ${total.toLocaleString()}`}
           </Button>
         </div>
       </DialogContent>
     </Dialog>
   );
-};
-
-export default ReceiptModal;
+}
