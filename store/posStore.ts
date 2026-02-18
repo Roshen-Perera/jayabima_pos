@@ -12,6 +12,8 @@ interface POSState {
     updateQuantity: (productId: string, quantity: number) => void;
     clearCart: () => void;
     applyDiscount: (discount: number) => void;
+    updateItemDiscount: (productId: string, discount: number) => void;
+    updateItemPrice: (productId: string, price: number) => void;
     setCustomer: (id?: string, name?: string) => void;
     calculateTotals: () => void;
 }
@@ -76,6 +78,30 @@ export const usePOSStore = create<POSState>((set, get) => ({
         set({ cart: { ...cart, items: newItems } });
         get().calculateTotals();
     },
+
+    updateItemDiscount: (productId, discount) =>
+        set((state) => ({
+            cart: {
+                ...state.cart,
+                items: state.cart.items.map((item) =>
+                    item.productId === productId
+                        ? { ...item, discount }
+                        : item
+                ),
+            },
+        })),
+
+    updateItemPrice: (productId, price) =>
+        set((state) => ({
+            cart: {
+                ...state.cart,
+                items: state.cart.items.map((item) =>
+                    item.productId === productId
+                        ? { ...item, overridePrice: price }
+                        : item
+                ),
+            },
+        })),
 
     clearCart: () => {
         set({
