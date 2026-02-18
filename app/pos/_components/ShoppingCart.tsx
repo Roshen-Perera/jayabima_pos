@@ -122,21 +122,14 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
       updateItemPrice(productId, value);
       alert.success("Price overridden", `New price set to Rs. ${value}`);
     } else if (edit.mode === "discount") {
-      const maxDiscount = originalPrice * quantity;
-      if (value > maxDiscount) {
-        alert.error(
-          "Invalid discount",
-          `Max discount is Rs. ${maxDiscount.toLocaleString()}`,
-        );
+      if (value > 100 || value < 0) {
+        alert.error("Invalid discount", "Discount must be between 0% and 100%");
         return;
       }
-      // Store as the new unit price so both modes stay consistent
-      const newUnitPrice = (originalPrice * quantity - value) / quantity;
+      // Convert percentage to new unit price
+      const newUnitPrice = originalPrice * (1 - value / 100);
       updateItemPrice(productId, newUnitPrice);
-      alert.success(
-        "Discount applied",
-        `Rs. ${value} discount applied to item`,
-      );
+      alert.success("Discount applied", `${value}% discount applied to item`);
     }
 
     closeEdit(productId);
