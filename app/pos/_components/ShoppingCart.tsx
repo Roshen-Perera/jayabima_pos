@@ -79,7 +79,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
             {cart.items.length}
           </Badge>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center">
           {cart.items.length > 0 && (
             <Button
               variant="ghost"
