@@ -4,7 +4,7 @@ export interface CartItem {
     name: string;
     price: number;
     discount?: number;
-    overridePrice?: number; 
+    overridePrice?: number;
     quantity: number;
     image?: string;
     category?: string;
@@ -27,10 +27,15 @@ export interface Sale {
     customerName?: string;
     userId: string;
     userName: string;
-    subtotal: number;
-    discount: number;
+    originalTotal: number;     // sum of all items at full inventory price
+    itemDiscount: number;      // total saved via per-item overrides
+    totalSavings: number;      // itemDiscount + cart discount
+    subtotal: number;          // selling price after item discounts
+    discount: number;          // cart-level flat discount
     total: number;
     paymentMethod: PaymentMethod;
+    cashPaid?: number;       // amount of cash handed by customer (CASH only)
+    cashBalance?: number;    // change returned to customer (CASH only)
     status: SaleStatus;
     createdAt: Date;
 }
