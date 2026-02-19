@@ -1,4 +1,4 @@
-import { SignJWT, jwtVerify } from 'jose';
+import { SignJWT, jwtVerify, JWTPayload as JoseJWTPayload } from 'jose';
 
 const JWT_SECRET = (() => {
     const value = process.env.JWT_SECRET;
@@ -10,7 +10,7 @@ const JWT_SECRET = (() => {
 
 const JWT_EXPIRES_IN = '7d'; // Token expires in 7 days
 
-export interface JWTPayload {
+export interface JWTPayload extends JoseJWTPayload {
     userId: string;
     email: string;
     role: string;
