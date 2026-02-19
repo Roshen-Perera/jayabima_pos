@@ -21,7 +21,6 @@ export const usePOSStore = create<POSState>((set, get) => ({
     //Initial state
     cart: {
         items: [],
-        subtotal: 0,
         discount: 0,
         total: 0,
     },
@@ -85,16 +84,15 @@ export const usePOSStore = create<POSState>((set, get) => ({
                     ? { ...item, overridePrice: price }
                     : item
             );
-            const subtotal = updatedItems.reduce(
+            const total = updatedItems.reduce(
                 (sum, item) => sum + (item.overridePrice ?? item.price) * item.quantity,
                 0
-            );
+            ) - (state.cart.discount ?? 0);
             return {
                 cart: {
                     ...state.cart,
                     items: updatedItems,
-                    subtotal,
-                    total: subtotal - (state.cart.discount ?? 0),
+                    total,
                 },
             };
         }),
@@ -104,7 +102,6 @@ export const usePOSStore = create<POSState>((set, get) => ({
         set({
             cart: {
                 items: [],
-                subtotal: 0,
                 discount: 0,
                 total: 0,
             },
@@ -126,12 +123,10 @@ export const usePOSStore = create<POSState>((set, get) => ({
     calculateTotals: () => {
         const { cart } = get();
 
-        const subtotal = cart.items.reduce(
+        const total = cart.items.reduce(
             (sum, item) => sum + item.price * item.quantity,
             0
-        );
-
-        const total = subtotal - cart.discount;
-        set({ cart: { ...cart, subtotal, total } });
+        ) - cart.discount;
+        set({ cart: { ...cart, total } });
     }
 }));
