@@ -22,6 +22,7 @@ export const usePOSStore = create<POSState>((set, get) => ({
     cart: {
         items: [],
         discount: 0,
+        subtotal: 0,
         total: 0,
     },
 
@@ -77,25 +78,16 @@ export const usePOSStore = create<POSState>((set, get) => ({
         get().calculateTotals();
     },
 
-    updateItemPrice: (productId, price) =>
-        set((state) => {
-            const updatedItems = state.cart.items.map((item) =>
-                item.productId === productId
-                    ? { ...item, overridePrice: price }
-                    : item
-            );
-            const total = updatedItems.reduce(
-                (sum, item) => sum + (item.overridePrice ?? item.price) * item.quantity,
-                0
-            ) - (state.cart.discount ?? 0);
-            return {
-                cart: {
-                    ...state.cart,
-                    items: updatedItems,
-                    total,
-                },
-            };
-        }),
+    updateItemPrice: (productId, price) => {
+        const { cart } = get();
+        const updatedItems = cart.items.map((item) =>
+            item.productId === productId
+                ? { ...item, overridePrice: price }
+                : item
+        );
+        set({ cart: { ...cart, items: updatedItems } });
+        get().calculateTotals();
+    },
 
 
     clearCart: () => {
@@ -103,6 +95,7 @@ export const usePOSStore = create<POSState>((set, get) => ({
             cart: {
                 items: [],
                 discount: 0,
+                subtotal: 0,
                 total: 0,
             },
             customerId: undefined,
@@ -123,10 +116,15 @@ export const usePOSStore = create<POSState>((set, get) => ({
     calculateTotals: () => {
         const { cart } = get();
 
-        const total = cart.items.reduce(
-            (sum, item) => sum + item.price * item.quantity,
+        // Step 1: sum using effective (post-item-discount) price
+        const subtotal = cart.items.reduce(
+            (sum, item) => sum + (item.overridePrice ?? item.price) * item.quantity,
             0
-        ) - cart.discount;
-        set({ cart: { ...cart, total } });
+        );
+
+        // Step 2: apply cart-level discount on top of the already-discounted subtotal
+        const total = Math.max(0, subtotal - (cart.discount ?? 0));
+
+        set({ cart: { ...cart, subtotal, total } });
     }
 }));
