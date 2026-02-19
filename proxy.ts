@@ -8,7 +8,7 @@ const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-passwor
 // Auth routes (redirect to dashboard if already logged in)
 const authRoutes = ['/login', '/register'];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // Get token from cookie
