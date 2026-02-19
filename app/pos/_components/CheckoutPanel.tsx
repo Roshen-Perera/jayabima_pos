@@ -149,9 +149,32 @@ export default function CheckoutPanel({
               <span>Items</span>
               <span>{cart.items.length}</span>
             </div>
+            {/* Item-level discounts */}
+            {(() => {
+              const itemDiscount = cart.items.reduce(
+                (sum, i) =>
+                  sum + (i.price - (i.overridePrice ?? i.price)) * i.quantity,
+                0,
+              );
+              return itemDiscount > 0 ? (
+                <div className="flex justify-between text-green-600">
+                  <span>Item Discounts</span>
+                  <span>-Rs. {itemDiscount.toLocaleString()}</span>
+                </div>
+              ) : null;
+            })()}
+            {/* Subtotal after item discounts (shown when cart discount also active) */}
+            {cart.discount > 0 &&
+              cart.items.some((i) => i.overridePrice !== undefined) && (
+                <div className="flex justify-between text-muted-foreground">
+                  <span>Subtotal</span>
+                  <span>Rs. {cart.subtotal.toLocaleString()}</span>
+                </div>
+              )}
+            {/* Cart-level discount */}
             {cart.discount > 0 && (
               <div className="flex justify-between text-green-600">
-                <span>Discount</span>
+                <span>Cart Discount</span>
                 <span>-Rs. {cart.discount.toLocaleString()}</span>
               </div>
             )}
