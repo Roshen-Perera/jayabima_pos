@@ -112,15 +112,18 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
     }
 
     if (edit.mode === "price") {
-      if (value > originalPrice * quantity) {
+      if (value > originalPrice) {
         alert.error(
           "Invalid price",
-          `Price cannot exceed original Rs. ${originalPrice.toLocaleString()}`,
+          `Unit price cannot exceed original Rs. ${originalPrice.toLocaleString()}`,
         );
         return;
       }
       updateItemPrice(productId, value);
-      alert.success("Price overridden", `New price set to Rs. ${value}`);
+      alert.success(
+        "Price overridden",
+        `Unit price set to Rs. ${value.toLocaleString()}`,
+      );
     } else if (edit.mode === "discount") {
       if (value > 100 || value < 0) {
         alert.error("Invalid discount", "Discount must be between 0% and 100%");
@@ -307,7 +310,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                           onClick={() =>
                             setEdit(item.productId, {
                               mode: "price",
-                              input: String(itemEffectiveTotal), // pre-fill with current total
+                              input: String(effectivePrice), // pre-fill with current unit price
                             })
                           }
                         >
@@ -324,7 +327,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                             setEdit(item.productId, {
                               mode: "discount",
                               input: isOverridden
-                                ? String(itemSavings) // pre-fill current discount
+                                ? (discountPct ?? "") // pre-fill current discount %
                                 : "",
                             })
                           }
@@ -355,7 +358,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                         <div className="flex items-center justify-between text-xs text-muted-foreground">
                           <span>
                             {edit.mode === "price"
-                              ? "New total price (Rs.)"
+                              ? "New unit price (Rs.)"
                               : "Discount percentage (%)"}
                           </span>
                           {/* Live derived preview */}
@@ -363,12 +366,11 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                             !isNaN(parseFloat(edit.input)) && (
                               <span className="text-xs font-medium">
                                 {edit.mode === "price"
-                                  ? itemOriginalTotal - parseFloat(edit.input) >
-                                    0
-                                    ? `Save Rs. ${(itemOriginalTotal - parseFloat(edit.input)).toLocaleString()}`
+                                  ? originalPrice - parseFloat(edit.input) > 0
+                                    ? `Save Rs. ${((originalPrice - parseFloat(edit.input)) * item.quantity).toLocaleString()}`
                                     : ""
                                   : parseFloat(edit.input) <= 100
-                                    ? `Final: Rs. ${(itemOriginalTotal * (1 - parseFloat(edit.input) / 100)).toLocaleString()}`
+                                    ? `Final: Rs. ${(originalPrice * (1 - parseFloat(edit.input) / 100) * item.quantity).toLocaleString()}`
                                     : ""}
                               </span>
                             )}
@@ -382,7 +384,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                             type="number"
                             placeholder={
                               edit.mode === "price"
-                                ? `Max ${itemOriginalTotal}`
+                                ? `Max ${originalPrice}`
                                 : "0 - 100"
                             }
                             value={edit.input}
@@ -391,9 +393,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                             }
                             className="h-7 text-sm flex-1"
                             min={0}
-                            max={
-                              edit.mode === "price" ? itemOriginalTotal : 100
-                            }
+                            max={edit.mode === "price" ? originalPrice : 100}
                             autoFocus
                             onKeyDown={(e) => {
                               if (e.key === "Enter")
