@@ -76,11 +76,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
   // Cart-level discount
   const handleApplyCartDiscount = () => {
     const discount = parseFloat(cartDiscountValue);
-    if (
-      !isNaN(discount) &&
-      discount >= 0 &&
-      discount <= cart.total + cart.discount
-    ) {
+    if (!isNaN(discount) && discount >= 0 && discount <= cart.subtotal) {
       applyDiscount(discount);
       setShowCartDiscountInput(false);
       setCartDiscountValue("");
@@ -488,10 +484,19 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
 
               {/* Cart-level discount */}
               {cart.discount > 0 && (
-                <div className="flex justify-between text-sm text-green-600">
-                  <span>Cart Discount</span>
-                  <span>-Rs. {cart.discount.toLocaleString()}</span>
-                </div>
+                <>
+                  {/* Subtotal after item discounts (only relevant when both discounts are active) */}
+                  {cart.items.some((i) => i.overridePrice !== undefined) && (
+                    <div className="flex justify-between text-sm text-muted-foreground">
+                      <span>Subtotal (after item discounts)</span>
+                      <span>Rs. {cart.subtotal.toLocaleString()}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between text-sm text-green-600">
+                    <span>Cart Discount</span>
+                    <span>-Rs. {cart.discount.toLocaleString()}</span>
+                  </div>
+                </>
               )}
 
               {/* Add Cart Discount button/input */}
@@ -505,7 +510,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                       onChange={(e) => setCartDiscountValue(e.target.value)}
                       className="h-8 text-sm"
                       min={0}
-                      max={cart.total + cart.discount}
+                      max={cart.subtotal}
                       autoFocus
                     />
                     <Button
@@ -558,10 +563,10 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                   0,
                 );
                 const totalSavings = totalOriginal - cart.total;
-                const savingsPct = (
-                  (totalSavings / totalOriginal) *
-                  100
-                ).toFixed(1);
+                const savingsPct =
+                  totalOriginal > 0
+                    ? ((totalSavings / totalOriginal) * 100).toFixed(1)
+                    : "0.0";
 
                 return totalSavings > 0 ? (
                   <div className="flex justify-between text-xs text-green-600 bg-green-50 dark:bg-green-950/30 px-2 py-1.5 rounded-md">
