@@ -76,7 +76,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
   // Cart-level discount
   const handleApplyCartDiscount = () => {
     const discount = parseFloat(cartDiscountValue);
-    if (!isNaN(discount) && discount >= 0 && discount <= cart.subtotal) {
+    if (!isNaN(discount) && discount >= 0 && discount <= cart.total + cart.discount) {
       applyDiscount(discount);
       setShowCartDiscountInput(false);
       setCartDiscountValue("");
@@ -482,12 +482,6 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                   ) : null;
                 })()}
 
-              {/* Subtotal = selling price after item discounts */}
-              <div className="flex justify-between text-sm font-medium">
-                <span>Subtotal</span>
-                <span>Rs. {cart.subtotal.toLocaleString()}</span>
-              </div>
-
               {/* Cart-level discount */}
               {cart.discount > 0 && (
                 <div className="flex justify-between text-sm text-green-600">
@@ -507,7 +501,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                       onChange={(e) => setCartDiscountValue(e.target.value)}
                       className="h-8 text-sm"
                       min={0}
-                      max={cart.subtotal}
+                      max={cart.total + cart.discount}
                       autoFocus
                     />
                     <Button
@@ -560,7 +554,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                   0,
                 );
                 const totalSavings =
-                  totalOriginal - cart.subtotal + (cart.discount ?? 0);
+                  totalOriginal - cart.total;
                 const savingsPct = (
                   (totalSavings / totalOriginal) *
                   100
