@@ -76,7 +76,11 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
   // Cart-level discount
   const handleApplyCartDiscount = () => {
     const discount = parseFloat(cartDiscountValue);
-    if (!isNaN(discount) && discount >= 0 && discount <= cart.total + cart.discount) {
+    if (
+      !isNaN(discount) &&
+      discount >= 0 &&
+      discount <= cart.total + cart.discount
+    ) {
       applyDiscount(discount);
       setShowCartDiscountInput(false);
       setCartDiscountValue("");
@@ -553,8 +557,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                   (sum, i) => sum + i.price * i.quantity,
                   0,
                 );
-                const totalSavings =
-                  totalOriginal - cart.total;
+                const totalSavings = totalOriginal - cart.total;
                 const savingsPct = (
                   (totalSavings / totalOriginal) *
                   100

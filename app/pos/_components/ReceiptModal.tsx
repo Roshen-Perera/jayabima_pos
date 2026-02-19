@@ -155,11 +155,6 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
               </div>
             )}
 
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Subtotal</span>
-              <span>Rs. {sale.subtotal.toLocaleString()}</span>
-            </div>
-
             {sale.discount > 0 && (
               <div className="flex justify-between text-green-600">
                 <span>Cart Discount</span>

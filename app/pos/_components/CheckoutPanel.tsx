@@ -114,7 +114,6 @@ export default function CheckoutPanel({
         originalTotal,
         itemDiscount,
         totalSavings,
-        subtotal: cart.subtotal,
         discount: cart.discount,
         total,
         paymentMethod,
