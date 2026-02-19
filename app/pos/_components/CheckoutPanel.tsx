@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { alert } from "@/lib/alert";
 import { usePOSStore } from "@/store/posStore";
+import { useProductStore } from "@/store/productStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import {
   Banknote,
@@ -50,6 +51,7 @@ export default function CheckoutPanel({
   onSuccess,
 }: CheckoutPanelProps) {
   const { cart, customerId, customerName, clearCart } = usePOSStore();
+  const { updateStock } = useProductStore();
   const { user } = useAuthStore();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("CASH");
   const [cashInput, setCashInput] = useState("");
@@ -120,6 +122,11 @@ export default function CheckoutPanel({
         status: "COMPLETED",
         createdAt: new Date(),
       };
+
+      // Deduct sold quantities from product stock
+      cart.items.forEach((item) => {
+        updateStock(item.productId, item.quantity);
+      });
 
       clearCart();
       onSuccess(sale);
