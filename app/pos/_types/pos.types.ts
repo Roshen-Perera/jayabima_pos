@@ -13,7 +13,8 @@ export interface CartItem {
 export interface Cart {
     items: CartItem[];
     discount: number;
-    total: number;
+    subtotal: number;   // sum of effective (post-item-discount) prices × qty
+    total: number;      // subtotal − cart discount
 }
 
 export type PaymentMethod = 'CASH' | 'CARD' | 'MOBILE' | 'OTHER';
