@@ -61,7 +61,7 @@ export default function CustomerSelector() {
   };
 
   return (
-    <div ref={containerRef} className="relative px-4 pt-3 pb-1">
+    <div ref={containerRef} className="relative px-4 pb-1">
       {/* Trigger / selected state */}
       {hasCustomer || isWalkIn ? (
         <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-muted/60 border border-border">
