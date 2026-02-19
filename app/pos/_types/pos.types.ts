@@ -12,7 +12,6 @@ export interface CartItem {
 
 export interface Cart {
     items: CartItem[];
-    subtotal: number;
     discount: number;
     total: number;
 }
@@ -30,7 +29,6 @@ export interface Sale {
     originalTotal: number;     // sum of all items at full inventory price
     itemDiscount: number;      // total saved via per-item overrides
     totalSavings: number;      // itemDiscount + cart discount
-    subtotal: number;          // selling price after item discounts
     discount: number;          // cart-level flat discount
     total: number;
     paymentMethod: PaymentMethod;
@@ -47,5 +45,5 @@ export interface SaleItem {
     productName: string;
     quantity: number;
     price: number;
-    subtotal: number;
+    total: number;
 }
