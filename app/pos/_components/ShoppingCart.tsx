@@ -21,6 +21,7 @@ import {
 import { usePOSStore } from "@/store/posStore";
 import { useState } from "react";
 import { alert } from "@/lib/alert";
+import CustomerSelector from "./CustomerSelector";
 
 interface ShoppingCartProps {
   onCheckout: () => void;
@@ -168,6 +169,9 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
+        {/* Customer selector */}
+        <CustomerSelector />
+
         <ScrollArea className="flex-1 min-h-0">
           <div className="p-4 space-y-2">
             {isEmpty ? (
