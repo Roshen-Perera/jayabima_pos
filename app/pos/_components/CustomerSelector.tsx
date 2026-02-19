@@ -6,14 +6,7 @@ import { usePOSStore } from "@/store/posStore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import {
-  User,
-  UserX,
-  Search,
-  ChevronDown,
-  X,
-  PersonStanding,
-} from "lucide-react";
+import { User, Search, ChevronDown, X, PersonStanding } from "lucide-react";
 
 export default function CustomerSelector() {
   const { customers } = useCustomerStore();
