@@ -1,6 +1,5 @@
 import { Package } from "lucide-react";
 import React, { useMemo } from "react";
-import ProductCard from "./ProductCard";
 import { Product } from "@/app/inventory/_types/product.types";
 import { CartItem } from "../_types/pos.types";
 import { Badge } from "@/components/ui/badge";
