@@ -102,9 +102,11 @@ export default function POSPage() {
       </div>
 
       {/* RIGHT SIDE - Cart */}
-      <div className="hidden lg:block flex-shrink-0">
+      <div className="hidden xl:block flex-shrink-0">
         <ShoppingCart onCheckout={() => setIsCheckoutOpen(true)} />
       </div>
+
+
 
       {/* Checkout Dialog */}
       <CheckoutPanel
