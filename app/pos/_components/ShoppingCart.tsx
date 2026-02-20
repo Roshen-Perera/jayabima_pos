@@ -37,12 +37,16 @@ interface ItemEditState {
 export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
   const {
     cart,
+    customerId,
+    customerName,
     updateQuantity,
     removeFromCart,
     clearCart,
     applyDiscount,
     updateItemPrice,
   } = usePOSStore();
+
+  const noCustomer = !customerId && customerName !== "Walking Customer";
 
   const [showCartDiscountInput, setShowCartDiscountInput] = useState(false);
   const [cartDiscountValue, setCartDiscountValue] = useState("");
@@ -589,6 +593,12 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                   Rs. {cart.total.toLocaleString()}
                 </span>
               </div>
+
+              {noCustomer && (
+                <p className="text-center text-xs text-amber-600 dark:text-amber-400">
+                  Select a customer or Walking Customer to checkout
+                </p>
+              )}
 
               <Button
                 className="w-full mt-2"
