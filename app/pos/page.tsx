@@ -5,15 +5,20 @@ import { usePOSStore } from "@/store/posStore";
 import { productCategories } from "@/data/data";
 
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useProductStore } from "@/store/productStore";
 import CheckoutPanel from "./_components/CheckoutPanel";
 import ProductGrid from "./_components/ProductGrid";
 import ProductSearch from "./_components/ProductSearch";
 import ReceiptModal from "./_components/ReceiptModal";
 import { Sale } from "./_types/pos.types";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import ShoppingCart from "./_components/ShoppingCart";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function POSPage() {
   const { products } = useProductStore();
@@ -46,48 +51,24 @@ export default function POSPage() {
         <ProductSearch placeholder={searchQuery} onSearch={setSearchQuery} />
 
         {/* Category Filter */}
-        <div className="shrink-0 w-full overflow-x-auto">
-          <div className="flex gap-2 pb-2 w-max">
-            {/* All Category */}
-            <Button
-              variant={categoryFilter === "all" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setCategoryFilter("all")}
-              className="flex-shrink-0"
-            >
-              All
-            </Button>
-
-            {/* Category Buttons */}
+        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="All Categories" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Categories</SelectItem>
             {categories.map((category) => {
               const count = products.filter(
                 (p) => p.category === category && p.active,
               ).length;
-
               return (
-                <Button
-                  key={category}
-                  variant={categoryFilter === category ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setCategoryFilter(category)}
-                  className="flex-shrink-0 gap-1.5"
-                >
-                  {category}
-                  {count > 0 && (
-                    <Badge
-                      variant={
-                        categoryFilter === category ? "secondary" : "outline"
-                      }
-                      className="h-4 text-xs px-1"
-                    >
-                      {count}
-                    </Badge>
-                  )}
-                </Button>
+                <SelectItem key={category} value={category}>
+                  {category} ({count})
+                </SelectItem>
               );
             })}
-          </div>
-        </div>
+          </SelectContent>
+        </Select>
 
         {/* Product Grid */}
         <div className="flex-1 overflow-y-auto">
