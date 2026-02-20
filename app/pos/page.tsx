@@ -14,6 +14,7 @@ import ReceiptModal from "./_components/ReceiptModal";
 import { Sale } from "./_types/pos.types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ShoppingCart from "./_components/ShoppingCart";
+import { ShoppingCart as CartIcon, ArrowLeft } from "lucide-react";
 
 export default function POSPage() {
   const { products } = useProductStore();
@@ -25,6 +26,7 @@ export default function POSPage() {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const [completedSale, setCompletedSale] = useState<Sale | null>(null);
+  const [mobileView, setMobileView] = useState<"products" | "cart">("products");
 
   // Get unique categories from products
   const categories = useMemo(() => {
