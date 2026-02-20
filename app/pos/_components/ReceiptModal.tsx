@@ -69,8 +69,8 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
 
           <Separator />
 
-          {/* Customer */}
-          {sale.customerName && (
+          {/* Customer — hidden for walk-in sales */}
+          {sale.customerName && sale.customerName !== "Walking Customer" && (
             <>
               <div className="text-xs">
                 <span className="text-muted-foreground">Customer: </span>

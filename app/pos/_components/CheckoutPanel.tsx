@@ -15,7 +15,6 @@ import { usePOSStore } from "@/store/posStore";
 import { useProductStore } from "@/store/productStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import {
-  AlertTriangle,
   Banknote,
   CreditCard,
   ShoppingBag,
@@ -51,21 +50,24 @@ export default function CheckoutPanel({
   onClose,
   onSuccess,
 }: CheckoutPanelProps) {
-  const { cart, customerId, customerName, clearCart } = usePOSStore();
+  const { cart, customerId, customerName, setCustomer, clearCart } = usePOSStore();
   const { updateStock } = useProductStore();
   const { user } = useAuthStore();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("CASH");
   const [cashInput, setCashInput] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Reset state when dialog opens
+  // Reset state when dialog opens; auto-default to Walking Customer if none selected
   useEffect(() => {
     if (open) {
       setPaymentMethod("CASH");
       setCashInput("");
       setIsProcessing(false);
+      if (!customerId && customerName !== "Walking Customer") {
+        setCustomer(undefined, "Walking Customer");
+      }
     }
-  }, [open]);
+  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const total = cart.total;
 
@@ -74,9 +76,6 @@ export default function CheckoutPanel({
   const cashBalance = cashPaid - total;
   const isCash = paymentMethod === "CASH";
   const cashInputValid = !isCash || (cashInput !== "" && cashPaid >= total);
-
-  // Customer validation
-  const noCustomer = !customerId && customerName !== "Walking Customer";
 
   // Quick cash presets (round numbers >= total)
   const presets = Array.from(
@@ -88,14 +87,6 @@ export default function CheckoutPanel({
   ).filter((v) => v >= total);
 
   const handleCheckout = async () => {
-    if (noCustomer) {
-      alert.error(
-        "No customer selected",
-        "Please select a customer or choose Walking Customer before checkout.",
-      );
-      return;
-    }
-
     if (isCash && cashPaid < total) {
       alert.error(
         "Insufficient cash",
@@ -161,21 +152,7 @@ export default function CheckoutPanel({
         </DialogHeader>
 
         <div className="space-y-4">
-          {/* Customer warning */}
-          {noCustomer && (
-            <div className="flex items-start gap-2.5 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2.5 text-sm text-amber-800 dark:border-amber-700/50 dark:bg-amber-950/30 dark:text-amber-400">
-              <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0" />
-              <div>
-                <p className="font-medium">No customer selected</p>
-                <p className="text-xs opacity-80">
-                  Select a customer or choose &ldquo;Walking Customer&rdquo; in
-                  the cart before proceeding.
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* Order summary */}
+          {/* Order summary */
           <div className="rounded-lg bg-muted/50 p-3 space-y-1.5 text-sm">
             <div className="flex justify-between text-muted-foreground">
               <span>Items</span>
@@ -318,15 +295,13 @@ export default function CheckoutPanel({
             className="w-full"
             size="lg"
             onClick={handleCheckout}
-            disabled={isProcessing || !cashInputValid || noCustomer}
+            disabled={isProcessing || !cashInputValid}
           >
             {isProcessing
               ? "Processing…"
-              : noCustomer
-                ? "Select a Customer First"
-                : isCash && cashInput === ""
-                  ? "Enter Cash Amount"
-                  : `Confirm Payment · Rs. ${total.toLocaleString()}`}
+              : isCash && cashInput === ""
+                ? "Enter Cash Amount"
+                : `Confirm Payment · Rs. ${total.toLocaleString()}`}
           </Button>
         </div>
       </DialogContent>
