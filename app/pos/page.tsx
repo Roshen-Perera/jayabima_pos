@@ -46,8 +46,8 @@ export default function POSPage() {
         <ProductSearch placeholder={searchQuery} onSearch={setSearchQuery} />
 
         {/* Category Filter */}
-        <ScrollArea className="w-full whitespace-nowrap">
-          <div className="flex gap-2 pb-2">
+        <div className="shrink-0 w-full overflow-x-auto">
+          <div className="flex gap-2 pb-2 w-max">
             {/* All Category */}
             <Button
               variant={categoryFilter === "all" ? "default" : "outline"}
@@ -87,7 +87,7 @@ export default function POSPage() {
               );
             })}
           </div>
-        </ScrollArea>
+        </div>
 
         {/* Product Grid */}
         <div className="flex-1 overflow-y-auto">
