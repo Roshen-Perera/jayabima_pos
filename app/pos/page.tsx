@@ -126,7 +126,7 @@ export default function POSPage() {
 
       {/* RIGHT SIDE - Cart (always visible on lg+, conditionally on mobile) */}
       <div
-        className={`flex-shrink-0 flex flex-col w-full lg:w-auto overflow-hidden ${
+        className={`shrink-0 flex flex-col w-full lg:w-auto overflow-hidden ${
           mobileView === "cart" ? "flex" : "hidden lg:flex"
         }`}
       >
