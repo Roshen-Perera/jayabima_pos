@@ -99,14 +99,15 @@ export default function POSPage() {
             onAddToCart={addToCart}
           />
         </div>
+        <div className="lg:flex justify-center block">
+          <Button onClick={() => setIsCheckoutOpen(true)}>View Cart</Button>
+        </div>
       </div>
 
       {/* RIGHT SIDE - Cart */}
       <div className="hidden xl:block flex-shrink-0">
         <ShoppingCart onCheckout={() => setIsCheckoutOpen(true)} />
       </div>
-
-
 
       {/* Checkout Dialog */}
       <CheckoutPanel
