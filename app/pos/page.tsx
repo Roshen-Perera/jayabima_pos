@@ -14,7 +14,6 @@ import ReceiptModal from "./_components/ReceiptModal";
 import { Sale } from "./_types/pos.types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ShoppingCart from "./_components/ShoppingCart";
-import { ShoppingCart as CartIcon, ArrowLeft } from "lucide-react";
 
 export default function POSPage() {
   const { products } = useProductStore();
@@ -26,7 +25,6 @@ export default function POSPage() {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const [completedSale, setCompletedSale] = useState<Sale | null>(null);
-  const [mobileView, setMobileView] = useState<"products" | "cart">("products");
 
   // Get unique categories from products
   const categories = useMemo(() => {
@@ -41,13 +39,9 @@ export default function POSPage() {
   };
 
   return (
-    <div className="flex gap-4 overflow-hidden">
-      {/* LEFT SIDE - Products (always visible on lg+, conditionally on mobile) */}
-      <div
-        className={`flex-1 flex flex-col gap-3 overflow-hidden ${
-          mobileView === "cart" ? "hidden lg:flex" : "flex"
-        }`}
-      >
+    <div className="flex h-[calc(100vh-4rem)] gap-4 overflow-hidden">
+      {/* LEFT SIDE - Products */}
+      <div className="flex-1 flex flex-col gap-3 overflow-hidden">
         {/* Search */}
         <ProductSearch placeholder={searchQuery} onSearch={setSearchQuery} />
 
@@ -96,7 +90,7 @@ export default function POSPage() {
         </ScrollArea>
 
         {/* Product Grid */}
-        <div className="flex-1 overflow-y-auto pb-20 lg:pb-0">
+        <div className="flex-1 overflow-y-auto">
           <ProductGrid
             products={products}
             searchQuery={searchQuery}
@@ -105,47 +99,11 @@ export default function POSPage() {
             onAddToCart={addToCart}
           />
         </div>
-
-        {/* Mobile floating cart button */}
-        <div className="fixed bottom-4 left-0 right-0 flex justify-center lg:hidden z-10">
-          <Button
-            size="lg"
-            className="shadow-xl gap-2 pr-5"
-            onClick={() => setMobileView("cart")}
-          >
-            <CartIcon className="w-5 h-5" />
-            View Cart
-            {cart.items.length > 0 && (
-              <Badge variant="secondary" className="ml-1">
-                {cart.items.length}
-              </Badge>
-            )}
-          </Button>
-        </div>
       </div>
 
-      {/* RIGHT SIDE - Cart (always visible on lg+, conditionally on mobile) */}
-      <div
-        className={`shrink-0 flex flex-col w-full lg:w-auto overflow-hidden ${
-          mobileView === "cart" ? "flex" : "hidden lg:flex"
-        }`}
-      >
-        {/* Mobile back button */}
-        <div className="flex items-center gap-2 mb-3 lg:hidden">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="gap-1 px-2"
-            onClick={() => setMobileView("products")}
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Products
-          </Button>
-        </div>
-
-        <div className="flex-1 overflow-hidden">
-          <ShoppingCart onCheckout={() => setIsCheckoutOpen(true)} />
-        </div>
+      {/* RIGHT SIDE - Cart */}
+      <div className="flex-shrink-0">
+        <ShoppingCart onCheckout={() => setIsCheckoutOpen(true)} />
       </div>
 
       {/* Checkout Dialog */}
