@@ -50,7 +50,8 @@ export default function CheckoutPanel({
   onClose,
   onSuccess,
 }: CheckoutPanelProps) {
-  const { cart, customerId, customerName, setCustomer, clearCart } = usePOSStore();
+  const { cart, customerId, customerName, setCustomer, clearCart } =
+    usePOSStore();
   const { updateStock } = useProductStore();
   const { user } = useAuthStore();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("CASH");
@@ -152,7 +153,7 @@ export default function CheckoutPanel({
         </DialogHeader>
 
         <div className="space-y-4">
-          {/* Order summary */
+          {/* Order summary */}
           <div className="rounded-lg bg-muted/50 p-3 space-y-1.5 text-sm">
             <div className="flex justify-between text-muted-foreground">
               <span>Items</span>
