@@ -41,7 +41,7 @@ export default function POSPage() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] gap-4 overflow-hidden">
+    <div className="flex gap-4 overflow-hidden">
       {/* LEFT SIDE - Products (always visible on lg+, conditionally on mobile) */}
       <div
         className={`flex-1 flex flex-col gap-3 overflow-hidden ${
