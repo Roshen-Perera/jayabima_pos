@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 export default function POSPage() {
   const { products } = useProductStore();
@@ -87,6 +87,7 @@ export default function POSPage() {
               <Button variant="outline">Open Dialog</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-sm">
+              <DialogTitle></DialogTitle>
               <div className="flex-shrink-0 h-200">
                 <ShoppingCart onCheckout={() => setIsCheckoutOpen(true)} />
               </div>
