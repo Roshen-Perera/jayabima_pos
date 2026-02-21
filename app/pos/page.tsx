@@ -80,7 +80,7 @@ export default function POSPage() {
             onAddToCart={addToCart}
           />
         </div>
-        <div className="lg:flex justify-center block">
+        <div className="lg:hidden flex justify-center">
           <Button onClick={() => setIsCheckoutOpen(true)}>View Cart</Button>
         </div>
       </div>
