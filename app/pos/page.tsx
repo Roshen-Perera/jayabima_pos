@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 export default function POSPage() {
   const { products } = useProductStore();
@@ -80,8 +81,15 @@ export default function POSPage() {
             onAddToCart={addToCart}
           />
         </div>
-        <div className="lg:hidden flex justify-center">
-          <Button onClick={() => setIsCheckoutOpen(true)}>View Cart</Button>
+        <div className=" flex justify-center">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline">Open Dialog</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-sm">
+              <ShoppingCart onCheckout={() => setIsCheckoutOpen(true)} />
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
