@@ -81,7 +81,7 @@ export default function POSPage() {
             onAddToCart={addToCart}
           />
         </div>
-        <div className=" flex justify-center">
+        <div className="flex justify-center xl:hidden">
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="outline">Open Dialog</Button>
