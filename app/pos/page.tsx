@@ -87,7 +87,9 @@ export default function POSPage() {
               <Button variant="outline">Open Dialog</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-sm">
-              <ShoppingCart onCheckout={() => setIsCheckoutOpen(true)} />
+              <div className="flex-shrink-0 h-200">
+                <ShoppingCart onCheckout={() => setIsCheckoutOpen(true)} />
+              </div>
             </DialogContent>
           </Dialog>
         </div>
