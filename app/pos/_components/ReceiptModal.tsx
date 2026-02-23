@@ -55,7 +55,9 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
         <div className="space-y-3 font-mono text-sm" id="receipt-content">
           {/* Store Header */}
           <div className="text-center">
-            <h2 className="text-xl font-bold">JAYABIMA HARDWARE</h2>
+            <div className="flex flex-row justify-between items-center">
+              <img src="/dwd.png" alt="image" />
+            </div>
             <p className="text-xs text-muted-foreground">
               No 28/D, Rathnapura Road, Diurumpitiya, Getaheththa
             </p>
