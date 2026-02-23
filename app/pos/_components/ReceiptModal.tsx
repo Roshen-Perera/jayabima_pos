@@ -8,10 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { alert } from "@/lib/alert";
-import { Printer, ShoppingBag } from "lucide-react";
-import Image from "next/image";
-import React from "react";
+import { Download, Printer, ShoppingBag } from "lucide-react";
 import { Sale } from "../_types/pos.types";
 
 interface ReceiptModalProps {
@@ -24,7 +21,6 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
   if (!sale) return null;
 
   const handlePrint = () => window.print();
-  const handleDownload = () => alert.success("PDF download coming soon!");
 
   // Derived totals from sale
   const originalTotal =
@@ -243,6 +239,10 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
           <Button variant="outline" className="flex-1" onClick={handlePrint}>
             <Printer className="mr-2 h-4 w-4" />
             Print
+          </Button>
+          <Button variant="outline" className="flex-1" onClick={handleDownload} disabled={isSavingPdf}>
+            <Download className="mr-2 h-4 w-4" />
+            {isSavingPdf ? "Saving…" : "Save PDF"}
           </Button>
           <Button className="flex-1" onClick={onClose}>
             New Sale
