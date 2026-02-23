@@ -46,7 +46,7 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-sm max-h-[90vh] flex flex-col">
+      <DialogContent className="sm:max-w-sm max-h-[90vh] flex flex-col print:max-h-none">
         <DialogHeader className="print:hidden">
           <DialogTitle className="flex items-center gap-2">
             <ShoppingBag className="h-5 w-5 text-green-600" />
@@ -56,7 +56,7 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
 
         {/* Receipt */}
         <div
-          className="space-y-3 font-mono text-sm overflow-y-auto flex-1 pr-1"
+          className="space-y-3 font-mono text-sm overflow-y-auto flex-1 pr-1 print:overflow-visible print:flex-none"
           id="receipt-content"
         >
           {/* Store Header */}
