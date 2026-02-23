@@ -47,7 +47,7 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-sm">
-        <DialogHeader>
+        <DialogHeader className="print:hidden">
           <DialogTitle className="flex items-center gap-2">
             <ShoppingBag className="h-5 w-5 text-green-600" />
             Sale Completed!
@@ -236,7 +236,7 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
         </div>
 
         {/* Actions */}
-        <div className="flex gap-2 mt-2">
+        <div className="flex gap-2 mt-2 print:hidden">
           <Button variant="outline" className="flex-1" onClick={handlePrint}>
             <Printer className="mr-2 h-4 w-4" />
             Print
