@@ -55,10 +55,8 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
         <div className="space-y-3 font-mono text-sm" id="receipt-content">
           {/* Store Header */}
           <div className="text-center space-y-1">
-            <h2 className="text-base font-bold">JAYABIMA</h2>
-            <p className="text-xs text-muted-foreground">
-              Hardware & Construction Supplies
-            </p>
+            <h2 className="text-base font-bold">JAYABIMA HARDWARE</h2>
+            <p className="text-xs text-muted-foreground">No 28/D, Rathnapura Road, Diurumpitiya, Getaheththa</p>
             <p className="text-xs text-muted-foreground">
               {new Date(sale.createdAt).toLocaleString("en-LK")}
             </p>
