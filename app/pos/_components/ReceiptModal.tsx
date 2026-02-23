@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,6 +10,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { alert } from "@/lib/alert";
 import { Printer, ShoppingBag } from "lucide-react";
+import Image from "next/image";
 import React from "react";
 import { Sale } from "../_types/pos.types";
 
@@ -54,9 +57,9 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
         {/* Receipt */}
         <div className="space-y-3 font-mono text-sm" id="receipt-content">
           {/* Store Header */}
-          <div className="text-center">
-            <div className="flex flex-row justify-between items-center">
-              <img src="/dwd.png" alt="image" />
+          <div className="text-center space-y-0.5">
+            <div className="flex justify-center items-center">
+              <img src="/dwd.png" alt="Store Logo" width={200} height={100} />
             </div>
             <p className="text-xs text-muted-foreground">
               No 28/D, Rathnapura Road, Diurumpitiya, Getaheththa
