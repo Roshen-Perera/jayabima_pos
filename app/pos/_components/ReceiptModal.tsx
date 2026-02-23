@@ -142,6 +142,10 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
                       <span>-Rs. {itemSavings.toLocaleString()}</span>
                     </div>
                   )}
+
+                  {index < sale.items.length - 1 && (
+                    <Separator className="mt-2" />
+                  )}
                 </div>
               );
             })}
