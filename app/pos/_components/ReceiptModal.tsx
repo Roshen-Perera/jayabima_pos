@@ -240,10 +240,6 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
             <Printer className="mr-2 h-4 w-4" />
             Print
           </Button>
-          <Button variant="outline" className="flex-1" onClick={handleDownload} disabled={isSavingPdf}>
-            <Download className="mr-2 h-4 w-4" />
-            {isSavingPdf ? "Saving…" : "Save PDF"}
-          </Button>
           <Button className="flex-1" onClick={onClose}>
             New Sale
           </Button>
