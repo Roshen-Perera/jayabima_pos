@@ -66,6 +66,6 @@ export const useSalesStore = create<SalesState>((set, get) => ({
                 sale.items.some((item) =>
                     item.name.toLowerCase().includes(searchQuery.toLowerCase())
                 );
-        },
+        });
     }
 }));
