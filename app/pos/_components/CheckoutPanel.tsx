@@ -40,7 +40,7 @@ const PAYMENT_OPTIONS: {
   {
     value: "MOBILE",
     label: "Mobile Pay",
-    icon: <Smartphone className="w-5 h-5" />,
+    icon: <Smartphone className="w-5 h-5" />, 
   },
   { value: "OTHER", label: "Other", icon: <Wallet className="w-5 h-5" /> },
 ];
@@ -50,7 +50,7 @@ export default function CheckoutPanel({
   onClose,
   onSuccess,
 }: CheckoutPanelProps) {
-  const { cart, customerId, customerName, setCustomer, clearCart } =
+  const { cart, customerId, customerName, setCustomer, clearCart, addSale } =
     usePOSStore();
   const { updateStock } = useProductStore();
   const { user } = useAuthStore();
@@ -132,6 +132,7 @@ export default function CheckoutPanel({
         updateStock(item.productId, item.quantity);
       });
 
+      addSale(sale);
       clearCart();
       onSuccess(sale);
       onClose();
