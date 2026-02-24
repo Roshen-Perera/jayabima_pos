@@ -6,8 +6,15 @@ import { Filter, RefreshCw, Search } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import SalesStats from "./components/SalesStats";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import SalesTable from "./components/SalesTable";
+import ReceiptModal from "../pos/_components/ReceiptModal";
 
 const Page = () => {
   const {
@@ -102,6 +109,11 @@ const Page = () => {
         </Select>
       </div>
       <SalesTable sales={filteredSales} onViewReceipt={handleViewReceipt} />
+      <ReceiptModal
+        open={isReceiptOpen}
+        onClose={handleCloseReceipt}
+        sale={selectedSale}
+      />
     </div>
   );
 };
