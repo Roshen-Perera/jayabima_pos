@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { PaymentMethod, Sale } from "../_types/pos.types";
+import { useSalesStore } from "@/store/salesStore";
 
 interface CheckoutPanelProps {
   open: boolean;
@@ -50,13 +51,14 @@ export default function CheckoutPanel({
   onClose,
   onSuccess,
 }: CheckoutPanelProps) {
-  const { cart, customerId, customerName, setCustomer, clearCart, addSale } =
+  const { cart, customerId, customerName, setCustomer, clearCart } =
     usePOSStore();
   const { updateStock } = useProductStore();
   const { user } = useAuthStore();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("CASH");
   const [cashInput, setCashInput] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const { addSale } = useSalesStore();
 
   // Reset state when dialog opens; auto-default to Walking Customer if none selected
   useEffect(() => {
