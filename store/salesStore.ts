@@ -11,4 +11,5 @@ interface SalesState {
     paymentFilter: string;
 
     addSale: (sale: Sale) => void;
+    fetchSales: () => Promise<void>;
 }
