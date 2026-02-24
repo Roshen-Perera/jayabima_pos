@@ -32,4 +32,10 @@ export const useSalesStore = create<SalesState>((set, get) => ({
     searchQuery: '',
     dateFilter: 'today',
     paymentFilter: 'all',
+
+    addSale: (sale) => {
+        set((state) => ({
+            sales: [sale, ...state.sales],
+        }));
+    },
 }));
