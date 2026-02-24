@@ -7,4 +7,5 @@ interface SalesState {
 
     isLoading: boolean;
     searchQuery: string;
+    dateFilter: 'today' | 'week' | 'month' | 'all';
 }
