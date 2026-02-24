@@ -4,3 +4,7 @@ interface SalesTableProps {
   sales: Sale[];
   onViewReceipt: (sale: Sale) => void;
 }
+
+export default function SalesTable({ sales, onViewReceipt }: SalesTableProps) {
+    
+}
