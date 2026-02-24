@@ -81,7 +81,7 @@ export const useSalesStore = create<SalesState>((set, get) => ({
             }
             const matchesPayment =
                 paymentFilter === 'all' || sale.paymentMethod === paymentFilter;
-
+            return matchesSearch && matchesDate && matchesPayment;
         });
     }
 }));
