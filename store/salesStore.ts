@@ -52,4 +52,5 @@ export const useSalesStore = create<SalesState>((set, get) => ({
     },
 
     setSelectedSale: (sale) => set({ selectedSale: sale }),
+    setSearchQuery: (query) => set({ searchQuery: query }),
 }));
