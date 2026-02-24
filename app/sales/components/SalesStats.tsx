@@ -1,5 +1,8 @@
 "use client";
 
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { ShoppingBag } from "lucide-react";
+
 interface SalesStatsProps {
   stats: {
     totalSales: number;
