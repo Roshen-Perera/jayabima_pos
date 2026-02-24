@@ -59,7 +59,13 @@ export const useSalesStore = create<SalesState>((set, get) => ({
     getFilteredSales: () => {
         const { sales, searchQuery, dateFilter, paymentFilter } = get();
         return sales.filter((sale) => {
-
+            const matchesSearch =
+                !searchQuery ||
+                sale.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                sale.customerName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                sale.items.some((item) =>
+                    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+                );
         },
     }
 }));
