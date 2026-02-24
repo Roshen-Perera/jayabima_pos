@@ -87,6 +87,18 @@ const Page = () => {
             <SelectItem value="all">All Time</SelectItem>
           </SelectContent>
         </Select>
+        <Select value={paymentFilter} onValueChange={setPaymentFilter}>
+          <SelectTrigger className="w-full sm:w-45">
+            <SelectValue placeholder="Payment Method" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Payments</SelectItem>
+            <SelectItem value="CASH">Cash</SelectItem>
+            <SelectItem value="CARD">Card</SelectItem>
+            <SelectItem value="MOBILE">Mobile</SelectItem>
+            <SelectItem value="OTHER">Other</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
