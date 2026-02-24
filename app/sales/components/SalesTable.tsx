@@ -105,7 +105,6 @@ export default function SalesTable({ sales, onViewReceipt }: SalesTableProps) {
                     onClick={() => onViewReceipt(sale)}
                   >
                     <Eye className="h-4 w-4 mr-1" />
-                    Preview
                   </Button>
                 </TableCell>
               </TableRow>
