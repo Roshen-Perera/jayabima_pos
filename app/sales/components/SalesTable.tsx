@@ -1,5 +1,5 @@
 import { Sale } from "@/app/pos/_types/pos.types";
-import { Table, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 interface SalesTableProps {
   sales: Sale[];
