@@ -12,4 +12,5 @@ interface SalesState {
 
     addSale: (sale: Sale) => void;
     fetchSales: () => Promise<void>;
+    setSelectedSale: (sale: Sale | null) => void;
 }
