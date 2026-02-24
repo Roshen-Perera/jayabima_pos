@@ -1,5 +1,5 @@
 import { Sale } from "@/app/pos/_types/pos.types";
-import { Table, TableHeader } from "@/components/ui/table";
+import { Table, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 interface SalesTableProps {
   sales: Sale[];
@@ -18,9 +18,21 @@ export default function SalesTable({ sales, onViewReceipt }: SalesTableProps) {
     );
   }
 
-  return <div className="border rounded-lg overflow-hidden">
-    <Table>
-        <TableHeader></TableHeader>
-    </Table>
-  </div>;
+  return (
+    <div className="border rounded-lg overflow-hidden">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Receipt #</TableHead>
+            <TableHead>Date & Time</TableHead>
+            <TableHead>Customer</TableHead>
+            <TableHead>Items</TableHead>
+            <TableHead>Payment</TableHead>
+            <TableHead className="text-right">Amount</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+      </Table>
+    </div>
+  );
 }
