@@ -55,4 +55,8 @@ export const useSalesStore = create<SalesState>((set, get) => ({
     setSearchQuery: (query) => set({ searchQuery: query }),
     setDateFilter: (filter) => set({ dateFilter: filter }),
     setPaymentFilter: (filter) => set({ paymentFilter: filter }),
+
+    getFilteredSales: () => {
+        
+    }
 }));
