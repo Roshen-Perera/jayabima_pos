@@ -1,9 +1,26 @@
+"use client";
+
+import { useSalesStore } from '@/store/salesStore';
 import React from 'react'
 
-const page = () => {
+const Page = () => {
+  const {
+    searchQuery,
+    dateFilter,
+    paymentFilter,
+    selectedSale,
+    setSearchQuery,
+    setDateFilter,
+    setPaymentFilter,
+    setSelectedSale,
+    getFilteredSales,
+    getTodayStats,
+    fetchSales,
+    isLoading,
+  } = useSalesStore();
   return (
     <div></div>
   )
 }
 
-export default page
+export default Page
