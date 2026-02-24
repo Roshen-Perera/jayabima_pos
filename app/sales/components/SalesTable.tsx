@@ -33,15 +33,13 @@ export default function SalesTable({ sales, onViewReceipt }: SalesTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-            {sales.map((sale) => {
+          {sales.map((sale) => {
             const totalQuantity = sale.items.reduce(
               (sum, item) => sum + item.quantity,
-              0
+              0,
             );
-            return (
-                <TableRow key={sale.id}></TableRow>
-            )]
-         )};
+            return <TableRow key={sale.id}></TableRow>;
+          })}
         </TableBody>
       </Table>
     </div>
