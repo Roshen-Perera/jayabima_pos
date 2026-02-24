@@ -38,6 +38,9 @@ export default function SalesTable({ sales, onViewReceipt }: SalesTableProps) {
               (sum, item) => sum + item.quantity,
               0
             );
+            return (
+                <TableRow key={sale.id}></TableRow>
+            )]
          )};
         </TableBody>
       </Table>
