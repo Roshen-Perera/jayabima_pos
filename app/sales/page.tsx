@@ -1,7 +1,7 @@
 "use client";
 
 import { useSalesStore } from "@/store/salesStore";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Page = () => {
   const {
@@ -21,6 +21,9 @@ const Page = () => {
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const filteredSales = getFilteredSales();
   const stats = getTodayStats();
+  useEffect(() => {
+    fetchSales();
+  }, [fetchSales]);
   return <div></div>;
 };
 
