@@ -19,6 +19,7 @@ const Page = () => {
     isLoading,
   } = useSalesStore();
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
+  const filteredSales = getFilteredSales();
   return <div></div>;
 };
 
