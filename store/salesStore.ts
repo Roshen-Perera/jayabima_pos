@@ -24,3 +24,7 @@ interface SalesState {
         averageOrderValue: number;
     };
 }
+
+export const useSalesStore = create<SalesState>((set, get) => ({
+
+}));
