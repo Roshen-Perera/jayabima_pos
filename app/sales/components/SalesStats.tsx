@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { DollarSign, Package, ShoppingBag } from "lucide-react";
+import { DollarSign, Package, ShoppingBag, TrendingUp } from "lucide-react";
 
 interface SalesStatsProps {
   stats: {
@@ -44,6 +44,18 @@ export default function SalesStats({ stats }: SalesStatsProps) {
       <CardContent>
         <div className="text-2xl font-bold">{stats.totalItems}</div>
         <p className="text-xs text-muted-foreground mt-1">Total items today</p>
+      </CardContent>
+    </Card>
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+        <CardTitle className="text-sm font-medium">Avg Order Value</CardTitle>
+        <TrendingUp className="h-4 w-4 text-muted-foreground" />
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">
+          Rs. {Math.round(stats.averageOrderValue).toLocaleString()}
+        </div>
+        <p className="text-xs text-muted-foreground mt-1">Per transaction</p>
       </CardContent>
     </Card>
   </div>;
