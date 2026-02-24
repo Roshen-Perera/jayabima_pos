@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Printer, User } from "lucide-react";
+import { Printer, User, View } from "lucide-react";
 
 interface SalesTableProps {
   sales: Sale[];
@@ -104,8 +104,8 @@ export default function SalesTable({ sales, onViewReceipt }: SalesTableProps) {
                     size="sm"
                     onClick={() => onViewReceipt(sale)}
                   >
-                    <Printer className="h-4 w-4 mr-1" />
-                    Reprint
+                    <View className="h-4 w-4 mr-1" />
+                    Preview
                   </Button>
                 </TableCell>
               </TableRow>
