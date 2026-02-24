@@ -7,6 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { User } from "lucide-react";
 
 interface SalesTableProps {
   sales: Sale[];
@@ -60,6 +61,19 @@ export default function SalesTable({ sales, onViewReceipt }: SalesTableProps) {
                       minute: "2-digit",
                     })}
                   </div>
+                </TableCell>
+                <TableCell>
+                  {sale.customerName &&
+                  sale.customerName !== "Walking Customer" ? (
+                    <div className="flex items-center gap-1">
+                      <User className="h-3 w-3 text-muted-foreground" />
+                      <span className="text-sm">{sale.customerName}</span>
+                    </div>
+                  ) : (
+                    <span className="text-sm text-muted-foreground">
+                      Walk-in
+                    </span>
+                  )}
                 </TableCell>
               </TableRow>
             );
