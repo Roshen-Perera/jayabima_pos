@@ -6,4 +6,5 @@ interface SalesState {
     selectedSale: Sale | null;
 
     isLoading: boolean;
+    searchQuery: string;
 }
