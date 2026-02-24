@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useSalesStore } from "@/store/salesStore";
 import { RefreshCw } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import SalesStats from "./components/SalesStats";
 
 const Page = () => {
   const {
@@ -58,6 +59,7 @@ const Page = () => {
           Refresh
         </Button>
       </div>
+      <SalesStats stats={stats} />
     </div>
   );
 };
