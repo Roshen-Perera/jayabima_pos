@@ -1,7 +1,7 @@
 "use client";
 
-import { useSalesStore } from '@/store/salesStore';
-import React from 'react'
+import { useSalesStore } from "@/store/salesStore";
+import React, { useState } from "react";
 
 const Page = () => {
   const {
@@ -18,9 +18,8 @@ const Page = () => {
     fetchSales,
     isLoading,
   } = useSalesStore();
-  return (
-    <div></div>
-  )
-}
+  const [isReceiptOpen, setIsReceiptOpen] = useState(false);
+  return <div></div>;
+};
 
-export default Page
+export default Page;
