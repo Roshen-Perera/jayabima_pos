@@ -16,7 +16,6 @@ interface POSState {
     updateItemPrice: (productId: string, price: number | undefined) => void;
     setCustomer: (id?: string, name?: string) => void;
     calculateTotals: () => void;
-    addSale: (sale: Sale) => void;
 }
 
 export const usePOSStore = create<POSState>((set, get) => ({
@@ -129,9 +128,5 @@ export const usePOSStore = create<POSState>((set, get) => ({
         const total = Math.max(0, subtotal - (cart.discount ?? 0));
 
         set({ cart: { ...cart, subtotal, total } });
-    },
-
-    addSale: (sale: Sale) => {
-        set((state) => ({ sales: [sale, ...state.sales] }));
     },
 }));
