@@ -1,5 +1,6 @@
 import { Sale } from "@/app/pos/_types/pos.types";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -8,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { User } from "lucide-react";
+import { Printer, User } from "lucide-react";
 
 interface SalesTableProps {
   sales: Sale[];
@@ -96,6 +97,16 @@ export default function SalesTable({ sales, onViewReceipt }: SalesTableProps) {
                       Saved Rs. {sale.totalSavings.toLocaleString()}
                     </div>
                   )}
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onViewReceipt(sale)}
+                  >
+                    <Printer className="h-4 w-4 mr-1" />
+                    Reprint
+                  </Button>
                 </TableCell>
               </TableRow>
             );
