@@ -16,4 +16,5 @@ interface SalesState {
     setSearchQuery: (query: string) => void;
     setDateFilter: (filter: 'today' | 'week' | 'month' | 'all') => void;
     setPaymentFilter: (filter: string) => void;
+    getFilteredSales: () => Sale[];
 }
