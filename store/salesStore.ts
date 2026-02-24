@@ -26,5 +26,10 @@ interface SalesState {
 }
 
 export const useSalesStore = create<SalesState>((set, get) => ({
-
+    sales: [],
+    selectedSale: null,
+    isLoading: false,
+    searchQuery: '',
+    dateFilter: 'today',
+    paymentFilter: 'all',
 }));
