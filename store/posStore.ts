@@ -1,11 +1,12 @@
 import { Product } from "@/app/inventory/_types/product.types";
-import { Cart, CartItem } from "@/app/pos/_types/pos.types";
+import { Cart, CartItem, Sale } from "@/app/pos/_types/pos.types";
 import { create } from "zustand";
 
 interface POSState {
     cart: Cart;
     customerId?: string;
     customerName?: string;
+    sales: Sale[];
 
     addToCart: (product: Product) => void;
     removeFromCart: (productId: string) => void;
@@ -15,6 +16,7 @@ interface POSState {
     updateItemPrice: (productId: string, price: number | undefined) => void;
     setCustomer: (id?: string, name?: string) => void;
     calculateTotals: () => void;
+    addSale: (sale: Sale) => void;
 }
 
 export const usePOSStore = create<POSState>((set, get) => ({
@@ -28,6 +30,7 @@ export const usePOSStore = create<POSState>((set, get) => ({
 
     customerId: undefined,
     customerName: undefined,
+    sales: [],
 
     addToCart: (product) => {
         const { cart } = get();
@@ -126,5 +129,9 @@ export const usePOSStore = create<POSState>((set, get) => ({
         const total = Math.max(0, subtotal - (cart.discount ?? 0));
 
         set({ cart: { ...cart, subtotal, total } });
-    }
+    },
+
+    addSale: (sale: Sale) => {
+        set((state) => ({ sales: [sale, ...state.sales] }));
+    },
 }));
