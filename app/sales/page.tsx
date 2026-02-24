@@ -21,7 +21,7 @@ const Page = () => {
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const filteredSales = getFilteredSales();
   const stats = getTodayStats();
-  
+
   useEffect(() => {
     fetchSales();
   }, [fetchSales]);
@@ -29,6 +29,12 @@ const Page = () => {
   const handleViewReceipt = (sale: any) => {
     setSelectedSale(sale);
     setIsReceiptOpen(true);
+  };
+
+  const handleCloseReceipt = () => {
+    setIsReceiptOpen(false);
+    // Don't clear selected sale immediately to allow animation
+    setTimeout(() => setSelectedSale(null), 300);
   };
   return <div></div>;
 };
