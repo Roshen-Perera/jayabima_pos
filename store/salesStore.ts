@@ -50,4 +50,6 @@ export const useSalesStore = create<SalesState>((set, get) => ({
             set({ isLoading: false });
         }
     },
+
+    setSelectedSale: (sale) => set({ selectedSale: sale }),
 }));
