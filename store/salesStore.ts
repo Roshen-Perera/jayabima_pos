@@ -17,4 +17,10 @@ interface SalesState {
     setDateFilter: (filter: 'today' | 'week' | 'month' | 'all') => void;
     setPaymentFilter: (filter: string) => void;
     getFilteredSales: () => Sale[];
+    getTodayStats: () => {
+        totalSales: number;
+        totalRevenue: number;
+        totalItems: number;
+        averageOrderValue: number;
+    };
 }
