@@ -36,7 +36,11 @@ const Page = () => {
     // Don't clear selected sale immediately to allow animation
     setTimeout(() => setSelectedSale(null), 300);
   };
-  return <div className="space-y-6"></div>;
+  return <div className="space-y-6">
+    <div className="flex items-center justify-between">
+      
+    </div>
+  </div>;
 };
 
 export default Page;
