@@ -13,50 +13,56 @@ interface SalesStatsProps {
 }
 
 export default function SalesStats({ stats }: SalesStatsProps) {
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-        <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
-        <ShoppingBag className="h-4 w-4 text-muted-foreground" />
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold">{stats.totalSales}</div>
-        <p className="text-xs text-muted-foreground mt-1">Transactions today</p>
-      </CardContent>
-    </Card>
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-        <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-        <DollarSign className="h-4 w-4 text-muted-foreground" />
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold">
-          Rs. {stats.totalRevenue.toLocaleString()}
-        </div>
-        <p className="text-xs text-muted-foreground mt-1">Revenue today</p>
-      </CardContent>
-    </Card>
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-        <CardTitle className="text-sm font-medium">Items Sold</CardTitle>
-        <Package className="h-4 w-4 text-muted-foreground" />
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold">{stats.totalItems}</div>
-        <p className="text-xs text-muted-foreground mt-1">Total items today</p>
-      </CardContent>
-    </Card>
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-        <CardTitle className="text-sm font-medium">Avg Order Value</CardTitle>
-        <TrendingUp className="h-4 w-4 text-muted-foreground" />
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold">
-          Rs. {Math.round(stats.averageOrderValue).toLocaleString()}
-        </div>
-        <p className="text-xs text-muted-foreground mt-1">Per transaction</p>
-      </CardContent>
-    </Card>
-  </div>;
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+          <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
+          <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{stats.totalSales}</div>
+          <p className="text-xs text-muted-foreground mt-1">
+            Transactions today
+          </p>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+          <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+          <DollarSign className="h-4 w-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">
+            Rs. {stats.totalRevenue.toLocaleString()}
+          </div>
+          <p className="text-xs text-muted-foreground mt-1">Revenue today</p>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+          <CardTitle className="text-sm font-medium">Items Sold</CardTitle>
+          <Package className="h-4 w-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{stats.totalItems}</div>
+          <p className="text-xs text-muted-foreground mt-1">
+            Total items today
+          </p>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+          <CardTitle className="text-sm font-medium">Avg Order Value</CardTitle>
+          <TrendingUp className="h-4 w-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">
+            Rs. {Math.round(stats.averageOrderValue).toLocaleString()}
+          </div>
+          <p className="text-xs text-muted-foreground mt-1">Per transaction</p>
+        </CardContent>
+      </Card>
+    </div>
+  );
 }
