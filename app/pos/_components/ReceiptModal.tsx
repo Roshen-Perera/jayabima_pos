@@ -7,7 +7,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Separator } from "@/components/ui/separator";
 import { Download, Printer, ShoppingBag } from "lucide-react";
 import { Sale } from "../_types/pos.types";
 
@@ -74,7 +73,7 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
             </p>
           </div>
 
-          <Separator />
+          <hr />
 
           {/* Customer — hidden for walk-in sales */}
           {sale.customerName && sale.customerName !== "Walking Customer" && (
@@ -83,7 +82,7 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
                 <span className="text-muted-foreground">Customer: </span>
                 <span className="font-medium">{sale.customerName}</span>
               </div>
-              <Separator />
+              <hr />
             </>
           )}
 
@@ -143,14 +142,14 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
                   )}
 
                   {index < sale.items.length - 1 && (
-                    <Separator className="mt-2" />
+                    <hr className="mt-2" />
                   )}
                 </div>
               );
             })}
           </div>
 
-          <Separator />
+          <hr />
 
           {/* Totals */}
           <div className="space-y-1 text-xs">
@@ -189,7 +188,7 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
             </div>
           </div>
 
-          <Separator />
+          <hr />
 
           {/* Payment */}
           <div className="text-xs text-center space-y-1">
