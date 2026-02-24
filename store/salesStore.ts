@@ -66,6 +66,9 @@ export const useSalesStore = create<SalesState>((set, get) => ({
                 sale.items.some((item) =>
                     item.name.toLowerCase().includes(searchQuery.toLowerCase())
                 );
+            const now = new Date();
+            const saleDate = new Date(sale.createdAt);
+            let matchesDate = true;
         });
     }
 }));
