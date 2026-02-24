@@ -69,6 +69,17 @@ export const useSalesStore = create<SalesState>((set, get) => ({
             const now = new Date();
             const saleDate = new Date(sale.createdAt);
             let matchesDate = true;
+
+            if (dateFilter === 'today') {
+                matchesDate = saleDate.toDateString() === now.toDateString();
+            } else if (dateFilter === 'week') {
+                const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                matchesDate = saleDate >= weekAgo;
+            } else if (dateFilter === 'month') {
+                const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+                matchesDate = saleDate >= monthAgo;
+            }
+
         });
     }
 }));
