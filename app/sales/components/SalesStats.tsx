@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { ShoppingBag } from "lucide-react";
+import { DollarSign, ShoppingBag } from "lucide-react";
 
 interface SalesStatsProps {
   stats: {
@@ -22,6 +22,18 @@ export default function SalesStats({ stats }: SalesStatsProps) {
       <CardContent>
         <div className="text-2xl font-bold">{stats.totalSales}</div>
         <p className="text-xs text-muted-foreground mt-1">Transactions today</p>
+      </CardContent>
+    </Card>
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+        <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+        <DollarSign className="h-4 w-4 text-muted-foreground" />
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">
+          Rs. {stats.totalRevenue.toLocaleString()}
+        </div>
+        <p className="text-xs text-muted-foreground mt-1">Revenue today</p>
       </CardContent>
     </Card>
   </div>;
