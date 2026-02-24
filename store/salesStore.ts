@@ -79,6 +79,8 @@ export const useSalesStore = create<SalesState>((set, get) => ({
                 const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
                 matchesDate = saleDate >= monthAgo;
             }
+            const matchesPayment =
+                paymentFilter === 'all' || sale.paymentMethod === paymentFilter;
 
         });
     }
