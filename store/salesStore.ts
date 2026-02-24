@@ -106,5 +106,4 @@ export const useSalesStore = create<SalesState>((set, get) => ({
             averageOrderValue,
         };
     }
-
 }));
