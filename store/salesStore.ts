@@ -38,4 +38,16 @@ export const useSalesStore = create<SalesState>((set, get) => ({
             sales: [sale, ...state.sales],
         }));
     },
+
+    fetchSales: async () => {
+        set({ isLoading: true });
+        try {
+            // TODO: Later replace with API call
+            await new Promise((resolve) => setTimeout(resolve, 300));
+        } catch (error) {
+            console.error('Fetch sales error:', error);
+        } finally {
+            set({ isLoading: false });
+        }
+    },
 }));
