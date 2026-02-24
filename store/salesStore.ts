@@ -58,5 +58,8 @@ export const useSalesStore = create<SalesState>((set, get) => ({
 
     getFilteredSales: () => {
         const { sales, searchQuery, dateFilter, paymentFilter } = get();
+        return sales.filter((sale) => {
+
+        },
     }
 }));
