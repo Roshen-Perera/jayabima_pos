@@ -1,6 +1,8 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useSalesStore } from "@/store/salesStore";
+import { RefreshCw } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 const Page = () => {
@@ -45,6 +47,16 @@ const Page = () => {
             View and reprint all transactions
           </p>
         </div>
+        <Button
+          variant="outline"
+          onClick={() => fetchSales()}
+          disabled={isLoading}
+        >
+          <RefreshCw
+            className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
+          />
+          Refresh
+        </Button>
       </div>
     </div>
   );
