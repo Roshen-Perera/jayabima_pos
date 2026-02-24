@@ -16,4 +16,6 @@ export default function SalesTable({ sales, onViewReceipt }: SalesTableProps) {
       </div>
     );
   }
+
+  return <div className="border rounded-lg overflow-hidden"></div>;
 }
