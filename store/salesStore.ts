@@ -85,7 +85,26 @@ export const useSalesStore = create<SalesState>((set, get) => ({
         });
     },
     getTodayStats: () => {
+        const { sales } = get();
+        const today = new Date().toDateString();
+        const todaySales = sales.filter(
+            (sale) => new Date(sale.createdAt).toDateString() === today
+        );
 
+        const totalSales = todaySales.length;
+        const totalRevenue = todaySales.reduce((sum, sale) => sum + sale.total, 0);
+        const totalItems = todaySales.reduce(
+            (sum, sale) => sum + sale.items.reduce((s, item) => s + item.quantity, 0),
+            0
+        );
+        const averageOrderValue = totalSales > 0 ? totalRevenue / totalSales : 0;
+
+        return {
+            totalSales,
+            totalRevenue,
+            totalItems,
+            averageOrderValue,
+        };
     }
 
 }));
