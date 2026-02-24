@@ -2,9 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { useSalesStore } from "@/store/salesStore";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, Search } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import SalesStats from "./components/SalesStats";
+import { Input } from "@/components/ui/input";
 
 const Page = () => {
   const {
@@ -61,7 +62,15 @@ const Page = () => {
       </div>
       <SalesStats stats={stats} />
       <div className="flex flex-col sm:flex-row gap-3">
-        
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by receipt #, customer, or product..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+        </div>
       </div>
     </div>
   );
