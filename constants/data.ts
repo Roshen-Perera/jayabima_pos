@@ -13,8 +13,8 @@ export const navItems = [
         icon: ShoppingCart,
     },
     {
-        title: "Orders",
-        url: "/orders",
+        title: "Sales History",
+        url: "/sales",
         icon: FileText,
     },
     {
