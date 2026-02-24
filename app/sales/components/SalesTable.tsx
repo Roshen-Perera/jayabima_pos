@@ -87,6 +87,16 @@ export default function SalesTable({ sales, onViewReceipt }: SalesTableProps) {
                 <TableCell>
                   <Badge variant="outline">{sale.paymentMethod}</Badge>
                 </TableCell>
+                <TableCell className="text-right">
+                  <div className="font-semibold">
+                    Rs. {sale.total.toLocaleString()}
+                  </div>
+                  {sale.totalSavings && sale.totalSavings > 0 && (
+                    <div className="text-xs text-green-600">
+                      Saved Rs. {sale.totalSavings.toLocaleString()}
+                    </div>
+                  )}
+                </TableCell>
               </TableRow>
             );
           })}
