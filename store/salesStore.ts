@@ -9,4 +9,6 @@ interface SalesState {
     searchQuery: string;
     dateFilter: 'today' | 'week' | 'month' | 'all';
     paymentFilter: string;
+
+    addSale: (sale: Sale) => void;
 }
