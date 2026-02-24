@@ -1,5 +1,5 @@
 import { Sale } from "@/app/pos/_types/pos.types";
-import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 interface SalesTableProps {
   sales: Sale[];
@@ -38,9 +38,15 @@ export default function SalesTable({ sales, onViewReceipt }: SalesTableProps) {
               (sum, item) => sum + item.quantity,
               0,
             );
-            return <TableRow key={sale.id}>
-                <TableRow key={sale.id}></TableRow>
-            </TableRow>;
+            return (
+              <TableRow key={sale.id}>
+                <TableRow key={sale.id}>
+                  <TableCell className="font-mono text-sm">
+                    #{sale.id.slice(-8).toUpperCase()}
+                  </TableCell>
+                </TableRow>
+              </TableRow>
+            );
           })}
         </TableBody>
       </Table>
