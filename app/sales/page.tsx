@@ -20,6 +20,7 @@ const Page = () => {
   } = useSalesStore();
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const filteredSales = getFilteredSales();
+  const stats = getTodayStats();
   return <div></div>;
 };
 
