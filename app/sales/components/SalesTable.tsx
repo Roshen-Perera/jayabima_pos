@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Eye, Printer, User, View } from "lucide-react";
+import { Eye, User } from "lucide-react";
 
 interface SalesTableProps {
   sales: Sale[];
