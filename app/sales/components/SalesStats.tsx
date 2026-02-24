@@ -8,3 +8,5 @@ interface SalesStatsProps {
     averageOrderValue: number;
   };
 }
+
+export default function SalesStats({ stats }: SalesStatsProps) {}
