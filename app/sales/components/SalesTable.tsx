@@ -1,5 +1,12 @@
 import { Sale } from "@/app/pos/_types/pos.types";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface SalesTableProps {
   sales: Sale[];
@@ -40,11 +47,20 @@ export default function SalesTable({ sales, onViewReceipt }: SalesTableProps) {
             );
             return (
               <TableRow key={sale.id}>
-                <TableRow key={sale.id}>
-                  <TableCell className="font-mono text-sm">
-                    #{sale.id.slice(-8).toUpperCase()}
-                  </TableCell>
-                </TableRow>
+                <TableCell className="font-mono text-sm">
+                  #{sale.id.slice(-8).toUpperCase()}
+                </TableCell>
+                <TableCell className="text-sm">
+                  <div>
+                    {new Date(sale.createdAt).toLocaleDateString("en-LK")}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {new Date(sale.createdAt).toLocaleTimeString("en-LK", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </div>
+                </TableCell>
               </TableRow>
             );
           })}
