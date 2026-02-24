@@ -21,9 +21,15 @@ const Page = () => {
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const filteredSales = getFilteredSales();
   const stats = getTodayStats();
+  
   useEffect(() => {
     fetchSales();
   }, [fetchSales]);
+
+  const handleViewReceipt = (sale: any) => {
+    setSelectedSale(sale);
+    setIsReceiptOpen(true);
+  };
   return <div></div>;
 };
 
