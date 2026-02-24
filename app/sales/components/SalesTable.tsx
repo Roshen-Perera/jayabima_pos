@@ -32,6 +32,9 @@ export default function SalesTable({ sales, onViewReceipt }: SalesTableProps) {
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
+        <TableBody>
+            
+        </TableBody>
       </Table>
     </div>
   );
