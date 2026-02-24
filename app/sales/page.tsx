@@ -36,7 +36,7 @@ const Page = () => {
     // Don't clear selected sale immediately to allow animation
     setTimeout(() => setSelectedSale(null), 300);
   };
-  return <div></div>;
+  return <div className="space-y-6"></div>;
 };
 
 export default Page;
