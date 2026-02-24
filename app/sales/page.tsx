@@ -2,10 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { useSalesStore } from "@/store/salesStore";
-import { RefreshCw, Search } from "lucide-react";
+import { Filter, RefreshCw, Search } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import SalesStats from "./components/SalesStats";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const Page = () => {
   const {
@@ -71,6 +72,21 @@ const Page = () => {
             className="pl-10"
           />
         </div>
+        <Select
+          value={dateFilter}
+          onValueChange={(value: any) => setDateFilter(value)}
+        >
+          <SelectTrigger className="w-full sm:w-[180px]">
+            <Filter className="h-4 w-4 mr-2" />
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="today">Today</SelectItem>
+            <SelectItem value="week">This Week</SelectItem>
+            <SelectItem value="month">This Month</SelectItem>
+            <SelectItem value="all">All Time</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
