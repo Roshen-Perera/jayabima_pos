@@ -60,6 +60,9 @@ const Page = () => {
         </Button>
       </div>
       <SalesStats stats={stats} />
+      <div className="flex flex-col sm:flex-row gap-3">
+        
+      </div>
     </div>
   );
 };
