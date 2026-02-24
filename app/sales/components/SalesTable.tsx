@@ -75,6 +75,14 @@ export default function SalesTable({ sales, onViewReceipt }: SalesTableProps) {
                     </span>
                   )}
                 </TableCell>
+                <TableCell>
+                  <div className="text-sm">
+                    {sale.items.length} item{sale.items.length !== 1 ? "s" : ""}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {totalQuantity} qty
+                  </div>
+                </TableCell>
               </TableRow>
             );
           })}
