@@ -1,4 +1,5 @@
 import { Sale } from "@/app/pos/_types/pos.types";
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -82,6 +83,9 @@ export default function SalesTable({ sales, onViewReceipt }: SalesTableProps) {
                   <div className="text-xs text-muted-foreground">
                     {totalQuantity} qty
                   </div>
+                </TableCell>
+                <TableCell>
+                  <Badge variant="outline">{sale.paymentMethod}</Badge>
                 </TableCell>
               </TableRow>
             );
