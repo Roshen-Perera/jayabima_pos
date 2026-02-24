@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import SalesStats from "./components/SalesStats";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import SalesTable from "./components/SalesTable";
 
 const Page = () => {
   const {
@@ -100,6 +101,7 @@ const Page = () => {
           </SelectContent>
         </Select>
       </div>
+      <SalesTable sales={filteredSales} onViewReceipt={handleViewReceipt} />
     </div>
   );
 };
