@@ -181,7 +181,7 @@ const LoginForm = () => {
             </Button>
 
             {/* Register Link */}
-            <p className="text-center text-sm text-muted-foreground">
+            {/* <p className="text-center text-sm text-muted-foreground">
               Don&apos;t have an account?{" "}
               <a
                 href="#register"
@@ -190,7 +190,7 @@ const LoginForm = () => {
               >
                 Sign up
               </a>
-            </p>
+            </p> */}
           </CardFooter>
         </form>
       </Card>
