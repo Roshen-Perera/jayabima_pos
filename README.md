@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Jayabima POS
 
-## Getting Started
+Jayabima POS is a full-stack Point of Sale web application built for small to mid-sized retail operations. It provides day-to-day sales workflows, inventory and customer management, and operational reporting in a modern, fast, and responsive interface. The project is structured around the Next.js App Router and uses Prisma with PostgreSQL to deliver a clean API surface and reliable data access.
 
-First, run the development server:
+### Highlights
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- End-to-end POS flow with cart management, checkout, and receipt handling
+- Role-based user model with authentication, session handling, and account management
+- Customer, inventory, sales, suppliers, and reports sections with shared UI patterns
+- Centralized stores and hooks for predictable client state
+- Typed models and validation schemas to keep data consistent across UI and API
+
+### Tech Stack
+
+- Next.js 16 App Router, React 19, TypeScript 5
+- Prisma ORM with PostgreSQL (Neon-ready)
+- Tailwind CSS 4 with component utilities
+- Zustand for client state management
+- Zod for request and form validation
+- Nodemailer for email flows
+
+### Feature Areas
+
+- **Authentication:** login, register, password reset, and session support under `app/api/auth/*`
+- **Customers:** listing, search, stats, and CRUD-friendly forms
+- **Inventory:** product listings, search, and stock visibility
+- **Sales & POS:** cart management, checkout, receipt modal, and sales dashboard
+- **Suppliers & Reports:** management screens and reporting views
+
+### Project Structure
+
+- `app/`: Next.js routes, pages, and layouts
+- `app/api/`: route handlers for auth and server-side actions
+- `components/`: shared UI and layout components
+- `store/`: Zustand stores for domain state
+- `lib/`: helpers for Prisma, auth, and utilities
+- `prisma/`: schema and database configuration
+
+### Environment Variables
+
+Create a `.env` file at the project root with values similar to:
+
+```env
+DATABASE_URL="postgresql://USER:PASSWORD@HOST/DATABASE?sslmode=require"
+JWT_SECRET="your-secret"
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
+EMAIL_USER="you@example.com"
+EMAIL_PASSWORD="app-password"
+EMAIL_HOST="smtp.gmail.com"
+EMAIL_PORT="587"
+EMAIL_FROM="Jayabima POS <you@example.com>"
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Getting Started
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open `http://localhost:3000` to view the app. The API routes live under `app/api` and Prisma models are defined in `prisma/schema.prisma`.
 
-## Learn More
+### Scripts
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npm run dev` - start the development server
+- `npm run build` - build the production bundle
+- `npm run start` - run the production server
+- `npm run lint` - lint the codebase
