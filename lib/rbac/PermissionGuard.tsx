@@ -27,4 +27,9 @@ export default function PermissionGuard({
     } else if (permissions) {
       hasAccess = requireAll ? canAll(permissions) : canAny(permissions);
     }
+
+    if (!hasAccess) {
+      return <>{fallback}</>;
+    }
+
 }
