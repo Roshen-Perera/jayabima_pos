@@ -46,3 +46,10 @@ export async function requirePermission(
 
     return { authorized: true, user };
 }
+
+export async function requireAnyPermission(
+    request: NextRequest,
+    permissions: Permission[]
+): Promise<{ authorized: boolean; user?: any; response?: NextResponse }> {
+    
+}
