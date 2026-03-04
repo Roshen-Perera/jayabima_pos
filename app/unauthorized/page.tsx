@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -6,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { usePermissions } from "@/hooks/usePermissions";
-import { ShieldAlert } from "lucide-react";
+import { ArrowLeft, ShieldAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -40,12 +41,19 @@ const Page = () => {
                 </p>
               </div>
             )}
-             <p className="text-xs text-muted-foreground text-center pt-2">
+            <p className="text-xs text-muted-foreground text-center pt-2">
               Please contact your administrator if you believe this is an error.
             </p>
           </div>
           <div className="flex gap-2">
-            
+            <Button
+              variant="outline"
+              onClick={() => router.back()}
+              className="flex-1"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Go Back
+            </Button>
           </div>
         </CardContent>
       </Card>
