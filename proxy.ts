@@ -6,7 +6,7 @@ import { verifyToken } from './lib/auth/jwt';
 const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-password'];
 
 // Auth routes (redirect to dashboard if already logged in)
-const authRoutes = ['/login', '/register'];
+const authRoutes = ['/login'];
 
 export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
