@@ -14,14 +14,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { navItems } from "@/constants/data";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthStore, UserRole } from "@/store/useAuthStore";
 
 export function AppSidebar() {
   // Determine the active page based on the current URL path.
   const pathName = usePathname();
   const user = useAuthStore((state) => state.user);
   const isLoading = useAuthStore((state) => state.isLoading);
-
+  const role = user?.role as UserRole;
+  
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
