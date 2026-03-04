@@ -7,3 +7,9 @@ interface RoleGuardProps {
   allowedRoles: UserRole[];
   fallback?: ReactNode;
 }
+
+export default function RoleGuard({
+  children,
+  allowedRoles,
+  fallback = null,
+}: RoleGuardProps) {}
