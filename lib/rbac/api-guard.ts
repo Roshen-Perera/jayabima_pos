@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Permission } from "./permissions";
+import { verifyToken } from "../auth/jwt";
 
 export async function requirePermission(
     request: NextRequest,
@@ -15,4 +16,6 @@ export async function requirePermission(
             ),
         };
     }
+
+    const user = await verifyToken(token);
 }
