@@ -44,6 +44,9 @@ const Page = () => {
               Please contact your administrator if you believe this is an error.
             </p>
           </div>
+          <div className="flex gap-2">
+            
+          </div>
         </CardContent>
       </Card>
     </div>
