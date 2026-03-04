@@ -4,6 +4,7 @@ import { useProductStore } from "@/store/productStore";
 import { AlertTriangle, Package } from "lucide-react";
 import React from "react";
 import ProductActions from "./ProductActions";
+import PermissionGuard from "@/lib/rbac/PermissionGuard";
 
 const ProductList = () => {
   const products = useProductStore((s) => s.products);
@@ -67,7 +68,9 @@ const ProductList = () => {
                     SKU: {product.sku}
                   </p>
                 </div>
-                <ProductActions product={product} />
+                <PermissionGuard permission="inventory:delete">
+                  <ProductActions product={product} />
+                </PermissionGuard>
               </div>
 
               <div className="space-y-3">
