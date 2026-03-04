@@ -86,3 +86,10 @@ export async function requireAnyPermission(
     }
     return { authorized: true, user };
 }
+
+export async function requireRole(
+    request: NextRequest,
+    allowedRoles: UserRole[]
+): Promise<{ authorized: boolean; user?: any; response?: NextResponse }> {
+    
+}
