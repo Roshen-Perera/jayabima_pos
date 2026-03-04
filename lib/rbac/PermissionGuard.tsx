@@ -9,3 +9,13 @@ interface PermissionGuardProps {
   requireAll?: boolean;
   fallback?: ReactNode;
 }
+
+export default function PermissionGuard({
+  children,
+  permission,
+  permissions,
+  requireAll = false,
+  fallback = null,
+}: PermissionGuardProps) {
+    
+}
