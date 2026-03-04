@@ -111,4 +111,5 @@ export async function requireRole(
             ),
         };
     }
+    const userRole = user.role as UserRole;
 }
