@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { verifyToken } from './lib/auth/jwt';
-import { Permission, UserRole } from './lib/rbac/permissions';
+import { hasPermission, Permission, UserRole } from './lib/rbac/permissions';
 
 // Public routes (don't require authentication)
 const publicRoutes = ['/login', '/forgot-password', '/reset-password'];
@@ -72,6 +72,11 @@ export async function proxy(request: NextRequest) {
             const requiredPermission = routePermissions[matchedRoute];
             const userRole = user.role as UserRole;
 
+            if (!hasPermission(userRole, requiredPermission)) {
+                // User doesn't have permission - redirect to unauthorized
+                return NextResponse.redirect(new URL('/unauthorized', request.url));
+            }
+        }
 
         const requestHeaders = new Headers(request.headers);
         requestHeaders.set('x-user-id', user.userId);
