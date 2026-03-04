@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Permission, UserRole } from "./permissions";
+import { hasPermission, Permission, UserRole } from "./permissions";
 import { verifyToken } from "../auth/jwt";
 
 export async function requirePermission(
@@ -28,6 +28,19 @@ export async function requirePermission(
             ),
         };
     }
+
     const userRole = user.role as UserRole;
 
+    if (!hasPermission(userRole, permission)) {
+        return {
+            authorized: false,
+            response: NextResponse.json(
+                {
+                    success: false,
+                    message: 'Forbidden: You do not have permission to perform this action',
+                },
+                { status: 403 }
+            ),
+        };
+    }
 }
