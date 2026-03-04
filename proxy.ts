@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 import { verifyToken } from './lib/auth/jwt';
 
 // Public routes (don't require authentication)
-const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-password'];
+const publicRoutes = ['/login', '/forgot-password', '/reset-password'];
 
 // Auth routes (redirect to dashboard if already logged in)
 const authRoutes = ['/login'];
