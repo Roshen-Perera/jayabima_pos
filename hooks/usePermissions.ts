@@ -1,4 +1,4 @@
-import { hasAllPermissions, hasAnyPermission, hasPermission, Permission, UserRole } from "@/lib/rbac/permissions";
+import { getRolePermissions, hasAllPermissions, hasAnyPermission, hasPermission, Permission, UserRole } from "@/lib/rbac/permissions";
 import { useAuthStore } from "@/store/useAuthStore";
 
 
@@ -25,5 +25,7 @@ export function usePermissions() {
         isAdmin: role === 'ADMIN',
         isManager: role === 'MANAGER',
         isCashier: role === 'CASHIER',
+        
+        permissions: role ? getRolePermissions(role) : [],
     }
 }
