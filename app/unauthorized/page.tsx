@@ -20,7 +20,11 @@ const Page = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-            <div className="bg-muted rounded-lg p-4 space-y-2"></div>
+          <div className="bg-muted rounded-lg p-4 space-y-2">
+            <p className="text-sm text-muted-foreground text-center">
+              This page is restricted to users with specific permissions.
+            </p>
+          </div>
         </CardContent>
       </Card>
     </div>
