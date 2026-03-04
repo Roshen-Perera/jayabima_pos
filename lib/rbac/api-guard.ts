@@ -5,5 +5,6 @@ export async function requirePermission(
     request: NextRequest,
     permission: Permission
 ): Promise<{ authorized: boolean; user?: any; response?: NextResponse }> {
-    
+    const token = request.cookies.get('auth-token')?.value;
+
 }
