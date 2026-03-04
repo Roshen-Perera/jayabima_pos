@@ -102,4 +102,13 @@ export async function requireRole(
         };
     }
     const user = await verifyToken(token);
+    if (!user) {
+        return {
+            authorized: false,
+            response: NextResponse.json(
+                { success: false, message: 'Invalid token' },
+                { status: 401 }
+            ),
+        };
+    }
 }
