@@ -40,6 +40,9 @@ const Page = () => {
                 </p>
               </div>
             )}
+             <p className="text-xs text-muted-foreground text-center pt-2">
+              Please contact your administrator if you believe this is an error.
+            </p>
           </div>
         </CardContent>
       </Card>
