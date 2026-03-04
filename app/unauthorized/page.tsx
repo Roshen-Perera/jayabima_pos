@@ -20,7 +20,7 @@ const Page = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-            
+            <div className="bg-muted rounded-lg p-4 space-y-2"></div>
         </CardContent>
       </Card>
     </div>
