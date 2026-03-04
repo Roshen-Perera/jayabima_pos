@@ -20,6 +20,7 @@ export function AppSidebar() {
   // Determine the active page based on the current URL path.
   const pathName = usePathname();
   const user = useAuthStore((state) => state.user);
+  const isLoading = useAuthStore((state) => state.isLoading);
 
   return (
     <Sidebar collapsible="icon">
