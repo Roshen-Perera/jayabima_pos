@@ -125,4 +125,5 @@ export async function requireRole(
             ),
         };
     }
+    return { authorized: true, user };
 }
