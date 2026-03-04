@@ -1,4 +1,4 @@
-import { hasPermission, Permission, UserRole } from "@/lib/rbac/permissions";
+import { hasAnyPermission, hasPermission, Permission, UserRole } from "@/lib/rbac/permissions";
 import { useAuthStore } from "@/store/useAuthStore";
 
 
@@ -10,6 +10,11 @@ export function usePermissions() {
         can: (permission: Permission) => {
             if (!role) return false;
             return hasPermission(role, permission);
+        },
+        // Check if has any of the permissions
+        canAny: (permissions: Permission[]) => {
+            if (!role) return false;
+            return hasAnyPermission(role, permissions);
         },
     }
 }
