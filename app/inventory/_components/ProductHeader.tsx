@@ -11,7 +11,7 @@ const ProductHeader = () => {
         <div>
           <p className="text-muted-foreground">Manage Products and quantity</p>
         </div>
-        <PermissionGuard permission="inventory:create">
+        {can('inventory:create') && (
           <div className="flex items-center gap-2">
             <Button variant="outline" className="gap-2">
               <Download className="w-4 h-4" />
@@ -19,7 +19,7 @@ const ProductHeader = () => {
             </Button>
             <ProductForm mode="add" />
           </div>
-        </PermissionGuard>
+        )}
       </div>
     </div>
   );
