@@ -84,4 +84,5 @@ export async function requireAnyPermission(
             ),
         };
     }
+    return { authorized: true, user };
 }
