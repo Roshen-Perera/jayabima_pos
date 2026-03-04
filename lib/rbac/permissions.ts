@@ -136,3 +136,20 @@ export function hasAllPermissions(role: UserRole, permissions: Permission[]): bo
 export function getRolePermissions(role: UserRole): Permission[] {
     return rolePermissions[role] || [];
 }
+
+export function canAccessRoute(role: UserRole, route: string): boolean {
+    const routePermissionMap: Record<string, Permission> = {
+        '/': 'dashboard:view',
+        '/pos': 'pos:access',
+        '/sales': 'sales:view',
+        '/inventory': 'inventory:view',
+        '/customers': 'customers:view',
+        '/suppliers': 'suppliers:view',
+        '/employees': 'employees:view',
+        '/reports': 'reports:view',
+        '/settings': 'settings:view',
+    };
+
+    const permission = routePermissionMap[route];
+    return permission ? hasPermission(role, permission) : false;
+}
