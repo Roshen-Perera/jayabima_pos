@@ -27,5 +27,7 @@ export function usePermissions() {
         isCashier: role === 'CASHIER',
         
         permissions: role ? getRolePermissions(role) : [],
+
+        role,
     }
 }
