@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { usePermissions } from "@/hooks/usePermissions";
-import { ArrowLeft, ShieldAlert } from "lucide-react";
+import { ArrowLeft, Home, ShieldAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -53,6 +53,10 @@ const Page = () => {
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Go Back
+            </Button>
+            <Button onClick={() => router.push("/")} className="flex-1">
+              <Home className="h-4 w-4 mr-2" />
+              Dashboard
             </Button>
           </div>
         </CardContent>
