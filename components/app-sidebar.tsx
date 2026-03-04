@@ -16,6 +16,7 @@ import Image from "next/image";
 import { navItems } from "@/constants/data";
 import { useAuthStore, UserRole } from "@/store/useAuthStore";
 import { hasPermission } from "@/lib/rbac/permissions";
+import { Skeleton } from "./ui/skeleton";
 
 export function AppSidebar() {
   // Determine the active page based on the current URL path.
@@ -23,7 +24,7 @@ export function AppSidebar() {
   const user = useAuthStore((state) => state.user);
   const isLoading = useAuthStore((state) => state.isLoading);
   const role = user?.role as UserRole;
-  
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
