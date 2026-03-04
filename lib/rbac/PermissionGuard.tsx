@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { Permission } from "./permissions";
+import { usePermissions } from "@/hooks/usePermissions";
 
 
 interface PermissionGuardProps {
@@ -17,5 +18,5 @@ export default function PermissionGuard({
   requireAll = false,
   fallback = null,
 }: PermissionGuardProps) {
-    
+    const { can, canAny, canAll } = usePermissions();
 }
