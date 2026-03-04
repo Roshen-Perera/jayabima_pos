@@ -21,6 +21,9 @@ export function usePermissions() {
             if (!role) return false;
             return hasAllPermissions(role, permissions);
         },
-
+        // Role checks
+        isAdmin: role === 'ADMIN',
+        isManager: role === 'MANAGER',
+        isCashier: role === 'CASHIER',
     }
 }
