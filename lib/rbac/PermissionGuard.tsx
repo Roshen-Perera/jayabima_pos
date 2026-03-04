@@ -19,4 +19,6 @@ export default function PermissionGuard({
   fallback = null,
 }: PermissionGuardProps) {
     const { can, canAny, canAll } = usePermissions();
+
+    let hasAccess = false;
 }
