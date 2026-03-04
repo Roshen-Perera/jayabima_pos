@@ -1,4 +1,10 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { usePermissions } from "@/hooks/usePermissions";
 import { ShieldAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -24,6 +30,16 @@ const Page = () => {
             <p className="text-sm text-muted-foreground text-center">
               This page is restricted to users with specific permissions.
             </p>
+            {user && (
+              <div className="text-center pt-2 border-t border-border">
+                <p className="text-xs text-muted-foreground">
+                  Current role:
+                  <span className="font-semibold capitalize">
+                    {role?.toLowerCase()}
+                  </span>
+                </p>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
