@@ -15,4 +15,7 @@ export default function RoleGuard({
   fallback = null,
 }: RoleGuardProps) {
     const { role } = usePermissions();
+    if (!role || !allowedRoles.includes(role)) {
+        return <>{fallback}</>;
+    }
 }
