@@ -43,4 +43,6 @@ export async function requirePermission(
             ),
         };
     }
+
+    return { authorized: true, user };
 }
