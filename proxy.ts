@@ -63,6 +63,11 @@ export async function proxy(request: NextRequest) {
 
     // If user is logged in, add user info to headers (for server components)
     if (user) {
+        // Find matching route (check exact match first, then prefix)
+        const matchedRoute = Object.keys(routePermissions)
+            .sort((a, b) => b.length - a.length) // Longest match first
+            .find((route) => pathname === route || pathname.startsWith(route + '/'));
+
         const requestHeaders = new Headers(request.headers);
         requestHeaders.set('x-user-id', user.userId);
         requestHeaders.set('x-user-role', user.role);
