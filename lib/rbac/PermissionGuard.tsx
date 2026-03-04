@@ -31,5 +31,5 @@ export default function PermissionGuard({
     if (!hasAccess) {
       return <>{fallback}</>;
     }
-
+    return <>{children}</>;
 }
