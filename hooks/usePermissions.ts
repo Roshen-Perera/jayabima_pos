@@ -29,5 +29,6 @@ export function usePermissions() {
         permissions: role ? getRolePermissions(role) : [],
 
         role,
+        user,
     }
 }
