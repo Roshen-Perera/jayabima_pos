@@ -2,6 +2,7 @@ import React from "react";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProductForm from "./ProductForm";
+import PermissionGuard from "@/lib/rbac/PermissionGuard";
 
 const ProductHeader = () => {
   return (
@@ -10,13 +11,15 @@ const ProductHeader = () => {
         <div>
           <p className="text-muted-foreground">Manage Products and quantity</p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" className="gap-2">
-            <Download className="w-4 h-4" />
-            Export
-          </Button>
-          <ProductForm mode="add" />
-        </div>
+        <PermissionGuard permission="inventory:create">
+          <div className="flex items-center gap-2">
+            <Button variant="outline" className="gap-2">
+              <Download className="w-4 h-4" />
+              Export
+            </Button>
+            <ProductForm mode="add" />
+          </div>
+        </PermissionGuard>
       </div>
     </div>
   );
