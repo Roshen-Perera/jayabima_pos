@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePermissions } from "@/hooks/usePermissions";
 import { ShieldAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -15,6 +15,9 @@ const Page = () => {
             <ShieldAlert className="h-8 w-8 text-destructive" />
           </div>
           <CardTitle className="text-2xl font-bold">Access Denied</CardTitle>
+          <CardDescription className="text-base">
+            You don&apos;t have permission to access this page
+          </CardDescription>
         </CardHeader>
       </Card>
     </div>
