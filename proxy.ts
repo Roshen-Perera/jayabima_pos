@@ -28,6 +28,15 @@ const routePermissions: Record<string, Permission> = {
 export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
+    // Skip middleware for static files and images
+    if (
+        pathname.startsWith('/_next') ||
+        pathname.startsWith('/api') ||
+        pathname.includes('.') // Skip files with extensions
+    ) {
+        return NextResponse.next();
+    }
+
     // Get token from cookie
     const token = request.cookies.get('auth-token')?.value;
 
