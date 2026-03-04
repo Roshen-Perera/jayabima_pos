@@ -112,4 +112,17 @@ export async function requireRole(
         };
     }
     const userRole = user.role as UserRole;
+
+    if (!allowedRoles.includes(userRole)) {
+        return {
+            authorized: false,
+            response: NextResponse.json(
+                {
+                    success: false,
+                    message: 'Forbidden: You do not have the required role',
+                },
+                { status: 403 }
+            ),
+        };
+    }
 }
