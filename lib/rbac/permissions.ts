@@ -120,3 +120,7 @@ export const rolePermissions: Record<UserRole, Permission[]> = {
         'customers:create', // Can add walk-in customers
     ],
 };
+
+export function hasPermission(role: UserRole, permission: Permission): boolean {
+    return rolePermissions[role]?.includes(permission) ?? false;
+}
