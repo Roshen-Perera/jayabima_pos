@@ -101,4 +101,5 @@ export async function requireRole(
             ),
         };
     }
+    const user = await verifyToken(token);
 }
