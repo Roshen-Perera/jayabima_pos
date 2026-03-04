@@ -1,12 +1,29 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { verifyToken } from './lib/auth/jwt';
+import { Permission } from './lib/rbac/permissions';
 
 // Public routes (don't require authentication)
 const publicRoutes = ['/login', '/forgot-password', '/reset-password'];
 
 // Auth routes (redirect to dashboard if already logged in)
 const authRoutes = ['/login'];
+
+// Map of routes to required permissions
+const routePermissions: Record<string, Permission> = {
+    '/': 'dashboard:view',
+    '/pos': 'pos:access',
+    '/sales': 'sales:view',
+    '/inventory': 'inventory:view',
+    '/customers': 'customers:view',
+    '/suppliers': 'suppliers:view',
+    '/employees': 'employees:view',
+    '/users': 'employees:view',
+    '/reports': 'reports:view',
+    '/settings': 'settings:view',
+    '/profile': 'dashboard:view', // Everyone can access profile
+};
+
 
 export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
