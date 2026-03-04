@@ -21,4 +21,10 @@ export default function PermissionGuard({
     const { can, canAny, canAll } = usePermissions();
 
     let hasAccess = false;
+
+    if (permission) {
+      hasAccess = can(permission);
+    } else if (permissions) {
+      hasAccess = requireAll ? canAll(permissions) : canAny(permissions);
+    }
 }
