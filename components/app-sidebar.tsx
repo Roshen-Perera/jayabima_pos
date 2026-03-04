@@ -25,7 +25,7 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link href="#">
+              <Link href="/">
                 {/* <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <Home className="size-5" />
                 </div> */}
@@ -52,20 +52,33 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathName === item.url}
-                    className="data-[active=true]:bg-orange-500/10 data-[active=true]:text-orange-500"
-                  >
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {isLoading
+                ? Array.from({ length: 5 }).map((_, i) => (
+                    <SidebarMenuItem key={i}>
+                      <div className="flex items-center gap-2 px-2 py-1.5">
+                        <Skeleton className="h-4 w-4 rounded" />
+                        <Skeleton className="h-4 w-24 rounded" />
+                      </div>
+                    </SidebarMenuItem>
+                  ))
+                : navItems
+                    .filter(
+                      (item) => role && hasPermission(role, item.permission),
+                    )
+                    .map((item) => (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={pathName === item.url}
+                          className="data-[active=true]:bg-orange-500/10 data-[active=true]:text-orange-500"
+                        >
+                          <Link href={item.url}>
+                            <item.icon />
+                            <span>{item.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
