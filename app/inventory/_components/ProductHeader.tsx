@@ -3,8 +3,10 @@ import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProductForm from "./ProductForm";
 import PermissionGuard from "@/lib/rbac/PermissionGuard";
+import { usePermissions } from "@/hooks/usePermissions";
 
 const ProductHeader = () => {
+  const { can, isAdmin } = usePermissions();
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
