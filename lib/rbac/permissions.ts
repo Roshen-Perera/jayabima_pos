@@ -132,3 +132,7 @@ export function hasAnyPermission(role: UserRole, permissions: Permission[]): boo
 export function hasAllPermissions(role: UserRole, permissions: Permission[]): boolean {
     return permissions.every((permission) => hasPermission(role, permission));
 }
+
+export function getRolePermissions(role: UserRole): Permission[] {
+    return rolePermissions[role] || [];
+}
