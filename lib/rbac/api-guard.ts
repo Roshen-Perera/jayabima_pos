@@ -71,4 +71,5 @@ export async function requireAnyPermission(
             ),
         };
     }
+    const userRole = user.role as UserRole;
 }
