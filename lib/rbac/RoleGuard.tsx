@@ -18,4 +18,5 @@ export default function RoleGuard({
     if (!role || !allowedRoles.includes(role)) {
         return <>{fallback}</>;
     }
+    return <>{children}</>;
 }
