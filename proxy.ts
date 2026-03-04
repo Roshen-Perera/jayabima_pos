@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { verifyToken } from './lib/auth/jwt';
-import { Permission } from './lib/rbac/permissions';
+import { Permission, UserRole } from './lib/rbac/permissions';
 
 // Public routes (don't require authentication)
 const publicRoutes = ['/login', '/forgot-password', '/reset-password'];
@@ -67,6 +67,11 @@ export async function proxy(request: NextRequest) {
         const matchedRoute = Object.keys(routePermissions)
             .sort((a, b) => b.length - a.length) // Longest match first
             .find((route) => pathname === route || pathname.startsWith(route + '/'));
+
+        if (matchedRoute) {
+            const requiredPermission = routePermissions[matchedRoute];
+            const userRole = user.role as UserRole;
+
 
         const requestHeaders = new Headers(request.headers);
         requestHeaders.set('x-user-id', user.userId);
