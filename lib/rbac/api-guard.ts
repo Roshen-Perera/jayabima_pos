@@ -52,5 +52,14 @@ export async function requireAnyPermission(
     permissions: Permission[]
 ): Promise<{ authorized: boolean; user?: any; response?: NextResponse }> {
     const token = request.cookies.get('auth-token')?.value;
-    
+    if (!token) {
+        return {
+            authorized: false,
+            response: NextResponse.json(
+                { success: false, message: 'Unauthorized' },
+                { status: 401 }
+            ),
+        };
+    }
+    const user = await verifyToken(token);
 }
