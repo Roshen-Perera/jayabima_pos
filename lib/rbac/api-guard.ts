@@ -91,5 +91,5 @@ export async function requireRole(
     request: NextRequest,
     allowedRoles: UserRole[]
 ): Promise<{ authorized: boolean; user?: any; response?: NextResponse }> {
-    
+    const token = request.cookies.get('auth-token')?.value;
 }
