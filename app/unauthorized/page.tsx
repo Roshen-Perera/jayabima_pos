@@ -10,11 +10,10 @@ import {
 } from "@/components/ui/card";
 import { usePermissions } from "@/hooks/usePermissions";
 import { ArrowLeft, Home, ShieldAlert } from "lucide-react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import React from "react";
 
 const Page = () => {
-  const router = useRouter();
   const { role, user } = usePermissions();
   return (
     <div>
@@ -52,16 +51,18 @@ const Page = () => {
             <div className="flex gap-2">
               <Button
                 variant="outline"
-                onClick={() => router.back()}
+                onClick={() => window.history.back()}
                 className="flex-1"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Go Back
               </Button>
-              <Button onClick={() => router.push("/")} className="flex-1">
-                <Home className="h-4 w-4 mr-2" />
-                Dashboard
-              </Button>
+              <Link href="/" className="flex-1">
+                <Button className="w-full">
+                  <Home className="h-4 w-4 mr-2" />
+                  Dashboard
+                </Button>
+              </Link>
             </div>
           </CardContent>
         </Card>
