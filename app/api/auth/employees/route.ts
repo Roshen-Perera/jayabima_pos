@@ -120,5 +120,11 @@ export async function POST(request: NextRequest) {
         const existingEmail = await prisma.user.findUnique({
             where: { email: validatedData.email },
         });
+        if (existingEmail) {
+            return NextResponse.json(
+                { success: false, message: 'Email already exists' },
+                { status: 400 }
+            );
+        }
     } catch (error) { }
 }
