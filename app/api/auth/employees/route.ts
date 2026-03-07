@@ -7,4 +7,5 @@ export async function GET(request: NextRequest) {
         'employees:view'
     );
     if (!authorized) return response;
+    try {} catch (error) {}
 }
