@@ -1,3 +1,4 @@
+import { fa } from "zod/v4/locales";
 import { UserRole } from "./permissions";
 
 export function canCreateRole(userRole: UserRole, targetRole: UserRole): boolean {
@@ -25,4 +26,11 @@ export function canEditUser(
         return targetUserRole === 'CASHIER'; // Manager can only edit cashiers
     }
     return false; // No one can edit users, including themselves, as per requirements
+}
+
+export function canResetUserPassword(
+    userRole: UserRole,
+    targetUserRole: UserRole
+): boolean {
+    return false; // No one can reset passwords, including themselves, as per requirements
 }
