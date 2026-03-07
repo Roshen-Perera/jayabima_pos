@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth/session';
 import z from 'zod';
@@ -75,3 +75,6 @@ const updateProfileSchema = z.object({
     email: z.string().email('Invalid email address'),
     phone: z.string().optional(),
 });
+
+export async function PATCH(request: NextRequest) {
+}
