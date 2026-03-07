@@ -40,3 +40,11 @@ export function canResetUserPassword(
     }
     return false; // Cashiers cannot reset any passwords
 }
+
+// Check if user can delete another user
+export function canDeleteUser(
+    userRole: UserRole,
+    targetUserRole: UserRole
+): boolean {
+    
+}
