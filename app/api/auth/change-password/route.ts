@@ -22,6 +22,10 @@ export async function POST(request: NextRequest) {
         }
         const body = await request.json();
         const validatedData = changePasswordSchema.parse(body);
+        const user = await prisma.user.findUnique({
+            where: { id: session.userId },
+        });
+        
     } catch (error) {
 
     }
