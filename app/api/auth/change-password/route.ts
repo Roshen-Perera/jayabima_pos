@@ -1,3 +1,4 @@
+import { NextRequest } from "next/server";
 import z from "zod";
 
 const changePasswordSchema = z.object({
@@ -8,3 +9,7 @@ const changePasswordSchema = z.object({
     message: "Passwords don't match",
     path: ['confirmPassword'],
 });
+
+export async function POST(request: NextRequest) {
+    
+}
