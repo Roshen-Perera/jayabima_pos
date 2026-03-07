@@ -6,4 +6,5 @@ export async function GET(request: NextRequest) {
         request,
         'employees:view'
     );
+    if (!authorized) return response;
 }
