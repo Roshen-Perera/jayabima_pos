@@ -150,5 +150,14 @@ export async function POST(request: NextRequest) {
                 createdAt: true,
             },
         });
+        return NextResponse.json(
+            {
+                success: true,
+                message: 'Employee created successfully',
+                employee,
+                temporaryPassword: validatedData.password, // Return for admin to give to new user
+            },
+            { status: 201 }
+        );
     } catch (error) { }
 }
