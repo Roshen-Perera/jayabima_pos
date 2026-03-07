@@ -11,5 +11,9 @@ const changePasswordSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-    
+    try {
+         
+    } catch (error) {
+        
+    }
 }
