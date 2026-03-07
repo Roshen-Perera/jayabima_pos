@@ -86,6 +86,7 @@ export async function PATCH(
             );
         }
         const isSelf = user.userId === params.id;
+        const userRole = user.role as UserRole;
     } catch (error) {
 
     }
