@@ -73,3 +73,6 @@ const createEmployeeSchema = z.object({
     role: z.enum(['ADMIN', 'MANAGER', 'CASHIER']),
     password: z.string().min(8, 'Password must be at least 8 characters'),
 });
+
+export async function POST(request: NextRequest) {
+}
