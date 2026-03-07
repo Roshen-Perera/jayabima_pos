@@ -117,5 +117,8 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             );
         }
+        const existingEmail = await prisma.user.findUnique({
+            where: { email: validatedData.email },
+        });
     } catch (error) { }
 }
