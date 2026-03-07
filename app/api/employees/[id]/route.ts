@@ -211,6 +211,10 @@ export async function DELETE(
             message: 'Employee deactivated successfully',
         });
     } catch (error) {
-
+        console.error('Delete employee error:', error);
+        return NextResponse.json(
+            { success: false, message: 'Failed to delete employee' },
+            { status: 500 }
+        );
     }
 }
