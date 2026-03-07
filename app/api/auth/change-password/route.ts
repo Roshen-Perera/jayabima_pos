@@ -63,6 +63,10 @@ export async function POST(request: NextRequest) {
                 mustChangePassword: false, // Clear flag if it was set
             },
         });
+        return NextResponse.json({
+            success: true,
+            message: 'Password changed successfully',
+        });
     } catch (error) {
 
     }
