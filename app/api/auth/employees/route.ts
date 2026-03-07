@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import z from "zod";
 import { UserRole } from "@/types/user.types";
 import { canCreateRole } from "@/lib/rbac/user-permissions";
-import { validatePassword } from "@/lib/auth/password";
+import { hashPassword, validatePassword } from "@/lib/auth/password";
 
 export async function GET(request: NextRequest) {
     const { authorized, user, response } = await requirePermission(
@@ -126,5 +126,7 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             );
         }
+        const hashedPassword = await hashPassword(validatedData.password);
+
     } catch (error) { }
 }
