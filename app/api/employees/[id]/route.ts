@@ -123,6 +123,20 @@ export async function PATCH(
                 );
             }
         }
+        const employee = await prisma.user.update({
+            where: { id: params.id },
+            data: validatedData,
+            select: {
+                id: true,
+                username: true,
+                email: true,
+                name: true,
+                phone: true,
+                role: true,
+                isActive: true,
+                updatedAt: true,
+            },
+        });
     } catch (error) {
 
     }
