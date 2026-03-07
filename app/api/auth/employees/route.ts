@@ -98,6 +98,15 @@ export async function POST(request: NextRequest) {
             );
         }
         const passwordValidation = validatePassword(validatedData.password);
-
+        if (!passwordValidation.valid) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: 'Password does not meet requirements',
+                    errors: passwordValidation.errors,
+                },
+                { status: 400 }
+            );
+        }
     } catch (error) { }
 }
