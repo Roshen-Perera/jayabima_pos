@@ -176,6 +176,12 @@ export async function DELETE(
         const targetEmployee = await prisma.user.findUnique({
             where: { id: params.id },
         });
+        if (!targetEmployee) {
+            return NextResponse.json(
+                { success: false, message: 'Employee not found' },
+                { status: 404 }
+            );
+        }
     } catch (error) {
 
     }
