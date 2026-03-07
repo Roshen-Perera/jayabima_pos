@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import z from "zod";
 import { UserRole } from "@/types/user.types";
 import { canCreateRole } from "@/lib/rbac/user-permissions";
+import { validatePassword } from "@/lib/auth/password";
 
 export async function GET(request: NextRequest) {
     const { authorized, user, response } = await requirePermission(
@@ -82,8 +83,8 @@ export async function POST(request: NextRequest) {
         'employees:create'
     );
     if (!authorized) return response;
-    try { 
-        const body = await request.json(); 
+    try {
+        const body = await request.json();
         const validatedData = createEmployeeSchema.parse(body);
         const userRole = user.role as UserRole;
         const targetRole = validatedData.role as UserRole;
@@ -96,5 +97,7 @@ export async function POST(request: NextRequest) {
                 { status: 403 }
             );
         }
+        const passwordValidation = validatePassword(validatedData.password);
+
     } catch (error) { }
 }
