@@ -1,5 +1,5 @@
 import { requirePermission } from "@/lib/rbac/api-guard";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 
@@ -30,8 +30,14 @@ export async function GET(
                 updatedAt: true,
                 lastLogin: true,
             },
-        }); 
+        });
+        if (!employee) {
+            return NextResponse.json(
+                { success: false, message: 'Employee not found' },
+                { status: 404 }
+            );
+        }
     } catch (error) {
-        
+
     }
 }
