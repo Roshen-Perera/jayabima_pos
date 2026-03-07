@@ -12,4 +12,10 @@ export async function GET(
     );
 
     if (!authorized) return response;
+
+    try {
+        
+    } catch (error) {
+        
+    }
 }
