@@ -18,5 +18,8 @@ export function canEditUser(
     if (isSelf) {
         return true; // Everyone can edit themselves
     }
+    if (userRole === 'ADMIN') {
+        return true; // Admin can edit anyone
+    }
     return false; // No one can edit users, including themselves, as per requirements
 }
