@@ -153,5 +153,10 @@ export async function PATCH(
                 { status: 400 }
             );
         }
+        console.error('Update employee error:', error);
+        return NextResponse.json(
+            { success: false, message: 'Failed to update employee' },
+            { status: 500 }
+        );
     }
 }
