@@ -30,3 +30,9 @@ export interface UpdateEmployeeData {
     role?: UserRole;
     isActive?: boolean;
 }
+
+export interface ChangePasswordData {
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+}
