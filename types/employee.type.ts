@@ -13,3 +13,12 @@ export interface Employee {
     updatedAt: Date;
     lastLogin?: Date;
 }
+
+export interface CreateEmployeeData {
+    username: string;
+    email: string;
+    name: string;
+    phone?: string;
+    role: UserRole;
+    password: string;
+}
