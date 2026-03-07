@@ -43,6 +43,8 @@ export async function GET(
                 { status: 403 }
             );
         }
+        return NextResponse.json({ success: true, employee });
+
     } catch (error) {
 
     }
