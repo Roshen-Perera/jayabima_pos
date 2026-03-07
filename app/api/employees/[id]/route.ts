@@ -75,6 +75,7 @@ export async function PATCH(
 
     try {
         const body = await request.json();
+        const validatedData = updateEmployeeSchema.parse(body);
     } catch (error) {
 
     }
