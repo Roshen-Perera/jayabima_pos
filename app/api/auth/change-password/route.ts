@@ -20,6 +20,8 @@ export async function POST(request: NextRequest) {
                 { status: 401 }
             );
         }
+        const body = await request.json();
+
     } catch (error) {
 
     }
