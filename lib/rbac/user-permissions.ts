@@ -46,5 +46,7 @@ export function canDeleteUser(
     userRole: UserRole,
     targetUserRole: UserRole
 ): boolean {
-    
+    if (userRole === 'ADMIN') {
+        return true; // Admin can delete anyone
+    }
 }
