@@ -189,6 +189,7 @@ export async function DELETE(
             );
         }
         const userRole = user.role as UserRole;
+        const targetRole = targetEmployee.role as UserRole;
     } catch (error) {
 
     }
