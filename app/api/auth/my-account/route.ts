@@ -79,7 +79,12 @@ const updateProfileSchema = z.object({
 export async function PATCH(request: NextRequest) {
     try {
         const session = await getCurrentUser();
-
+        if (!session) {
+            return NextResponse.json(
+                { success: false, message: 'Not authenticated' },
+                { status: 401 }
+            );
+        }
     } catch (error) {
 
     }
