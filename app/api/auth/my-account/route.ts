@@ -99,6 +99,31 @@ export async function PATCH(request: NextRequest) {
                 { status: 400 }
             );
         }
+        const user = await prisma.user.update({
+            where: { id: session.userId },
+            data: {
+                name: validatedData.name,
+                email: validatedData.email,
+                phone: validatedData.phone,
+            },
+            select: {
+                id: true,
+                username: true,
+                email: true,
+                name: true,
+                phone: true,
+                role: true,
+                isActive: true,
+                status: true,
+                createdAt: true,
+                updatedAt: true,
+            },
+        });
+        return NextResponse.json({
+            success: true,
+            message: 'Profile updated successfully',
+            user,
+        });
     } catch (error) {
 
     }
