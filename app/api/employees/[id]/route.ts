@@ -197,6 +197,14 @@ export async function DELETE(
                 { status: 403 }
             );
         }
+
+        await prisma.user.update({
+            where: { id: params.id },
+            data: {
+                isActive: false,
+                status: 'INACTIVE',
+            },
+        });
     } catch (error) {
 
     }
