@@ -84,5 +84,7 @@ export async function POST(request: NextRequest) {
         const body = await request.json(); 
         const validatedData = createEmployeeSchema.parse(body);
         const userRole = user.role as UserRole;
+        const targetRole = validatedData.role as UserRole;
+
     } catch (error) { }
 }
