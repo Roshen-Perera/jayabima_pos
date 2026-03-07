@@ -21,5 +21,8 @@ export function canEditUser(
     if (userRole === 'ADMIN') {
         return true; // Admin can edit anyone
     }
+    if (userRole === 'MANAGER') {
+        return targetUserRole === 'CASHIER'; // Manager can only edit cashiers
+    }
     return false; // No one can edit users, including themselves, as per requirements
 }
