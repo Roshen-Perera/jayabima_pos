@@ -7,5 +7,8 @@ export async function GET(request: NextRequest) {
         'employees:view'
     );
     if (!authorized) return response;
-    try {} catch (error) {}
+    try {
+        const { searchParams } = new URL(request.url);
+
+    } catch (error) {}
 }
