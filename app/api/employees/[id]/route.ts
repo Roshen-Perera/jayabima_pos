@@ -46,6 +46,9 @@ export async function GET(
         return NextResponse.json({ success: true, employee });
 
     } catch (error) {
-
+        return NextResponse.json(
+            { success: false, message: 'Failed to fetch employee' },
+            { status: 500 }
+        );
     }
 }
