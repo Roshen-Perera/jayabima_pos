@@ -85,6 +85,8 @@ export async function PATCH(request: NextRequest) {
                 { status: 401 }
             );
         }
+        const body = await request.json();
+
     } catch (error) {
 
     }
