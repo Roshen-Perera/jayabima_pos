@@ -2,6 +2,7 @@ import { requirePermission } from "@/lib/rbac/api-guard";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import z from "zod";
+import { UserRole } from "@/types/user.types";
 
 
 export async function GET(
