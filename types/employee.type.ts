@@ -22,3 +22,11 @@ export interface CreateEmployeeData {
     role: UserRole;
     password: string;
 }
+
+export interface UpdateEmployeeData {
+    name?: string;
+    email?: string;
+    phone?: string;
+    role?: UserRole;
+    isActive?: boolean;
+}
