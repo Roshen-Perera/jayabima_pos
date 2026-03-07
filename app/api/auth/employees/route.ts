@@ -1,5 +1,6 @@
 import { requirePermission } from "@/lib/rbac/api-guard";
 import { NextRequest } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
     const { authorized, user, response } = await requirePermission(
@@ -30,9 +31,27 @@ export async function GET(request: NextRequest) {
         if (isActive !== null && isActive !== undefined && isActive !== 'all') {
             where.isActive = isActive === 'true';
         }
-        
+
         if (user.role === 'MANAGER') {
             where.role = 'CASHIER';
         }
+
+        const employees = await prisma.user.findMany({
+            where,
+            select: {
+                id: true,
+                username: true,
+                email: true,
+                name: true,
+                phone: true,
+                role: true,
+                isActive: true,
+                status: true,
+                createdAt: true,
+                updatedAt: true,
+                lastLogin: true,
+            },
+            orderBy: { createdAt: 'desc' },
+        });
     } catch (error) {}
 }
