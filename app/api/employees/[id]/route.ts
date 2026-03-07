@@ -78,6 +78,7 @@ export async function PATCH(
     try {
         const body = await request.json();
         const validatedData = updateEmployeeSchema.parse(body);
+        // Get target employee
         const targetEmployee = await prisma.user.findUnique({
             where: { id: params.id },
         });
