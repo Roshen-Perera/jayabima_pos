@@ -127,6 +127,28 @@ export async function POST(request: NextRequest) {
             );
         }
         const hashedPassword = await hashPassword(validatedData.password);
-
+        const employee = await prisma.user.create({
+            data: {
+                username: validatedData.username,
+                email: validatedData.email,
+                name: validatedData.name,
+                phone: validatedData.phone,
+                role: targetRole,
+                password: hashedPassword,
+                isActive: true,
+                status: 'ACTIVE',
+                mustChangePassword: true, // Force password change on first login
+            },
+            select: {
+                id: true,
+                username: true,
+                email: true,
+                name: true,
+                phone: true,
+                role: true,
+                isActive: true,
+                createdAt: true,
+            },
+        });
     } catch (error) { }
 }
