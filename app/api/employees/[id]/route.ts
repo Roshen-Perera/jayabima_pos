@@ -85,7 +85,7 @@ export async function PATCH(
                 { status: 404 }
             );
         }
-
+        const isSelf = user.userId === params.id;
     } catch (error) {
 
     }
