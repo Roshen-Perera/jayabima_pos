@@ -111,6 +111,11 @@ export async function POST(request: NextRequest) {
         const existingUsername = await prisma.user.findUnique({
             where: { username: validatedData.username },
         });
-        
+        if (existingUsername) {
+            return NextResponse.json(
+                { success: false, message: 'Username already exists' },
+                { status: 400 }
+            );
+        }
     } catch (error) { }
 }
