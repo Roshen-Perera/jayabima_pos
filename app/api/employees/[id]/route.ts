@@ -205,6 +205,11 @@ export async function DELETE(
                 status: 'INACTIVE',
             },
         });
+
+        return NextResponse.json({
+            success: true,
+            message: 'Employee deactivated successfully',
+        });
     } catch (error) {
 
     }
