@@ -15,5 +15,8 @@ export function canEditUser(
     targetUserRole: UserRole,
     isSelf: boolean
 ): boolean {
+    if (isSelf) {
+        return true; // Everyone can edit themselves
+    }
     return false; // No one can edit users, including themselves, as per requirements
 }
