@@ -51,3 +51,15 @@ export function canDeleteUser(
     }
     return false; // No one can delete users, including themselves, as per requirements
 }
+
+// Get list of roles that a user can create based on their role
+export function getAllowedRolesToCreate(userRole: UserRole): UserRole[] {
+    switch (userRole) {
+        case 'ADMIN':
+            return ['MANAGER', 'CASHIER'];
+        case 'MANAGER':
+            return ['CASHIER'];
+        default:
+            return [];
+    }
+}
