@@ -1,6 +1,7 @@
 import { requirePermission } from "@/lib/rbac/api-guard";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import z from "zod";
 
 
 export async function GET(
@@ -52,3 +53,11 @@ export async function GET(
         );
     }
 }
+
+const updateEmployeeSchema = z.object({
+    name: z.string().min(2).optional(),
+    email: z.string().email().optional(),
+    phone: z.string().optional(),
+    role: z.enum(['ADMIN', 'MANAGER', 'CASHIER']).optional(),
+    isActive: z.boolean().optional(),
+});
