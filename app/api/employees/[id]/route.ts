@@ -107,6 +107,22 @@ export async function PATCH(
                 );
             }
         }
+        // Check email uniqueness if changing
+        if (validatedData.email && validatedData.email !== targetEmployee.email) {
+            const existingEmail = await prisma.user.findFirst({
+                where: {
+                    email: validatedData.email,
+                    NOT: { id: params.id },
+                },
+            });
+
+            if (existingEmail) {
+                return NextResponse.json(
+                    { success: false, message: 'Email already in use' },
+                    { status: 400 }
+                );
+            }
+        }
     } catch (error) {
 
     }
