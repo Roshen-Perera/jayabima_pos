@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import z from "zod";
 import { UserRole } from "@/types/user.types";
+import { canEditUser } from "@/lib/rbac/user-permissions";
 
 
 export async function GET(
@@ -89,7 +90,12 @@ export async function PATCH(
         const isSelf = user.userId === params.id;
         const userRole = user.role as UserRole;
         const targetRole = targetEmployee.role as UserRole;
-
+        if (!canEditUser(userRole, targetRole, isSelf)) {
+            return NextResponse.json(
+                { success: false, message: 'You cannot edit this employee' },
+                { status: 403 }
+            );
+        }
     } catch (error) {
 
     }
