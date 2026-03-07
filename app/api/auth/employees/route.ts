@@ -12,5 +12,7 @@ export async function GET(request: NextRequest) {
         const search = searchParams.get('search') || '';
         const role = searchParams.get('role');
         const isActive = searchParams.get('isActive');
+
+        const where: any = {};
     } catch (error) {}
 }
