@@ -75,4 +75,8 @@ const createEmployeeSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+    const { authorized, user, response } = await requirePermission(
+        request,
+        'employees:create'
+    );
 }
