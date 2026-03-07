@@ -22,5 +22,9 @@ export async function GET(request: NextRequest) {
                 { username: { contains: search, mode: 'insensitive' as const } },
             ];
         }
+
+        if (role && role !== 'all') {
+            where.role = role;
+        }
     } catch (error) {}
 }
