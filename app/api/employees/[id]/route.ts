@@ -96,6 +96,14 @@ export async function PATCH(
                 { status: 403 }
             );
         }
+        if (validatedData.role && validatedData.role !== targetEmployee.role) {
+            if (userRole !== 'ADMIN') {
+                return NextResponse.json(
+                    { success: false, message: 'Only admins can change roles' },
+                    { status: 403 }
+                );
+            }
+        }
     } catch (error) {
 
     }
