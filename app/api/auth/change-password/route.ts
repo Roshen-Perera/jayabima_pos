@@ -56,6 +56,13 @@ export async function POST(request: NextRequest) {
             );
         }
         const hashedPassword = await hashPassword(validatedData.newPassword);
+        await prisma.user.update({
+            where: { id: session.userId },
+            data: {
+                password: hashedPassword,
+                mustChangePassword: false, // Clear flag if it was set
+            },
+        });
     } catch (error) {
 
     }
