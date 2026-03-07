@@ -136,6 +136,10 @@ export async function PATCH(request: NextRequest) {
             );
         }
         console.error('Update profile error:', error);
+        return NextResponse.json(
+            { success: false, message: 'Internal server error' },
+            { status: 500 }
+        );
 
     }
 }
