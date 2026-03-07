@@ -38,6 +38,12 @@ export async function POST(request: NextRequest) {
             validatedData.currentPassword,
             user.password
         );
+        if (!isValidPassword) {
+            return NextResponse.json(
+                { success: false, message: 'Current password is incorrect' },
+                { status: 400 }
+            );
+        }
     } catch (error) {
 
     }
