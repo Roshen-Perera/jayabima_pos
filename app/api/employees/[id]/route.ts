@@ -1,3 +1,4 @@
+import { requirePermission } from "@/lib/rbac/api-guard";
 import { NextRequest } from "next/server";
 
 
@@ -5,5 +6,8 @@ export async function GET(
     request: NextRequest,
     { params }: { params: { id: string } }
 ) {
-    
+    const { authorized, user, response } = await requirePermission(
+        request,
+        'employees:view'
+    );
 }
