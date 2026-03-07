@@ -9,6 +9,6 @@ export async function GET(request: NextRequest) {
     if (!authorized) return response;
     try {
         const { searchParams } = new URL(request.url);
-
+        const search = searchParams.get('search') || '';
     } catch (error) {}
 }
