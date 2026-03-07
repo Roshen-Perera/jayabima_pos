@@ -137,6 +137,11 @@ export async function PATCH(
                 updatedAt: true,
             },
         });
+        return NextResponse.json({
+            success: true,
+            message: 'Employee updated successfully',
+            employee,
+        });
     } catch (error) {
 
     }
