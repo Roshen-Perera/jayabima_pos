@@ -70,4 +70,6 @@ export async function PATCH(
         request,
         'employees:update'
     );
+
+    if (!authorized) return response;
 }
