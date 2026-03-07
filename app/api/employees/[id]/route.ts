@@ -98,6 +98,7 @@ export async function PATCH(
                 { status: 403 }
             );
         }
+        // Only admin can change roles
         if (validatedData.role && validatedData.role !== targetEmployee.role) {
             if (userRole !== 'ADMIN') {
                 return NextResponse.json(
