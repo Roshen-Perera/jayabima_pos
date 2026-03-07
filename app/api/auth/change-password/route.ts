@@ -2,7 +2,7 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 import { prisma } from '@/lib/prisma';
-import { validatePassword, verifyPassword } from "@/lib/auth/password";
+import { hashPassword, validatePassword, verifyPassword } from "@/lib/auth/password";
 
 
 const changePasswordSchema = z.object({
@@ -55,6 +55,7 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             );
         }
+        const hashedPassword = await hashPassword(validatedData.newPassword);
     } catch (error) {
 
     }
