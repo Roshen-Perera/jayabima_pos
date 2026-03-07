@@ -135,5 +135,7 @@ export async function PATCH(request: NextRequest) {
                 { status: 400 }
             );
         }
+        console.error('Update profile error:', error);
+
     }
 }
