@@ -87,6 +87,12 @@ export async function PATCH(request: NextRequest) {
         }
         const body = await request.json();
         const validatedData = updateProfileSchema.parse(body);
+        const existingUser = await prisma.user.findFirst({
+            where: {
+                email: validatedData.email,
+                NOT: { id: session.userId },
+            },
+        });
     } catch (error) {
 
     }
