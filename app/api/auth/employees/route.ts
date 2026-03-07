@@ -26,5 +26,9 @@ export async function GET(request: NextRequest) {
         if (role && role !== 'all') {
             where.role = role;
         }
+
+        if (isActive !== null && isActive !== undefined && isActive !== 'all') {
+            where.isActive = isActive === 'true';
+        }
     } catch (error) {}
 }
