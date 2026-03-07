@@ -30,5 +30,9 @@ export async function GET(request: NextRequest) {
         if (isActive !== null && isActive !== undefined && isActive !== 'all') {
             where.isActive = isActive === 'true';
         }
+        
+        if (user.role === 'MANAGER') {
+            where.role = 'CASHIER';
+        }
     } catch (error) {}
 }
