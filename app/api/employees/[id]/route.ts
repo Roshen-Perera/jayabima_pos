@@ -74,7 +74,7 @@ export async function PATCH(
     if (!authorized) return response;
 
     try {
-
+        const body = await request.json();
     } catch (error) {
 
     }
