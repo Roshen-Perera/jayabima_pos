@@ -36,3 +36,9 @@ export interface ChangePasswordData {
     newPassword: string;
     confirmPassword: string;
 }
+
+export interface UpdateProfileData {
+    name: string;
+    email: string;
+    phone?: string;
+}
