@@ -165,5 +165,8 @@ export async function DELETE(
     request: NextRequest,
     { params }: { params: { id: string } }
 ) {
-    
+    const { authorized, user, response } = await requirePermission(
+        request,
+        'employees:delete'
+    );
 }
