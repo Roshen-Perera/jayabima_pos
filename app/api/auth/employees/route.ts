@@ -10,5 +10,6 @@ export async function GET(request: NextRequest) {
     try {
         const { searchParams } = new URL(request.url);
         const search = searchParams.get('search') || '';
+        const role = searchParams.get('role');
     } catch (error) {}
 }
