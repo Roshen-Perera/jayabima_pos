@@ -1,5 +1,5 @@
 import { getCurrentUser } from "@/lib/auth/session";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 
 const changePasswordSchema = z.object({
@@ -14,6 +14,12 @@ const changePasswordSchema = z.object({
 export async function POST(request: NextRequest) {
     try {
         const session = await getCurrentUser();
+        if (!session) {
+            return NextResponse.json(
+                { success: false, message: 'Not authenticated' },
+                { status: 401 }
+            );
+        }
     } catch (error) {
 
     }
