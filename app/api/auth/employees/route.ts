@@ -80,5 +80,5 @@ export async function POST(request: NextRequest) {
         'employees:create'
     );
     if (!authorized) return response;
-    try {} catch (error) {}
+    try { const body = await request.json(); } catch (error) { }
 }
