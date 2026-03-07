@@ -37,6 +37,12 @@ export async function GET(
                 { status: 404 }
             );
         }
+        if (user.role === 'MANAGER' && employee.role !== 'CASHIER') {
+            return NextResponse.json(
+                { success: false, message: 'Access denied' },
+                { status: 403 }
+            );
+        }
     } catch (error) {
 
     }
