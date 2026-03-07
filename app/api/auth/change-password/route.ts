@@ -1,6 +1,8 @@
 import { getCurrentUser } from "@/lib/auth/session";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
+import { prisma } from '@/lib/prisma';
+
 
 const changePasswordSchema = z.object({
     currentPassword: z.string().min(1, 'Current password is required'),
@@ -25,7 +27,7 @@ export async function POST(request: NextRequest) {
         const user = await prisma.user.findUnique({
             where: { id: session.userId },
         });
-        
+
     } catch (error) {
 
     }
