@@ -1,6 +1,7 @@
 import { requirePermission } from "@/lib/rbac/api-guard";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import z from "zod";
 
 export async function GET(request: NextRequest) {
     const { authorized, user, response } = await requirePermission(
@@ -63,3 +64,12 @@ export async function GET(request: NextRequest) {
         );
     }
 }
+
+const createEmployeeSchema = z.object({
+    username: z.string().min(3, 'Username must be at least 3 characters'),
+    email: z.string().email('Invalid email address'),
+    name: z.string().min(2, 'Name must be at least 2 characters'),
+    phone: z.string().optional(),
+    role: z.enum(['ADMIN', 'MANAGER', 'CASHIER']),
+    password: z.string().min(8, 'Password must be at least 8 characters'),
+});
