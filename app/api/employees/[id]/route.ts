@@ -171,4 +171,10 @@ export async function DELETE(
     );
 
     if (!authorized) return response;
+
+    try {
+
+    } catch (error) {
+        
+    }
 }
