@@ -49,4 +49,5 @@ export function canDeleteUser(
     if (userRole === 'ADMIN') {
         return true; // Admin can delete anyone
     }
+    return false; // No one can delete users, including themselves, as per requirements
 }
