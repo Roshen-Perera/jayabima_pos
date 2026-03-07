@@ -188,6 +188,7 @@ export async function DELETE(
                 { status: 400 }
             );
         }
+        const userRole = user.role as UserRole;
     } catch (error) {
 
     }
