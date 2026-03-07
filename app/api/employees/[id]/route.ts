@@ -1,5 +1,6 @@
 import { requirePermission } from "@/lib/rbac/api-guard";
 import { NextRequest } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 
 export async function GET(
@@ -14,7 +15,22 @@ export async function GET(
     if (!authorized) return response;
 
     try {
-        
+        const employee = await prisma.user.findUnique({
+            where: { id: params.id },
+            select: {
+                id: true,
+                username: true,
+                email: true,
+                name: true,
+                phone: true,
+                role: true,
+                isActive: true,
+                status: true,
+                createdAt: true,
+                updatedAt: true,
+                lastLogin: true,
+            },
+        }); 
     } catch (error) {
         
     }
