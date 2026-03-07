@@ -78,5 +78,10 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             );
         }
+        console.error('Change password error:', error);
+        return NextResponse.json(
+            { success: false, message: 'Internal server error' },
+            { status: 500 }
+        );
     }
 }
