@@ -88,6 +88,7 @@ export async function PATCH(
                 { status: 404 }
             );
         }
+        // Check if user can edit this employee
         const isSelf = user.userId === params.id;
         const userRole = user.role as UserRole;
         const targetRole = targetEmployee.role as UserRole;
