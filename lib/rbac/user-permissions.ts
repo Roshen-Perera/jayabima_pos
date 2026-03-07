@@ -9,3 +9,11 @@ export function canCreateRole(userRole: UserRole, targetRole: UserRole): boolean
     }
     return false; // Managers and Cashiers cannot create roles
 }
+
+export function canEditUser(
+    userRole: UserRole,
+    targetUserRole: UserRole,
+    isSelf: boolean
+): boolean {
+    return false; // No one can edit users, including themselves, as per requirements
+}
