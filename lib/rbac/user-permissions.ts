@@ -38,5 +38,5 @@ export function canResetUserPassword(
     if (userRole === 'MANAGER') {
         return targetUserRole === 'CASHIER'; // Manager can only reset cashier passwords
     }
-    return false; // No one can reset passwords, including themselves, as per requirements
+    return false; // Cashiers cannot reset any passwords
 }
