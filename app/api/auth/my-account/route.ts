@@ -93,6 +93,12 @@ export async function PATCH(request: NextRequest) {
                 NOT: { id: session.userId },
             },
         });
+        if (existingUser) {
+            return NextResponse.json(
+                { success: false, message: 'Email already in use' },
+                { status: 400 }
+            );
+        }
     } catch (error) {
 
     }
