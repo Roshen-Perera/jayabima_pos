@@ -108,5 +108,9 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             );
         }
+        const existingUsername = await prisma.user.findUnique({
+            where: { username: validatedData.username },
+        });
+        
     } catch (error) { }
 }
