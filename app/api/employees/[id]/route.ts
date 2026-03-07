@@ -173,8 +173,10 @@ export async function DELETE(
     if (!authorized) return response;
 
     try {
-
+        const targetEmployee = await prisma.user.findUnique({
+            where: { id: params.id },
+        });
     } catch (error) {
-        
+
     }
 }
