@@ -61,3 +61,10 @@ const updateEmployeeSchema = z.object({
     role: z.enum(['ADMIN', 'MANAGER', 'CASHIER']).optional(),
     isActive: z.boolean().optional(),
 });
+
+export async function PATCH(
+    request: NextRequest,
+    { params }: { params: { id: string } }
+) {
+    
+}
