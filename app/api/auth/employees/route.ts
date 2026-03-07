@@ -1,5 +1,5 @@
 import { requirePermission } from "@/lib/rbac/api-guard";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
@@ -53,5 +53,7 @@ export async function GET(request: NextRequest) {
             },
             orderBy: { createdAt: 'desc' },
         });
-    } catch (error) {}
+        return NextResponse.json({ success: true, employees });
+
+    } catch (error) { }
 }
