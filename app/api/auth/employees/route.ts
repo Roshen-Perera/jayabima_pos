@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import z from "zod";
 import { UserRole } from "@/types/user.types";
+import { canCreateRole } from "@/lib/rbac/user-permissions";
 
 export async function GET(request: NextRequest) {
     const { authorized, user, response } = await requirePermission(
@@ -86,5 +87,14 @@ export async function POST(request: NextRequest) {
         const validatedData = createEmployeeSchema.parse(body);
         const userRole = user.role as UserRole;
         const targetRole = validatedData.role as UserRole;
+        if (!canCreateRole(userRole, targetRole)) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: `You cannot create ${targetRole} accounts`,
+                },
+                { status: 403 }
+            );
+        }
     } catch (error) { }
 }
