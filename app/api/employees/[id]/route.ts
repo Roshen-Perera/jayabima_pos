@@ -160,3 +160,10 @@ export async function PATCH(
         );
     }
 }
+
+export async function DELETE(
+    request: NextRequest,
+    { params }: { params: { id: string } }
+) {
+    
+}
