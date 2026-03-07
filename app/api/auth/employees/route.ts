@@ -79,4 +79,5 @@ export async function POST(request: NextRequest) {
         request,
         'employees:create'
     );
+    if (!authorized) return response;
 }
