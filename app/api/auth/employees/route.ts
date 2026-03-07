@@ -2,6 +2,7 @@ import { requirePermission } from "@/lib/rbac/api-guard";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import z from "zod";
+import { UserRole } from "@/types/user.types";
 
 export async function GET(request: NextRequest) {
     const { authorized, user, response } = await requirePermission(
@@ -85,6 +86,5 @@ export async function POST(request: NextRequest) {
         const validatedData = createEmployeeSchema.parse(body);
         const userRole = user.role as UserRole;
         const targetRole = validatedData.role as UserRole;
-
     } catch (error) { }
 }
