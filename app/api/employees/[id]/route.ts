@@ -10,4 +10,6 @@ export async function GET(
         request,
         'employees:view'
     );
+
+    if (!authorized) return response;
 }
