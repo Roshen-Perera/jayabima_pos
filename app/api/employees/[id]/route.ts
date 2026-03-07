@@ -182,6 +182,12 @@ export async function DELETE(
                 { status: 404 }
             );
         }
+        if (user.userId === params.id) {
+            return NextResponse.json(
+                { success: false, message: 'You cannot delete your own account' },
+                { status: 400 }
+            );
+        }
     } catch (error) {
 
     }
