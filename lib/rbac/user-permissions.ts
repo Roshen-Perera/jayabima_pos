@@ -32,5 +32,8 @@ export function canResetUserPassword(
     userRole: UserRole,
     targetUserRole: UserRole
 ): boolean {
+    if (userRole === 'ADMIN') {
+        return true; // Admin can reset anyone's password
+    }
     return false; // No one can reset passwords, including themselves, as per requirements
 }
