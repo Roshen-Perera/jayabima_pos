@@ -169,4 +169,6 @@ export async function DELETE(
         request,
         'employees:delete'
     );
+
+    if (!authorized) return response;
 }
