@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
             );
         }
         const body = await request.json();
-
+        const validatedData = changePasswordSchema.parse(body);
     } catch (error) {
 
     }
