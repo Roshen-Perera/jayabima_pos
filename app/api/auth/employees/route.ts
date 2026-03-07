@@ -170,5 +170,10 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             );
         }
+        console.error('Create employee error:', error);
+        return NextResponse.json(
+            { success: false, message: 'Failed to create employee' },
+            { status: 500 }
+        );
     }
 }
