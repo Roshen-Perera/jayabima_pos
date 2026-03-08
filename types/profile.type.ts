@@ -13,3 +13,9 @@ export interface ChangePasswordData {
     newPassword: string;
     confirmPassword: string;
 }
+
+export interface ProfileUpdateResponse {
+    success: boolean;
+    message: string;
+    user?: User;
+}
