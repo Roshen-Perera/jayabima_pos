@@ -56,3 +56,10 @@ export interface ResetPasswordResponse {
     message: string;
     temporaryPassword?: string;
 }
+
+export interface CreateEmployeeResponse {
+    success: boolean;
+    message: string;
+    employee?: Employee;
+    temporaryPassword?: string;
+}
