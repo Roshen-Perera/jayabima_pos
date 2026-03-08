@@ -49,3 +49,10 @@ export interface EmployeeFilters {
     role?: UserRole | 'all';
     status?: 'active' | 'inactive' | 'all';
 }
+
+
+export interface ResetPasswordResponse {
+    success: boolean;
+    message: string;
+    temporaryPassword?: string;
+}
