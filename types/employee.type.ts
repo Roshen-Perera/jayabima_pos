@@ -29,6 +29,7 @@ export interface UpdateEmployeeData {
     phone?: string | null;
     role?: UserRole;
     isActive?: boolean;
+    status?: UserStatus;
 }
 
 export interface ChangePasswordData {
@@ -41,4 +42,10 @@ export interface UpdateProfileData {
     name: string;
     email: string;
     phone?: string;
+}
+
+export interface EmployeeFilters {
+    search?: string;
+    role?: UserRole | 'all';
+    status?: 'active' | 'inactive' | 'all';
 }
