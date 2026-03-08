@@ -7,3 +7,9 @@ export interface UpdateProfileData {
     email: string;
     phone?: string;
 }
+
+export interface ChangePasswordData {
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+}
