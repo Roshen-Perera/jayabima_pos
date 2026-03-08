@@ -32,18 +32,6 @@ export interface UpdateEmployeeData {
     status?: UserStatus;
 }
 
-export interface ChangePasswordData {
-    currentPassword: string;
-    newPassword: string;
-    confirmPassword: string;
-}
-
-export interface UpdateProfileData {
-    name: string;
-    email: string;
-    phone?: string;
-}
-
 export interface EmployeeFilters {
     search?: string;
     role?: UserRole | 'all';
