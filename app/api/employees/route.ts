@@ -1,12 +1,13 @@
-import { requirePermission } from "@/lib/rbac/api-guard";
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import z from "zod";
-import { UserRole } from "@/types/user.types";
-import { canCreateRole } from "@/lib/rbac/user-permissions";
-import { hashPassword, validatePassword } from "@/lib/auth/password";
-import { sendNewAccountEmail } from "@/lib/email";
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import { requirePermission } from '@/lib/rbac/api-guard';
+import { canCreateRole } from '@/lib/rbac/user-permissions';
+import { prisma } from '@/lib/prisma';
+import { hashPassword, validatePassword } from '@/lib/auth/password';
+import { sendNewAccountEmail } from '@/lib/email';
+import { UserRole } from '@/types/user.types';
 
+// Helper function to generate temp password
 function generateTempPassword(): string {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%';
     let password = '';
@@ -16,12 +17,15 @@ function generateTempPassword(): string {
     return password;
 }
 
+// GET - List employees
 export async function GET(request: NextRequest) {
     const { authorized, user, response } = await requirePermission(
         request,
         'employees:view'
     );
+
     if (!authorized) return response;
+
     try {
         const { searchParams } = new URL(request.url);
         const search = searchParams.get('search') || '';
@@ -67,8 +71,8 @@ export async function GET(request: NextRequest) {
             },
             orderBy: { createdAt: 'desc' },
         });
-        return NextResponse.json({ success: true, employees });
 
+        return NextResponse.json({ success: true, employees });
     } catch (error) {
         console.error('Get employees error:', error);
         return NextResponse.json(
@@ -78,26 +82,30 @@ export async function GET(request: NextRequest) {
     }
 }
 
+// POST - Create employee
 const createEmployeeSchema = z.object({
     username: z.string().min(3, 'Username must be at least 3 characters'),
     email: z.string().email('Invalid email address'),
     name: z.string().min(2, 'Name must be at least 2 characters'),
     phone: z.string().optional(),
     role: z.enum(['ADMIN', 'MANAGER', 'CASHIER']),
-    password: z.string().min(8, 'Password must be at least 8 characters'),
 });
 
 export async function POST(request: NextRequest) {
     const { authorized, user, response } = await requirePermission(
         request,
-        'employees:create_cashier' // Permission to create any employee, role checks will be done in code
+        'employees:create_cashier'
     );
+
     if (!authorized) return response;
+
     try {
         const body = await request.json();
         const validatedData = createEmployeeSchema.parse(body);
+
         const userRole = user.role as UserRole;
         const targetRole = validatedData.role as UserRole;
+
         if (!canCreateRole(userRole, targetRole)) {
             return NextResponse.json(
                 {
@@ -107,36 +115,45 @@ export async function POST(request: NextRequest) {
                 { status: 403 }
             );
         }
-        const passwordValidation = validatePassword(validatedData.password);
+
+        // Generate temp password
+        const tempPassword = generateTempPassword();
+
+        const passwordValidation = validatePassword(tempPassword);
         if (!passwordValidation.valid) {
             return NextResponse.json(
                 {
                     success: false,
-                    message: 'Password does not meet requirements',
-                    errors: passwordValidation.errors,
+                    message: 'Generated password does not meet requirements',
                 },
-                { status: 400 }
+                { status: 500 }
             );
         }
+
         const existingUsername = await prisma.user.findUnique({
             where: { username: validatedData.username },
         });
+
         if (existingUsername) {
             return NextResponse.json(
                 { success: false, message: 'Username already exists' },
                 { status: 400 }
             );
         }
+
         const existingEmail = await prisma.user.findUnique({
             where: { email: validatedData.email },
         });
+
         if (existingEmail) {
             return NextResponse.json(
                 { success: false, message: 'Email already exists' },
                 { status: 400 }
             );
         }
-        const hashedPassword = await hashPassword(validatedData.password);
+
+        const hashedPassword = await hashPassword(tempPassword);
+
         const employee = await prisma.user.create({
             data: {
                 username: validatedData.username,
@@ -147,7 +164,7 @@ export async function POST(request: NextRequest) {
                 password: hashedPassword,
                 isActive: true,
                 status: 'ACTIVE',
-                mustChangePassword: true, // Force password change on first login
+                mustChangePassword: true,
             },
             select: {
                 id: true,
@@ -160,6 +177,7 @@ export async function POST(request: NextRequest) {
                 createdAt: true,
             },
         });
+
         // 📧 Send welcome email with temp password (fire and forget)
         sendNewAccountEmail({
             email: employee.email,
@@ -180,12 +198,17 @@ export async function POST(request: NextRequest) {
             .catch((error) => {
                 console.error('❌ Email sending error:', error);
             });
+
+        if (process.env.NODE_ENV === 'development') {
+            console.log('🔑 Temporary password:', tempPassword);
+        }
+
         return NextResponse.json(
             {
                 success: true,
-                message: 'Employee created successfully',
+                message: `Employee created successfully. Login credentials have been sent to ${employee.email}`,
                 employee,
-                temporaryPassword: validatedData.password, // Return for admin to give to new user
+                temporaryPassword: tempPassword, // Fallback if email fails
             },
             { status: 201 }
         );
@@ -200,6 +223,7 @@ export async function POST(request: NextRequest) {
                 { status: 400 }
             );
         }
+
         console.error('Create employee error:', error);
         return NextResponse.json(
             { success: false, message: 'Failed to create employee' },
