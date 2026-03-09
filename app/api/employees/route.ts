@@ -7,6 +7,15 @@ import { canCreateRole } from "@/lib/rbac/user-permissions";
 import { hashPassword, validatePassword } from "@/lib/auth/password";
 import { sendNewAccountEmail } from "@/lib/email";
 
+function generateTempPassword(): string {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%';
+    let password = '';
+    for (let i = 0; i < 12; i++) {
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return password;
+}
+
 export async function GET(request: NextRequest) {
     const { authorized, user, response } = await requirePermission(
         request,
