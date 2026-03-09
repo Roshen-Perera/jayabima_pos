@@ -90,6 +90,9 @@ export const rolePermissions: Record<UserRole, Permission[]> = {
         'reports:export',
         'settings:view',
         'settings:update',
+        'profile:view',
+        'profile:update',
+        'profile:change_password',
     ],
 
     MANAGER: [
