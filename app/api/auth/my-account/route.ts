@@ -117,6 +117,7 @@ export async function PATCH(request: NextRequest) {
                 status: true,
                 createdAt: true,
                 updatedAt: true,
+                lastLogin: true,
             },
         });
         return NextResponse.json({
