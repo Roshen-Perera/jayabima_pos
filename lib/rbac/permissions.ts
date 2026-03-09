@@ -33,10 +33,13 @@ export type Permission =
 
     // Employees/Users
     | 'employees:view'
-    | 'employees:create'
+    | 'employees:view_details'
+    | 'employees:create_admin'
+    | 'employees:create_manager'
+    | 'employees:create_cashier'
     | 'employees:update'
     | 'employees:delete'
-    | 'employees:manage_roles'
+    | 'employees:reset_password'
 
     // Reports
     | 'reports:view'
