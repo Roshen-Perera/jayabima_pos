@@ -5,6 +5,7 @@ import z from "zod";
 import { UserRole } from "@/types/user.types";
 import { canCreateRole } from "@/lib/rbac/user-permissions";
 import { hashPassword, validatePassword } from "@/lib/auth/password";
+import { sendNewAccountEmail } from "@/lib/email";
 
 export async function GET(request: NextRequest) {
     const { authorized, user, response } = await requirePermission(
@@ -150,6 +151,26 @@ export async function POST(request: NextRequest) {
                 createdAt: true,
             },
         });
+        // 📧 Send welcome email with temp password (fire and forget)
+        sendNewAccountEmail({
+            email: employee.email,
+            name: employee.name,
+            username: employee.username,
+            temporaryPassword: tempPassword,
+            role: employee.role,
+        })
+            .then((result) => {
+                if (result.success) {
+                    console.log('✅ Welcome email sent to:', employee.email);
+                    console.log('📧 Message ID:', result.messageId);
+                } else {
+                    console.error('❌ Failed to send email to:', employee.email);
+                    console.error('Error:', result.error);
+                }
+            })
+            .catch((error) => {
+                console.error('❌ Email sending error:', error);
+            });
         return NextResponse.json(
             {
                 success: true,
