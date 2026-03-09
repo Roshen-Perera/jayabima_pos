@@ -80,7 +80,7 @@ const createEmployeeSchema = z.object({
 export async function POST(request: NextRequest) {
     const { authorized, user, response } = await requirePermission(
         request,
-        'employees:create'
+        'employees:create_cashier' // Permission to create any employee, role checks will be done in code
     );
     if (!authorized) return response;
     try {
