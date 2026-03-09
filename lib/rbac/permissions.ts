@@ -48,7 +48,11 @@ export type Permission =
 
     // Settings
     | 'settings:view'
-    | 'settings:update';
+    | 'settings:update'
+
+    | 'profile:view'
+    | 'profile:update'
+    | 'profile:change_password';
 
 export const rolePermissions: Record<UserRole, Permission[]> = {
     ADMIN: [
