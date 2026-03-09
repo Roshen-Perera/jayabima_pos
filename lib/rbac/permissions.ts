@@ -115,7 +115,11 @@ export const rolePermissions: Record<UserRole, Permission[]> = {
         'suppliers:create',
         'suppliers:update',
         'suppliers:delete',
-        'employees:view', // Can view but not manage
+        'employees:view',
+        'employees:view_details',
+        'employees:create_cashier',
+        'employees:update',
+        'employees:reset_password',
         'reports:view',
         'reports:view_financial',
         'reports:export',
