@@ -124,6 +124,9 @@ export const rolePermissions: Record<UserRole, Permission[]> = {
         'reports:view_financial',
         'reports:export',
         'settings:view',
+        'profile:view',
+        'profile:update',
+        'profile:change_password',
     ],
 
     CASHIER: [
@@ -135,6 +138,9 @@ export const rolePermissions: Record<UserRole, Permission[]> = {
         'inventory:view',
         'customers:view',
         'customers:create', // Can add walk-in customers
+        'profile:view',
+        'profile:update',
+        'profile:change_password',
     ],
 };
 
