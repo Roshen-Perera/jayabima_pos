@@ -86,6 +86,11 @@ export async function POST(
             .catch((error) => {
                 console.error('❌ Email sending error:', error);
             });
+
+        if (process.env.NODE_ENV === 'development') {
+            console.log('🔑 Temporary password:', tempPassword);
+            console.log('👤 Reset by:', user.name);
+        }
     } catch (error) {
     }
 }
