@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { UserRole } from "@/lib/rbac/permissions";
 import { canResetUserPassword } from "@/lib/rbac/user-permissions";
+import { hashPassword } from "@/lib/auth/password";
 
 
 function generateTempPassword(): string {
@@ -55,6 +56,7 @@ export async function POST(
         }
 
         const tempPassword = generateTempPassword();
+        const hashedPassword = await hashPassword(tempPassword);
     } catch (error) {
     }
 }
