@@ -91,6 +91,12 @@ export async function POST(
             console.log('🔑 Temporary password:', tempPassword);
             console.log('👤 Reset by:', user.name);
         }
+
+        return NextResponse.json({
+            success: true,
+            message: `Password reset successfully. New credentials sent to ${targetEmployee.email}`,
+            temporaryPassword: tempPassword, // Fallback if email fails
+        });
     } catch (error) {
     }
 }
