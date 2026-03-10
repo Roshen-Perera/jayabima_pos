@@ -2,6 +2,7 @@ import { requirePermission } from "@/lib/rbac/api-guard";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { UserRole } from "@/lib/rbac/permissions";
+import { canResetUserPassword } from "@/lib/rbac/user-permissions";
 
 
 function generateTempPassword(): string {
@@ -46,6 +47,12 @@ export async function POST(
         const userRole = user.role as UserRole;
         const targetRole = targetEmployee.role as UserRole;
 
+        if (!canResetUserPassword(userRole, targetRole)) {
+            return NextResponse.json(
+                { success: false, message: "You cannot reset this user's password" },
+                { status: 403 }
+            );
+        }
     } catch (error) {
     }
 }
