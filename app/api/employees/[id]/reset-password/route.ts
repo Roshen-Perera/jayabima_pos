@@ -98,5 +98,10 @@ export async function POST(
             temporaryPassword: tempPassword, // Fallback if email fails
         });
     } catch (error) {
+        console.error('Reset password error:', error);
+        return NextResponse.json(
+            { success: false, message: 'Failed to reset password' },
+            { status: 500 }
+        );
     }
 }
