@@ -19,4 +19,6 @@ export async function POST(
         request,
         'employees:reset_password'
     );
+
+    if (!authorized) return response;
 }
