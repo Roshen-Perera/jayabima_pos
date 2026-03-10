@@ -57,6 +57,14 @@ export async function POST(
 
         const tempPassword = generateTempPassword();
         const hashedPassword = await hashPassword(tempPassword);
+
+        await prisma.user.update({
+            where: { id: params.id },
+            data: {
+                password: hashedPassword,
+                mustChangePassword: true, // Force password change
+            },
+        });
     } catch (error) {
     }
 }
