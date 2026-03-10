@@ -33,6 +33,15 @@ export async function POST(
                 { status: 404 }
             );
         }
+        if (user.userId === params.id) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: 'Use change password feature to update your own password',
+                },
+                { status: 400 }
+            );
+        }
     } catch (error) {
     }
 }
