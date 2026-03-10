@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { UserRole } from "@/lib/rbac/permissions";
 import { canResetUserPassword } from "@/lib/rbac/user-permissions";
 import { hashPassword } from "@/lib/auth/password";
+import { sendPasswordResetByAdminEmail } from "@/lib/email";
 
 
 function generateTempPassword(): string {
@@ -65,6 +66,26 @@ export async function POST(
                 mustChangePassword: true, // Force password change
             },
         });
+
+        sendPasswordResetByAdminEmail({
+            email: targetEmployee.email,
+            name: targetEmployee.name,
+            username: targetEmployee.username,
+            temporaryPassword: tempPassword,
+            resetBy: user.name, // Who reset the password
+        })
+            .then((result) => {
+                if (result.success) {
+                    console.log('✅ Password reset email sent to:', targetEmployee.email);
+                    console.log('📧 Message ID:', result.messageId);
+                } else {
+                    console.error('❌ Failed to send email to:', targetEmployee.email);
+                    console.error('Error:', result.error);
+                }
+            })
+            .catch((error) => {
+                console.error('❌ Email sending error:', error);
+            });
     } catch (error) {
     }
 }
