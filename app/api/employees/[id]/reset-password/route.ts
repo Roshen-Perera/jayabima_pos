@@ -1,5 +1,6 @@
 import { requirePermission } from "@/lib/rbac/api-guard";
 import { NextRequest } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 
 function generateTempPassword(): string {
