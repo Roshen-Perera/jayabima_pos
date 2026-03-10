@@ -12,7 +12,7 @@ export async function GET(
 ) {
     const { authorized, user, response } = await requirePermission(
         request,
-        'employees:view'
+        'employees:view_details'
     );
 
     if (!authorized) return response;
