@@ -23,7 +23,9 @@ export async function POST(
     if (!authorized) return response;
 
     try {
-
+        const targetEmployee = await prisma.user.findUnique({
+            where: { id: params.id },
+        });
     } catch (error) {
     }
 }
