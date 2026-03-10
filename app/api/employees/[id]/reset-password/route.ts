@@ -1,3 +1,4 @@
+import { NextRequest } from "next/server";
 
 
 function generateTempPassword(): string {
@@ -7,4 +8,11 @@ function generateTempPassword(): string {
         password += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     return password;
+}
+
+export async function POST(
+    request: NextRequest,
+    { params }: { params: { id: string } }
+) {
+    
 }
