@@ -44,6 +44,8 @@ export async function POST(
             );
         }
         const userRole = user.role as UserRole;
+        const targetRole = targetEmployee.role as UserRole;
+
     } catch (error) {
     }
 }
