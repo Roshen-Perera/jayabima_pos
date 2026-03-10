@@ -1,6 +1,7 @@
 import { requirePermission } from "@/lib/rbac/api-guard";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { UserRole } from "@/lib/rbac/permissions";
 
 
 function generateTempPassword(): string {
@@ -42,6 +43,7 @@ export async function POST(
                 { status: 400 }
             );
         }
+        const userRole = user.role as UserRole;
     } catch (error) {
     }
 }
