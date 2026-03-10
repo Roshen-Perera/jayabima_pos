@@ -53,6 +53,8 @@ export async function POST(
                 { status: 403 }
             );
         }
+
+        const tempPassword = generateTempPassword();
     } catch (error) {
     }
 }
