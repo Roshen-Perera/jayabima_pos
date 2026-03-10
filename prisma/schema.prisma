@@ -37,6 +37,9 @@ model User {
   isActive      Boolean    @default(true)
   status        UserStatus @default(ACTIVE)
   
+  // Password management
+  mustChangePassword Boolean  @default(false)
+  
   // Password reset
   resetToken        String?   @unique
   resetTokenExpiry  DateTime?
