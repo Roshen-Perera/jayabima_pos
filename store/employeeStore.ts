@@ -230,6 +230,9 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
         set({ searchQuery: query });
         // Auto-fetch when search changes (debounce in component)
     },
-
+    setRoleFilter: (role) => {
+        set({ roleFilter: role });
+        get().fetchEmployees(); // Auto-refresh
+    },
 
 }));
