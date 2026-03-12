@@ -50,7 +50,9 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
             if (searchQuery) params.set('search', searchQuery);
             if (roleFilter !== 'all') params.set('role', roleFilter);
             if (statusFilter !== 'all') params.set('isActive', statusFilter);
-
+            const response = await fetch(`/api/employees?${params}`, {
+                credentials: 'include',
+            });
         } catch (error) {
 
         }
