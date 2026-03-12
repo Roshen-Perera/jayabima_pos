@@ -1,3 +1,5 @@
+"use client";
+
 import PasswordStrengthIndicator from "@/components/PasswordStrengthIndicator";
 import { Button } from "@/components/ui/button";
 import {
