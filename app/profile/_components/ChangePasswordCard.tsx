@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { Card, CardTitle, CardDescription, CardHeader } from "@/components/ui/card";
 import { useProfileStore } from "@/store/profileStore";
 import { useState } from "react";
 
@@ -39,5 +39,14 @@ export default function ChangePasswordCard() {
     setShowPasswords((prev) => ({ ...prev, [field]: !prev[field] }));
   };
 
-  return <Card></Card>;
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Change Password</CardTitle>
+        <CardDescription>
+          Update your password to keep your account secure
+        </CardDescription>
+      </CardHeader>
+    </Card>
+  );
 }
