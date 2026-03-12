@@ -66,4 +66,9 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
             set({ isLoading: false });
         }
     },
+
+    fetchEmployeeById: async (id) => {
+        
+    }
+    
 }));
