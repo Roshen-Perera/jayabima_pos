@@ -23,4 +23,8 @@ export default function ProfileInfoCard({ user }: ProfileInfoCardProps) {
     });
     setIsEditing(false);
   };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+  }
 }
