@@ -94,6 +94,18 @@ export default function ChangePasswordCard() {
             </Label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="newPassword"
+                type={showPasswords.new ? "text" : "password"}
+                value={formData.newPassword}
+                onChange={(e) =>
+                  setFormData({ ...formData, newPassword: e.target.value })
+                }
+                className="pl-10 pr-10"
+                disabled={isSubmitting}
+                required
+                minLength={8}
+              />
             </div>
           </div>
         </form>
