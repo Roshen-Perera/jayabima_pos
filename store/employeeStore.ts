@@ -142,6 +142,20 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
             const result = await response.json();
 
             if (result.success) {
+                alert.success('Employee updated!', 'Changes have been saved');
+
+                // Update in local state
+                set((state) => ({
+                    employees: state.employees.map((emp) =>
+                        emp.id === id ? { ...emp, ...result.employee } : emp
+                    ),
+                }));
+
+                return true;
+            } else {
+                alert.error('Update failed', result.message || 'Could not update employee');
+                return false;
+            }
         } catch (error) {
 
         }
