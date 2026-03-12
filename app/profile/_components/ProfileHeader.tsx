@@ -1,3 +1,4 @@
+import { Card } from "@/components/ui/card";
 import { User } from "@/types/user.types";
 
 interface ProfileHeaderProps {
@@ -26,4 +27,8 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
         return "outline";
     }
   };
+
+  return <Card>
+    
+  </Card>;
 }
