@@ -40,9 +40,14 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
     isSubmitting: false,
     searchQuery: '',
     roleFilter: 'all',
-    statusFilter: 'all'
+    statusFilter: 'all',
 
-      fetchEmployees: async () => {
+    fetchEmployees: async () => {
         set({ isLoading: true });
+        try {
+            const { searchQuery, roleFilter, statusFilter } = get();
+        } catch (error) {
+
+        }
     },
 }));
