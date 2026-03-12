@@ -157,7 +157,9 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
                 return false;
             }
         } catch (error) {
-
+            console.error('Update employee error:', error);
+            alert.error('Error', 'Something went wrong');
+            return false;
         }
     }
 
