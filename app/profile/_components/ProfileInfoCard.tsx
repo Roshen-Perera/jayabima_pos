@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useProfileStore } from "@/store/profileStore";
 import { User } from "@/types/user.types";
 import { Pencil } from "lucide-react";
@@ -63,7 +65,18 @@ export default function ProfileInfoCard({ user }: ProfileInfoCardProps) {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-            
+          <div className="space-y-2">
+            <Label htmlFor="username">Username</Label>
+            <Input
+              id="username"
+              value={user.username}
+              disabled
+              className="bg-muted"
+            />
+            <p className="text-xs text-muted-foreground">
+              Username cannot be changed
+            </p>
+          </div>
         </form>
       </CardContent>
     </Card>
