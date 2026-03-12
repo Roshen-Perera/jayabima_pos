@@ -58,7 +58,12 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
               <p className="text-sm">{user.email}</p>
               {user.phone && <p className="text-sm">{user.phone}</p>}
             </div>
-            <div className="flex gap-4 text-xs text-muted-foreground pt-2"></div>
+            <div className="flex gap-4 text-xs text-muted-foreground pt-2">
+              <div>
+                <span className="font-medium">Joined: </span>
+                {format(new Date(user.createdAt), "MMM d, yyyy")}
+              </div>
+            </div>
           </div>
         </div>
       </CardContent>
