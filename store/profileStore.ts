@@ -5,4 +5,7 @@ interface ProfileState {
     profile: User | null;
     isLoading: boolean;
     isSubmitting: boolean;
+
+    fetchProfile: () => Promise<void>;
+
 }
