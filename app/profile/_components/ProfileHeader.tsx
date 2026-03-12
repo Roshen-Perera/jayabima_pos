@@ -32,7 +32,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
 
   return (
     <Card>
-      <CardContent className="pt-6">
+      <CardContent>
         <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
           <Avatar className="h-24 w-24">
             <AvatarImage src={user.avatar || undefined} alt={user.name} />
