@@ -21,5 +21,8 @@ interface ProfileState {
 }
 
 export const useProfileStore = create<ProfileState>((set) => ({
-    
+    profile: null,
+    isLoading: false,
+    isSubmitting: false,
+
 }));
