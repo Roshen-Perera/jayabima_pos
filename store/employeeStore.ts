@@ -60,7 +60,10 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
                 alert.error('Failed to load employees', data.message || 'Could not fetch employees');
             }
         } catch (error) {
-
+            console.error('Fetch employees error:', error);
+            alert.error('Error', 'Something went wrong while fetching employees');
+        } finally {
+            set({ isLoading: false });
         }
     },
 }));
