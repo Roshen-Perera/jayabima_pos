@@ -1,3 +1,4 @@
+import { alert } from "@/lib/alert";
 import { User } from "@/types/user.types";
 import { ca } from "zod/v4/locales";
 import { create } from "zustand";
@@ -56,6 +57,14 @@ export const useProfileStore = create<ProfileState>((set) => ({
                 body: JSON.stringify(data),
             });
             const result = await response.json();
+            if (result.success) {
+                alert.success('Profile updated!', 'Your changes have been saved');
+                set({ profile: result.user });
+                return true;
+            } else {
+                alert.error('Update failed', result.message || 'Could not update profile');
+                return false;
+            }
         } catch (error) {
 
         }
