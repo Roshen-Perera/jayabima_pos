@@ -16,4 +16,8 @@ export default function ChangePasswordCard() {
   const [errors, setErrors] = useState({
     confirmPassword: "",
   });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    
+  }
 }
