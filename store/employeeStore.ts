@@ -221,6 +221,8 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
             console.error('Reset password error:', error);
             alert.error('Error', 'Something went wrong');
             return { success: false };
+        } finally {
+            set({ isSubmitting: false });
         }
     }
 
