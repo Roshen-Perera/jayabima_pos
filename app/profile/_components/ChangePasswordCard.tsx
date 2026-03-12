@@ -152,6 +152,11 @@ export default function ChangePasswordCard() {
                 )}
               </button>
             </div>
+            {errors.confirmPassword && (
+              <p className="text-sm text-destructive">
+                {errors.confirmPassword}
+              </p>
+            )}
           </div>
         </form>
       </CardContent>
