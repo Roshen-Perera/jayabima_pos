@@ -121,7 +121,11 @@ export default function ChangePasswordCard() {
             </div>
             <PasswordStrengthIndicator password={formData.newPassword} />
           </div>
-          <div className="space-y-2"></div>
+          <div className="space-y-2">
+            <Label htmlFor="confirmPassword">
+              Confirm New Password <span className="text-destructive">*</span>
+            </Label>
+          </div>
         </form>
       </CardContent>
     </Card>
