@@ -198,6 +198,11 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
     },
     resetEmployeePassword: async (id) => {
         set({ isSubmitting: true });
+        try {
+
+        } catch (error) {
+            
+        }
     }
 
 }));
