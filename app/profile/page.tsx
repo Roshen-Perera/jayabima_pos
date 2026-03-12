@@ -19,7 +19,13 @@ const Page = () => {
   if (!profile) {
     return (
       <div className="container mx-auto py-6">
-        
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-center text-muted-foreground">
+              Failed to load profile. Please try again.
+            </p>
+          </CardContent>
+        </Card>
       </div>
     );
   }
