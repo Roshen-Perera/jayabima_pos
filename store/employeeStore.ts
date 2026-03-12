@@ -166,6 +166,12 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
     },
     deleteEmployee: async (id) => {
         set({ isSubmitting: true });
+
+        try {
+
+        } catch (error) {
+            
+        }
     }
 
 
