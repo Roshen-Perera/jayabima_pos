@@ -1,3 +1,4 @@
+import PasswordStrengthIndicator from "@/components/PasswordStrengthIndicator";
 import {
   Card,
   CardTitle,
@@ -118,6 +119,7 @@ export default function ChangePasswordCard() {
                 )}
               </button>
             </div>
+            <PasswordStrengthIndicator password={formData.newPassword} />
           </div>
         </form>
       </CardContent>
