@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { useProfileStore } from "@/store/profileStore";
+import { Lock } from "lucide-react";
 import { useState } from "react";
 
 export default function ChangePasswordCard() {
@@ -61,7 +62,7 @@ export default function ChangePasswordCard() {
               Current Password <span className="text-destructive">*</span>
             </Label>
             <div className="relative">
-                
+              <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             </div>
           </div>
         </form>
