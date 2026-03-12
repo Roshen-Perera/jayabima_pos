@@ -5,6 +5,7 @@ import React, { useEffect } from "react";
 import ProfileHeader from "./_components/ProfileHeader";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { User } from "lucide-react";
+import { Lock } from "lucide-react";
 
 const Page = () => {
   const { profile, isLoading, fetchProfile } = useProfileStore();
@@ -42,6 +43,10 @@ const Page = () => {
           <TabsTrigger value="info">
             <User className="h-4 w-4 mr-2" />
             Profile Info
+          </TabsTrigger>
+          <TabsTrigger value="password">
+            <Lock className="h-4 w-4 mr-2" />
+            Password
           </TabsTrigger>
         </TabsList>
       </Tabs>
