@@ -31,5 +31,8 @@ export default function ProfileInfoCard({ user }: ProfileInfoCardProps) {
       email: formData.email,
       phone: formData.phone || undefined,
     });
+    if (success) {
+      setIsEditing(false);
+    }
   }
 }
