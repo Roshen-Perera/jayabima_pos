@@ -31,7 +31,7 @@ const Page = () => {
     );
   }
 
-  return <div>Page</div>;
+  return <div className="container mx-auto py-6 space-y-6">Page</div>;
 };
 
 export default Page;
