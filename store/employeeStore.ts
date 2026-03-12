@@ -1,5 +1,6 @@
 import { Employee } from "@/types/employee.type";
 import { UserRole } from "./useAuthStore";
+import { create } from "zustand";
 
 interface EmployeeState {
     employees: Employee[];
@@ -31,3 +32,7 @@ interface EmployeeState {
     setRoleFilter: (role: string) => void;
     setStatusFilter: (status: string) => void;
 }
+
+export const useEmployeeStore = create<EmployeeState>((set, get) => ({
+    
+}));
