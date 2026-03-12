@@ -1,4 +1,5 @@
 import PasswordStrengthIndicator from "@/components/PasswordStrengthIndicator";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardTitle,
@@ -9,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useProfileStore } from "@/store/profileStore";
-import { Eye, EyeOff, Lock } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock } from "lucide-react";
 import { useState } from "react";
 
 export default function ChangePasswordCard() {
@@ -158,6 +159,19 @@ export default function ChangePasswordCard() {
               </p>
             )}
           </div>
+          <Button type="submit" disabled={isSubmitting} className="w-full">
+            {isSubmitting ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Changing Password...
+              </>
+            ) : (
+              <>
+                <Lock className="h-4 w-4 mr-2" />
+                Change Password
+              </>
+            )}
+          </Button>
         </form>
       </CardContent>
     </Card>
