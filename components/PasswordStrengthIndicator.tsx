@@ -41,4 +41,6 @@ export default function PasswordStrengthIndicator({
   }, [requirements]);
 
   if (!password) return null;
+
+  return <div className="space-y-2"></div>;
 }
