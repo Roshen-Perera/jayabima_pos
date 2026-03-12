@@ -49,9 +49,14 @@ export const useProfileStore = create<ProfileState>((set) => ({
     updateProfile: async (data) => {
         set({ isSubmitting: true });
         try {
-
+            const response = await fetch('/api/auth/my-account', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify(data),
+            });
         } catch (error) {
-            
+
         }
     }
 }));
