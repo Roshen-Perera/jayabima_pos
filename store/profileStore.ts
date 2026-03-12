@@ -72,5 +72,5 @@ export const useProfileStore = create<ProfileState>((set) => ({
         } finally {
             set({ isSubmitting: false });
         }
-    }
+    },
 }));
