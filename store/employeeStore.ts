@@ -91,6 +91,6 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
     },
     createEmployee: async (data) => {
 
-    }
+    },
 
 }));
