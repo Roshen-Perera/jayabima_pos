@@ -8,4 +8,9 @@ export default function ChangePasswordCard() {
     new: false,
     confirm: false,
   });
+  const [formData, setFormData] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
 }
