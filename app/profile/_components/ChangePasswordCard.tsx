@@ -13,4 +13,7 @@ export default function ChangePasswordCard() {
     newPassword: "",
     confirmPassword: "",
   });
+  const [errors, setErrors] = useState({
+    confirmPassword: "",
+  });
 }
