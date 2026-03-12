@@ -122,7 +122,9 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
                 return { success: false };
             }
         } catch (error) {
-
+            console.error('Create employee error:', error);
+            alert.error('Error', 'Something went wrong');
+            return { success: false };
         }
     },
 
