@@ -88,6 +88,9 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
         } finally {
             set({ isLoading: false });
         }
+    },
+    createEmployee: async (data) => {
+
     }
 
 }));
