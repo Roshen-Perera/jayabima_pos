@@ -39,4 +39,6 @@ export default function PasswordStrengthIndicator({
     if (metCount <= 4) return { label: "Medium", color: "text-yellow-500" };
     return { label: "Strong", color: "text-green-500" };
   }, [requirements]);
+
+  if (!password) return null;
 }
