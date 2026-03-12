@@ -224,6 +224,8 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
         } finally {
             set({ isSubmitting: false });
         }
-    }
+    },
+    setSelectedEmployee: (employee) => set({ selectedEmployee: employee }),
+
 
 }));
