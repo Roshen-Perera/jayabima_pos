@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { User } from "@/types/user.types";
 
 interface ProfileHeaderProps {
@@ -28,7 +28,9 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
     }
   };
 
-  return <Card>
-    
-  </Card>;
+  return (
+    <Card>
+      <CardContent className="pt-6"></CardContent>
+    </Card>
+  );
 }
