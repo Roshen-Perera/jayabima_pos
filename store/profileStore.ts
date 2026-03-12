@@ -96,7 +96,7 @@ export const useProfileStore = create<ProfileState>((set) => ({
             alert.error('Error', 'Something went wrong');
             return false;
         } finally {
-
+            set({ isSubmitting: false });
         }
     }
 }));
