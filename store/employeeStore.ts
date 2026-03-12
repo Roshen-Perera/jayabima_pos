@@ -1,6 +1,7 @@
 import { Employee } from "@/types/employee.type";
 import { UserRole } from "./useAuthStore";
 import { create } from "zustand";
+import { alert } from "@/lib/alert";
 
 interface EmployeeState {
     employees: Employee[];
@@ -68,7 +69,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
     },
 
     fetchEmployeeById: async (id) => {
-        
+
     }
     
 }));
