@@ -12,5 +12,9 @@ interface ProfileState {
         email: string;
         phone?: string;
     }) => Promise<boolean>;
-
+    changePassword: (data: {
+        currentPassword: string;
+        newPassword: string;
+        confirmPassword: string;
+    }) => Promise<boolean>;
 }
