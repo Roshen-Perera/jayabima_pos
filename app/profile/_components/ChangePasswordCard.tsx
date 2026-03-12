@@ -1,4 +1,10 @@
-import { Card, CardTitle, CardDescription, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardTitle,
+  CardDescription,
+  CardHeader,
+  CardContent,
+} from "@/components/ui/card";
 import { useProfileStore } from "@/store/profileStore";
 import { useState } from "react";
 
@@ -47,6 +53,7 @@ export default function ChangePasswordCard() {
           Update your password to keep your account secure
         </CardDescription>
       </CardHeader>
+      <CardContent></CardContent>
     </Card>
   );
 }
