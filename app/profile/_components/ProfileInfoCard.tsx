@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useProfileStore } from "@/store/profileStore";
 import { User } from "@/types/user.types";
 import { Pencil } from "lucide-react";
@@ -61,6 +61,11 @@ export default function ProfileInfoCard({ user }: ProfileInfoCardProps) {
           )}
         </div>
       </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+            
+        </form>
+      </CardContent>
     </Card>
   );
 }
