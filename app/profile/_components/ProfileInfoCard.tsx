@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useProfileStore } from "@/store/profileStore";
 import { User } from "@/types/user.types";
-import { Pencil } from "lucide-react";
+import { Loader2, Pencil, Save, X } from "lucide-react";
 import { useState } from "react";
 
 interface ProfileInfoCardProps {
@@ -142,6 +142,32 @@ export default function ProfileInfoCard({ user }: ProfileInfoCardProps) {
               Contact your administrator to change your role
             </p>
           </div>
+          {isEditing && (
+            <div className="flex gap-2 pt-4">
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4 mr-2" />
+                    Save Changes
+                  </>
+                )}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleCancel}
+                disabled={isSubmitting}
+              >
+                <X className="h-4 w-4 mr-2" />
+                Cancel
+              </Button>
+            </div>
+          )}
         </form>
       </CardContent>
     </Card>
