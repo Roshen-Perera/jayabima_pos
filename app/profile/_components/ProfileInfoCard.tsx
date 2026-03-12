@@ -9,4 +9,9 @@ interface ProfileInfoCardProps {
 export default function ProfileInfoCard({ user }: ProfileInfoCardProps) {
   const { updateProfile, isSubmitting } = useProfileStore();
   const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    name: user.name,
+    email: user.email,
+    phone: user.phone || "",
+  });
 }
