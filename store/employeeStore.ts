@@ -204,9 +204,21 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
                 credentials: 'include',
             });
             const result = await response.json();
-
+            if (result.success) {
+                alert.success(
+                    'Password reset!',
+                    'Temporary password has been sent to employee\'s email'
+                );
+                return {
+                    success: true,
+                    temporaryPassword: result.temporaryPassword, // Fallback if email fails
+                };
+            } else {
+                alert.error('Reset failed', result.message || 'Could not reset password');
+                return { success: false };
+            }
         } catch (error) {
-            
+
         }
     }
 
