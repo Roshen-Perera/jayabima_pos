@@ -122,6 +122,19 @@ export default function ProfileInfoCard({ user }: ProfileInfoCardProps) {
               required
             />
           </div>
+          <div className="space-y-2">
+            <Label htmlFor="phone">Phone Number</Label>
+            <Input
+              id="phone"
+              type="tel"
+              value={formData.phone}
+              onChange={(e) =>
+                setFormData({ ...formData, phone: e.target.value })
+              }
+              disabled={!isEditing || isSubmitting}
+              placeholder="Optional"
+            />
+          </div>
         </form>
       </CardContent>
     </Card>
