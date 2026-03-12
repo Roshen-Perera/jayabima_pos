@@ -168,9 +168,12 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
         set({ isSubmitting: true });
 
         try {
-
+            const response = await fetch(`/api/employees/${id}`, {
+                method: 'DELETE',
+                credentials: 'include',
+            });
         } catch (error) {
-            
+
         }
     }
 
