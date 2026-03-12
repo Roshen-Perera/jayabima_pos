@@ -173,6 +173,21 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
                 credentials: 'include',
             });
             const result = await response.json();
+            if (result.success) {
+                alert.success('Employee deactivated', 'Employee has been deactivated');
+
+                // Update in local state (soft delete)
+                set((state) => ({
+                    employees: state.employees.map((emp) =>
+                        emp.id === id ? { ...emp, isActive: false, status: 'INACTIVE' as const } : emp
+                    ),
+                }));
+
+                return true;
+            } else {
+                alert.error('Delete failed', result.message || 'Could not delete employee');
+                return false;
+            }
         } catch (error) {
 
         }
