@@ -1,0 +1,3 @@
+interface PasswordStrengthIndicatorProps {
+  password: string;
+}
