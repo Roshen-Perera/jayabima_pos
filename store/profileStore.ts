@@ -25,4 +25,7 @@ export const useProfileStore = create<ProfileState>((set) => ({
     isLoading: false,
     isSubmitting: false,
 
+    fetchProfile: async () => {
+
+    },
 }));
