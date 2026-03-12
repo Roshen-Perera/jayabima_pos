@@ -125,6 +125,8 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
             console.error('Create employee error:', error);
             alert.error('Error', 'Something went wrong');
             return { success: false };
+        } finally {
+            set({ isSubmitting: false });
         }
     },
 
