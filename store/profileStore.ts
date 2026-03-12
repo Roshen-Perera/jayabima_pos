@@ -84,6 +84,13 @@ export const useProfileStore = create<ProfileState>((set) => ({
                 body: JSON.stringify(data),
             });
             const result = await response.json();
+            if (result.success) {
+                alert.success('Password changed!', 'Your password has been updated successfully');
+                return true;
+            } else {
+                alert.error('Change failed', result.message || 'Could not change password');
+                return false;
+            }
         } catch (error) {
 
         } finally {
