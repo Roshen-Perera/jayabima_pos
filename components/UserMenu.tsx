@@ -109,15 +109,6 @@ const UserMenu = () => {
             <span>Profile</span>
           </DropdownMenuItem>
 
-          {/* Settings */}
-          <DropdownMenuItem
-            onClick={() => router.push("/settings")}
-            className="cursor-pointer"
-          >
-            <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
-          </DropdownMenuItem>
-
           <DropdownMenuSeparator />
 
           {/* Logout */}
