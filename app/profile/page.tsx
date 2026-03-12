@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProfileStore } from "@/store/profileStore";
 import React, { useEffect } from "react";
+import ProfileHeader from "./_components/ProfileHeader";
 
 const Page = () => {
   const { profile, isLoading, fetchProfile } = useProfileStore();
@@ -31,7 +32,11 @@ const Page = () => {
     );
   }
 
-  return <div className="container mx-auto py-6 space-y-6">Page</div>;
+  return (
+    <div className="container mx-auto py-6 space-y-6">
+      <ProfileHeader user={profile} />
+    </div>
+  );
 };
 
 export default Page;
