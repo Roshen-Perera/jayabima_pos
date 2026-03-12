@@ -1,4 +1,5 @@
 import { User } from "@/types/user.types";
+import { ca } from "zod/v4/locales";
 import { create } from "zustand";
 
 
@@ -47,5 +48,10 @@ export const useProfileStore = create<ProfileState>((set) => ({
 
     updateProfile: async (data) => {
         set({ isSubmitting: true });
+        try {
+
+        } catch (error) {
+            
+        }
     }
 }));
