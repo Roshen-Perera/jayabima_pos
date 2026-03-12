@@ -218,7 +218,9 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
                 return { success: false };
             }
         } catch (error) {
-
+            console.error('Reset password error:', error);
+            alert.error('Error', 'Something went wrong');
+            return { success: false };
         }
     }
 
