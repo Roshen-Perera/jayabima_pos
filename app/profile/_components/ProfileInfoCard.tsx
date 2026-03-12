@@ -14,4 +14,13 @@ export default function ProfileInfoCard({ user }: ProfileInfoCardProps) {
     email: user.email,
     phone: user.phone || "",
   });
+
+  const handleCancel = () => {
+    setFormData({
+      name: user.name,
+      email: user.email,
+      phone: user.phone || "",
+    });
+    setIsEditing(false);
+  };
 }
