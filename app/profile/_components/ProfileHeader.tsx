@@ -39,6 +39,9 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
               {getInitials(user.name)}
             </AvatarFallback>
           </Avatar>
+          <div className="flex-1 space-y-2">
+            
+          </div>
         </div>
       </CardContent>
     </Card>
