@@ -172,6 +172,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
                 method: 'DELETE',
                 credentials: 'include',
             });
+            const result = await response.json();
         } catch (error) {
 
         }
