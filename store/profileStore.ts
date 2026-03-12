@@ -28,9 +28,12 @@ export const useProfileStore = create<ProfileState>((set) => ({
     fetchProfile: async () => {
         set({ isLoading: true });
         try {
-
+            const response = await fetch('/api/auth/my-account', {
+                credentials: 'include',
+            });
+            const data = await response.json();
         } catch (error) {
-            
+
         }
     },
 }));
