@@ -76,5 +76,12 @@ export const useProfileStore = create<ProfileState>((set) => ({
 
     changePassword: async (data) => {
         set({ isSubmitting: true });
+        try {
+
+        } catch (error) {
+
+        } finally {
+            
+        }
     }
 }));
