@@ -15,6 +15,15 @@ const Page = () => {
       </div>
     );
   }
+
+  if (!profile) {
+    return (
+      <div className="container mx-auto py-6">
+        
+      </div>
+    );
+  }
+
   return <div>Page</div>;
 };
 
