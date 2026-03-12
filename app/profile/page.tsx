@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { User } from "lucide-react";
 import { Lock } from "lucide-react";
 import ProfileInfoCard from "./_components/ProfileInfoCard";
+import ChangePasswordCard from "./_components/ChangePasswordCard";
 
 const Page = () => {
   const { profile, isLoading, fetchProfile } = useProfileStore();
@@ -52,6 +53,9 @@ const Page = () => {
         </TabsList>
         <TabsContent value="info" className="mt-6">
           <ProfileInfoCard user={profile} />
+        </TabsContent>
+        <TabsContent value="password" className="mt-6">
+          <ChangePasswordCard />
         </TabsContent>
       </Tabs>
     </div>
