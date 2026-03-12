@@ -40,7 +40,7 @@ const Page = () => {
   }
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
+    <div className="container mx-auto space-y-6">
       <ProfileHeader user={profile} />
       <Tabs defaultValue="info" className="w-full">
         <TabsList className="grid w-full grid-cols-2 max-w-md">
