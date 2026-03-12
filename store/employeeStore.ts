@@ -130,4 +130,8 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
         }
     },
 
+    updateEmployee: async (id, data) => {
+
+    }
+
 }));
