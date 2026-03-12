@@ -200,6 +200,8 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
         set({ isSubmitting: true });
         try {
 
+            const result = await response.json();
+
         } catch (error) {
             const response = await fetch(`/api/employees/${id}/reset-password`, {
                 method: 'POST',
