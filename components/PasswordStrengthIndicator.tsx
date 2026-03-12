@@ -42,5 +42,16 @@ export default function PasswordStrengthIndicator({
 
   if (!password) return null;
 
-  return <div className="space-y-2"></div>;
+  return (
+    <div className="space-y-2">
+      {strength.label && (
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium">Password Strength:</span>
+          <span className={`text-sm font-semibold ${strength.color}`}>
+            {strength.label}
+          </span>
+        </div>
+      )}
+    </div>
+  );
 }
