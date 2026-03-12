@@ -60,6 +60,9 @@ export default function ChangePasswordCard() {
             <Label htmlFor="currentPassword">
               Current Password <span className="text-destructive">*</span>
             </Label>
+            <div className="relative">
+                
+            </div>
           </div>
         </form>
       </CardContent>
