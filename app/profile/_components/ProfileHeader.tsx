@@ -30,7 +30,11 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
 
   return (
     <Card>
-      <CardContent className="pt-6"></CardContent>
+      <CardContent className="pt-6">
+        <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
+            
+        </div>
+      </CardContent>
     </Card>
   );
 }
