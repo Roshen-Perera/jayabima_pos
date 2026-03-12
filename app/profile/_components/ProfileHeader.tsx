@@ -53,6 +53,11 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
                 </Badge>
               )}
             </div>
+            <div className="text-muted-foreground space-y-1">
+              <p className="text-sm">@{user.username}</p>
+              <p className="text-sm">{user.email}</p>
+              {user.phone && <p className="text-sm">{user.phone}</p>}
+            </div>
           </div>
         </div>
       </CardContent>
