@@ -25,5 +25,13 @@ export default function ChangePasswordCard() {
        return;
      }
      const success = await changePassword(formData);
+     if (success) {
+       // Reset form on success
+       setFormData({
+         currentPassword: "",
+         newPassword: "",
+         confirmPassword: "",
+       });
+     }
   }
 }
