@@ -1,5 +1,5 @@
 import { User } from "@/types/user.types";
-import { create } from "domain";
+import { create } from "zustand";
 
 
 interface ProfileState {
