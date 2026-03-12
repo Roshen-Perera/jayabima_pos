@@ -89,7 +89,9 @@ export default function ChangePasswordCard() {
             </div>
           </div>
           <div className="space-y-2">
-            
+            <Label htmlFor="newPassword">
+              New Password <span className="text-destructive">*</span>
+            </Label>
           </div>
         </form>
       </CardContent>
