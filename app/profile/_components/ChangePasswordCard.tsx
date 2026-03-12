@@ -125,6 +125,9 @@ export default function ChangePasswordCard() {
             <Label htmlFor="confirmPassword">
               Confirm New Password <span className="text-destructive">*</span>
             </Label>
+             <div className="relative">
+                
+             </div>
           </div>
         </form>
       </CardContent>
