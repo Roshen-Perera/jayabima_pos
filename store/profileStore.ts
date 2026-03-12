@@ -40,6 +40,8 @@ export const useProfileStore = create<ProfileState>((set) => ({
         } catch (error) {
             console.error('Fetch profile error:', error);
             alert.error('Error', 'Something went wrong while fetching profile');
+        } finally {
+            set({ isLoading: false });
         }
     },
 }));
