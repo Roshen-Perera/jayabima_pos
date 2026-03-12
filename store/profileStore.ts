@@ -44,4 +44,8 @@ export const useProfileStore = create<ProfileState>((set) => ({
             set({ isLoading: false });
         }
     },
+
+    updateProfile: async (data) => {
+        set({ isSubmitting: true });
+    }
 }));
