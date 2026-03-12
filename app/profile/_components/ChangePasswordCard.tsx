@@ -55,7 +55,9 @@ export default function ChangePasswordCard() {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-            
+            <div className="space-y-2">
+                
+            </div>
         </form>
       </CardContent>
     </Card>
