@@ -53,7 +53,11 @@ export default function ChangePasswordCard() {
           Update your password to keep your account secure
         </CardDescription>
       </CardHeader>
-      <CardContent></CardContent>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+            
+        </form>
+      </CardContent>
     </Card>
   );
 }
