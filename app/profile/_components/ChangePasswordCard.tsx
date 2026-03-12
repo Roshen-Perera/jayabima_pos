@@ -127,6 +127,19 @@ export default function ChangePasswordCard() {
             </Label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="confirmPassword"
+                type={showPasswords.confirm ? "text" : "password"}
+                value={formData.confirmPassword}
+                onChange={(e) => {
+                  setFormData({ ...formData, confirmPassword: e.target.value });
+                  setErrors({ confirmPassword: "" });
+                }}
+                className="pl-10 pr-10"
+                disabled={isSubmitting}
+                required
+                minLength={8}
+              />
             </div>
           </div>
         </form>
