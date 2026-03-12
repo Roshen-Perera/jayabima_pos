@@ -8,7 +8,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useProfileStore } from "@/store/profileStore";
-import { Lock } from "lucide-react";
+import { Eye, EyeOff, Lock } from "lucide-react";
 import { useState } from "react";
 
 export default function ChangePasswordCard() {
@@ -75,6 +75,17 @@ export default function ChangePasswordCard() {
                 disabled={isSubmitting}
                 required
               />
+              <button
+                type="button"
+                onClick={() => togglePasswordVisibility("current")}
+                className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
+              >
+                {showPasswords.current ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
             </div>
           </div>
         </form>
