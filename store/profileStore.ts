@@ -83,6 +83,7 @@ export const useProfileStore = create<ProfileState>((set) => ({
                 credentials: 'include',
                 body: JSON.stringify(data),
             });
+            const result = await response.json();
         } catch (error) {
 
         } finally {
