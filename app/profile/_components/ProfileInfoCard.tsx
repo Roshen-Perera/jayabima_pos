@@ -107,6 +107,21 @@ export default function ProfileInfoCard({ user }: ProfileInfoCardProps) {
               minLength={2}
             />
           </div>
+          <div className="space-y-2">
+            <Label htmlFor="email">
+              Email <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              id="email"
+              type="email"
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+              disabled={!isEditing || isSubmitting}
+              required
+            />
+          </div>
         </form>
       </CardContent>
     </Card>
