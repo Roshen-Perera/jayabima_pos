@@ -132,6 +132,17 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
 
     updateEmployee: async (id, data) => {
         set({ isSubmitting: true });
+        try {
+            const response = await fetch(`/api/employees/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify(data),
+            });
+
+        } catch (error) {
+
+        }
     }
 
 }));
