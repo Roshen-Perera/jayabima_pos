@@ -199,14 +199,14 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
     resetEmployeePassword: async (id) => {
         set({ isSubmitting: true });
         try {
-
-            const result = await response.json();
-
-        } catch (error) {
             const response = await fetch(`/api/employees/${id}/reset-password`, {
                 method: 'POST',
                 credentials: 'include',
             });
+            const result = await response.json();
+
+        } catch (error) {
+            
         }
     }
 
