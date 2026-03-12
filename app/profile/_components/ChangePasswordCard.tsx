@@ -140,6 +140,17 @@ export default function ChangePasswordCard() {
                 required
                 minLength={8}
               />
+              <button
+                type="button"
+                onClick={() => togglePasswordVisibility("confirm")}
+                className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
+              >
+                {showPasswords.confirm ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
             </div>
           </div>
         </form>
