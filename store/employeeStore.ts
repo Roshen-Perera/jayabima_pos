@@ -234,5 +234,8 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
         set({ roleFilter: role });
         get().fetchEmployees(); // Auto-refresh
     },
-
+    setStatusFilter: (status) => {
+        set({ statusFilter: status });
+        get().fetchEmployees(); // Auto-refresh
+    },
 }));
