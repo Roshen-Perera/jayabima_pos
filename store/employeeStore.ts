@@ -99,7 +99,28 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
                 body: JSON.stringify(data),
             });
             const result = await response.json();
+            if (result.success) {
+                alert.success(
+                    'Employee created!',
+                    `${data.name} has been added. Login credentials sent to ${data.email}`
+                );
 
+                // Add to local state
+                set((state) => ({
+                    employees: [result.employee, ...state.employees],
+                }));
+
+                // Refresh list
+                get().fetchEmployees();
+
+                return {
+                    success: true,
+                    temporaryPassword: result.temporaryPassword, // Fallback if email fails
+                };
+            } else {
+                alert.error('Failed to create employee', result.message || 'Could not create employee');
+                return { success: false };
+            }
         } catch (error) {
 
         }
