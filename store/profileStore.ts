@@ -77,11 +77,16 @@ export const useProfileStore = create<ProfileState>((set) => ({
     changePassword: async (data) => {
         set({ isSubmitting: true });
         try {
-
+            const response = await fetch('/api/auth/change-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify(data),
+            });
         } catch (error) {
 
         } finally {
-            
+
         }
     }
 }));
