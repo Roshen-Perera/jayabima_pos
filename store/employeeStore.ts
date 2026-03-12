@@ -98,6 +98,8 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
                 credentials: 'include',
                 body: JSON.stringify(data),
             });
+            const result = await response.json();
+
         } catch (error) {
 
         }
