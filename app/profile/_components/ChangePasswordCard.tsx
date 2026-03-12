@@ -34,4 +34,7 @@ export default function ChangePasswordCard() {
        });
      }
   }
+  const togglePasswordVisibility = (field: "current" | "new" | "confirm") => {
+    setShowPasswords((prev) => ({ ...prev, [field]: !prev[field] }));
+  };
 }
