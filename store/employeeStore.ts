@@ -164,6 +164,9 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
             set({ isSubmitting: false });
         }
     },
-    
+    deleteEmployee: async (id) => {
+        set({ isSubmitting: true });
+    }
+
 
 }));
