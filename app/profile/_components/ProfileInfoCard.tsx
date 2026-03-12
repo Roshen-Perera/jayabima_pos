@@ -26,5 +26,10 @@ export default function ProfileInfoCard({ user }: ProfileInfoCardProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const success = await updateProfile({
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone || undefined,
+    });
   }
 }
