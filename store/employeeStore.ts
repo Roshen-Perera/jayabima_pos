@@ -53,6 +53,7 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
             const response = await fetch(`/api/employees?${params}`, {
                 credentials: 'include',
             });
+            const data = await response.json();
         } catch (error) {
 
         }
