@@ -3,7 +3,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useProfileStore } from "@/store/profileStore";
 import React, { useEffect } from "react";
 import ProfileHeader from "./_components/ProfileHeader";
-import { Tabs, TabsList } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { User } from "lucide-react";
 
 const Page = () => {
   const { profile, isLoading, fetchProfile } = useProfileStore();
@@ -37,7 +38,12 @@ const Page = () => {
     <div className="container mx-auto py-6 space-y-6">
       <ProfileHeader user={profile} />
       <Tabs defaultValue="info" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 max-w-md"></TabsList>
+        <TabsList className="grid w-full grid-cols-2 max-w-md">
+          <TabsTrigger value="info">
+            <User className="h-4 w-4 mr-2" />
+            Profile Info
+          </TabsTrigger>
+        </TabsList>
       </Tabs>
     </div>
   );
