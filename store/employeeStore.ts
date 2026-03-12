@@ -47,6 +47,10 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
         try {
             const { searchQuery, roleFilter, statusFilter } = get();
             const params = new URLSearchParams();
+            if (searchQuery) params.set('search', searchQuery);
+            if (roleFilter !== 'all') params.set('role', roleFilter);
+            if (statusFilter !== 'all') params.set('isActive', statusFilter);
+
         } catch (error) {
 
         }
