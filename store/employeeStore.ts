@@ -54,6 +54,11 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
                 credentials: 'include',
             });
             const data = await response.json();
+            if (data.success) {
+                set({ employees: data.employees });
+            } else {
+                alert.error('Failed to load employees', data.message || 'Could not fetch employees');
+            }
         } catch (error) {
 
         }
