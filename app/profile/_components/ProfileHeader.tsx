@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { User } from "@/types/user.types";
 
@@ -40,7 +41,18 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 space-y-2">
-            
+            {/* Name and Badges */}
+            <div className="flex items-center gap-3 flex-wrap">
+              <h1 className="text-3xl font-bold">{user.name}</h1>
+              <Badge variant={getRoleBadgeVariant(user.role)}>
+                {user.role}
+              </Badge>
+              {!user.isActive && (
+                <Badge variant="outline" className="bg-muted">
+                  Inactive
+                </Badge>
+              )}
+            </div>
           </div>
         </div>
       </CardContent>
