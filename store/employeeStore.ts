@@ -201,7 +201,10 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
         try {
 
         } catch (error) {
-            
+            const response = await fetch(`/api/employees/${id}/reset-password`, {
+                method: 'POST',
+                credentials: 'include',
+            });
         }
     }
 
