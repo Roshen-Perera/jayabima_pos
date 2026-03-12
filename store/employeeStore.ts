@@ -34,5 +34,11 @@ interface EmployeeState {
 }
 
 export const useEmployeeStore = create<EmployeeState>((set, get) => ({
-    
+    employees: [],
+    selectedEmployee: null,
+    isLoading: false,
+    isSubmitting: false,
+    searchQuery: '',
+    roleFilter: 'all',
+    statusFilter: 'all'
 }));
