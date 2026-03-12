@@ -1,3 +1,4 @@
+import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProfileStore } from "@/store/profileStore";
 import React, { useEffect } from "react";
