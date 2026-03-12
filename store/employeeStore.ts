@@ -70,6 +70,24 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
 
     fetchEmployeeById: async (id) => {
         set({ isLoading: true });
+        try {
+            const response = await fetch(`/api/employees/${id}`, {
+                credentials: 'include',
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                set({ selectedEmployee: data.employee });
+            } else {
+                alert.error('Failed to load employee', data.message || 'Could not fetch employee');
+            }
+        } catch (error) {
+            console.error('Fetch employee error:', error);
+            alert.error('Error', 'Something went wrong');
+        } finally {
+            set({ isLoading: false });
+        }
     }
-    
+
 }));
