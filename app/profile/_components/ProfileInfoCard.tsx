@@ -1,3 +1,4 @@
+import { Card } from "@/components/ui/card";
 import { useProfileStore } from "@/store/profileStore";
 import { User } from "@/types/user.types";
 import { useState } from "react";
@@ -35,4 +36,8 @@ export default function ProfileInfoCard({ user }: ProfileInfoCardProps) {
       setIsEditing(false);
     }
   }
+
+  return (
+    <Card></Card>
+  )
 }
