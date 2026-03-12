@@ -3,9 +3,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useProfileStore } from "@/store/profileStore";
 import React, { useEffect } from "react";
 import ProfileHeader from "./_components/ProfileHeader";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { User } from "lucide-react";
 import { Lock } from "lucide-react";
+import ProfileInfoCard from "./_components/ProfileInfoCard";
 
 const Page = () => {
   const { profile, isLoading, fetchProfile } = useProfileStore();
@@ -49,6 +50,9 @@ const Page = () => {
             Password
           </TabsTrigger>
         </TabsList>
+        <TabsContent value="info" className="mt-6">
+          <ProfileInfoCard user={profile} />
+        </TabsContent>
       </Tabs>
     </div>
   );
