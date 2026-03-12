@@ -140,6 +140,8 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
                 body: JSON.stringify(data),
             });
             const result = await response.json();
+
+            if (result.success) {
         } catch (error) {
 
         }
