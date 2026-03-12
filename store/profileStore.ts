@@ -32,6 +32,11 @@ export const useProfileStore = create<ProfileState>((set) => ({
                 credentials: 'include',
             });
             const data = await response.json();
+            if (data.success) {
+                set({ profile: data.user });
+            } else {
+                alert.error('Failed to load profile', data.message || 'Could not fetch profile');
+            }
         } catch (error) {
 
         }
