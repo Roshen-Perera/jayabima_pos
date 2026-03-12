@@ -106,6 +106,17 @@ export default function ChangePasswordCard() {
                 required
                 minLength={8}
               />
+              <button
+                type="button"
+                onClick={() => togglePasswordVisibility("new")}
+                className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
+              >
+                {showPasswords.new ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
             </div>
           </div>
         </form>
