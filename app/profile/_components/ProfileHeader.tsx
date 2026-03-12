@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { User } from "@/types/user.types";
 
@@ -32,7 +33,12 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
     <Card>
       <CardContent className="pt-6">
         <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
-            
+          <Avatar className="h-24 w-24">
+            <AvatarImage src={user.avatar || undefined} alt={user.name} />
+            <AvatarFallback className="text-2xl">
+              {getInitials(user.name)}
+            </AvatarFallback>
+          </Avatar>
         </div>
       </CardContent>
     </Card>
