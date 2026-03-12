@@ -1,3 +1,4 @@
+import { Check, X } from "lucide-react";
 import { useMemo } from "react";
 
 interface PasswordStrengthIndicatorProps {
@@ -52,6 +53,22 @@ export default function PasswordStrengthIndicator({
           </span>
         </div>
       )}
+      <div className="space-y-1">
+        {requirements.map((req, index) => (
+          <div key={index} className="flex items-center gap-2 text-xs">
+            {req.met ? (
+              <Check className="h-3 w-3 text-green-500" />
+            ) : (
+              <X className="h-3 w-3 text-muted-foreground" />
+            )}
+            <span
+              className={req.met ? "text-green-500" : "text-muted-foreground"}
+            >
+              {req.label}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
