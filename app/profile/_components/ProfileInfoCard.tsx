@@ -135,6 +135,13 @@ export default function ProfileInfoCard({ user }: ProfileInfoCardProps) {
               placeholder="Optional"
             />
           </div>
+          <div className="space-y-2">
+            <Label htmlFor="role">Role</Label>
+            <Input id="role" value={user.role} disabled className="bg-muted" />
+            <p className="text-xs text-muted-foreground">
+              Contact your administrator to change your role
+            </p>
+          </div>
         </form>
       </CardContent>
     </Card>
