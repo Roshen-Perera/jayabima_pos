@@ -5,6 +5,7 @@ import {
   CardHeader,
   CardContent,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useProfileStore } from "@/store/profileStore";
 import { Lock } from "lucide-react";
@@ -63,6 +64,17 @@ export default function ChangePasswordCard() {
             </Label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="currentPassword"
+                type={showPasswords.current ? "text" : "password"}
+                value={formData.currentPassword}
+                onChange={(e) =>
+                  setFormData({ ...formData, currentPassword: e.target.value })
+                }
+                className="pl-10 pr-10"
+                disabled={isSubmitting}
+                required
+              />
             </div>
           </div>
         </form>
