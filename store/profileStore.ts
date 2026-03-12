@@ -66,7 +66,9 @@ export const useProfileStore = create<ProfileState>((set) => ({
                 return false;
             }
         } catch (error) {
-
+            console.error('Update profile error:', error);
+            alert.error('Error', 'Something went wrong');
+            return false;
         }
     }
 }));
