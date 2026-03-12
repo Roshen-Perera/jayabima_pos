@@ -1,4 +1,5 @@
 import { User } from "@/types/user.types";
+import { create } from "domain";
 
 
 interface ProfileState {
@@ -18,3 +19,7 @@ interface ProfileState {
         confirmPassword: string;
     }) => Promise<boolean>;
 }
+
+export const useProfileStore = create<ProfileState>((set) => ({
+    
+}));
