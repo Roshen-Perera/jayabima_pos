@@ -24,5 +24,6 @@ export default function ChangePasswordCard() {
        setErrors({ confirmPassword: "Passwords don't match" });
        return;
      }
+     const success = await changePassword(formData);
   }
 }
