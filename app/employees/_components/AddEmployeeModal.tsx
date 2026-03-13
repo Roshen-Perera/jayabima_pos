@@ -32,5 +32,13 @@ export default function AddEmployeeModal({
     e.preventDefault();
 
     if (!formData.role) return;
+
+    const result = await createEmployee({
+      username: formData.username,
+      email: formData.email,
+      name: formData.name,
+      phone: formData.phone || undefined,
+      role: formData.role as UserRole,
+    });
   }
 }
