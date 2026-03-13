@@ -10,7 +10,7 @@ import { Employee } from "@/types/employee.type";
 import { useState } from "react";
 import TempPasswordDisplay from "./TempPasswordDisplay";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Loader2 } from "lucide-react";
 
 interface ResetPasswordModalProps {
   employee: Employee | null;
@@ -93,6 +93,20 @@ export default function ResetPasswordModal({
                 className="flex-1"
               >
                 Cancel
+              </Button>
+              <Button
+                onClick={handleReset}
+                disabled={isSubmitting}
+                className="flex-1"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Resetting...
+                  </>
+                ) : (
+                  "Reset Password"
+                )}
               </Button>
             </div>
           </div>
