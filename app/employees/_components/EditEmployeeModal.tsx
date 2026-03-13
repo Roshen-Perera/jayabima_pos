@@ -25,5 +25,18 @@ export default function EditEmployeeModal({
     role: employee?.role ?? ("" as UserRole | ""),
     isActive: employee?.isActive ?? true,
   }));
-
+  
+  const handleOpenChange = (isOpen: boolean) => {
+    if (isOpen && employee) {
+      // Reset form with fresh employee data when opening
+      setFormData({
+        name: employee.name,
+        email: employee.email,
+        phone: employee.phone || "",
+        role: employee.role,
+        isActive: employee.isActive,
+      });
+    }
+    onOpenChange(isOpen);
+  };
 }
