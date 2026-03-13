@@ -14,4 +14,5 @@ export default function ResetPasswordModal({
   onOpenChange,
 }: ResetPasswordModalProps) {
   const { resetEmployeePassword, isSubmitting } = useEmployeeStore();
+  const [tempPassword, setTempPassword] = useState<string | null>(null);
 }
