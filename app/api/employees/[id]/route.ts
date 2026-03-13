@@ -8,18 +8,28 @@ import { canDeleteUser, canEditUser } from "@/lib/rbac/user-permissions";
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
+    const { id } = await context.params;
+
     const { authorized, user, response } = await requirePermission(
         request,
         'employees:view_details'
     );
 
-    if (!authorized) return response;
+    if (!authorized) {
+        return (
+            response ??
+            NextResponse.json(
+                { success: false, message: 'Unauthorized' },
+                { status: 401 }
+            )
+        );
+    }
 
     try {
         const employee = await prisma.user.findUnique({
-            where: { id: params.id },
+            where: { id },
             select: {
                 id: true,
                 username: true,
@@ -66,21 +76,31 @@ const updateEmployeeSchema = z.object({
 
 export async function PATCH(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
+    const { id } = await context.params;
+
     const { authorized, user, response } = await requirePermission(
         request,
         'employees:update'
     );
 
-    if (!authorized) return response;
+    if (!authorized) {
+        return (
+            response ??
+            NextResponse.json(
+                { success: false, message: 'Unauthorized' },
+                { status: 401 }
+            )
+        );
+    }
 
     try {
         const body = await request.json();
         const validatedData = updateEmployeeSchema.parse(body);
         // Get target employee
         const targetEmployee = await prisma.user.findUnique({
-            where: { id: params.id },
+            where: { id },
         });
         if (!targetEmployee) {
             return NextResponse.json(
@@ -89,7 +109,7 @@ export async function PATCH(
             );
         }
         // Check if user can edit this employee
-        const isSelf = user.userId === params.id;
+        const isSelf = user.userId === id;
         const userRole = user.role as UserRole;
         const targetRole = targetEmployee.role as UserRole;
         if (!canEditUser(userRole, targetRole, isSelf)) {
@@ -112,7 +132,7 @@ export async function PATCH(
             const existingEmail = await prisma.user.findFirst({
                 where: {
                     email: validatedData.email,
-                    NOT: { id: params.id },
+                    NOT: { id },
                 },
             });
 
@@ -124,7 +144,7 @@ export async function PATCH(
             }
         }
         const employee = await prisma.user.update({
-            where: { id: params.id },
+            where: { id },
             data: validatedData,
             select: {
                 id: true,
@@ -163,18 +183,28 @@ export async function PATCH(
 
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
+    const { id } = await context.params;
+
     const { authorized, user, response } = await requirePermission(
         request,
         'employees:delete'
     );
 
-    if (!authorized) return response;
+    if (!authorized) {
+        return (
+            response ??
+            NextResponse.json(
+                { success: false, message: 'Unauthorized' },
+                { status: 401 }
+            )
+        );
+    }
 
     try {
         const targetEmployee = await prisma.user.findUnique({
-            where: { id: params.id },
+            where: { id },
         });
         if (!targetEmployee) {
             return NextResponse.json(
@@ -182,7 +212,7 @@ export async function DELETE(
                 { status: 404 }
             );
         }
-        if (user.userId === params.id) {
+        if (user.userId === id) {
             return NextResponse.json(
                 { success: false, message: 'You cannot delete your own account' },
                 { status: 400 }
@@ -199,7 +229,7 @@ export async function DELETE(
         }
 
         await prisma.user.update({
-            where: { id: params.id },
+            where: { id },
             data: {
                 isActive: false,
                 status: 'INACTIVE',
