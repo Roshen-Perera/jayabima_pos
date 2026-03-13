@@ -1,3 +1,4 @@
+import { useEmployeeStore } from "@/store/employeeStore";
 import { Employee } from "@/types/employee.type";
 
 interface EditEmployeeModalProps {
@@ -11,5 +12,6 @@ export default function EditEmployeeModal({
   open,
   onOpenChange,
 }: EditEmployeeModalProps) {
-    
+      const { updateEmployee, isSubmitting } = useEmployeeStore();
+
 }
