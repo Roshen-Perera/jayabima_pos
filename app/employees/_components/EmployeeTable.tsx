@@ -48,4 +48,12 @@ export default function EmployeeTable({
         return false;
     }
   };
+
+  if (employees.length === 0) {
+    return (
+      <div className="text-center py-12 border rounded-lg">
+        <p className="text-muted-foreground">No employees found</p>
+      </div>
+    );
+  }
 }
