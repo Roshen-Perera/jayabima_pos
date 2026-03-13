@@ -126,7 +126,9 @@ export default function AddEmployeeModal({
               />
             </div>
             <div className="space-y-2">
-                
+              <Label htmlFor="name">
+                Full Name <span className="text-destructive">*</span>
+              </Label>
             </div>
           </form>
         )}
