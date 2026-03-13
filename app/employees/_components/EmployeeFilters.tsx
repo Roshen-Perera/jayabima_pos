@@ -1,4 +1,5 @@
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { Search } from "lucide-react";
 
 interface EmployeeFiltersProps {
@@ -29,6 +30,9 @@ export default function EmployeeFilters({
           className="pl-10"
         />
       </div>
+      <Select value={roleFilter} onValueChange={onRoleChange}>
+        
+      </Select>
     </div>
   );
 }
