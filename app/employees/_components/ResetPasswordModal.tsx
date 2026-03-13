@@ -6,3 +6,11 @@ interface ResetPasswordModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
+
+export default function ResetPasswordModal({
+  employee,
+  open,
+  onOpenChange,
+}: ResetPasswordModalProps) {
+    
+}
