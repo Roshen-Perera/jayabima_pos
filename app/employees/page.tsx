@@ -62,7 +62,7 @@ const Page = () => {
     }
   };
 
-  return <div></div>;
+  return <div className="container mx-auto py-6 space-y-6"></div>;
 };
 
 export default Page;
