@@ -5,3 +5,11 @@ interface EditEmployeeModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
+
+export default function EditEmployeeModal({
+  employee,
+  open,
+  onOpenChange,
+}: EditEmployeeModalProps) {
+    
+}
