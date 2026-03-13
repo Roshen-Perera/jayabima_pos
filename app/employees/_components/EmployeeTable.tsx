@@ -15,4 +15,16 @@ export default function EmployeeTable({
   onDelete,
 }: EmployeeTableProps) {
   const { role, user } = usePermissions();
+  const getRoleBadgeVariant = (employeeRole: string) => {
+    switch (employeeRole) {
+      case "ADMIN":
+        return "destructive";
+      case "MANAGER":
+        return "default";
+      case "CASHIER":
+        return "secondary";
+      default:
+        return "outline";
+    }
+  };
 }
