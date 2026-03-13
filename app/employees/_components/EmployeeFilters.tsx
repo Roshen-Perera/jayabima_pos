@@ -1,5 +1,11 @@
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Search } from "lucide-react";
 
 interface EmployeeFiltersProps {
@@ -41,6 +47,8 @@ export default function EmployeeFilters({
           <SelectItem value="CASHIER">Cashier</SelectItem>
         </SelectContent>
       </Select>
+
+      <Select value={statusFilter} onValueChange={onStatusChange}></Select>
     </div>
   );
 }
