@@ -1,3 +1,4 @@
+import { alert } from "@/lib/alert";
 import { useState } from "react";
 
 interface TempPasswordDisplayProps {
@@ -13,4 +14,15 @@ export default function TempPasswordDisplay({
 }: TempPasswordDisplayProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(password);
+      setCopied(true);
+      alert.success("Copied!", "Password copied to clipboard");
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      alert.error("Failed to copy", "Could not copy password");
+    }
+  };
 }
