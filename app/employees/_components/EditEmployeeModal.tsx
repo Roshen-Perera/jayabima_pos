@@ -25,7 +25,7 @@ export default function EditEmployeeModal({
     role: employee?.role ?? ("" as UserRole | ""),
     isActive: employee?.isActive ?? true,
   }));
-  
+
   const handleOpenChange = (isOpen: boolean) => {
     if (isOpen && employee) {
       // Reset form with fresh employee data when opening
@@ -39,4 +39,6 @@ export default function EditEmployeeModal({
     }
     onOpenChange(isOpen);
   };
+
+  const handleSubmit = async (e: React.FormEvent) => {};
 }
