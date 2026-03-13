@@ -9,6 +9,7 @@ import { useEmployeeStore } from "@/store/employeeStore";
 import { Employee } from "@/types/employee.type";
 import { useState } from "react";
 import TempPasswordDisplay from "./TempPasswordDisplay";
+import { Button } from "@/components/ui/button";
 
 interface ResetPasswordModalProps {
   employee: Employee | null;
@@ -57,6 +58,9 @@ export default function ResetPasswordModal({
               username={employee.username}
               email={employee.email}
             />
+            <Button onClick={handleClose} className="w-full">
+              Done
+            </Button>
           </div>
         ) : (
           <div className="space-y-4"></div>
