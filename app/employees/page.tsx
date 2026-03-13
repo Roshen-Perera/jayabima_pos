@@ -1,5 +1,7 @@
+import { Button } from "@/components/ui/button";
 import { useEmployeeStore } from "@/store/employeeStore";
 import { Employee } from "@/types/employee.type";
+import { UserPlus } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 const Page = () => {
@@ -73,6 +75,10 @@ const Page = () => {
             Manage employee accounts and permissions
           </p>
         </div>
+        <Button onClick={() => setShowAddModal(true)}>
+          <UserPlus className="h-4 w-4 mr-2" />
+          Add Employee
+        </Button>
       </div>
     </div>
   );
