@@ -138,26 +138,6 @@ const Page = () => {
           )}
         </CardContent>
       </Card>
-      <CardContent>
-        {isLoading ? (
-          // Loading skeleton
-          <div className="space-y-3">
-            <Skeleton className="h-12 w-full" />
-            <Skeleton className="h-12 w-full" />
-            <Skeleton className="h-12 w-full" />
-            <Skeleton className="h-12 w-full" />
-            <Skeleton className="h-12 w-full" />
-          </div>
-        ) : (
-          // Employee table
-          <EmployeeTable
-            employees={employees}
-            onEdit={handleEdit}
-            onResetPassword={handleResetPassword}
-            onDelete={handleDelete}
-          />
-        )}
-      </CardContent>
       <AddEmployeeModal open={showAddModal} onOpenChange={setShowAddModal} />
       <EditEmployeeModal
         employee={selectedEmployee}
