@@ -46,4 +46,17 @@ export default function AddEmployeeModal({
       setTempPassword(result.temporaryPassword || null);
     }
   }
+
+  const handleClose = () => {
+    // Reset form
+    setFormData({
+      username: "",
+      email: "",
+      name: "",
+      phone: "",
+      role: "",
+    });
+    setTempPassword(null);
+    onOpenChange(false);
+  };
 }
