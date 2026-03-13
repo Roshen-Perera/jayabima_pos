@@ -8,6 +8,7 @@ import {
 import { useEmployeeStore } from "@/store/employeeStore";
 import { Employee } from "@/types/employee.type";
 import { useState } from "react";
+import TempPasswordDisplay from "./TempPasswordDisplay";
 
 interface ResetPasswordModalProps {
   employee: Employee | null;
@@ -50,7 +51,13 @@ export default function ResetPasswordModal({
           </DialogDescription>
         </DialogHeader>
         {tempPassword ? (
-          <div className="space-y-4"></div>
+          <div className="space-y-4">
+            <TempPasswordDisplay
+              password={tempPassword}
+              username={employee.username}
+              email={employee.email}
+            />
+          </div>
         ) : (
           <div className="space-y-4"></div>
         )}
