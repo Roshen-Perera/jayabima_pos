@@ -47,6 +47,11 @@ const Page = () => {
     setShowResetModal(true);
   };
 
+  const handleDelete = (employee: Employee) => {
+    setSelectedEmployee(employee);
+    setShowDeleteDialog(true);
+  };  
+
   return <div></div>;
 };
 
