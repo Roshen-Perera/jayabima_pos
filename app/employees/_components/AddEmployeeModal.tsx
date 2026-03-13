@@ -194,7 +194,17 @@ export default function AddEmployeeModal({
                 They will be required to change it on first login.
               </p>
             </div>
-            <div className="flex gap-2 pt-4"></div>
+            <div className="flex gap-2 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleClose}
+                disabled={isSubmitting}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+            </div>
           </form>
         )}
         ;
