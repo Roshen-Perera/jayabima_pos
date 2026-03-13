@@ -1,4 +1,4 @@
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { alert } from "@/lib/alert";
 import { useState } from "react";
 
@@ -37,6 +37,9 @@ export default function TempPasswordDisplay({
           This password has been sent to <strong>{email}</strong>
         </CardDescription>
       </CardHeader>
+      <CardContent className="space-y-4">
+        
+      </CardContent>
     </Card>
   );
 }
