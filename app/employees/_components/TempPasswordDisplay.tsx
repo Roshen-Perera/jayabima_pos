@@ -11,6 +11,6 @@ export default function TempPasswordDisplay({
   username,
   email,
 }: TempPasswordDisplayProps) {
-      const [showPassword, setShowPassword] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [copied, setCopied] = useState(false);
 }
