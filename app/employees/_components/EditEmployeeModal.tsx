@@ -2,6 +2,7 @@ import { usePermissions } from "@/hooks/usePermissions";
 import { UserRole } from "@/lib/rbac/permissions";
 import { useEmployeeStore } from "@/store/employeeStore";
 import { Employee } from "@/types/employee.type";
+import { useEffect, useState } from "react";
 
 interface EditEmployeeModalProps {
   employee: Employee | null;
@@ -24,5 +25,6 @@ export default function EditEmployeeModal({
     role: "" as UserRole | "",
     isActive: true,
   });
+
 
 }
