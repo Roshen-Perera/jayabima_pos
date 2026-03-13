@@ -1,4 +1,4 @@
-import { AlertDialog } from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogContent } from "@/components/ui/alert-dialog";
 import { Employee } from "@/types/employee.type";
 
 interface DeleteEmployeeDialogProps {
@@ -16,5 +16,9 @@ export default function DeleteEmployeeDialog({
   onConfirm,
   isDeleting,
 }: DeleteEmployeeDialogProps) {
-  return <AlertDialog open={open} onOpenChange={onOpenChange}></AlertDialog>;
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent></AlertDialogContent>
+    </AlertDialog>
+  );
 }
