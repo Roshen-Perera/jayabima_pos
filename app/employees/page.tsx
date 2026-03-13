@@ -42,6 +42,11 @@ const Page = () => {
     setShowEditModal(true);
   };
 
+  const handleResetPassword = (employee: Employee) => {
+    setSelectedEmployee(employee);
+    setShowResetModal(true);
+  };
+
   return <div></div>;
 };
 
