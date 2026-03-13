@@ -159,6 +159,16 @@ export default function EditEmployeeModal({
           </div>
           <div className="flex items-center justify-between rounded-lg border p-4"></div>
         </form>
+        <div className="space-y-0.5">
+          <Label htmlFor="isActive" className="text-base">
+            Account Status
+          </Label>
+          <p className="text-sm text-muted-foreground">
+            {formData.isActive
+              ? "Active - Can login"
+              : "Inactive - Cannot login"}
+          </p>
+        </div>
       </DialogContent>
     </Dialog>
   );
