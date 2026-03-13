@@ -1,4 +1,4 @@
-import { Table } from "@/components/ui/table";
+import { Table, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { usePermissions } from "@/hooks/usePermissions";
 import { UserRole } from "@/lib/rbac/permissions";
 import {
@@ -64,7 +64,18 @@ export default function EmployeeTable({
 
   return (
     <div className="border rounded-lg">
-      <Table></Table>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead>Role</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Joined</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+      </Table>
     </div>
   );
 }
