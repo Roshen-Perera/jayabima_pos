@@ -104,7 +104,12 @@ const Page = () => {
           />
         </CardContent>
       </Card>
-      <Card></Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Employees ({employees.length})</CardTitle>
+          <CardDescription>All employees in the system</CardDescription>
+        </CardHeader>
+      </Card>
     </div>
   );
 };
