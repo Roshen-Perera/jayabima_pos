@@ -13,6 +13,7 @@ import { useState } from "react";
 import TempPasswordDisplay from "./TempPasswordDisplay";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 interface AddEmployeeModalProps {
   open: boolean;
@@ -96,6 +97,17 @@ export default function AddEmployeeModal({
               <Label htmlFor="username">
                 Username <span className="text-destructive">*</span>
               </Label>
+              <Input
+                id="username"
+                value={formData.username}
+                onChange={(e) =>
+                  setFormData({ ...formData, username: e.target.value })
+                }
+                placeholder="john.doe"
+                required
+                minLength={3}
+                disabled={isSubmitting}
+              />
             </div>
           </form>
         )}
