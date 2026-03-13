@@ -85,6 +85,14 @@ export default function TempPasswordDisplay({
           <p className="text-sm font-medium text-yellow-900 dark:text-yellow-100 mb-2">
             📧 Email Sent
           </p>
+          <ul className="text-xs text-yellow-800 dark:text-yellow-200 space-y-1 list-disc list-inside">
+            <li>
+              Credentials have been emailed to <strong>{email}</strong>
+            </li>
+            <li>Employee must change password on first login</li>
+            <li>This password is shown as a fallback if email fails</li>
+            <li>You can manually share this password if needed</li>
+          </ul>
         </div>
       </CardContent>
     </Card>
