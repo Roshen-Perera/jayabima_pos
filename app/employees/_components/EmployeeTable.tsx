@@ -1,3 +1,4 @@
+import { Table } from "@/components/ui/table";
 import { usePermissions } from "@/hooks/usePermissions";
 import { UserRole } from "@/lib/rbac/permissions";
 import {
@@ -61,5 +62,9 @@ export default function EmployeeTable({
     );
   }
 
-  return <div className="border rounded-lg"></div>;
+  return (
+    <div className="border rounded-lg">
+      <Table></Table>
+    </div>
+  );
 }
