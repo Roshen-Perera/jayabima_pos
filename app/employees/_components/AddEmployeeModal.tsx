@@ -27,4 +27,8 @@ export default function AddEmployeeModal({
   
   const [tempPassword, setTempPassword] = useState<string | null>(null);
   const allowedRoles = role ? getAllowedRolesToCreate(role) : [];
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+  }
 }
