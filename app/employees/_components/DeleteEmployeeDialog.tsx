@@ -1,6 +1,7 @@
 import {
   AlertDialog,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
@@ -30,6 +31,9 @@ export default function DeleteEmployeeDialog({
             <AlertTriangle className="h-5 w-5 text-destructive" />
             <AlertDialogTitle>Deactivate Employee</AlertDialogTitle>
           </div>
+          <AlertDialogDescription className="space-y-2">
+            
+          </AlertDialogDescription>
         </AlertDialogHeader>
       </AlertDialogContent>
     </AlertDialog>
