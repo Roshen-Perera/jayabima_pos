@@ -27,4 +27,9 @@ export default function EmployeeTable({
         return "outline";
     }
   };
+
+  const canPerformAction = (
+    employee: Employee,
+    action: "edit" | "reset" | "delete",
+  ) => {};
 }
