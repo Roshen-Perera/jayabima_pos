@@ -6,3 +6,12 @@ interface EmployeeTableProps {
   onResetPassword: (employee: Employee) => void;
   onDelete: (employee: Employee) => void;
 }
+
+export default function EmployeeTable({
+  employees,
+  onEdit,
+  onResetPassword,
+  onDelete,
+}: EmployeeTableProps) {
+    
+}
