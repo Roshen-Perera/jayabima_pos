@@ -1,5 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useEmployeeStore } from "@/store/employeeStore";
 import { Employee } from "@/types/employee.type";
 import { UserPlus } from "lucide-react";
@@ -86,6 +92,7 @@ const Page = () => {
           <CardTitle>Filters</CardTitle>
           <CardDescription>Search and filter employees</CardDescription>
         </CardHeader>
+        <CardContent></CardContent>
       </Card>
     </div>
   );
