@@ -10,6 +10,7 @@ import { Employee } from "@/types/employee.type";
 import { useState } from "react";
 import TempPasswordDisplay from "./TempPasswordDisplay";
 import { Button } from "@/components/ui/button";
+import { AlertTriangle } from "lucide-react";
 
 interface ResetPasswordModalProps {
   employee: Employee | null;
@@ -65,7 +66,9 @@ export default function ResetPasswordModal({
         ) : (
           <div className="space-y-4">
             <div className="bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-md p-4">
-              <div className="flex gap-3"></div>
+              <div className="flex gap-3">
+                <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 shrink-0 mt-0.5" />
+              </div>
             </div>
           </div>
         )}
