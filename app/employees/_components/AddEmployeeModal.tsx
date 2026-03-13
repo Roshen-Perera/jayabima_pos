@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Loader2 } from "lucide-react";
 
 interface AddEmployeeModalProps {
   open: boolean;
@@ -203,6 +204,16 @@ export default function AddEmployeeModal({
                 className="flex-1"
               >
                 Cancel
+              </Button>
+              <Button type="submit" disabled={isSubmitting} className="flex-1">
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Creating...
+                  </>
+                ) : (
+                  "Create Employee"
+                )}
               </Button>
             </div>
           </form>
