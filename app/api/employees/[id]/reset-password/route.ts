@@ -8,12 +8,40 @@ import { sendPasswordResetByAdminEmail } from "@/lib/email";
 
 
 function generateTempPassword(): string {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%';
-    let password = '';
-    for (let i = 0; i < 12; i++) {
-        password += chars.charAt(Math.floor(Math.random() * chars.length));
+    const uppercase = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+    const lowercase = 'abcdefghijkmnpqrstuvwxyz';
+    const numbers = '23456789';
+    const special = '!@#$%&*';
+
+    // Helper to get random char from string
+    const randomChar = (str: string) => str[Math.floor(Math.random() * str.length)];
+
+    // GUARANTEE at least one of each required type
+    const password = [
+        randomChar(uppercase),  // At least 1 uppercase
+        randomChar(uppercase),  // Extra uppercase
+        randomChar(lowercase),  // At least 1 lowercase
+        randomChar(lowercase),  // Extra lowercase
+        randomChar(numbers),    // At least 1 number
+        randomChar(numbers),    // Extra number
+        randomChar(special),    // At least 1 special
+        randomChar(special),    // Extra special
+    ];
+
+    // Fill remaining 4 characters with random mix
+    const allChars = uppercase + lowercase + numbers + special;
+    for (let i = 0; i < 4; i++) {
+        password.push(randomChar(allChars));
     }
-    return password;
+
+    // Shuffle array to avoid predictable pattern
+    // Fisher-Yates shuffle algorithm
+    for (let i = password.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [password[i], password[j]] = [password[j], password[i]];
+    }
+
+    return password.join('');
 }
 
 export async function POST(
