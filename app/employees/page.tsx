@@ -37,6 +37,11 @@ const Page = () => {
     return () => clearTimeout(timer);
   }, [searchQuery, fetchEmployees]);
 
+  const handleEdit = (employee: Employee) => {
+    setSelectedEmployee(employee);
+    setShowEditModal(true);
+  };
+
   return <div></div>;
 };
 
