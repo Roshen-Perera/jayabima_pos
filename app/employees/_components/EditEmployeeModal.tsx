@@ -1,4 +1,5 @@
 import { usePermissions } from "@/hooks/usePermissions";
+import { UserRole } from "@/lib/rbac/permissions";
 import { useEmployeeStore } from "@/store/employeeStore";
 import { Employee } from "@/types/employee.type";
 
@@ -15,4 +16,13 @@ export default function EditEmployeeModal({
 }: EditEmployeeModalProps) {
   const { updateEmployee, isSubmitting } = useEmployeeStore();
   const { isAdmin } = usePermissions();
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    role: "" as UserRole | "",
+    isActive: true,
+  });
+
 }
