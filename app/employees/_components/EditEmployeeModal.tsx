@@ -1,3 +1,4 @@
+import { usePermissions } from "@/hooks/usePermissions";
 import { useEmployeeStore } from "@/store/employeeStore";
 import { Employee } from "@/types/employee.type";
 
@@ -12,6 +13,6 @@ export default function EditEmployeeModal({
   open,
   onOpenChange,
 }: EditEmployeeModalProps) {
-      const { updateEmployee, isSubmitting } = useEmployeeStore();
-
+  const { updateEmployee, isSubmitting } = useEmployeeStore();
+  const { isAdmin } = usePermissions();
 }
