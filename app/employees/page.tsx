@@ -14,6 +14,7 @@ import EmployeeFilters from "./_components/EmployeeFilters";
 import EmployeeTable from "./_components/EmployeeTable";
 import { Skeleton } from "@/components/ui/skeleton";
 import AddEmployeeModal from "./_components/AddEmployeeModal";
+import EditEmployeeModal from "./_components/EditEmployeeModal";
 
 const Page = () => {
   const {
@@ -154,6 +155,11 @@ const Page = () => {
         )}
       </CardContent>
       <AddEmployeeModal open={showAddModal} onOpenChange={setShowAddModal} />
+      <EditEmployeeModal
+        employee={selectedEmployee}
+        open={showEditModal}
+        onOpenChange={setShowEditModal}
+      />
     </div>
   );
 };
