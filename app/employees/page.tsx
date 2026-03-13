@@ -1,5 +1,5 @@
-import { useEmployeeStore } from '@/store/employeeStore';
-import React from 'react'
+import { useEmployeeStore } from "@/store/employeeStore";
+import React, { useState } from "react";
 
 const Page = () => {
   const {
@@ -14,9 +14,10 @@ const Page = () => {
     setStatusFilter,
     deleteEmployee,
   } = useEmployeeStore();
-  return (
-    <div></div>
-  )
-}
 
-export default Page
+  const [showAddModal, setShowAddModal] = useState(false);
+
+  return <div></div>;
+};
+
+export default Page;
