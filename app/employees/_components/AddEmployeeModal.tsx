@@ -23,4 +23,7 @@ export default function AddEmployeeModal({
     phone: "",
     role: "" as UserRole | "",
   });
+  
+  const [tempPassword, setTempPassword] = useState<string | null>(null);
+
 }
