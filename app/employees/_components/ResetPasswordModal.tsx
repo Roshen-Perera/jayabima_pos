@@ -30,4 +30,6 @@ export default function ResetPasswordModal({
     setTempPassword(null);
     onOpenChange(false);
   };
+
+  if (!employee) return null;
 }
