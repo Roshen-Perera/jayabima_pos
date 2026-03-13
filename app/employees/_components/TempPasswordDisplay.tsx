@@ -42,6 +42,11 @@ export default function TempPasswordDisplay({
           <p className="text-sm font-medium text-yellow-900 dark:text-yellow-100">
             Temporary Password:
           </p>
+          <div className="flex gap-2">
+            <div className="flex-1 bg-white dark:bg-gray-900 rounded-md p-3 border border-yellow-300 font-mono text-lg">
+              {showPassword ? password : "••••••••••••"}
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>
