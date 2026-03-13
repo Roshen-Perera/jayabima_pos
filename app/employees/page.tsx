@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -24,6 +24,7 @@ const Page = () => {
   const {
     employees,
     isLoading,
+    isSubmitting,
     searchQuery,
     roleFilter,
     statusFilter,
@@ -44,16 +45,12 @@ const Page = () => {
   );
 
   useEffect(() => {
-    fetchEmployees();
-  }, [fetchEmployees]);
-
-  useEffect(() => {
     const timer = setTimeout(() => {
       fetchEmployees();
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchQuery, fetchEmployees]);
+  }, [searchQuery, roleFilter, statusFilter, fetchEmployees]);
 
   const handleEdit = (employee: Employee) => {
     setSelectedEmployee(employee);
@@ -151,7 +148,7 @@ const Page = () => {
         open={showDeleteDialog}
         onOpenChange={setShowDeleteDialog}
         onConfirm={handleConfirmDelete}
-        isDeleting={false}
+        isDeleting={isSubmitting}
       />
     </div>
   );
