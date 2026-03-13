@@ -32,7 +32,10 @@ export default function DeleteEmployeeDialog({
             <AlertDialogTitle>Deactivate Employee</AlertDialogTitle>
           </div>
           <AlertDialogDescription className="space-y-2">
-            
+            <p>
+              Are you sure you want to deactivate{" "}
+              <strong>{employee.name}</strong> ({employee.email})?
+            </p>
           </AlertDialogDescription>
         </AlertDialogHeader>
       </AlertDialogContent>
