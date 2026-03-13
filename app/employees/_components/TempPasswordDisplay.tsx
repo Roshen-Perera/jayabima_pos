@@ -1,3 +1,4 @@
+import { useState } from "react";
 
 interface TempPasswordDisplayProps {
   password: string;
@@ -10,5 +11,6 @@ export default function TempPasswordDisplay({
   username,
   email,
 }: TempPasswordDisplayProps) {
-    
+      const [showPassword, setShowPassword] = useState(false);
+
 }
