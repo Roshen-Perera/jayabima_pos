@@ -14,7 +14,13 @@ import TempPasswordDisplay from "./TempPasswordDisplay";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface AddEmployeeModalProps {
   open: boolean;
@@ -184,10 +190,11 @@ export default function AddEmployeeModal({
             <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-md p-3">
               <p className="text-sm text-blue-900 dark:text-blue-100">
                 <strong>ℹ️ Note:</strong> A temporary password will be
-                automatically generated and sent to the employee&apos;s email. They
-                will be required to change it on first login.
+                automatically generated and sent to the employee&apos;s email.
+                They will be required to change it on first login.
               </p>
             </div>
+            <div className="flex gap-2 pt-4"></div>
           </form>
         )}
         ;
