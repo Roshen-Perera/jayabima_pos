@@ -48,7 +48,11 @@ export default function EmployeeFilters({
         </SelectContent>
       </Select>
 
-      <Select value={statusFilter} onValueChange={onStatusChange}></Select>
+      <Select value={statusFilter} onValueChange={onStatusChange}>
+        <SelectTrigger className="w-full md:w-[180px]">
+          <SelectValue placeholder="All Status" />
+        </SelectTrigger>
+      </Select>
     </div>
   );
 }
