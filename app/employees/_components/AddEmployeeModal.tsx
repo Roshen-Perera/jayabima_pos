@@ -1,3 +1,4 @@
+import { usePermissions } from "@/hooks/usePermissions";
 import { useEmployeeStore } from "@/store/employeeStore";
 
 
@@ -11,6 +12,7 @@ export default function AddEmployeeModal({
   onOpenChange,
 }: AddEmployeeModalProps) {
   const { createEmployee, isSubmitting } = useEmployeeStore();
+  const { role } = usePermissions();
 
 
 }
