@@ -1,4 +1,13 @@
-import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { usePermissions } from "@/hooks/usePermissions";
 import { UserRole } from "@/lib/rbac/permissions";
 import {
@@ -7,6 +16,8 @@ import {
   canResetUserPassword,
 } from "@/lib/rbac/user-permissions";
 import { Employee } from "@/types/employee.type";
+import { Badge, MoreHorizontal, Pencil, Key, Trash2 } from "lucide-react";
+import { format } from "path";
 
 interface EmployeeTableProps {
   employees: Employee[];
@@ -75,7 +86,108 @@ export default function EmployeeTable({
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody></TableBody>
+        <TableBody>
+          {employees.map((employee) => {
+            const showEdit = canPerformAction(employee, "edit");
+            const showReset = canPerformAction(employee, "reset");
+            const showDelete = canPerformAction(employee, "delete");
+            const showActions = showEdit || showReset || showDelete;
+
+            return (
+              <TableRow key={employee.id}>
+                {/* Name & Username */}
+                <TableCell>
+                  <div>
+                    <p className="font-medium">{employee.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      @{employee.username}
+                    </p>
+                  </div>
+                </TableCell>
+
+                {/* Email */}
+                <TableCell>{employee.email}</TableCell>
+
+                {/* Role */}
+                <TableCell>
+                  <Badge variant={getRoleBadgeVariant(employee.role)}>
+                    {employee.role}
+                  </Badge>
+                </TableCell>
+
+                {/* Status */}
+                <TableCell>
+                  {employee.isActive ? (
+                    <Badge
+                      variant="outline"
+                      className="bg-green-50 text-green-700 border-green-200"
+                    >
+                      Active
+                    </Badge>
+                  ) : (
+                    <Badge
+                      variant="outline"
+                      className="bg-gray-50 text-gray-700 border-gray-200"
+                    >
+                      Inactive
+                    </Badge>
+                  )}
+                </TableCell>
+
+                {/* Joined Date */}
+                <TableCell className="text-sm text-muted-foreground">
+                  {format(new Date(employee.createdAt), "MMM d, yyyy")}
+                </TableCell>
+
+                {/* Actions */}
+                <TableCell className="text-right">
+                  {showActions && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+
+                        {showEdit && (
+                          <DropdownMenuItem onClick={() => onEdit(employee)}>
+                            <Pencil className="h-4 w-4 mr-2" />
+                            Edit
+                          </DropdownMenuItem>
+                        )}
+
+                        {showReset && (
+                          <DropdownMenuItem
+                            onClick={() => onResetPassword(employee)}
+                          >
+                            <Key className="h-4 w-4 mr-2" />
+                            Reset Password
+                          </DropdownMenuItem>
+                        )}
+
+                        {showDelete && (
+                          <>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onClick={() => onDelete(employee)}
+                              className="text-destructive focus:text-destructive"
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Deactivate
+                            </DropdownMenuItem>
+                          </>
+                        )}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
       </Table>
     </div>
   );
