@@ -14,7 +14,7 @@ import TempPasswordDisplay from "./TempPasswordDisplay";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface AddEmployeeModalProps {
   open: boolean;
@@ -169,6 +169,13 @@ export default function AddEmployeeModal({
                 <SelectTrigger>
                   <SelectValue placeholder="Select role" />
                 </SelectTrigger>
+                <SelectContent>
+                  {allowedRoles.map((role) => (
+                    <SelectItem key={role} value={role}>
+                      {role}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
               </Select>
             </div>
           </form>
