@@ -90,7 +90,9 @@ export default function AddEmployeeModal({
             </Button>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4"></form>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2"></div>
+          </form>
         )}
         ;
       </DialogContent>
