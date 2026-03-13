@@ -1,3 +1,4 @@
+import { useEmployeeStore } from "@/store/employeeStore";
 
 
 interface AddEmployeeModalProps {
@@ -8,4 +9,8 @@ interface AddEmployeeModalProps {
 export default function AddEmployeeModal({
   open,
   onOpenChange,
-}: AddEmployeeModalProps) {}
+}: AddEmployeeModalProps) {
+  const { createEmployee, isSubmitting } = useEmployeeStore();
+
+
+}
