@@ -4,3 +4,11 @@ interface TempPasswordDisplayProps {
   username: string;
   email: string;
 }
+
+export default function TempPasswordDisplay({
+  password,
+  username,
+  email,
+}: TempPasswordDisplayProps) {
+    
+}
