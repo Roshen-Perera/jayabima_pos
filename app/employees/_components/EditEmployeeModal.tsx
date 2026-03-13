@@ -20,6 +20,7 @@ import { usePermissions } from "@/hooks/usePermissions";
 import { UserRole } from "@/lib/rbac/permissions";
 import { useEmployeeStore } from "@/store/employeeStore";
 import { Employee } from "@/types/employee.type";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface EditEmployeeModalProps {
@@ -188,6 +189,16 @@ export default function EditEmployeeModal({
               className="flex-1"
             >
               Cancel
+            </Button>
+            <Button type="submit" disabled={isSubmitting} className="flex-1">
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                "Save Changes"
+              )}
             </Button>
           </div>
         </form>
