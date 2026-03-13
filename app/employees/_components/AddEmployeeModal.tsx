@@ -165,7 +165,9 @@ export default function AddEmployeeModal({
                   setFormData({ ...formData, role: value as UserRole })
                 }
                 disabled={isSubmitting}
-              ></Select>
+              >
+                
+              </Select>
             </div>
           </form>
         )}
