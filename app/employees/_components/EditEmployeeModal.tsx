@@ -90,6 +90,21 @@ export default function EditEmployeeModal({
               Username cannot be changed
             </p>
           </div>
+          <div className="space-y-2">
+            <Label htmlFor="email">
+              Email <span className="text-destructive">*</span>
+            </Label>
+            <Input
+              id="email"
+              type="email"
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+              required
+              disabled={isSubmitting}
+            />
+          </div>
         </form>
       </DialogContent>
     </Dialog>
