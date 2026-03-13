@@ -141,7 +141,9 @@ export default function AddEmployeeModal({
                 disabled={isSubmitting}
               />
             </div>
-            <div className="space-y-2"></div>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone Number</Label>
+            </div>
           </form>
         )}
         ;
