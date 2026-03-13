@@ -12,6 +12,7 @@ import { useEmployeeStore } from "@/store/employeeStore";
 import { useState } from "react";
 import TempPasswordDisplay from "./TempPasswordDisplay";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
 interface AddEmployeeModalProps {
   open: boolean;
@@ -91,7 +92,11 @@ export default function AddEmployeeModal({
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2"></div>
+            <div className="space-y-2">
+              <Label htmlFor="username">
+                Username <span className="text-destructive">*</span>
+              </Label>
+            </div>
           </form>
         )}
         ;
