@@ -129,6 +129,17 @@ export default function AddEmployeeModal({
               <Label htmlFor="name">
                 Full Name <span className="text-destructive">*</span>
               </Label>
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                placeholder="John Doe"
+                required
+                minLength={2}
+                disabled={isSubmitting}
+              />
             </div>
           </form>
         )}
