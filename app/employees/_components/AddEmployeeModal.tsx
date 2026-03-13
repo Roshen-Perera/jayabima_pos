@@ -26,6 +26,5 @@ export default function AddEmployeeModal({
   });
   
   const [tempPassword, setTempPassword] = useState<string | null>(null);
-
   const allowedRoles = role ? getAllowedRolesToCreate(role) : [];
 }
