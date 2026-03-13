@@ -15,6 +15,7 @@ import EmployeeTable from "./_components/EmployeeTable";
 import { Skeleton } from "@/components/ui/skeleton";
 import AddEmployeeModal from "./_components/AddEmployeeModal";
 import EditEmployeeModal from "./_components/EditEmployeeModal";
+import ResetPasswordModal from "./_components/ResetPasswordModal";
 
 const Page = () => {
   const {
@@ -159,6 +160,11 @@ const Page = () => {
         employee={selectedEmployee}
         open={showEditModal}
         onOpenChange={setShowEditModal}
+      />
+      <ResetPasswordModal
+        employee={selectedEmployee}
+        open={showResetModal}
+        onOpenChange={setShowResetModal}
       />
     </div>
   );
