@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { usePermissions } from "@/hooks/usePermissions";
 import { UserRole } from "@/lib/rbac/permissions";
 import { useEmployeeStore } from "@/store/employeeStore";
@@ -157,18 +158,27 @@ export default function EditEmployeeModal({
               </p>
             )}
           </div>
-          <div className="flex items-center justify-between rounded-lg border p-4"></div>
+          <div className="flex items-center justify-between rounded-lg border p-4">
+            <div className="space-y-0.5">
+              <Label htmlFor="isActive" className="text-base">
+                Account Status
+              </Label>
+              <p className="text-sm text-muted-foreground">
+                {formData.isActive
+                  ? "Active - Can login"
+                  : "Inactive - Cannot login"}
+              </p>
+            </div>
+            <Switch
+              id="isActive"
+              checked={formData.isActive}
+              onCheckedChange={(checked) =>
+                setFormData({ ...formData, isActive: checked })
+              }
+              disabled={isSubmitting}
+            />
+          </div>
         </form>
-        <div className="space-y-0.5">
-          <Label htmlFor="isActive" className="text-base">
-            Account Status
-          </Label>
-          <p className="text-sm text-muted-foreground">
-            {formData.isActive
-              ? "Active - Can login"
-              : "Inactive - Cannot login"}
-          </p>
-        </div>
       </DialogContent>
     </Dialog>
   );
