@@ -1,6 +1,10 @@
 import { usePermissions } from "@/hooks/usePermissions";
 import { UserRole } from "@/lib/rbac/permissions";
-import { canDeleteUser, canEditUser, canResetUserPassword } from "@/lib/rbac/user-permissions";
+import {
+  canDeleteUser,
+  canEditUser,
+  canResetUserPassword,
+} from "@/lib/rbac/user-permissions";
 import { Employee } from "@/types/employee.type";
 
 interface EmployeeTableProps {
@@ -56,4 +60,6 @@ export default function EmployeeTable({
       </div>
     );
   }
+
+  return <div className="border rounded-lg"></div>;
 }
