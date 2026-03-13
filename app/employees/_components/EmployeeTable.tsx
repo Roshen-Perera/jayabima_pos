@@ -1,5 +1,6 @@
 import { usePermissions } from "@/hooks/usePermissions";
 import { UserRole } from "@/lib/rbac/permissions";
+import { canDeleteUser, canEditUser, canResetUserPassword } from "@/lib/rbac/user-permissions";
 import { Employee } from "@/types/employee.type";
 
 interface EmployeeTableProps {
@@ -36,5 +37,15 @@ export default function EmployeeTable({
     if (!role || !user) return false;
     const isSelf = user.id === employee.id;
     const targetRole = employee.role as UserRole;
+    switch (action) {
+      case "edit":
+        return canEditUser(role, targetRole, isSelf);
+      case "reset":
+        return !isSelf && canResetUserPassword(role, targetRole);
+      case "delete":
+        return !isSelf && canDeleteUser(role, targetRole);
+      default:
+        return false;
+    }
   };
 }
