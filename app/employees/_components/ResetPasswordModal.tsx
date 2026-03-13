@@ -25,4 +25,9 @@ export default function ResetPasswordModal({
       setTempPassword(result.temporaryPassword || null);
     }
   };
+
+  const handleClose = () => {
+    setTempPassword(null);
+    onOpenChange(false);
+  };
 }
