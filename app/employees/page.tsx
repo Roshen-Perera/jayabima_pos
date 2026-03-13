@@ -50,7 +50,17 @@ const Page = () => {
   const handleDelete = (employee: Employee) => {
     setSelectedEmployee(employee);
     setShowDeleteDialog(true);
-  };  
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!selectedEmployee) return;
+
+    const success = await deleteEmployee(selectedEmployee.id);
+    if (success) {
+      setShowDeleteDialog(false);
+      setSelectedEmployee(null);
+    }
+  };
 
   return <div></div>;
 };
