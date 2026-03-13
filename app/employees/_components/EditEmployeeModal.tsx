@@ -18,13 +18,12 @@ export default function EditEmployeeModal({
   const { updateEmployee, isSubmitting } = useEmployeeStore();
   const { isAdmin } = usePermissions();
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    role: "" as UserRole | "",
-    isActive: true,
-  });
-
+  const [formData, setFormData] = useState(() => ({
+    name: employee?.name || "",
+    email: employee?.email || "",
+    phone: employee?.phone || "",
+    role: employee?.role ?? ("" as UserRole | ""),
+    isActive: employee?.isActive ?? true,
+  }));
 
 }
