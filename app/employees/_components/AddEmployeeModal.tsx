@@ -113,6 +113,17 @@ export default function AddEmployeeModal({
               <Label htmlFor="email">
                 Email <span className="text-destructive">*</span>
               </Label>
+              <Input
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                placeholder="john@jayabima.com"
+                required
+                disabled={isSubmitting}
+              />
             </div>
           </form>
         )}
