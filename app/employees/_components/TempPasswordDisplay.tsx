@@ -38,7 +38,9 @@ export default function TempPasswordDisplay({
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        
+        <div className="space-y-2">
+            
+        </div>
       </CardContent>
     </Card>
   );
