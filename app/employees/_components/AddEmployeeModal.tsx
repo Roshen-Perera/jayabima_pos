@@ -1,9 +1,17 @@
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { usePermissions } from "@/hooks/usePermissions";
 import { UserRole } from "@/lib/rbac/permissions";
 import { getAllowedRolesToCreate } from "@/lib/rbac/user-permissions";
 import { useEmployeeStore } from "@/store/employeeStore";
 import { useState } from "react";
+import TempPasswordDisplay from "./TempPasswordDisplay";
+import { Button } from "@/components/ui/button";
 
 interface AddEmployeeModalProps {
   open: boolean;
@@ -69,6 +77,22 @@ export default function AddEmployeeModal({
             Create a new employee account. Credentials will be sent via email.
           </DialogDescription>
         </DialogHeader>
+        {tempPassword ? (
+          // Show temp password after creation
+          <div className="space-y-4">
+            <TempPasswordDisplay
+              password={tempPassword}
+              username={formData.username}
+              email={formData.email}
+            />
+            <Button onClick={handleClose} className="w-full">
+              Done
+            </Button>
+          </div>
+        ) : (
+          <div></div>
+        )}
+        ;
       </DialogContent>
     </Dialog>
   );
