@@ -178,6 +178,7 @@ export default function EditEmployeeModal({
               disabled={isSubmitting}
             />
           </div>
+          <div className="flex gap-2 pt-4"></div>
         </form>
       </DialogContent>
     </Dialog>
