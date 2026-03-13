@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { Card, CardHeader } from "@/components/ui/card";
 import { alert } from "@/lib/alert";
 import { useState } from "react";
 
@@ -29,7 +29,7 @@ export default function TempPasswordDisplay({
 
   return (
     <Card className="border-yellow-500 bg-yellow-50 dark:bg-yellow-950">
-
+      <CardHeader></CardHeader>
     </Card>
-  )
+  );
 }
