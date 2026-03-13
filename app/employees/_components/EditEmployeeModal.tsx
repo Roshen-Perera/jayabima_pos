@@ -1,4 +1,4 @@
-import { Dialog } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { usePermissions } from "@/hooks/usePermissions";
 import { UserRole } from "@/lib/rbac/permissions";
 import { useEmployeeStore } from "@/store/employeeStore";
@@ -56,5 +56,9 @@ export default function EditEmployeeModal({
     }
   };
   if (!employee) return null;
-  return <Dialog open={open} onOpenChange={handleOpenChange}></Dialog>;
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto"></DialogContent>
+    </Dialog>
+  );
 }
