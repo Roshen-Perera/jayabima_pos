@@ -154,9 +154,11 @@ export default function AddEmployeeModal({
                 disabled={isSubmitting}
               />
             </div>
-             <div className="space-y-2">
-                
-             </div>
+            <div className="space-y-2">
+              <Label htmlFor="role">
+                Role <span className="text-destructive">*</span>
+              </Label>
+            </div>
           </form>
         )}
         ;
