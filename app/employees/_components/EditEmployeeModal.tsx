@@ -43,5 +43,13 @@ export default function EditEmployeeModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!employee) return;
+    const success = await updateEmployee(employee.id, {
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone || undefined,
+      role: formData.role as UserRole,
+      isActive: formData.isActive,
+    });
+
   };
 }
