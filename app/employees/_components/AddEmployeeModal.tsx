@@ -30,5 +30,7 @@ export default function AddEmployeeModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!formData.role) return;
   }
 }
