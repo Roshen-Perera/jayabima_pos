@@ -43,6 +43,9 @@ export default function DeleteEmployeeDialog({
               <li>Prevent them from logging in</li>
               <li>Preserve their data for audit trails</li>
             </ul>
+            <p className="text-sm font-medium mt-2">
+              You can reactivate this account later if needed.
+            </p>
           </AlertDialogDescription>
         </AlertDialogHeader>
       </AlertDialogContent>
