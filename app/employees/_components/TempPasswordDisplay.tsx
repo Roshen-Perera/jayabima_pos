@@ -82,7 +82,9 @@ export default function TempPasswordDisplay({
         </div>
 
         <div className="bg-white dark:bg-gray-900 rounded-md p-3 border border-yellow-300">
-            
+          <p className="text-sm font-medium text-yellow-900 dark:text-yellow-100 mb-2">
+            📧 Email Sent
+          </p>
         </div>
       </CardContent>
     </Card>
