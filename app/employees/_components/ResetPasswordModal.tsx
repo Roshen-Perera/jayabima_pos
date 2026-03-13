@@ -1,5 +1,6 @@
+import { useEmployeeStore } from "@/store/employeeStore";
 import { Employee } from "@/types/employee.type";
-
+import { useState } from "react";
 
 interface ResetPasswordModalProps {
   employee: Employee | null;
@@ -12,5 +13,5 @@ export default function ResetPasswordModal({
   open,
   onOpenChange,
 }: ResetPasswordModalProps) {
-    
+  const { resetEmployeePassword, isSubmitting } = useEmployeeStore();
 }
