@@ -58,7 +58,7 @@ export default function EditEmployeeModal({
   if (!employee) return null;
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto"></DialogContent>
+      <DialogContent className="sm:max-w-125 max-h-[90vh] overflow-y-auto"></DialogContent>
     </Dialog>
   );
 }
