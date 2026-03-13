@@ -42,5 +42,6 @@ export default function EditEmployeeModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!employee) return;
   };
 }
