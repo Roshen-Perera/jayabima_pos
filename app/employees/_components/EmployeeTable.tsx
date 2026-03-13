@@ -1,4 +1,5 @@
 import { usePermissions } from "@/hooks/usePermissions";
+import { UserRole } from "@/lib/rbac/permissions";
 import { Employee } from "@/types/employee.type";
 
 interface EmployeeTableProps {
@@ -34,5 +35,6 @@ export default function EmployeeTable({
   ) => {
     if (!role || !user) return false;
     const isSelf = user.id === employee.id;
+    const targetRole = employee.role as UserRole;
   };
 }
