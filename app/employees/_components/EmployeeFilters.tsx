@@ -52,6 +52,11 @@ export default function EmployeeFilters({
         <SelectTrigger className="w-full md:w-[180px]">
           <SelectValue placeholder="All Status" />
         </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All Status</SelectItem>
+          <SelectItem value="true">Active</SelectItem>
+          <SelectItem value="false">Inactive</SelectItem>
+        </SelectContent>
       </Select>
     </div>
   );
