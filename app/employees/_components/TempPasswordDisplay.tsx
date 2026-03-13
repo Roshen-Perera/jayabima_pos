@@ -1,5 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { alert } from "@/lib/alert";
 import { Check, Copy, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
@@ -73,6 +79,10 @@ export default function TempPasswordDisplay({
               )}
             </Button>
           </div>
+        </div>
+
+        <div className="bg-white dark:bg-gray-900 rounded-md p-3 border border-yellow-300">
+            
         </div>
       </CardContent>
     </Card>
