@@ -181,6 +181,13 @@ export default function AddEmployeeModal({
                 You can create: {allowedRoles.join(", ")}
               </p>
             </div>
+            <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-md p-3">
+              <p className="text-sm text-blue-900 dark:text-blue-100">
+                <strong>ℹ️ Note:</strong> A temporary password will be
+                automatically generated and sent to the employee&apos;s email. They
+                will be required to change it on first login.
+              </p>
+            </div>
           </form>
         )}
         ;
