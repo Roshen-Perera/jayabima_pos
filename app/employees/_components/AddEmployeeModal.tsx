@@ -14,6 +14,7 @@ import TempPasswordDisplay from "./TempPasswordDisplay";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 
 interface AddEmployeeModalProps {
   open: boolean;
@@ -158,6 +159,13 @@ export default function AddEmployeeModal({
               <Label htmlFor="role">
                 Role <span className="text-destructive">*</span>
               </Label>
+              <Select
+                value={formData.role}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, role: value as UserRole })
+                }
+                disabled={isSubmitting}
+              ></Select>
             </div>
           </form>
         )}
