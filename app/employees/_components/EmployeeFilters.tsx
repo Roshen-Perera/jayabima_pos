@@ -8,3 +8,14 @@ interface EmployeeFiltersProps {
   onRoleChange: (value: string) => void;
   onStatusChange: (value: string) => void;
 }
+
+export default function EmployeeFilters({
+  searchQuery,
+  roleFilter,
+  statusFilter,
+  onSearchChange,
+  onRoleChange,
+  onStatusChange,
+}: EmployeeFiltersProps) {
+    
+}
