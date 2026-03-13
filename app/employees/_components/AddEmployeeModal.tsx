@@ -1,9 +1,9 @@
+import { Dialog } from "@/components/ui/dialog";
 import { usePermissions } from "@/hooks/usePermissions";
 import { UserRole } from "@/lib/rbac/permissions";
 import { getAllowedRolesToCreate } from "@/lib/rbac/user-permissions";
 import { useEmployeeStore } from "@/store/employeeStore";
 import { useState } from "react";
-
 
 interface AddEmployeeModalProps {
   open: boolean;
@@ -24,7 +24,7 @@ export default function AddEmployeeModal({
     phone: "",
     role: "" as UserRole | "",
   });
-  
+
   const [tempPassword, setTempPassword] = useState<string | null>(null);
   const allowedRoles = role ? getAllowedRolesToCreate(role) : [];
 
@@ -45,7 +45,7 @@ export default function AddEmployeeModal({
       // Show temp password
       setTempPassword(result.temporaryPassword || null);
     }
-  }
+  };
 
   const handleClose = () => {
     // Reset form
@@ -59,4 +59,6 @@ export default function AddEmployeeModal({
     setTempPassword(null);
     onOpenChange(false);
   };
+
+  return <Dialog open={open} onOpenChange={handleClose}></Dialog>;
 }
