@@ -37,7 +37,7 @@ export default function EmployeeFilters({
         />
       </div>
       <Select value={roleFilter} onValueChange={onRoleChange}>
-        <SelectTrigger className="w-full md:w-[180px]">
+        <SelectTrigger className="w-full md:w-45">
           <SelectValue placeholder="All Roles" />
         </SelectTrigger>
         <SelectContent>
@@ -49,7 +49,7 @@ export default function EmployeeFilters({
       </Select>
 
       <Select value={statusFilter} onValueChange={onStatusChange}>
-        <SelectTrigger className="w-full md:w-[180px]">
+        <SelectTrigger className="w-full md:w-45">
           <SelectValue placeholder="All Status" />
         </SelectTrigger>
         <SelectContent>
