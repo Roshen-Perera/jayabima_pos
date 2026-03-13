@@ -50,6 +50,8 @@ export default function EditEmployeeModal({
       role: formData.role as UserRole,
       isActive: formData.isActive,
     });
-
+    if (success) {
+      onOpenChange(false);
+    }
   };
 }
