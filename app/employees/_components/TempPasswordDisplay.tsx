@@ -1,3 +1,4 @@
+import { Card } from "@/components/ui/card";
 import { alert } from "@/lib/alert";
 import { useState } from "react";
 
@@ -25,4 +26,10 @@ export default function TempPasswordDisplay({
       alert.error("Failed to copy", "Could not copy password");
     }
   };
+
+  return (
+    <Card className="border-yellow-500 bg-yellow-50 dark:bg-yellow-950">
+
+    </Card>
+  )
 }
