@@ -1,5 +1,7 @@
 import { usePermissions } from "@/hooks/usePermissions";
+import { UserRole } from "@/lib/rbac/permissions";
 import { useEmployeeStore } from "@/store/employeeStore";
+import { useState } from "react";
 
 
 interface AddEmployeeModalProps {
@@ -14,5 +16,11 @@ export default function AddEmployeeModal({
   const { createEmployee, isSubmitting } = useEmployeeStore();
   const { role } = usePermissions();
 
-
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    name: "",
+    phone: "",
+    role: "" as UserRole | "",
+  });
 }
