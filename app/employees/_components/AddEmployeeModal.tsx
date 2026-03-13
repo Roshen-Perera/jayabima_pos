@@ -218,7 +218,6 @@ export default function AddEmployeeModal({
             </div>
           </form>
         )}
-        ;
       </DialogContent>
     </Dialog>
   );
