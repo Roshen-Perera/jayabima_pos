@@ -10,6 +10,7 @@ import { useEmployeeStore } from "@/store/employeeStore";
 import { Employee } from "@/types/employee.type";
 import { UserPlus } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import EmployeeFilters from "./_components/EmployeeFilters";
 
 const Page = () => {
   const {
@@ -92,7 +93,16 @@ const Page = () => {
           <CardTitle>Filters</CardTitle>
           <CardDescription>Search and filter employees</CardDescription>
         </CardHeader>
-        <CardContent></CardContent>
+        <CardContent>
+          <EmployeeFilters
+            searchQuery={searchQuery}
+            roleFilter={roleFilter}
+            statusFilter={statusFilter}
+            onSearchChange={setSearchQuery}
+            onRoleChange={setRoleFilter}
+            onStatusChange={setStatusFilter}
+          />
+        </CardContent>
       </Card>
     </div>
   );
