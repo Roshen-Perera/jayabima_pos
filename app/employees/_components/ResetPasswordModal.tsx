@@ -84,6 +84,7 @@ export default function ResetPasswordModal({
                 </div>
               </div>
             </div>
+            <div className="flex gap-2"></div>
           </div>
         )}
       </DialogContent>
