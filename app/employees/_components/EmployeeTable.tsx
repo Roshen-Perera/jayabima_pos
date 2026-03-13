@@ -24,7 +24,7 @@ import {
   canResetUserPassword,
 } from "@/lib/rbac/user-permissions";
 import { Employee } from "@/types/employee.type";
-import { MoreHorizontal, Pencil, Key, Trash2 } from "lucide-react";
+import { MoreHorizontal, Pencil, Key, Trash2, UserCheck } from "lucide-react";
 import { format } from "date-fns";
 
 interface EmployeeTableProps {
@@ -32,6 +32,7 @@ interface EmployeeTableProps {
   onEdit: (employee: Employee) => void;
   onResetPassword: (employee: Employee) => void;
   onDelete: (employee: Employee) => void;
+  onReactivate: (employee: Employee) => void;
 }
 
 export default function EmployeeTable({
@@ -39,6 +40,7 @@ export default function EmployeeTable({
   onEdit,
   onResetPassword,
   onDelete,
+  onReactivate,
 }: EmployeeTableProps) {
   const { role, user } = usePermissions();
   const getRoleBadgeVariant = (employeeRole: string) => {
@@ -98,8 +100,13 @@ export default function EmployeeTable({
           {employees.map((employee) => {
             const showEdit = canPerformAction(employee, "edit");
             const showReset = canPerformAction(employee, "reset");
-            const showDelete = canPerformAction(employee, "delete");
-            const showActions = showEdit || showReset || showDelete;
+            const showDelete = !employee.isActive
+              ? false
+              : canPerformAction(employee, "delete");
+            const showReactivate =
+              !employee.isActive && canPerformAction(employee, "edit");
+            const showActions =
+              showEdit || showReset || showDelete || showReactivate;
 
             return (
               <TableRow key={employee.id}>
@@ -185,6 +192,19 @@ export default function EmployeeTable({
                             >
                               <Trash2 className="h-4 w-4 mr-2" />
                               Deactivate
+                            </DropdownMenuItem>
+                          </>
+                        )}
+
+                        {showReactivate && (
+                          <>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onClick={() => onReactivate(employee)}
+                              className="text-green-600 focus:text-green-600"
+                            >
+                              <UserCheck className="h-4 w-4 mr-2" />
+                              Activate
                             </DropdownMenuItem>
                           </>
                         )}

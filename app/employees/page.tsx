@@ -33,6 +33,7 @@ const Page = () => {
     setRoleFilter,
     setStatusFilter,
     deleteEmployee,
+    reactivateEmployee,
   } = useEmployeeStore();
 
   const [showAddModal, setShowAddModal] = useState(false);
@@ -75,6 +76,10 @@ const Page = () => {
       setShowDeleteDialog(false);
       setSelectedEmployee(null);
     }
+  };
+
+  const handleReactivate = async (employee: Employee) => {
+    await reactivateEmployee(employee.id);
   };
 
   return (
@@ -128,6 +133,7 @@ const Page = () => {
               onEdit={handleEdit}
               onResetPassword={handleResetPassword}
               onDelete={handleDelete}
+              onReactivate={handleReactivate}
             />
           )}
         </CardContent>

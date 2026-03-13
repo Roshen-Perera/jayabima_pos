@@ -24,6 +24,7 @@ interface EmployeeState {
     }) => Promise<{ success: boolean; temporaryPassword?: string }>;
     updateEmployee: (id: string, data: Partial<Employee>) => Promise<boolean>;
     deleteEmployee: (id: string) => Promise<boolean>;
+    reactivateEmployee: (id: string) => Promise<boolean>;
     resetEmployeePassword: (id: string) => Promise<{
         success: boolean;
         temporaryPassword?: string
@@ -190,6 +191,36 @@ export const useEmployeeStore = create<EmployeeState>((set, get) => ({
             }
         } catch (error) {
             console.error('Delete employee error:', error);
+            alert.error('Error', 'Something went wrong');
+            return false;
+        } finally {
+            set({ isSubmitting: false });
+        }
+    },
+    reactivateEmployee: async (id) => {
+        set({ isSubmitting: true });
+        try {
+            const response = await fetch(`/api/employees/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ isActive: true }),
+            });
+            const result = await response.json();
+            if (result.success) {
+                alert.success('Employee activated', 'Employee account has been reactivated');
+                set((state) => ({
+                    employees: state.employees.map((emp) =>
+                        emp.id === id ? { ...emp, isActive: true, status: 'ACTIVE' as const } : emp
+                    ),
+                }));
+                return true;
+            } else {
+                alert.error('Activation failed', result.message || 'Could not activate employee');
+                return false;
+            }
+        } catch (error) {
+            console.error('Reactivate employee error:', error);
             alert.error('Error', 'Something went wrong');
             return false;
         } finally {

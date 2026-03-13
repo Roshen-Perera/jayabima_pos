@@ -145,7 +145,12 @@ export async function PATCH(
         }
         const employee = await prisma.user.update({
             where: { id },
-            data: validatedData,
+            data: {
+                ...validatedData,
+                ...(validatedData.isActive !== undefined && {
+                    status: validatedData.isActive ? 'ACTIVE' : 'INACTIVE',
+                }),
+            },
             select: {
                 id: true,
                 username: true,
