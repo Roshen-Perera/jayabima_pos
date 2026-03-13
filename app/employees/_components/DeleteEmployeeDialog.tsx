@@ -38,6 +38,11 @@ export default function DeleteEmployeeDialog({
               {employee ? ` (${employee.email})` : ""}?
             </p>
             <p className="text-sm">This will:</p>
+            <ul className="text-sm list-disc list-inside space-y-1 ml-2">
+              <li>Set their account status to inactive</li>
+              <li>Prevent them from logging in</li>
+              <li>Preserve their data for audit trails</li>
+            </ul>
           </AlertDialogDescription>
         </AlertDialogHeader>
       </AlertDialogContent>
