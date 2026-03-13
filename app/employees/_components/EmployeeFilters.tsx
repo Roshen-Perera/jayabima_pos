@@ -1,5 +1,3 @@
-
-
 interface EmployeeFiltersProps {
   searchQuery: string;
   roleFilter: string;
@@ -17,5 +15,5 @@ export default function EmployeeFilters({
   onRoleChange,
   onStatusChange,
 }: EmployeeFiltersProps) {
-    
+  return <></>;
 }
