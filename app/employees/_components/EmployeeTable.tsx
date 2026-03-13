@@ -16,7 +16,7 @@ import {
   canResetUserPassword,
 } from "@/lib/rbac/user-permissions";
 import { Employee } from "@/types/employee.type";
-import { Badge, MoreHorizontal, Pencil, Key, Trash2 } from "lucide-react";
+import { MoreHorizontal, Pencil, Key, Trash2 } from "lucide-react";
 import { format } from "path";
 
 interface EmployeeTableProps {
