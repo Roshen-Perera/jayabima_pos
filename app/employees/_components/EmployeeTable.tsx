@@ -33,5 +33,6 @@ export default function EmployeeTable({
     action: "edit" | "reset" | "delete",
   ) => {
     if (!role || !user) return false;
+    const isSelf = user.id === employee.id;
   };
 }
