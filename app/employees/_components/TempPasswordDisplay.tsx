@@ -1,5 +1,7 @@
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { alert } from "@/lib/alert";
+import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 
 interface TempPasswordDisplayProps {
@@ -46,6 +48,18 @@ export default function TempPasswordDisplay({
             <div className="flex-1 bg-white dark:bg-gray-900 rounded-md p-3 border border-yellow-300 font-mono text-lg">
               {showPassword ? password : "••••••••••••"}
             </div>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {" "}
+              {showPassword ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+            </Button>
           </div>
         </div>
       </CardContent>
