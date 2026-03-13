@@ -31,5 +31,7 @@ export default function EmployeeTable({
   const canPerformAction = (
     employee: Employee,
     action: "edit" | "reset" | "delete",
-  ) => {};
+  ) => {
+    if (!role || !user) return false;
+  };
 }
