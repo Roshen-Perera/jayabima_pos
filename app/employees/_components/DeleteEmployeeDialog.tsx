@@ -1,5 +1,11 @@
-import { AlertDialog, AlertDialogContent, AlertDialogHeader } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Employee } from "@/types/employee.type";
+import { AlertTriangle } from "lucide-react";
 
 interface DeleteEmployeeDialogProps {
   employee: Employee | null;
@@ -19,7 +25,12 @@ export default function DeleteEmployeeDialog({
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
-        <AlertDialogHeader></AlertDialogHeader>
+        <AlertDialogHeader>
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="h-5 w-5 text-destructive" />
+            <AlertDialogTitle>Deactivate Employee</AlertDialogTitle>
+          </div>
+        </AlertDialogHeader>
       </AlertDialogContent>
     </AlertDialog>
   );
