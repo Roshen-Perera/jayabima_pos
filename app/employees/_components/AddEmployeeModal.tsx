@@ -143,6 +143,16 @@ export default function AddEmployeeModal({
             </div>
             <div className="space-y-2">
               <Label htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
+                type="tel"
+                value={formData.phone}
+                onChange={(e) =>
+                  setFormData({ ...formData, phone: e.target.value })
+                }
+                placeholder="0771234567 (optional)"
+                disabled={isSubmitting}
+              />
             </div>
           </form>
         )}
