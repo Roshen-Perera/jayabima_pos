@@ -13,6 +13,7 @@ import React, { useEffect, useState } from "react";
 import EmployeeFilters from "./_components/EmployeeFilters";
 import EmployeeTable from "./_components/EmployeeTable";
 import { Skeleton } from "@/components/ui/skeleton";
+import AddEmployeeModal from "./_components/AddEmployeeModal";
 
 const Page = () => {
   const {
@@ -132,6 +133,27 @@ const Page = () => {
           )}
         </CardContent>
       </Card>
+      <CardContent>
+        {isLoading ? (
+          // Loading skeleton
+          <div className="space-y-3">
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-12 w-full" />
+          </div>
+        ) : (
+          // Employee table
+          <EmployeeTable
+            employees={employees}
+            onEdit={handleEdit}
+            onResetPassword={handleResetPassword}
+            onDelete={handleDelete}
+          />
+        )}
+      </CardContent>
+      <AddEmployeeModal open={showAddModal} onOpenChange={setShowAddModal} />
     </div>
   );
 };
