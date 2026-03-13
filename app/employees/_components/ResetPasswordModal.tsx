@@ -63,7 +63,9 @@ export default function ResetPasswordModal({
             </Button>
           </div>
         ) : (
-          <div className="space-y-4"></div>
+          <div className="space-y-4">
+            <div className="bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-md p-4"></div>
+          </div>
         )}
       </DialogContent>
     </Dialog>
