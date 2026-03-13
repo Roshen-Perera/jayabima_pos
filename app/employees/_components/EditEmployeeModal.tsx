@@ -63,6 +63,9 @@ export default function EditEmployeeModal({
           <DialogTitle>Edit Employee</DialogTitle>
           <DialogDescription>Update employee information</DialogDescription>
         </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4">
+            
+        </form>
       </DialogContent>
     </Dialog>
   );
