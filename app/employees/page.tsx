@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { useEmployeeStore } from "@/store/employeeStore";
 import { Employee } from "@/types/employee.type";
 import { UserPlus } from "lucide-react";
@@ -80,6 +81,9 @@ const Page = () => {
           Add Employee
         </Button>
       </div>
+      <Card>
+        
+      </Card>
     </div>
   );
 };
