@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usePermissions } from "@/hooks/usePermissions";
 import { UserRole } from "@/lib/rbac/permissions";
 import { useEmployeeStore } from "@/store/employeeStore";
@@ -117,6 +118,32 @@ export default function EditEmployeeModal({
               placeholder="Optional"
               disabled={isSubmitting}
             />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="role">
+              Role <span className="text-destructive">*</span>
+            </Label>
+            <Select
+              value={formData.role}
+              onValueChange={(value) =>
+                setFormData({ ...formData, role: value as UserRole })
+              }
+              disabled={isSubmitting || !isAdmin}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ADMIN">ADMIN</SelectItem>
+                <SelectItem value="MANAGER">MANAGER</SelectItem>
+                <SelectItem value="CASHIER">CASHIER</SelectItem>
+              </SelectContent>
+            </Select>
+            {!isAdmin && (
+              <p className="text-xs text-muted-foreground">
+                Only admins can change roles
+              </p>
+            )}
           </div>
         </form>
       </DialogContent>
