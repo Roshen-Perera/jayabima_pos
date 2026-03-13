@@ -15,5 +15,5 @@ export default function EmployeeFilters({
   onRoleChange,
   onStatusChange,
 }: EmployeeFiltersProps) {
-  return <></>;
+  return <div className="flex flex-col md:flex-row gap-4"></div>;
 }
