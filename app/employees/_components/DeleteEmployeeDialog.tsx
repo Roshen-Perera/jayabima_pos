@@ -2,6 +2,7 @@ import {
   AlertDialog,
   AlertDialogContent,
   AlertDialogDescription,
+  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
@@ -48,6 +49,7 @@ export default function DeleteEmployeeDialog({
             </p>
           </AlertDialogDescription>
         </AlertDialogHeader>
+        <AlertDialogFooter></AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   );
