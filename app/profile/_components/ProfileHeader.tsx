@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { User } from "@/types/user.types";
+import { format } from "date-fns";
 
 interface ProfileHeaderProps {
   user: User;
@@ -58,7 +59,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
               <p className="text-sm">{user.email}</p>
               {user.phone && <p className="text-sm">{user.phone}</p>}
             </div>
-            {/* <div className="flex gap-4 text-xs text-muted-foreground pt-2">
+            <div className="flex gap-4 text-xs text-muted-foreground pt-2">
               <div>
                 <span className="font-medium">Joined: </span>
                 {format(new Date(user.createdAt), "MMM d, yyyy")}
@@ -69,7 +70,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
                   {format(new Date(user.lastLogin), "MMM d, yyyy h:mm a")}
                 </div>
               )}
-            </div> */}
+            </div>
           </div>
         </div>
       </CardContent>
