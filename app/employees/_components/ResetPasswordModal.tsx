@@ -72,6 +72,15 @@ export default function ResetPasswordModal({
                   <p className="text-sm font-medium text-yellow-900 dark:text-yellow-100">
                     Are you sure you want to reset this password?
                   </p>
+                  <ul className="text-sm text-yellow-800 dark:text-yellow-200 space-y-1 list-disc list-inside">
+                    <li>A new temporary password will be generated</li>
+                    <li>
+                      Credentials will be sent to{" "}
+                      <strong>{employee.email}</strong>
+                    </li>
+                    <li>Employee must change password on next login</li>
+                    <li>Current password will be immediately invalidated</li>
+                  </ul>
                 </div>
               </div>
             </div>
