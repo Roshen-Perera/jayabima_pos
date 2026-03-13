@@ -1,4 +1,10 @@
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useEmployeeStore } from "@/store/employeeStore";
 import { Employee } from "@/types/employee.type";
 import { useState } from "react";
@@ -43,6 +49,11 @@ export default function ResetPasswordModal({
             Reset password for {employee.name}
           </DialogDescription>
         </DialogHeader>
+        {tempPassword ? (
+          <div className="space-y-4"></div>
+        ) : (
+          <div className="space-y-4"></div>
+        )}
       </DialogContent>
     </Dialog>
   );
