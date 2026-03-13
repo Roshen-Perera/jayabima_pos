@@ -177,6 +177,9 @@ export default function AddEmployeeModal({
                   ))}
                 </SelectContent>
               </Select>
+              <p className="text-xs text-muted-foreground">
+                You can create: {allowedRoles.join(", ")}
+              </p>
             </div>
           </form>
         )}
