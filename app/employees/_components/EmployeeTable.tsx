@@ -1,3 +1,4 @@
+import { usePermissions } from "@/hooks/usePermissions";
 import { Employee } from "@/types/employee.type";
 
 interface EmployeeTableProps {
@@ -13,5 +14,5 @@ export default function EmployeeTable({
   onResetPassword,
   onDelete,
 }: EmployeeTableProps) {
-    
+  const { role, user } = usePermissions();
 }
