@@ -1,9 +1,8 @@
-import { Dialog } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { usePermissions } from "@/hooks/usePermissions";
 import { UserRole } from "@/lib/rbac/permissions";
 import { getAllowedRolesToCreate } from "@/lib/rbac/user-permissions";
 import { useEmployeeStore } from "@/store/employeeStore";
-import { DialogContent } from "@radix-ui/react-dialog";
 import { useState } from "react";
 
 interface AddEmployeeModalProps {
@@ -63,7 +62,14 @@ export default function AddEmployeeModal({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-125 max-h-[90vh] overflow-y-auto"></DialogContent>
+      <DialogContent className="sm:max-w-125 max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Add New Employee</DialogTitle>
+          <DialogDescription>
+            Create a new employee account. Credentials will be sent via email.
+          </DialogDescription>
+        </DialogHeader>
+      </DialogContent>
     </Dialog>
   );
 }
