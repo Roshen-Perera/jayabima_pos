@@ -1,4 +1,5 @@
 import { useEmployeeStore } from "@/store/employeeStore";
+import { Employee } from "@/types/employee.type";
 import React, { useState } from "react";
 
 const Page = () => {
@@ -19,6 +20,10 @@ const Page = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
+    null,
+  );
 
   return <div></div>;
 };
