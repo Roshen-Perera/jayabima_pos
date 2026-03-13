@@ -40,5 +40,10 @@ export default function AddEmployeeModal({
       phone: formData.phone || undefined,
       role: formData.role as UserRole,
     });
+
+    if (result.success) {
+      // Show temp password
+      setTempPassword(result.temporaryPassword || null);
+    }
   }
 }
