@@ -84,7 +84,17 @@ export default function ResetPasswordModal({
                 </div>
               </div>
             </div>
-            <div className="flex gap-2"></div>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleClose}
+                disabled={isSubmitting}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+            </div>
           </div>
         )}
       </DialogContent>
