@@ -36,7 +36,7 @@ export default function ResetPasswordModal({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[500px]"></DialogContent>
+      <DialogContent className="sm:max-w-125"></DialogContent>
     </Dialog>
   );
 }
