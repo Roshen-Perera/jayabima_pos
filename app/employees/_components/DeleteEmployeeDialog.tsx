@@ -36,6 +36,7 @@ export default function DeleteEmployeeDialog({
               Are you sure you want to deactivate{" "}
               <strong>{employee.name}</strong> ({employee.email})?
             </p>
+            <p className="text-sm">This will:</p>
           </AlertDialogDescription>
         </AlertDialogHeader>
       </AlertDialogContent>
