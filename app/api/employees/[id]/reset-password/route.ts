@@ -46,18 +46,28 @@ function generateTempPassword(): string {
 
 export async function POST(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    context: { params: Promise<{ id: string }> }
 ) {
+    const { id } = await context.params;
+
     const { authorized, user, response } = await requirePermission(
         request,
         'employees:reset_password'
     );
 
-    if (!authorized) return response;
+    if (!authorized) {
+        return (
+            response ??
+            NextResponse.json(
+                { success: false, message: 'Unauthorized' },
+                { status: 401 }
+            )
+        );
+    }
 
     try {
         const targetEmployee = await prisma.user.findUnique({
-            where: { id: params.id },
+            where: { id },
         });
         if (!targetEmployee) {
             return NextResponse.json(
@@ -65,7 +75,7 @@ export async function POST(
                 { status: 404 }
             );
         }
-        if (user.userId === params.id) {
+        if (user.userId === id) {
             return NextResponse.json(
                 {
                     success: false,
@@ -88,7 +98,7 @@ export async function POST(
         const hashedPassword = await hashPassword(tempPassword);
 
         await prisma.user.update({
-            where: { id: params.id },
+            where: { id },
             data: {
                 password: hashedPassword,
                 mustChangePassword: true, // Force password change
