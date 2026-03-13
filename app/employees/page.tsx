@@ -29,6 +29,14 @@ const Page = () => {
     fetchEmployees();
   }, [fetchEmployees]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchEmployees();
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery, fetchEmployees]);
+
   return <div></div>;
 };
 
