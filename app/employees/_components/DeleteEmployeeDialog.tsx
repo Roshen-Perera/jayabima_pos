@@ -7,3 +7,13 @@ interface DeleteEmployeeDialogProps {
   onConfirm: () => void;
   isDeleting: boolean;
 }
+
+export default function DeleteEmployeeDialog({
+  employee,
+  open,
+  onOpenChange,
+  onConfirm,
+  isDeleting,
+}: DeleteEmployeeDialogProps) {
+  return <div></div>;
+}
