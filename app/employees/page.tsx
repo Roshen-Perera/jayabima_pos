@@ -1,6 +1,6 @@
 import { useEmployeeStore } from "@/store/employeeStore";
 import { Employee } from "@/types/employee.type";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Page = () => {
   const {
@@ -24,6 +24,10 @@ const Page = () => {
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
     null,
   );
+
+  useEffect(() => {
+    fetchEmployees();
+  }, [fetchEmployees]);
 
   return <div></div>;
 };
