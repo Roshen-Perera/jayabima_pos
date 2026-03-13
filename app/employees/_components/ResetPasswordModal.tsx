@@ -15,4 +15,14 @@ export default function ResetPasswordModal({
 }: ResetPasswordModalProps) {
   const { resetEmployeePassword, isSubmitting } = useEmployeeStore();
   const [tempPassword, setTempPassword] = useState<string | null>(null);
+
+  const handleReset = async () => {
+    if (!employee) return;
+
+    const result = await resetEmployeePassword(employee.id);
+
+    if (result.success) {
+      setTempPassword(result.temporaryPassword || null);
+    }
+  };
 }
