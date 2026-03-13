@@ -78,6 +78,18 @@ export default function EditEmployeeModal({
               Username cannot be changed
             </p>
           </div>
+          <div className="space-y-2">
+            <Label htmlFor="username">Username</Label>
+            <Input
+              id="username"
+              value={employee.username}
+              disabled
+              className="bg-muted"
+            />
+            <p className="text-xs text-muted-foreground">
+              Username cannot be changed
+            </p>
+          </div>
         </form>
       </DialogContent>
     </Dialog>
