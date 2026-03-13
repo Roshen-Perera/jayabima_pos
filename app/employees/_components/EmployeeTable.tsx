@@ -18,7 +18,7 @@ import {
 } from "@/lib/rbac/user-permissions";
 import { Employee } from "@/types/employee.type";
 import { MoreHorizontal, Pencil, Key, Trash2 } from "lucide-react";
-import { format } from "path";
+import { format } from "date-fns";
 
 interface EmployeeTableProps {
   employees: Employee[];
