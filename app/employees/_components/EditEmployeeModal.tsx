@@ -54,4 +54,5 @@ export default function EditEmployeeModal({
       onOpenChange(false);
     }
   };
+  if (!employee) return null;
 }
