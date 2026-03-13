@@ -39,7 +39,9 @@ export default function TempPasswordDisplay({
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-            
+          <p className="text-sm font-medium text-yellow-900 dark:text-yellow-100">
+            Temporary Password:
+          </p>
         </div>
       </CardContent>
     </Card>
