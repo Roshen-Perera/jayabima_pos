@@ -105,6 +105,19 @@ export default function EditEmployeeModal({
               disabled={isSubmitting}
             />
           </div>
+          <div className="space-y-2">
+            <Label htmlFor="phone">Phone Number</Label>
+            <Input
+              id="phone"
+              type="tel"
+              value={formData.phone}
+              onChange={(e) =>
+                setFormData({ ...formData, phone: e.target.value })
+              }
+              placeholder="Optional"
+              disabled={isSubmitting}
+            />
+          </div>
         </form>
       </DialogContent>
     </Dialog>
