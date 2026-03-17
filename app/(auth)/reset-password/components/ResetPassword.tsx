@@ -209,6 +209,19 @@ function ResetPasswordContent() {
             <Label htmlFor="confirmPassword">
               Confirm Password <span className="text-destructive">*</span>
             </Label>
+            <Input
+              id="confirmPassword"
+              type={showPasswords.confirm ? "text" : "password"}
+              value={formData.confirmPassword}
+              onChange={(e) => {
+                setFormData({ ...formData, confirmPassword: e.target.value });
+                setErrors({ confirmPassword: "" });
+              }}
+              className="pl-10 pr-10"
+              disabled={isSubmitting}
+              required
+              minLength={8}
+            />
           </div>
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? (
