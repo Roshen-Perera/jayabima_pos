@@ -71,6 +71,12 @@ const Page = () => {
               <p className="text-sm text-blue-900 dark:text-blue-100">
                 <strong>What&apos;s next?</strong>
               </p>
+              <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1 list-disc list-inside mt-2">
+                <li>Check your email inbox (and spam folder)</li>
+                <li>Click the reset password link</li>
+                <li>Create a new password</li>
+                <li>Login with your new password</li>
+              </ul>
             </div>
           </CardContent>
         </Card>
