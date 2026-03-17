@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { alert } from "@/lib/alert";
 import { ArrowLeft, CheckCircle, Loader2, Mail } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -148,6 +149,15 @@ const Page = () => {
                 </>
               )}
             </Button>
+            <div className="text-center">
+              <Link
+                href="/login"
+                className="text-sm text-muted-foreground hover:text-primary inline-flex items-center gap-1"
+              >
+                <ArrowLeft className="h-3 w-3" />
+                Back to Login
+              </Link>
+            </div>
           </form>
         </CardContent>
       </Card>
