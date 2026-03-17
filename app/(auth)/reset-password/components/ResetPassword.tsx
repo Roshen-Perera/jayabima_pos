@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -203,6 +205,7 @@ function ResetPasswordContent() {
               </p>
             )}
           </div>
+          <div className="space-y-2"></div>
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? (
               <>
