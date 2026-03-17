@@ -14,7 +14,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-const Page = () => {
+const ForgotPassword = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -165,4 +165,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default ForgotPassword;
