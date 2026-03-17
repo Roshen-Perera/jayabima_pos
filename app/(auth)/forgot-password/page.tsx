@@ -17,6 +17,9 @@ const Page = () => {
     }
 
     setIsSubmitting(true);
+
+    try {
+    } catch (error) {}
   };
 
   return <div></div>;
