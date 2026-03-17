@@ -1,12 +1,9 @@
-
-import React from 'react'
+import { useRouter } from "next/navigation";
+import React from "react";
 
 const Page = () => {
-  return (
-    <div>
-      
-    </div>
-  )
-}
+  const router = useRouter();
+  return <div></div>;
+};
 
-export default Page
+export default Page;
