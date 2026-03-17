@@ -111,9 +111,11 @@ const Page = () => {
           </div>
           <CardTitle className="text-2xl">Forgot Password?</CardTitle>
           <CardDescription>
-            No worries! Enter your email and we&apos;ll send you reset instructions
+            No worries! Enter your email and we&apos;ll send you reset
+            instructions
           </CardDescription>
         </CardHeader>
+        <CardContent></CardContent>
       </Card>
     </div>
   );
