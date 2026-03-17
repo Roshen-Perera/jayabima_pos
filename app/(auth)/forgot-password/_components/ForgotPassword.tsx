@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { alert } from "@/lib/alert";
-import { ArrowLeft, CheckCircle } from "lucide-react";
+import { ArrowLeft, CheckCircle, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -104,7 +104,17 @@ const Page = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-orange-100 dark:from-gray-900 dark:to-gray-800 p-4">
-      <Card className="w-full max-w-md"></Card>
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <div className="mx-auto w-12 h-12 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center mb-4">
+            <Mail className="h-6 w-6 text-orange-600 dark:text-orange-400" />
+          </div>
+          <CardTitle className="text-2xl">Forgot Password?</CardTitle>
+          <CardDescription>
+            No worries! Enter your email and we&apos;ll send you reset instructions
+          </CardDescription>
+        </CardHeader>
+      </Card>
     </div>
   );
 };
