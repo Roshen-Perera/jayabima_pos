@@ -158,6 +158,9 @@ function ResetPasswordContent() {
           Create a new password for your account
         </CardDescription>
       </CardHeader>
+      <CardContent>
+        
+      </CardContent>
     </Card>
   );
 }
