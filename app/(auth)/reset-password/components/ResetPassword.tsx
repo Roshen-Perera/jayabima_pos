@@ -16,6 +16,7 @@ import { Suspense, useEffect, useState } from "react";
 import { Lock } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import PasswordStrengthIndicator from "@/components/PasswordStrengthIndicator";
 
 function ResetPasswordContent() {
   const router = useRouter();
@@ -199,11 +200,7 @@ function ResetPasswordContent() {
                 )}
               </button>
             </div>
-            {errors.confirmPassword && (
-              <p className="text-sm text-destructive">
-                {errors.confirmPassword}
-              </p>
-            )}
+            <PasswordStrengthIndicator password={formData.newPassword} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="confirmPassword">
