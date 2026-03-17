@@ -49,6 +49,8 @@ function ResetPasswordContent() {
             newPassword: formData.newPassword,
           }),
         });
+
+        const data = await response.json();
     } catch (error) {}
   };
 }
