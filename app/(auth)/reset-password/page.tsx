@@ -12,6 +12,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Lock } from "lucide-react";
+import { Label } from "@/components/ui/label";
 
 function ResetPasswordContent() {
   const router = useRouter();
