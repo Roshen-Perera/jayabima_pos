@@ -205,7 +205,11 @@ function ResetPasswordContent() {
               </p>
             )}
           </div>
-          <div className="space-y-2"></div>
+          <div className="space-y-2">
+            <Label htmlFor="confirmPassword">
+              Confirm Password <span className="text-destructive">*</span>
+            </Label>
+          </div>
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? (
               <>
