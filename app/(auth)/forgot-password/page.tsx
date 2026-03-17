@@ -24,6 +24,8 @@ const Page = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
+
+      const data = await response.json();
     } catch (error) {}
   };
 
