@@ -11,6 +11,7 @@ import { AlertTriangle, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Lock } from "lucide-react";
 
 function ResetPasswordContent() {
   const router = useRouter();
@@ -146,7 +147,17 @@ function ResetPasswordContent() {
     );
   }
 
-  return(
-    <Card className="w-full max-w-md"></Card>
-  )
+  return (
+    <Card className="w-full max-w-md">
+      <CardHeader className="text-center">
+        <div className="mx-auto w-12 h-12 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center mb-4">
+          <Lock className="h-6 w-6 text-orange-600 dark:text-orange-400" />
+        </div>
+        <CardTitle className="text-2xl">Reset Password</CardTitle>
+        <CardDescription>
+          Create a new password for your account
+        </CardDescription>
+      </CardHeader>
+    </Card>
+  );
 }
