@@ -36,7 +36,10 @@ const Page = () => {
       } else {
         alert.error("Failed", data.message || "Could not send reset email");
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("Forgot password error:", error);
+      alert.error("Error", "Something went wrong. Please try again.");
+    }
   };
 
   return <div></div>;
