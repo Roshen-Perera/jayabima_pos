@@ -5,10 +5,20 @@ import { hashPassword, validatePassword } from '@/lib/auth/password';
 import { verifyResetToken } from '@/lib/auth/jwt';
 
 // Validation schema
-const resetPasswordSchema = z.object({
-    token: z.string().min(1, 'Token is required'),
-    password: z.string().min(8, 'Password must be at least 8 characters'),
-});
+const resetPasswordSchema = z
+    .object({
+        token: z.string().min(1, 'Token is required'),
+        password: z.string().min(8, 'Password must be at least 8 characters').optional(),
+        newPassword: z.string().min(8, 'Password must be at least 8 characters').optional(),
+    })
+    .refine((data) => Boolean(data.password ?? data.newPassword), {
+        message: 'Password is required',
+        path: ['newPassword'],
+    })
+    .transform((data) => ({
+        token: data.token,
+        password: data.newPassword ?? data.password!,
+    }));
 
 export async function POST(request: NextRequest) {
     try {
