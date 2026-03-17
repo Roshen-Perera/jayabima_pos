@@ -209,19 +209,43 @@ function ResetPasswordContent() {
             <Label htmlFor="confirmPassword">
               Confirm Password <span className="text-destructive">*</span>
             </Label>
-            <Input
-              id="confirmPassword"
-              type={showPasswords.confirm ? "text" : "password"}
-              value={formData.confirmPassword}
-              onChange={(e) => {
-                setFormData({ ...formData, confirmPassword: e.target.value });
-                setErrors({ confirmPassword: "" });
-              }}
-              className="pl-10 pr-10"
-              disabled={isSubmitting}
-              required
-              minLength={8}
-            />
+            <div className="relative">
+              <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="confirmPassword"
+                type={showPasswords.confirm ? "text" : "password"}
+                value={formData.confirmPassword}
+                onChange={(e) => {
+                  setFormData({ ...formData, confirmPassword: e.target.value });
+                  setErrors({ confirmPassword: "" });
+                }}
+                className="pl-10 pr-10"
+                disabled={isSubmitting}
+                required
+                minLength={8}
+              />
+              <button
+                type="button"
+                onClick={() =>
+                  setShowPasswords({
+                    ...showPasswords,
+                    confirm: !showPasswords.confirm,
+                  })
+                }
+                className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
+              >
+                {showPasswords.confirm ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
+            </div>
+            {errors.confirmPassword && (
+              <p className="text-sm text-destructive">
+                {errors.confirmPassword}
+              </p>
+            )}
           </div>
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? (
