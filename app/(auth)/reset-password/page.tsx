@@ -33,5 +33,6 @@ function ResetPasswordContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({ confirmPassword: "" });
   };
 }
