@@ -60,50 +60,48 @@ const ForgotPassword = () => {
 
   if (emailSent) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-orange-100 dark:from-gray-900 dark:to-gray-800 p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <div className="mx-auto w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mb-4">
-              <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
-            </div>
-            <CardTitle className="text-2xl">Check Your Email</CardTitle>
-            <CardDescription>
-              We&apos;ve sent password reset instructions to{" "}
-              <strong>{email}</strong>
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-md p-4">
-              <p className="text-sm text-blue-900 dark:text-blue-100">
-                <strong>What&apos;s next?</strong>
-              </p>
-              <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1 list-disc list-inside mt-2">
-                <li>Check your email inbox (and spam folder)</li>
-                <li>Click the reset password link</li>
-                <li>Create a new password</li>
-                <li>Login with your new password</li>
-              </ul>
-            </div>
-            <div className="text-center text-sm text-muted-foreground">
-              Didn&apos;t receive the email?{" "}
-              <button
-                onClick={() => setEmailSent(false)}
-                className="text-primary hover:underline font-medium"
-              >
-                Try again
-              </button>
-            </div>
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() => router.push("/login")}
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <div className="mx-auto w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mb-4">
+            <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
+          </div>
+          <CardTitle className="text-2xl">Check Your Email</CardTitle>
+          <CardDescription>
+            We&apos;ve sent password reset instructions to{" "}
+            <strong>{email}</strong>
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-md p-4">
+            <p className="text-sm text-blue-900 dark:text-blue-100">
+              <strong>What&apos;s next?</strong>
+            </p>
+            <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1 list-disc list-inside mt-2">
+              <li>Check your email inbox (and spam folder)</li>
+              <li>Click the reset password link</li>
+              <li>Create a new password</li>
+              <li>Login with your new password</li>
+            </ul>
+          </div>
+          <div className="text-center text-sm text-muted-foreground">
+            Didn&apos;t receive the email?{" "}
+            <button
+              onClick={() => setEmailSent(false)}
+              className="text-primary hover:underline font-medium"
             >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Login
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+              Try again
+            </button>
+          </div>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => router.push("/login")}
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Login
+          </Button>
+        </CardContent>
+      </Card>
     );
   }
 
