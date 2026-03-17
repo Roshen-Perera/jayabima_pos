@@ -145,4 +145,8 @@ function ResetPasswordContent() {
       </div>
     );
   }
+
+  return(
+    <Card className="w-full max-w-md"></Card>
+  )
 }
