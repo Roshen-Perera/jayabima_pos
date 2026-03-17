@@ -1,3 +1,4 @@
+import { Card } from "@/components/ui/card";
 import { alert } from "@/lib/alert";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -80,4 +81,8 @@ function ResetPasswordContent() {
       setIsSubmitting(false);
     }
   };
+
+  if (isValidToken === false) {
+    return <Card className="w-full max-w-md"></Card>;
+  }
 }
