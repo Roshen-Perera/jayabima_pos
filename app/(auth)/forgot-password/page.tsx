@@ -4,7 +4,8 @@ import React, { useState } from "react";
 const Page = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
-    
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   return <div></div>;
 };
 
