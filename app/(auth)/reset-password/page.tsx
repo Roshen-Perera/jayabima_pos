@@ -160,7 +160,11 @@ function ResetPasswordContent() {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2"></div>
+          <div className="space-y-2">
+            <Label htmlFor="newPassword">
+              New Password <span className="text-destructive">*</span>
+            </Label>
+          </div>
         </form>
       </CardContent>
     </Card>
