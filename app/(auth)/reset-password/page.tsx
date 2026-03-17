@@ -7,12 +7,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { alert } from "@/lib/alert";
-import { AlertTriangle, Loader2 } from "lucide-react";
+import { AlertTriangle, Eye, EyeOff, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Lock } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 function ResetPasswordContent() {
   const router = useRouter();
@@ -167,6 +168,34 @@ function ResetPasswordContent() {
             </Label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="newPassword"
+                type={showPasswords.new ? "text" : "password"}
+                value={formData.newPassword}
+                onChange={(e) =>
+                  setFormData({ ...formData, newPassword: e.target.value })
+                }
+                className="pl-10 pr-10"
+                disabled={isSubmitting}
+                required
+                minLength={8}
+              />
+              <button
+                type="button"
+                onClick={() =>
+                  setShowPasswords({
+                    ...showPasswords,
+                    new: !showPasswords.new,
+                  })
+                }
+                className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
+              >
+                {showPasswords.new ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
             </div>
           </div>
         </form>
