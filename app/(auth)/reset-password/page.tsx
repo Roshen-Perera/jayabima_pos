@@ -76,6 +76,8 @@ function ResetPasswordContent() {
     } catch (error) {
       console.error("Reset password error:", error);
       alert.error("Error", "Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 }
