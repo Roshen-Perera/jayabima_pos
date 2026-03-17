@@ -39,6 +39,8 @@ const Page = () => {
     } catch (error) {
       console.error("Forgot password error:", error);
       alert.error("Error", "Something went wrong. Please try again.");
+    } finally {
+        setIsSubmitting(false);
     }
   };
 
