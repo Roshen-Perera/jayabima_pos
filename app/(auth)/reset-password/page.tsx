@@ -39,5 +39,8 @@ function ResetPasswordContent() {
       return;
     }
     setIsSubmitting(true);
+
+    try {
+    } catch (error) {}
   };
 }
