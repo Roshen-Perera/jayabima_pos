@@ -30,4 +30,8 @@ function ResetPasswordContent() {
       return;
     }
   }, [token]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+  };
 }
