@@ -73,6 +73,9 @@ function ResetPasswordContent() {
         }
         alert.error("Reset Failed", data.message || "Failed to reset password");
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("Reset password error:", error);
+      alert.error("Error", "Something went wrong. Please try again.");
+    }
   };
 }
