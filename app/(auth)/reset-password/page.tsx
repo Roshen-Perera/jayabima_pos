@@ -159,7 +159,9 @@ function ResetPasswordContent() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        
+        <form onSubmit={handleSubmit} className="space-y-4">
+            
+        </form>
       </CardContent>
     </Card>
   );
