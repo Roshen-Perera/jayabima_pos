@@ -65,6 +65,12 @@ function ResetPasswordContent() {
           router.push("/login");
         }, 1500);
       } else {
+        if (
+          data.message.includes("expired") ||
+          data.message.includes("invalid")
+        ) {
+          setIsValidToken(false);
+        }
         alert.error("Reset Failed", data.message || "Failed to reset password");
       }
     } catch (error) {}
