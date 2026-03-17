@@ -15,4 +15,6 @@ function ResetPasswordContent() {
     new: false,
     confirm: false,
   });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 }
