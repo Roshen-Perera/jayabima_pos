@@ -1,5 +1,6 @@
 import {
   Card,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -100,6 +101,7 @@ function ResetPasswordContent() {
             This password reset link is invalid or has expired
           </CardDescription>
         </CardHeader>
+        <CardContent className="space-y-4"></CardContent>
       </Card>
     );
   }
