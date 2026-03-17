@@ -120,6 +120,7 @@ const Page = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email Address</Label>
+              <div className="relative"></div>
             </div>
           </form>
         </CardContent>
