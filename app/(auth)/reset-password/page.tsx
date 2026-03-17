@@ -106,6 +106,11 @@ function ResetPasswordContent() {
             <p className="text-sm text-yellow-900 dark:text-yellow-100">
               <strong>What happened?</strong>
             </p>
+            <ul className="text-sm text-yellow-800 dark:text-yellow-200 space-y-1 list-disc list-inside mt-2">
+              <li>The link may have expired (valid for 1 hour)</li>
+              <li>The link may have already been used</li>
+              <li>The link may be malformed</li>
+            </ul>
           </div>
         </CardContent>
       </Card>
