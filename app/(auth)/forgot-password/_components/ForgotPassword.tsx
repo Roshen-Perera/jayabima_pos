@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { alert } from "@/lib/alert";
-import { ArrowLeft, CheckCircle, Mail } from "lucide-react";
+import { ArrowLeft, CheckCircle, Loader2, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -135,6 +135,19 @@ const Page = () => {
                 />
               </div>
             </div>
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  <Mail className="h-4 w-4 mr-2" />
+                  Send Reset Link
+                </>
+              )}
+            </Button>
           </form>
         </CardContent>
       </Card>
