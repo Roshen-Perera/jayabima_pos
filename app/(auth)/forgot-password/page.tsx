@@ -8,8 +8,8 @@ const Page = () => {
   const [emailSent, setEmailSent] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    
-  }
+    e.preventDefault();
+  };
 
   return <div></div>;
 };
