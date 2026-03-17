@@ -106,62 +106,60 @@ const ForgotPassword = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-orange-100 dark:from-gray-900 dark:to-gray-800 p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="mx-auto w-12 h-12 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center mb-4">
-            <Mail className="h-6 w-6 text-orange-600 dark:text-orange-400" />
+    <Card className="w-full max-w-md">
+      <CardHeader className="text-center">
+        <div className="mx-auto w-12 h-12 bg-orange-100 dark:bg-orange-900 rounded-full flex items-center justify-center mb-4">
+          <Mail className="h-6 w-6 text-orange-600 dark:text-orange-400" />
+        </div>
+        <CardTitle className="text-2xl">Forgot Password?</CardTitle>
+        <CardDescription>
+          No worries! Enter your email and we&apos;ll send you reset
+          instructions
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email">Email Address</Label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="email"
+                type="email"
+                placeholder="your.email@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="pl-10"
+                required
+                disabled={isSubmitting}
+              />
+            </div>
           </div>
-          <CardTitle className="text-2xl">Forgot Password?</CardTitle>
-          <CardDescription>
-            No worries! Enter your email and we&apos;ll send you reset
-            instructions
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="your.email@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10"
-                  required
-                  disabled={isSubmitting}
-                />
-              </div>
-            </div>
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Sending...
-                </>
-              ) : (
-                <>
-                  <Mail className="h-4 w-4 mr-2" />
-                  Send Reset Link
-                </>
-              )}
-            </Button>
-            <div className="text-center">
-              <Link
-                href="/login"
-                className="text-sm text-muted-foreground hover:text-primary inline-flex items-center gap-1"
-              >
-                <ArrowLeft className="h-3 w-3" />
-                Back to Login
-              </Link>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Sending...
+              </>
+            ) : (
+              <>
+                <Mail className="h-4 w-4 mr-2" />
+                Send Reset Link
+              </>
+            )}
+          </Button>
+          <div className="text-center">
+            <Link
+              href="/login"
+              className="text-sm text-muted-foreground hover:text-primary inline-flex items-center gap-1"
+            >
+              <ArrowLeft className="h-3 w-3" />
+              Back to Login
+            </Link>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   );
 };
 
