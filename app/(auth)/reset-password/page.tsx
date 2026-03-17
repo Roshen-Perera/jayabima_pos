@@ -38,5 +38,6 @@ function ResetPasswordContent() {
       setErrors({ confirmPassword: "Passwords don't match" });
       return;
     }
+    setIsSubmitting(true);
   };
 }
