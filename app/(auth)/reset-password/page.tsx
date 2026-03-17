@@ -1,5 +1,11 @@
-import { Card } from "@/components/ui/card";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { alert } from "@/lib/alert";
+import { AlertTriangle } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -83,6 +89,18 @@ function ResetPasswordContent() {
   };
 
   if (isValidToken === false) {
-    return <Card className="w-full max-w-md"></Card>;
+    return (
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <div className="mx-auto w-12 h-12 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mb-4">
+            <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
+          </div>
+          <CardTitle className="text-2xl">Invalid or Expired Link</CardTitle>
+          <CardDescription>
+            This password reset link is invalid or has expired
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    );
   }
 }
