@@ -34,5 +34,9 @@ function ResetPasswordContent() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({ confirmPassword: "" });
+    if (formData.newPassword !== formData.confirmPassword) {
+      setErrors({ confirmPassword: "Passwords don't match" });
+      return;
+    }
   };
 }
