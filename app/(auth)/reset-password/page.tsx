@@ -10,4 +10,9 @@ function ResetPasswordContent() {
     newPassword: "",
     confirmPassword: "",
   });
+
+  const [showPasswords, setShowPasswords] = useState({
+    new: false,
+    confirm: false,
+  });
 }
