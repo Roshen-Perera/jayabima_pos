@@ -18,17 +18,21 @@ function ResetPasswordContent() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isValidToken, setIsValidToken] = useState<boolean | null>(null);
   const [errors, setErrors] = useState({
     confirmPassword: "",
   });
 
-  const isValidToken = token ? true : false;
-
+  // Validate token on mount
   useEffect(() => {
     if (!token) {
+      setIsValidToken(false);
       alert.error("Invalid Link", "This password reset link is invalid");
       return;
     }
+
+    // Token exists, assume valid (backend will verify on submit)
+    setIsValidToken(true);
   }, [token]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -41,16 +45,28 @@ function ResetPasswordContent() {
     setIsSubmitting(true);
 
     try {
-        const response = await fetch("/api/auth/reset-password", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            token,
-            newPassword: formData.newPassword,
-          }),
-        });
+      const response = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token,
+          newPassword: formData.newPassword,
+        }),
+      });
 
-        const data = await response.json();
+      const data = await response.json();
+
+      if (data.success) {
+        alert.success(
+          "Password Reset",
+          "Your password has been reset successfully",
+        );
+        setTimeout(() => {
+          router.push("/login");
+        }, 1500);
+      } else {
+        alert.error("Reset Failed", data.message || "Failed to reset password");
+      }
     } catch (error) {}
   };
 }
