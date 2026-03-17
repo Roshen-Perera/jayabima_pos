@@ -66,7 +66,11 @@ const Page = () => {
               <strong>{email}</strong>
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4"></CardContent>
+          <CardContent className="space-y-4">
+            <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-md p-4">
+                
+            </div>
+          </CardContent>
         </Card>
       </div>
     );
