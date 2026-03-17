@@ -102,7 +102,11 @@ function ResetPasswordContent() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-md p-4"></div>
+          <div className="bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-md p-4">
+            <p className="text-sm text-yellow-900 dark:text-yellow-100">
+              <strong>What happened?</strong>
+            </p>
+          </div>
         </CardContent>
       </Card>
     );
