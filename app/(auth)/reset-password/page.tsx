@@ -1,5 +1,6 @@
+import { alert } from "@/lib/alert";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function ResetPasswordContent() {
   const router = useRouter();
@@ -17,8 +18,16 @@ function ResetPasswordContent() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isValidToken, setIsValidToken] = useState<boolean | null>(null);
   const [errors, setErrors] = useState({
     confirmPassword: "",
   });
+
+  const isValidToken = token ? true : false;
+
+  useEffect(() => {
+    if (!token) {
+      alert.error("Invalid Link", "This password reset link is invalid");
+      return;
+    }
+  }, [token]);
 }
