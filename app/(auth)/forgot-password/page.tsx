@@ -7,6 +7,10 @@ const Page = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    
+  }
+
   return <div></div>;
 };
 
