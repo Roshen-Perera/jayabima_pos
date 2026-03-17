@@ -157,13 +157,13 @@ const LoginForm = () => {
                   Remember me
                 </Label>
               </div>
-              <a
-                href="#forgot-password"
+              <Link
+                href="/forgot-password"
                 className="text-sm text-primary hover:underline"
                 tabIndex={isLoading ? -1 : 0}
               >
                 Forgot password?
-              </a>
+              </Link>
             </div>
           </CardContent>
 
