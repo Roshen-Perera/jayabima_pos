@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import { alert } from "@/lib/alert";
 import { AlertTriangle } from "lucide-react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -119,6 +120,14 @@ function ResetPasswordContent() {
           >
             Request New Reset Link
           </Button>
+          <div className="text-center">
+            <Link
+              href="/login"
+              className="text-sm text-muted-foreground hover:text-primary"
+            >
+              Back to Login
+            </Link>
+          </div>
         </CardContent>
       </Card>
     );
