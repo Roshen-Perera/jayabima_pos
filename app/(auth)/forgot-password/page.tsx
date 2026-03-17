@@ -15,6 +15,8 @@ const Page = () => {
       alert.error("Email required", "Please enter your email address");
       return;
     }
+
+    setIsSubmitting(true);
   };
 
   return <div></div>;
