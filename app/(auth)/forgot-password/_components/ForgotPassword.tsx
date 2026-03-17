@@ -1,5 +1,6 @@
 import {
   Card,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -65,6 +66,7 @@ const Page = () => {
               <strong>{email}</strong>
             </CardDescription>
           </CardHeader>
+          <CardContent className="space-y-4"></CardContent>
         </Card>
       </div>
     );
