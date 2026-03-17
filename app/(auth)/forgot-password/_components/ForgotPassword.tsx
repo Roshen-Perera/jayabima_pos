@@ -78,6 +78,15 @@ const Page = () => {
                 <li>Login with your new password</li>
               </ul>
             </div>
+            <div className="text-center text-sm text-muted-foreground">
+              Didn&apos;t receive the email?{" "}
+              <button
+                onClick={() => setEmailSent(false)}
+                className="text-primary hover:underline font-medium"
+              >
+                Try again
+              </button>
+            </div>
           </CardContent>
         </Card>
       </div>
