@@ -18,4 +18,7 @@ function ResetPasswordContent() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isValidToken, setIsValidToken] = useState<boolean | null>(null);
+  const [errors, setErrors] = useState({
+    confirmPassword: "",
+  });
 }
