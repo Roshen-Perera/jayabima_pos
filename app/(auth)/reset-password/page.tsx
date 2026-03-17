@@ -216,6 +216,14 @@ function ResetPasswordContent() {
               </>
             )}
           </Button>
+          <div className="text-center">
+            <Link
+              href="/login"
+              className="text-sm text-muted-foreground hover:text-primary"
+            >
+              Back to Login
+            </Link>
+          </div>
         </form>
       </CardContent>
     </Card>
