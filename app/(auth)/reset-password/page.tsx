@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -112,6 +113,12 @@ function ResetPasswordContent() {
               <li>The link may be malformed</li>
             </ul>
           </div>
+          <Button
+            className="w-full"
+            onClick={() => router.push("/forgot-password")}
+          >
+            Request New Reset Link
+          </Button>
         </CardContent>
       </Card>
     );
