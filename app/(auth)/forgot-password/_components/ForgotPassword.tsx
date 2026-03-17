@@ -115,7 +115,9 @@ const Page = () => {
             instructions
           </CardDescription>
         </CardHeader>
-        <CardContent></CardContent>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4"></form>
+        </CardContent>
       </Card>
     </div>
   );
