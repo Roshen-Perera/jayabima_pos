@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { alert } from "@/lib/alert";
-import { AlertTriangle, Eye, EyeOff, Loader2 } from "lucide-react";
+import { AlertTriangle, CheckCircle, Eye, EyeOff, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -203,6 +203,19 @@ function ResetPasswordContent() {
               </p>
             )}
           </div>
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Resetting Password...
+              </>
+            ) : (
+              <>
+                <CheckCircle className="h-4 w-4 mr-2" />
+                Reset Password
+              </>
+            )}
+          </Button>
         </form>
       </CardContent>
     </Card>
