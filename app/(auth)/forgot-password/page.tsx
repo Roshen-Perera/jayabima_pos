@@ -26,6 +26,16 @@ const Page = () => {
       });
 
       const data = await response.json();
+
+      if (data.success) {
+        setEmailSent(true);
+        alert.success(
+          "Email sent!",
+          "Check your email for password reset instructions",
+        );
+      } else {
+        alert.error("Failed", data.message || "Could not send reset email");
+      }
     } catch (error) {}
   };
 
