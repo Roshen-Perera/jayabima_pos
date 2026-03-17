@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import { alert } from "@/lib/alert";
 import { ArrowLeft, CheckCircle, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -117,7 +118,9 @@ const Page = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2"></div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address</Label>
+            </div>
           </form>
         </CardContent>
       </Card>
