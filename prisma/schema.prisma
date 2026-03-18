@@ -99,6 +99,13 @@ model Product {
   @@index([deletedAt])
 }
 
+enum PaymentMethod {
+  CASH
+  CARD
+  MOBILE
+  OTHER
+}
+
 model Sale {
   id            String        @id @default(cuid())
 
