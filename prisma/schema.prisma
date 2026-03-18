@@ -166,6 +166,13 @@ model SaleItem {
   @@index([productId])
 }
 
+enum InventoryReason {
+  SALE
+  ADJUSTMENT
+  RETURN
+  STOCK_COUNT
+}
+
 model InventoryLog {
   id             String          @id @default(cuid())
 
