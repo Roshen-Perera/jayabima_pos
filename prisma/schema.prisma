@@ -36,6 +36,14 @@ enum SaleStatus {
   REFUNDED
 }
 
+enum InventoryReason {
+  SALE
+  ADJUSTMENT
+  RETURN
+  STOCK_COUNT
+}
+
+
 // User Model
 model User {
   id        String   @id @default(cuid())
@@ -164,13 +172,6 @@ model SaleItem {
 
   @@index([saleId])
   @@index([productId])
-}
-
-enum InventoryReason {
-  SALE
-  ADJUSTMENT
-  RETURN
-  STOCK_COUNT
 }
 
 model InventoryLog {
