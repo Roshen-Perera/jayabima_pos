@@ -43,6 +43,13 @@ enum InventoryReason {
   STOCK_COUNT
 }
 
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+}
+
+
 
 // User Model
 model User {
