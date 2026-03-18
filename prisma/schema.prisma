@@ -151,3 +151,26 @@ model SaleItem {
   @@index([saleId])
   @@index([productId])
 }
+
+model InventoryLog {
+  id             String          @id @default(cuid())
+
+  productId      String
+  product        Product         @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  userId         String?
+  user           User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  quantityChange Int
+  previousStock  Int
+  newStock       Int
+  reason         InventoryReason
+  note           String?
+
+  createdAt      DateTime        @default(now())
+
+  @@index([productId])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([reason])
+}
