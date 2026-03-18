@@ -106,6 +106,13 @@ enum PaymentMethod {
   OTHER
 }
 
+enum SaleStatus {
+  COMPLETED
+  PENDING
+  CANCELLED
+  REFUNDED
+}
+
 model Sale {
   id            String        @id @default(cuid())
 
