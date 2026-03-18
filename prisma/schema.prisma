@@ -22,6 +22,20 @@ enum UserStatus {
   SUSPENDED
 }
 
+enum PaymentMethod {
+  CASH
+  CARD
+  MOBILE
+  OTHER
+}
+
+enum SaleStatus {
+  COMPLETED
+  PENDING
+  CANCELLED
+  REFUNDED
+}
+
 // User Model
 model User {
   id        String   @id @default(cuid())
@@ -97,20 +111,6 @@ model Product {
   @@index([category])
   @@index([stock])
   @@index([deletedAt])
-}
-
-enum PaymentMethod {
-  CASH
-  CARD
-  MOBILE
-  OTHER
-}
-
-enum SaleStatus {
-  COMPLETED
-  PENDING
-  CANCELLED
-  REFUNDED
 }
 
 model Sale {
