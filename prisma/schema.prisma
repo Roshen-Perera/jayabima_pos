@@ -98,3 +98,23 @@ model Product {
   @@index([stock])
   @@index([deletedAt])
 }
+
+model SaleItem {
+  id          String    @id @default(cuid())
+
+  saleId       String
+  sale         Sale      @relation(fields: [saleId], references: [id], onDelete: Cascade)
+
+  productId     String
+  product       Product   @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  productName   String
+  quantity      Int
+  price         Decimal   @db.Decimal(12, 2)
+  total         Decimal   @db.Decimal(12, 2)
+
+  createdAt     DateTime  @default(now())
+
+  @@index([saleId])
+  @@index([productId])
+}
