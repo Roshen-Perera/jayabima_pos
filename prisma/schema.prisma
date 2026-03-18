@@ -49,7 +49,12 @@ enum AuditAction {
   DELETE
 }
 
-
+enum AuditEntity {
+  CUSTOMER
+  PRODUCT
+  SALE
+  INVENTORY
+}
 
 // User Model
 model User {
