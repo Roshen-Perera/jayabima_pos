@@ -174,3 +174,21 @@ model InventoryLog {
   @@index([createdAt])
   @@index([reason])
 }
+
+model AuditLog {
+  id          String      @id @default(cuid())
+
+  entity      AuditEntity
+  entityId    String
+  action      AuditAction
+  changes     Json?
+
+  userId      String?
+  user        User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  createdAt   DateTime    @default(now())
+
+  @@index([entity, entityId])
+  @@index([userId])
+  @@index([createdAt])
+}
