@@ -202,6 +202,14 @@ enum AuditAction {
   DELETE
 }
 
+enum AuditEntity {
+  USER
+  CUSTOMER
+  PRODUCT
+  SALE
+  INVENTORY_LOG
+}
+
 
 model AuditLog {
   id          String      @id @default(cuid())
