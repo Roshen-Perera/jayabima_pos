@@ -196,21 +196,6 @@ model InventoryLog {
   @@index([reason])
 }
 
-enum AuditAction {
-  CREATE
-  UPDATE
-  DELETE
-}
-
-enum AuditEntity {
-  USER
-  CUSTOMER
-  PRODUCT
-  SALE
-  INVENTORY_LOG
-}
-
-
 model AuditLog {
   id          String      @id @default(cuid())
 
