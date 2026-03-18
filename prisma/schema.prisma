@@ -64,6 +64,10 @@ model User {
   password  String
   name      String
   role      UserRole @default(CASHIER)
+
+  sales         Sale[]
+  inventoryLogs InventoryLog[]
+  auditLogs     AuditLog[]
   
   // Additional fields
   phone         String?
