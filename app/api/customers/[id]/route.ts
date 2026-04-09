@@ -46,6 +46,10 @@ export async function DELETE(
             customer,
         });
     } catch (error) {
-
+        console.error('Error deactivating customer:', error);
+        return NextResponse.json(
+            { error: 'Failed to deactivate customer' },
+            { status: 500 }
+        );
     }
 }
