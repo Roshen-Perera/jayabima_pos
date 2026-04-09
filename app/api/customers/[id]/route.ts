@@ -23,5 +23,10 @@ export async function PUT(
                 { status: 400 }
             );
         }
+        console.error('Error updating customer:', error);
+        return NextResponse.json(
+            { error: 'Failed to update customer' },
+            { status: 500 }
+        );
     }
 }
