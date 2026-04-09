@@ -10,6 +10,7 @@ export async function PUT(
     try {
         const { id } = params;
         const body = await request.json();
+        const validatedData = customerSchema.partial().parse(body);
 
     } catch (error) {
 
