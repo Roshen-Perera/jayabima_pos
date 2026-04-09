@@ -30,6 +30,8 @@ export async function POST(request: NextRequest) {
                 totalPurchases: 0,
             },
         });
+        return NextResponse.json(customer, { status: 201 });
+
     } catch (error) {
 
     }
