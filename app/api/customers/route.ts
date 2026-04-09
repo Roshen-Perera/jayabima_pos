@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET() {
     try {
@@ -12,4 +12,8 @@ export async function GET() {
         console.error('Error fetching customers:', error);
         return NextResponse.json({ error: 'Failed to fetch customers' }, { status: 500 });
     }
+}
+
+export async function POST(request: NextRequest) {
+    
 }
