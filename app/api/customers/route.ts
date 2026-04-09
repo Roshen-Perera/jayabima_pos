@@ -9,6 +9,7 @@ export async function GET() {
         });
         return NextResponse.json(customers);
     } catch (error) {
+        console.error('Error fetching customers:', error);
 
     }
 }
