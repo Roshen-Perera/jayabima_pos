@@ -6,4 +6,9 @@ import { z } from 'zod';
 export async function PUT(
     request: NextRequest,
     { params }: { params: { id: string } }
-) {}
+) {
+    try {
+    } catch (error) {
+
+    }
+}
