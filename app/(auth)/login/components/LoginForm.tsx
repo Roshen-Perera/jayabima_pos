@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -57,10 +57,10 @@ const LoginForm = () => {
           router.push("/");
         }, 500);
       } else {
-       alert.error(
-         "Login failed",
-         result.message || "Invalid email or password. Please try again.",
-       );
+        alert.error(
+          "Login failed",
+          result.message || "Invalid email or password. Please try again.",
+        );
       }
     } catch (error) {
       alert.error(
