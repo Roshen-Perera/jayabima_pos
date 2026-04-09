@@ -1,3 +1,4 @@
+import { customerSchema } from '@/app/customers/lib/validation';
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -17,7 +18,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-
+        const validatedData = customerSchema.parse(body);
     } catch (error) {
 
     }
