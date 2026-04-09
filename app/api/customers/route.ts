@@ -1,6 +1,7 @@
 import { customerSchema } from '@/app/customers/lib/validation';
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
+import z from 'zod';
 
 export async function GET() {
     try {
@@ -33,6 +34,11 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(customer, { status: 201 });
 
     } catch (error) {
-
+        if (error instanceof z.ZodError) {
+            return NextResponse.json(
+                { error: 'Validation failed', details: error },
+                { status: 400 }
+            );
+        }
     }
 }
