@@ -19,6 +19,17 @@ export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
         const validatedData = customerSchema.parse(body);
+        const customer = await prisma.customer.create({
+            data: {
+                name: validatedData.name,
+                email: validatedData.email,
+                phone: validatedData.phone,
+                address: validatedData.address,
+                creditBalance: 0,
+                loyaltyPoints: 0,
+                totalPurchases: 0,
+            },
+        });
     } catch (error) {
 
     }
