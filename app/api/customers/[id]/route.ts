@@ -37,6 +37,14 @@ export async function DELETE(
 ) {
     try {
         const { id } = params;
+        const customer = await prisma.customer.update({
+            where: { id },
+            data: { isActive: false },
+        });
+        return NextResponse.json({
+            message: 'Customer deactivated successfully',
+            customer,
+        });
     } catch (error) {
 
     }
