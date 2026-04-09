@@ -8,6 +8,8 @@ export async function PUT(
     { params }: { params: { id: string } }
 ) {
     try {
+        const { id } = params;
+
     } catch (error) {
 
     }
