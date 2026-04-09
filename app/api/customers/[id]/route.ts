@@ -9,6 +9,7 @@ export async function PUT(
 ) {
     try {
         const { id } = params;
+        const body = await request.json();
 
     } catch (error) {
 
