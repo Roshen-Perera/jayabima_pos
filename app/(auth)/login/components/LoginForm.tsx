@@ -35,7 +35,6 @@ const LoginForm = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -48,7 +47,6 @@ const LoginForm = () => {
       const result = await login({
         email,
         password,
-        rememberMe,
       });
       if (result.success) {
         alert.success(
@@ -140,24 +138,8 @@ const LoginForm = () => {
             </div>
 
             {/* Remember Me & Forgot Password */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="remember"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-4 w-4 rounded border-gray-300"
-                  disabled={isLoading}
-                />
-                <Label
-                  htmlFor="remember"
-                  className="text-sm font-normal cursor-pointer"
-                >
-                  Remember me
-                </Label>
-              </div>
-              <Link
+            <divForgot Password */}
+            <div className="flex justify-end"
                 href="/forgot-password"
                 className="text-sm text-primary hover:underline"
                 tabIndex={isLoading ? -1 : 0}
