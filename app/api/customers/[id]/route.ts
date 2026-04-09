@@ -35,9 +35,9 @@ export async function DELETE(
     request: NextRequest,
     { params }: { params: { id: string } }
 ) {
-    try{
-
+    try {
+        const { id } = params;
     } catch (error) {
-        
+
     }
 }
