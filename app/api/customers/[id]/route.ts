@@ -15,6 +15,7 @@ export async function PUT(
             where: { id },
             data: validatedData,
         });
+        return NextResponse.json(customer);
     } catch (error) {
 
     }
