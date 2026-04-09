@@ -11,7 +11,10 @@ export async function PUT(
         const { id } = params;
         const body = await request.json();
         const validatedData = customerSchema.partial().parse(body);
-
+        const customer = await prisma.customer.update({
+            where: { id },
+            data: validatedData,
+        });
     } catch (error) {
 
     }
