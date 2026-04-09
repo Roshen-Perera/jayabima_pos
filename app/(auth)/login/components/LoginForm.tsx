@@ -137,9 +137,9 @@ const LoginForm = () => {
               </div>
             </div>
 
-            {/* Remember Me & Forgot Password */}
-            <divForgot Password */}
-            <div className="flex justify-end"
+            {/* Forgot Password */}
+            <div className="flex justify-end">
+              <Link
                 href="/forgot-password"
                 className="text-sm text-primary hover:underline"
                 tabIndex={isLoading ? -1 : 0}
