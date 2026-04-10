@@ -34,6 +34,7 @@ export const useCustomerStore = create<CustomerStore>()(
 
         // Actions
         setCustomers: (customers) => set({ customers }),
+        setInactiveCustomers: (customers) => set({ inactiveCustomers: customers }),
         setLoading: (loading) => set({ loading }),
         setError: (error) => set({ error }),
 
