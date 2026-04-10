@@ -21,6 +21,7 @@ const CustomerList = () => {
   }, [loadCustomers, loadInactiveCustomers]);
 
   const filteredCustomers = React.useMemo(() => {
+    const list = tab === "active" ? customers : inactiveCustomers;
     if (!search) return customers;
 
     const keyword = search.toLowerCase();
