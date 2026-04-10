@@ -22,6 +22,7 @@ export const customerSchema = z.object({
         .string()
         .min(5, "Address must be at least 5 characters")
         .max(200, "Address must be less than 200 characters"),
+    isActive: z.boolean().optional(),
 });
 
 export type CustomerFormData = z.infer<typeof customerSchema>;
