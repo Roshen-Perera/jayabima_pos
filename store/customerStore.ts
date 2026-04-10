@@ -82,11 +82,8 @@ export const useCustomerStore = create<CustomerStore>()(
             })),
 
         setSearch: (search) => set({ search }),
-        updateCustomer: (id, updatedData) =>
-            set((state) => ({
-                customers: state.customers.map((customer) =>
-                    customer.id === id ? { ...customer, ...updatedData } : customer
-                ),
-            })),
+        updateCustomer: (id, updatedData) => {
+            
+        }
     }),
 );
