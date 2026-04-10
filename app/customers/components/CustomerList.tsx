@@ -1,11 +1,12 @@
 import { Users, MoreVertical, Mail, MapPin } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCustomerStore } from "@/store/customerStore";
 import CustomerActions from "./CustomerActions";
 
 const CustomerList = () => {
+    const [tab, setTab] = useState("active");
     const customers = useCustomerStore((s) => s.customers);
     const search = useCustomerStore((s) => s.search);
 
