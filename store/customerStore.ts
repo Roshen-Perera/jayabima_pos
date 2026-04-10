@@ -1,5 +1,4 @@
 import { Customer } from '@/app/customers/types/customer.types';
-import { dummyCustomers } from '@/data/data';
 import { create } from 'zustand';
 interface CustomerStore {
     customers: Customer[];
