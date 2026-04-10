@@ -32,6 +32,21 @@ export const useCustomerStore = create<CustomerStore>()(
         setLoading: (loading) => set({ loading }),
         setError: (error) => set({ error }),
 
+        loadCustomers: async () => {
+            set({ loading: true, error: null });
+            try {
+                const response = await fetch('/api/customers');
+                if (!response.ok) throw new Error('Failed to load customers');
+                const data = await response.json();
+                set({ customers: data, loading: false });
+            } catch (error) {
+                set({
+                    error: error instanceof Error ? error.message : 'Failed to load customers',
+                    loading: false,
+                });
+            }
+        },
+
         addCustomer: (customerData) =>
             set((state) => ({
                 customers: [
