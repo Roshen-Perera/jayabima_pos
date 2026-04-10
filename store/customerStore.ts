@@ -48,7 +48,7 @@ export const useCustomerStore = create<CustomerStore>()(
         },
 
         addCustomer: (customerData) =>
-            
+            set({ loading: true, error: null }),
 
         deleteCustomer: (id) =>
             set((state) => ({
