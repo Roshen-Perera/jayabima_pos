@@ -137,6 +137,13 @@ export const useCustomerStore = create<CustomerStore>()(
         reactivateCustomer: async (id) => {  // Add this
             set({ loading: true, error: null });
             try {
+                set((state) => ({
+                    customers: [
+                        ...state.customers,
+                        state.inactiveCustomers.find((c) => c.id === id)!,
+                    ],
+                    inactiveCustomers: state.inactiveCustomers.filter((c) => c.id !== id),
+                }));
                 const response = await fetch(`/api/customers/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
