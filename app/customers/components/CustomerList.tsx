@@ -22,7 +22,7 @@ const CustomerList = () => {
 
   const filteredCustomers = React.useMemo(() => {
     const list = tab === "active" ? customers : inactiveCustomers;
-    if (!search) return customers;
+    if (!search) return list;
 
     const keyword = search.toLowerCase();
     return customers.filter(
