@@ -119,9 +119,16 @@ export const useCustomerStore = create<CustomerStore>()(
                     loading: false,
                 }));
             } catch (error) {
-                set({
-                    error: error instanceof Error ? error.message : 'Failed to deactivate customer',
-                    loading: false,
+                set((state) => {
+                    const inactiveCustomer = state.inactiveCustomers.find((c) => c.id === id);
+                    return {
+                        customers: inactiveCustomer
+                            ? [...state.customers, inactiveCustomer]
+                            : state.customers,
+                        inactiveCustomers: state.inactiveCustomers.filter((c) => c.id !== id),
+                        error: error instanceof Error ? error.message : 'Failed to deactivate customer',
+                        loading: false,
+                    };
                 });
                 throw error;
             }
