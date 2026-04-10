@@ -9,6 +9,7 @@ interface CustomerStore {
 
     // Actions
     setCustomers: (customers: Customer[]) => void;
+    loadCustomers: () => Promise<void>;
     addCustomer: (customer: Omit<Customer, 'id' | 'loyaltyPoints' | 'creditBalance'>) => void;
     deleteCustomer: (id: string) => void;
     updateCustomer: (id: string, updatedData: Partial<Customer>) => void;
