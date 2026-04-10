@@ -64,7 +64,7 @@ const CustomerList = () => {
                           </p>
                         </div>
                       </div>
-                      <CustomerActions customer={customer} type="active" />
+                      <CustomerActions customer={customer} />
                     </div>
 
                     <div className="space-y-3">
