@@ -38,15 +38,15 @@ const CustomerActions = ({
   const [showActionAlert, setShowActionAlert] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
 
-  const handleDeactivate = async () => {
-    await deactivateCustomer(customer.id);
+  const handleDeactivate = () => {
+    deactivateCustomer(customer.id);
     alert.success(`Customer ${customer.name} has been deactivated.`);
 
     setShowActionAlert(false);
   };
 
-  const handleReactivate = async () => {
-    await reactivateCustomer(customer.id);
+  const handleReactivate = () => {
+    reactivateCustomer(customer.id);
     alert.success(`Customer ${customer.name} has been reactivated.`);
 
     setShowActionAlert(false);
