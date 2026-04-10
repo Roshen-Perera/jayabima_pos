@@ -100,6 +100,14 @@ export const useCustomerStore = create<CustomerStore>()(
         deactivateCustomer: async (id) => {  // Changed from deleteCustomer
             set({ loading: true, error: null });
             try {
+                set((state) => ({
+                    inactiveCustomers: [
+                        ...state.inactiveCustomers,
+                        state.customers.find((c) => c.id === id)!,
+                    ],
+                    customers: state.customers.filter((c) => c.id !== id),
+                }));
+
                 const response = await fetch(`/api/customers/${id}`, {
                     method: 'DELETE',
                 });
