@@ -97,10 +97,27 @@ export const useCustomerStore = create<CustomerStore>()(
             }
         },
 
-        deleteCustomer: (id) =>
-            set((state) => ({
-                customers: state.customers.filter((c) => c.id !== id),
-            })),
+        deactivateCustomer: async (id) => {  // Changed from deleteCustomer
+            set({ loading: true, error: null });
+            try {
+                const response = await fetch(`/api/customers/${id}`, {
+                    method: 'DELETE',
+                });
+
+                if (!response.ok) throw new Error('Failed to deactivate customer');
+
+                set((state) => ({
+                    customers: state.customers.filter((c) => c.id !== id),
+                    loading: false,
+                }));
+            } catch (error) {
+                set({
+                    error: error instanceof Error ? error.message : 'Failed to deactivate customer',
+                    loading: false,
+                });
+                throw error;
+            }
+        },
 
         reactivateCustomer: async (id) => {  // Add this
             set({ loading: true, error: null });
