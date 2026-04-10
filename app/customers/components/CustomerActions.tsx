@@ -1,5 +1,5 @@
 "use client";
-import { MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { MoreVertical, Pencil, Trash2, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -26,18 +26,30 @@ import { alert } from "@/lib/alert";
 
 interface CustomerActionsProps {
   customer: Customer;
+  type?: "active" | "inactive";
 }
 
-const CustomerActions = ({ customer }: CustomerActionsProps) => {
-  const deleteCustomer = useCustomerStore((s) => s.deleteCustomer);
-  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+const CustomerActions = ({
+  customer,
+  type = "active",
+}: CustomerActionsProps) => {
+  const deactivateCustomer = useCustomerStore((s) => s.deactivateCustomer);
+  const reactivateCustomer = useCustomerStore((s) => s.reactivateCustomer);
+  const [showActionAlert, setShowActionAlert] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
 
-  const handleDelete = () => {
-    deleteCustomer(customer.id);
-    alert.success(`Customer ${customer.name} has been deleted.`);
+  const handleDeactivate = () => {
+    deactivateCustomer(customer.id);
+    alert.success(`Customer ${customer.name} has been deactivated.`);
 
-    setShowDeleteAlert(false);
+    setShowActionAlert(false);
+  };
+
+  const handleReactivate = () => {
+    reactivateCustomer(customer.id);
+    alert.success(`Customer ${customer.name} has been reactivated.`);
+
+    setShowActionAlert(false);
   };
 
   return (
@@ -57,13 +69,26 @@ const CustomerActions = ({ customer }: CustomerActionsProps) => {
               <Pencil className="w-3 h-3 mr-4" />
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem
-              className="flex text-destructive"
-              onClick={() => setShowDeleteAlert(true)}
-            >
-              <Trash2 className="w-3 h-3 mr-4 text-destructive" />
-              Delete
-            </DropdownMenuItem>
+
+            {type === "active" && (
+              <DropdownMenuItem
+                className="flex text-destructive"
+                onClick={() => setShowActionAlert(true)}
+              >
+                <Trash2 className="w-3 h-3 mr-4 text-destructive" />
+                Deactivate
+              </DropdownMenuItem>
+            )}
+
+            {type === "inactive" && (
+              <DropdownMenuItem
+                className="flex"
+                onClick={() => setShowActionAlert(true)}
+              >
+                <RotateCcw className="w-3 h-3 mr-4" />
+                Reactivate
+              </DropdownMenuItem>
+            )}
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -75,23 +100,29 @@ const CustomerActions = ({ customer }: CustomerActionsProps) => {
         onOpenChange={setShowEditDialog}
       />
 
-      <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
+      <AlertDialog open={showActionAlert} onOpenChange={setShowActionAlert}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete{" "}
-              <span className="font-semibold">{customer.name}</span> from your
-              customer list. This action cannot be undone.
+              {type === "active"
+                ? `This will deactivate ${customer.name}. You can reactivate them later.`
+                : `This will reactivate ${customer.name} and move them back to active customers.`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={handleDelete}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={type === "active" ? handleDeactivate : handleReactivate}
+              className={
+                type === "active"
+                  ? "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  : ""
+              }
             >
-              Delete Customer
+              {type === "active"
+                ? "Deactivate Customer"
+                : "Reactivate Customer"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
