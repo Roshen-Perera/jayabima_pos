@@ -47,8 +47,34 @@ export const useCustomerStore = create<CustomerStore>()(
             }
         },
 
-        addCustomer: (customerData) =>
-            set({ loading: true, error: null }),
+        addCustomer: async (customerData) => {
+            set({ loading: true, error: null });
+            try {
+                const response = await fetch('/api/customers', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(customerData),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to create customer');
+                }
+
+                const newCustomer = await response.json();
+
+                set((state) => ({
+                    customers: [...state.customers, newCustomer],
+                    loading: false,
+                }));
+            } catch (error) {
+                set({
+                    error: error instanceof Error ? error.message : 'Failed to add customer',
+                    loading: false,
+                });
+                throw error;
+            }
+        },
 
         deleteCustomer: (id) =>
             set((state) => ({
