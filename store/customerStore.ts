@@ -29,7 +29,7 @@ export const useCustomerStore = create<CustomerStore>()(
 
         // Actions
         setCustomers: (customers) => set({ customers }),
-
+        loadCustomers: () => Promise<void>,
         addCustomer: (customerData) =>
             set((state) => ({
                 customers: [
