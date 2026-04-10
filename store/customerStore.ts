@@ -84,7 +84,10 @@ export const useCustomerStore = create<CustomerStore>()(
         setSearch: (search) => set({ search }),
         updateCustomer: (id, updatedData) => {
             set({ loading: true, error: null });
-
+            try {
+            } catch (error) {
+                
+            }
         }
     }),
 );
