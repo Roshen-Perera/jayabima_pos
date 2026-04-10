@@ -6,6 +6,7 @@ import z from 'zod';
 export async function GET(request: NextRequest) {
     try {
         const searchParams = request.nextUrl.searchParams;
+        const showInactive = searchParams.get('showInactive') === 'true';
         const customers = await prisma.customer.findMany({
             where: { deletedAt: null },
             orderBy: { createdAt: 'desc' },
