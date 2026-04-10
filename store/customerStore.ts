@@ -3,7 +3,7 @@ import { dummyCustomers } from '@/data/data';
 import { create } from 'zustand';
 interface CustomerStore {
     customers: Customer[];
-    inactiveCustomers: Customer[];  
+    inactiveCustomers: Customer[];
     search: string;
     loading: boolean;
     error: string | null;
@@ -15,7 +15,7 @@ interface CustomerStore {
     loadInactiveCustomers: () => Promise<void>;
     addCustomer: (customer: Omit<Customer, 'id' | 'loyaltyPoints' | 'creditBalance'>) => void;
     deleteCustomer: (id: string) => void;
-    reactivateCustomer: (id: string) => Promise<void>; 
+    reactivateCustomer: (id: string) => Promise<void>;
     updateCustomer: (id: string, updatedData: Partial<Customer>) => void;
     setSearch: (search: string) => void;
     setLoading: (loading: boolean) => void;
@@ -48,6 +48,21 @@ export const useCustomerStore = create<CustomerStore>()(
             } catch (error) {
                 set({
                     error: error instanceof Error ? error.message : 'Failed to load customers',
+                    loading: false,
+                });
+            }
+        },
+
+        loadInactiveCustomers: async () => {  // Add this
+            set({ loading: true, error: null });
+            try {
+                const response = await fetch('/api/customers?showInactive=true');
+                if (!response.ok) throw new Error('Failed to load inactive customers');
+                const data = await response.json();
+                set({ inactiveCustomers: data, loading: false });
+            } catch (error) {
+                set({
+                    error: error instanceof Error ? error.message : 'Failed to load inactive customers',
                     loading: false,
                 });
             }
