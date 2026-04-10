@@ -48,18 +48,7 @@ export const useCustomerStore = create<CustomerStore>()(
         },
 
         addCustomer: (customerData) =>
-            set((state) => ({
-                customers: [
-                    ...state.customers,
-                    {
-                        id: "CUS-" + Date.now().toString(),
-                        ...customerData,
-                        loyaltyPoints: 0,
-                        creditBalance: 0,
-                        totalPurchases: 0,
-                    },
-                ],
-            })),
+            
 
         deleteCustomer: (id) =>
             set((state) => ({
