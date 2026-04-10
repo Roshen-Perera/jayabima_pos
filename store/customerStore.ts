@@ -85,8 +85,13 @@ export const useCustomerStore = create<CustomerStore>()(
         updateCustomer: (id, updatedData) => {
             set({ loading: true, error: null });
             try {
+                const response = await fetch(`/api/customers/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedData),
+                });
             } catch (error) {
-                
+
             }
         }
     }),
