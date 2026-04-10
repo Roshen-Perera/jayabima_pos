@@ -82,7 +82,7 @@ export const useCustomerStore = create<CustomerStore>()(
             })),
 
         setSearch: (search) => set({ search }),
-        updateCustomer: async(id, updatedData) => {
+        updateCustomer: async (id, updatedData) => {
             set({ loading: true, error: null });
             try {
                 const response = await fetch(`/api/customers/${id}`, {
@@ -91,6 +91,7 @@ export const useCustomerStore = create<CustomerStore>()(
                     body: JSON.stringify(updatedData),
                 });
                 if (!response.ok) throw new Error('Failed to update customer');
+                const updatedCustomer = await response.json();
 
             } catch (error) {
 
