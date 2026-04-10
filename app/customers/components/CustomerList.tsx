@@ -63,7 +63,7 @@ const CustomerList = () => {
                           </p>
                         </div>
                       </div>
-                      <CustomerActions customer={customer} />
+                      <CustomerActions customer={customer} type="active" />
                     </div>
 
                     <div className="space-y-3">
@@ -139,7 +139,7 @@ const CustomerList = () => {
                           </p>
                         </div>
                       </div>
-                      <CustomerActions customer={customer} />
+                      <CustomerActions customer={customer} type="inactive" />
                     </div>
 
                     <div className="space-y-3">
