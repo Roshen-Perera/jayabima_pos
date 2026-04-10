@@ -92,7 +92,12 @@ export const useCustomerStore = create<CustomerStore>()(
                 });
                 if (!response.ok) throw new Error('Failed to update customer');
                 const updatedCustomer = await response.json();
-
+                set((state) => ({
+                    customers: state.customers.map((c) =>
+                        c.id === id ? updatedCustomer : c
+                    ),
+                    loading: false,
+                }));
             } catch (error) {
 
             }
