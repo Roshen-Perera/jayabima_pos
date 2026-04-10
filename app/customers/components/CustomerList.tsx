@@ -1,5 +1,5 @@
 import { Users, MoreVertical, Mail, MapPin } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCustomerStore } from "@/store/customerStore";
@@ -14,6 +14,11 @@ const CustomerList = () => {
   const loadInactiveCustomers = useCustomerStore(
     (s) => s.loadInactiveCustomers,
   );
+
+  useEffect(() => {
+    loadCustomers();
+    loadInactiveCustomers();
+  }, [loadCustomers, loadInactiveCustomers]);
 
   const filteredCustomers = React.useMemo(() => {
     if (!search) return customers;
