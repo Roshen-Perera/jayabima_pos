@@ -4,6 +4,7 @@ import { create } from 'zustand';
 interface CustomerStore {
     customers: Customer[];
     search: string;
+    loading: boolean;
 
     // Actions
     setCustomers: (customers: Customer[]) => void;
