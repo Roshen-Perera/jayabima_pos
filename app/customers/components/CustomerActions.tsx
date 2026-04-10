@@ -45,8 +45,8 @@ const CustomerActions = ({
     setShowActionAlert(false);
   };
 
-  const handleReactivate = () => {
-    reactivateCustomer(customer.id);
+  const handleReactivate = async () => {
+    await reactivateCustomer(customer.id);
     alert.success(`Customer ${customer.name} has been reactivated.`);
 
     setShowActionAlert(false);
