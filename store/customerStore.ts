@@ -90,6 +90,8 @@ export const useCustomerStore = create<CustomerStore>()(
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(updatedData),
                 });
+                if (!response.ok) throw new Error('Failed to update customer');
+
             } catch (error) {
 
             }
