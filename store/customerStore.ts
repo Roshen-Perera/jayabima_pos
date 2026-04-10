@@ -27,6 +27,7 @@ export const useCustomerStore = create<CustomerStore>()(
     (set) => ({
         // Initial state (your dummyCustomers)
         customers: [],
+        inactiveCustomers: [],
         search: '',
         loading: false,
         error: null,
