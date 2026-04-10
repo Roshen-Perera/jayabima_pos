@@ -27,9 +27,11 @@ export const useCustomerStore = create<CustomerStore>()(
         loading: false,
         error: null,
 
+
         // Actions
         setCustomers: (customers) => set({ customers }),
-        loadCustomers: () => Promise<void>,
+        setLoading: (loading) => set({ loading }),
+
         addCustomer: (customerData) =>
             set((state) => ({
                 customers: [
