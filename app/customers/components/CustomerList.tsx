@@ -8,6 +8,7 @@ import CustomerActions from "./CustomerActions";
 const CustomerList = () => {
     const [tab, setTab] = useState("active");
     const customers = useCustomerStore((s) => s.customers);
+    const inactiveCustomers = useCustomerStore((s) => s.inactiveCustomers);
     const search = useCustomerStore((s) => s.search);
 
     const filteredCustomers = React.useMemo(() => {
