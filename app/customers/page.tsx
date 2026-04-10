@@ -7,13 +7,12 @@ import CustomerStats from "./components/CustomerStats";
 import CustomerSearch from "./components/CustomerSearch";
 
 const Page = () => {
-
   return (
     <div className="flex flex-col gap-3">
       <CustomerHeader />
-      <CustomerStats  />
-      <CustomerSearch/>
-      <CustomerList/>
+      <CustomerStats />
+      <CustomerSearch />
+      <CustomerList />
     </div>
   );
 };
