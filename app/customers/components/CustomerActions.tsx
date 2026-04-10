@@ -38,8 +38,8 @@ const CustomerActions = ({
   const [showActionAlert, setShowActionAlert] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
 
-  const handleDeactivate = async() => {
-    deactivateCustomer(customer.id);
+  const handleDeactivate = async () => {
+    await deactivateCustomer(customer.id);
     alert.success(`Customer ${customer.name} has been deactivated.`);
 
     setShowActionAlert(false);
