@@ -36,7 +36,7 @@ export async function DELETE(
     { params }: { params: { id: string } }
 ) {
     try {
-        const { id } = params;
+        const { id } = await params;
         const customer = await prisma.customer.update({
             where: { id },
             data: { isActive: false },
