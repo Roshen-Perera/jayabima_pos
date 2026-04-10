@@ -5,6 +5,7 @@ interface CustomerStore {
     customers: Customer[];
     search: string;
     loading: boolean;
+    error: string | null;
 
     // Actions
     setCustomers: (customers: Customer[]) => void;
