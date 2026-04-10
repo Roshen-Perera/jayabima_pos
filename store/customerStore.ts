@@ -3,6 +3,7 @@ import { dummyCustomers } from '@/data/data';
 import { create } from 'zustand';
 interface CustomerStore {
     customers: Customer[];
+    inactiveCustomers: Customer[];  
     search: string;
     loading: boolean;
     error: string | null;
