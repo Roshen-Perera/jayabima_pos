@@ -24,6 +24,8 @@ export const useCustomerStore = create<CustomerStore>()(
         // Initial state (your dummyCustomers)
         customers: dummyCustomers,
         search: '',
+        loading: false,
+        error: null,
 
         // Actions
         setCustomers: (customers) => set({ customers }),
@@ -33,7 +35,7 @@ export const useCustomerStore = create<CustomerStore>()(
                 customers: [
                     ...state.customers,
                     {
-                        id: "CUS-"+Date.now().toString(),
+                        id: "CUS-" + Date.now().toString(),
                         ...customerData,
                         loyaltyPoints: 0,
                         creditBalance: 0,
