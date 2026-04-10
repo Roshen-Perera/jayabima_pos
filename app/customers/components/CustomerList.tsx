@@ -6,24 +6,27 @@ import { useCustomerStore } from "@/store/customerStore";
 import CustomerActions from "./CustomerActions";
 
 const CustomerList = () => {
-    const [tab, setTab] = useState("active");
-    const customers = useCustomerStore((s) => s.customers);
-    const inactiveCustomers = useCustomerStore((s) => s.inactiveCustomers);
-    const search = useCustomerStore((s) => s.search);
-    const loadCustomers = useCustomerStore((s) => s.loadCustomers);
+  const [tab, setTab] = useState("active");
+  const customers = useCustomerStore((s) => s.customers);
+  const inactiveCustomers = useCustomerStore((s) => s.inactiveCustomers);
+  const search = useCustomerStore((s) => s.search);
+  const loadCustomers = useCustomerStore((s) => s.loadCustomers);
+  const loadInactiveCustomers = useCustomerStore(
+    (s) => s.loadInactiveCustomers,
+  );
 
-    const filteredCustomers = React.useMemo(() => {
-      if (!search) return customers;
+  const filteredCustomers = React.useMemo(() => {
+    if (!search) return customers;
 
-      const keyword = search.toLowerCase();
-      return customers.filter(
-        (c) =>
-          c.name.toLowerCase().includes(keyword) ||
-          c.email.toLowerCase().includes(keyword) ||
-          c.address.toLowerCase().includes(keyword) ||
-          c.phone.includes(keyword)
-      );
-    }, [customers, search]);
+    const keyword = search.toLowerCase();
+    return customers.filter(
+      (c) =>
+        c.name.toLowerCase().includes(keyword) ||
+        c.email.toLowerCase().includes(keyword) ||
+        c.address.toLowerCase().includes(keyword) ||
+        c.phone.includes(keyword),
+    );
+  }, [customers, search]);
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -44,7 +47,7 @@ const CustomerList = () => {
                     </p>
                   </div>
                 </div>
-                <CustomerActions customer={customer}/>
+                <CustomerActions customer={customer} />
               </div>
 
               <div className="space-y-3">
