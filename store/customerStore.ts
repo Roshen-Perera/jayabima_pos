@@ -14,6 +14,7 @@ interface CustomerStore {
     deleteCustomer: (id: string) => void;
     updateCustomer: (id: string, updatedData: Partial<Customer>) => void;
     setSearch: (search: string) => void;
+    setLoading: (loading: boolean) => void;
     // Computed (like your useMemo)
 }
 
