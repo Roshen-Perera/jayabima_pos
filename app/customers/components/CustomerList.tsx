@@ -25,7 +25,7 @@ const CustomerList = () => {
     if (!search) return list;
 
     const keyword = search.toLowerCase();
-    return customers.filter(
+    return list.filter(
       (c) =>
         c.name.toLowerCase().includes(keyword) ||
         c.email.toLowerCase().includes(keyword) ||
