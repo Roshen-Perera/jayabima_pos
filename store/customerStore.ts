@@ -22,7 +22,7 @@ interface CustomerStore {
 export const useCustomerStore = create<CustomerStore>()(
     (set) => ({
         // Initial state (your dummyCustomers)
-        customers: dummyCustomers,
+        customers: [],
         search: '',
         loading: false,
         error: null,
