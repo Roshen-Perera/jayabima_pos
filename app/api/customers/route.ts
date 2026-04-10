@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
         const searchParams = request.nextUrl.searchParams;
         const showInactive = searchParams.get('showInactive') === 'true';
         const customers = await prisma.customer.findMany({
-            where: { deletedAt: null },
+            where: { isActive: !showInactive },  // Active if false, Inactive if true
             orderBy: { createdAt: 'desc' },
         });
         return NextResponse.json(customers);
