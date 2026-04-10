@@ -103,6 +103,7 @@ export const useCustomerStore = create<CustomerStore>()(
                     error: error instanceof Error ? error.message : 'Failed to update customer',
                     loading: false,
                 });
+                throw error;
             }
         }
     }),
