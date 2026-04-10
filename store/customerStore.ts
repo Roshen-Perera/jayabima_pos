@@ -15,6 +15,7 @@ interface CustomerStore {
     loadInactiveCustomers: () => Promise<void>;
     addCustomer: (customer: Omit<Customer, 'id' | 'loyaltyPoints' | 'creditBalance'>) => void;
     deleteCustomer: (id: string) => void;
+    reactivateCustomer: (id: string) => Promise<void>; 
     updateCustomer: (id: string, updatedData: Partial<Customer>) => void;
     setSearch: (search: string) => void;
     setLoading: (loading: boolean) => void;
