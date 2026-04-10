@@ -99,7 +99,10 @@ export const useCustomerStore = create<CustomerStore>()(
                     loading: false,
                 }));
             } catch (error) {
-
+                set({
+                    error: error instanceof Error ? error.message : 'Failed to update customer',
+                    loading: false,
+                });
             }
         }
     }),
