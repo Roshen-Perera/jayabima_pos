@@ -152,9 +152,16 @@ export const useCustomerStore = create<CustomerStore>()(
 
                 if (!response.ok) throw new Error('Failed to reactivate customer');
             } catch (error) {
-                set({
-                    error: error instanceof Error ? error.message : 'Failed to reactivate customer',
-                    loading: false,
+                set((state) => {
+                    const activeCustomer = state.customers.find((c) => c.id === id);
+                    return {
+                        inactiveCustomers: activeCustomer
+                            ? [...state.inactiveCustomers, activeCustomer]
+                            : state.inactiveCustomers,
+                        customers: state.customers.filter((c) => c.id !== id),
+                        error: error instanceof Error ? error.message : 'Failed to reactivate customer',
+                        loading: false,
+                    };
                 });
                 throw error;
             }
