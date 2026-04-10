@@ -32,7 +32,7 @@ const CustomerList = () => {
         c.address.toLowerCase().includes(keyword) ||
         c.phone.includes(keyword),
     );
-  }, [customers, search]);
+  }, [customers, inactiveCustomers, search, tab]);
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
