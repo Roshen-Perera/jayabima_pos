@@ -102,6 +102,33 @@ export const useCustomerStore = create<CustomerStore>()(
                 customers: state.customers.filter((c) => c.id !== id),
             })),
 
+        reactivateCustomer: async (id) => {  // Add this
+            set({ loading: true, error: null });
+            try {
+                const response = await fetch(`/api/customers/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ isActive: true }),
+                });
+
+                if (!response.ok) throw new Error('Failed to reactivate customer');
+
+                const updatedCustomer = await response.json();
+
+                set((state) => ({
+                    customers: [...state.customers, updatedCustomer],
+                    inactiveCustomers: state.inactiveCustomers.filter((c) => c.id !== id),
+                    loading: false,
+                }));
+            } catch (error) {
+                set({
+                    error: error instanceof Error ? error.message : 'Failed to reactivate customer',
+                    loading: false,
+                });
+                throw error;
+            }
+        },
+
         setSearch: (search) => set({ search }),
         updateCustomer: async (id, updatedData) => {
             set({ loading: true, error: null });
