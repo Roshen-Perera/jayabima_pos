@@ -10,6 +10,7 @@ const CustomerList = () => {
     const customers = useCustomerStore((s) => s.customers);
     const inactiveCustomers = useCustomerStore((s) => s.inactiveCustomers);
     const search = useCustomerStore((s) => s.search);
+    const loadCustomers = useCustomerStore((s) => s.loadCustomers);
 
     const filteredCustomers = React.useMemo(() => {
       if (!search) return customers;
