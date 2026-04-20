@@ -98,14 +98,10 @@ export const useProductStore = create<ProductStore>()((set) => ({
         }
     },
 
-    updateProduct: (id, updates) =>
-        set((state) => ({
-            products: state.products.map((product) =>
-                product.id === id
-                    ? { ...product, ...updates, updatedAt: new Date() }
-                    : product
-            ),
-        })),
+    updateProduct: async (id, updates) => {
+        set({ loading: true, error: null });
+
+    },
 
     deleteProduct: (id) =>
         set((state) => ({
