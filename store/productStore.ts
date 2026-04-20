@@ -123,10 +123,9 @@ export const useProductStore = create<ProductStore>()((set) => ({
         }
     },
 
-    deleteProduct: (id) =>
-        set((state) => ({
-            products: state.products.filter((p) => p.id !== id),
-        })),
+    deactivateProduct: async (id) => {
+
+    },
 
     updateStock: (id, quantity) =>
         set((state) => ({
