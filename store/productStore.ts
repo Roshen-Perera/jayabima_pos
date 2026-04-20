@@ -8,6 +8,8 @@ interface ProductStore {
     inactiveProducts: Product[];
     search: string;
     categoryFilter: string;
+    loading: boolean;
+    error: string | null;
 
     setProducts: (products: Product[]) => void;
     setInactiveProducts: (products: Product[]) => void;
