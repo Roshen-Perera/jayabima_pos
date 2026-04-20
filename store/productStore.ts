@@ -71,7 +71,10 @@ export const useProductStore = create<ProductStore>()((set) => ({
 
     addProduct: async (productData) => {
         set({ loading: true, error: null });
+        try {
+        } catch (error) {
 
+        }
     }
 
     updateProduct: (id, updates) =>
