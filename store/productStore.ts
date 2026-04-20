@@ -20,8 +20,8 @@ interface ProductStore {
     updateStock: (id: string, quantity: number) => void;
     setSearch: (search: string) => void;
     setCategoryFilter: (category: string) => void;
-      setLoading: (loading: boolean) => void;
-
+    setLoading: (loading: boolean) => void;
+    setError: (error: string | null) => void;
 }
 
 export const useProductStore = create<ProductStore>()((set) => ({
