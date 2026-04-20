@@ -70,6 +70,8 @@ export const useProductStore = create<ProductStore>()((set) => ({
     },
 
     addProduct: async (productData) => {
+        set({ loading: true, error: null });
+
     }
 
     updateProduct: (id, updates) =>
