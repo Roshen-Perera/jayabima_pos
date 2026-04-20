@@ -1,5 +1,5 @@
 import { productSchema } from "@/app/inventory/lib/validation";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 export async function PUT(
@@ -14,6 +14,7 @@ export async function PUT(
             where: { id },
             data: validatedData,
         });
+        return NextResponse.json(product);
     } catch (error) {
 
     }
