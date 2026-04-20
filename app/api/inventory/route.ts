@@ -24,7 +24,20 @@ export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
         const validatedData = productSchema.parse(body);
-
+        const product = await prisma.product.create({
+            data: {
+                name: validatedData.name,
+                category: validatedData.category,
+                sku: validatedData.sku,
+                price: validatedData.price,
+                cost: validatedData.cost,
+                stock: validatedData.stock || 0,
+                minStock: validatedData.minStock || 0,
+                description: validatedData.description || null,
+                image: validatedData.image || null,
+                active: true,
+            },
+        });
     } catch (error) {
 
     }
