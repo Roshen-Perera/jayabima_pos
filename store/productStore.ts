@@ -136,6 +136,8 @@ export const useProductStore = create<ProductStore>()((set) => ({
             const response = await fetch(`/api/inventory/${id}`, {
                 method: 'DELETE',
             });
+            if (!response.ok) throw new Error('Failed to deactivate product');
+
         } catch (error) {
 
         }
