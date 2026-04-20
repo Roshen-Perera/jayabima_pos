@@ -12,6 +12,7 @@ interface ProductStore {
     setProducts: (products: Product[]) => void;
     setInactiveProducts: (products: Product[]) => void;
     loadProducts: () => Promise<void>;
+    loadInactiveProducts: () => Promise<void>;
 
     addProduct: (product: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => void;
     updateProduct: (id: string, updates: Partial<Product>) => void;
