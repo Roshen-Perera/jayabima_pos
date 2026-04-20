@@ -12,6 +12,7 @@ export interface Product {
     description?: string;
     active: boolean;
     image?: string;
+    deletedAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
 }
