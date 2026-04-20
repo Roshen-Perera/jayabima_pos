@@ -204,7 +204,11 @@ export const useProductStore = create<ProductStore>()((set) => ({
                 loading: false,
             }));
         } catch (error) {
-
+            set({
+                error: error instanceof Error ? error.message : 'Failed to update stock',
+                loading: false,
+            });
+            throw error;
         }
     },
 
