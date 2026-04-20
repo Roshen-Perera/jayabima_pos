@@ -48,6 +48,9 @@ export async function POST(request: NextRequest) {
             );
         }
         console.error('Error creating product:', error);
-
+        return NextResponse.json(
+            { error: 'Failed to create product' },
+            { status: 500 }
+        );
     }
 }
