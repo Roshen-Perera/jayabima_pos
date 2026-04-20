@@ -37,6 +37,10 @@ export async function DELETE(
 ) {
     try {
         const { id } = await params;
+        const product = await prisma.product.update({
+            where: { id },
+            data: { active: false },
+        });
     } catch (error) {
 
     }
