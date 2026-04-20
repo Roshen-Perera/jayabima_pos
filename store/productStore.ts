@@ -33,6 +33,8 @@ export const useProductStore = create<ProductStore>()((set) => ({
     error: null,
 
     setProducts: (products) => set({ products }),
+    setInactiveProducts: (inactiveProducts) => set({ inactiveProducts }),
+
 
     addProduct: (productData) =>
         set((state) => ({
