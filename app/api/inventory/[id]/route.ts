@@ -1,6 +1,7 @@
 import { productSchema } from "@/app/inventory/lib/validation";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { z } from "zod";
 
 export async function PUT(
     request: NextRequest,
@@ -16,6 +17,11 @@ export async function PUT(
         });
         return NextResponse.json(product);
     } catch (error) {
-
+        if (error instanceof z.ZodError) {
+            return NextResponse.json(
+                { error: 'Validation failed', details: error },
+                { status: 400 }
+            );
+        }
     }
 }
