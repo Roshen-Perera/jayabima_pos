@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
                 active: true,
             },
         });
+        return NextResponse.json(product, { status: 201 });
     } catch (error) {
 
     }
