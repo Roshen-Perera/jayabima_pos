@@ -106,6 +106,8 @@ export const useProductStore = create<ProductStore>()((set) => ({
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updates),
             });
+            if (!response.ok) throw new Error('Failed to update product');
+
         } catch (error) {
 
         }
