@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useProductStore } from "@/store/productStore";
 import { AlertTriangle, Package } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProductActions from "./ProductActions";
 import PermissionGuard from "@/lib/rbac/PermissionGuard";
 
@@ -14,6 +14,11 @@ const ProductList = () => {
   const categoryFilter = useProductStore((s) => s.categoryFilter);
   const loadProducts = useProductStore((s) => s.loadProducts);
   const loadInactiveProducts = useProductStore((s) => s.loadInactiveProducts);
+
+  useEffect(() => {
+    loadProducts();
+    loadInactiveProducts();
+  }, [loadProducts, loadInactiveProducts]);
 
   const filteredProducts = React.useMemo(() => {
     let filtered = products;
