@@ -101,7 +101,11 @@ export const useProductStore = create<ProductStore>()((set) => ({
     updateProduct: async (id, updates) => {
         set({ loading: true, error: null });
         try {
-
+            const response = await fetch(`/api/inventory/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updates),
+            });
         } catch (error) {
 
         }
