@@ -72,10 +72,31 @@ export const useProductStore = create<ProductStore>()((set) => ({
     addProduct: async (productData) => {
         set({ loading: true, error: null });
         try {
-        } catch (error) {
+            const response = await fetch('/api/inventory', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(productData),
+            });
 
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to create product');
+            }
+
+            const newProduct = await response.json();
+
+            set((state) => ({
+                products: [...state.products, newProduct],
+                loading: false,
+            }));
+        } catch (error) {
+            set({
+                error: error instanceof Error ? error.message : 'Failed to add product',
+                loading: false,
+            });
+            throw error;
         }
-    }
+    },
 
     updateProduct: (id, updates) =>
         set((state) => ({
