@@ -5,6 +5,7 @@ import { AlertTriangle, Package } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import ProductActions from "./ProductActions";
 import PermissionGuard from "@/lib/rbac/PermissionGuard";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const ProductList = () => {
   const [tab, setTab] = useState("active");
@@ -53,6 +54,18 @@ const ProductList = () => {
 
   return (
     <div>
+            <Tabs value={tab} onValueChange={setTab} className="w-full">
+        <TabsList className="grid w-full max-w-md grid-cols-2">
+          <TabsTrigger value="active">Active Products</TabsTrigger>
+          <TabsTrigger value="inactive">Inactive Products</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="active" className="mt-6">
+          {filteredProducts.length === 0 ? (
+            <div className="text-center py-12 text-muted-foreground">
+              No active products found
+            </div>
+          ) : (
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
         {filteredProducts.map((product) => {
           const isLowStock = product.stock <= product.minStock;
@@ -123,6 +136,8 @@ const ProductList = () => {
           );
         })}
       </div>
+      </TabsContent>
+      
     </div>
   );
 };
