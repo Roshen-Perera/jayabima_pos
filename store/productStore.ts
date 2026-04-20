@@ -164,6 +164,11 @@ export const useProductStore = create<ProductStore>()((set) => ({
                 ],
                 inactiveProducts: state.inactiveProducts.filter((p) => p.id !== id),
             }));
+            const response = await fetch(`/api/inventory/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ active: true }),
+            });
         } catch (error) {
 
         }
