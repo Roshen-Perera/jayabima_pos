@@ -52,75 +52,77 @@ const ProductList = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-      {filteredProducts.map((product) => {
-        const isLowStock = product.stock <= product.minStock;
-        const profitMargin =
-          ((product.price - product.cost) / product.price) * 100;
+    <div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+        {filteredProducts.map((product) => {
+          const isLowStock = product.stock <= product.minStock;
+          const profitMargin =
+            ((product.price - product.cost) / product.price) * 100;
 
-        return (
-          <Card key={product.id}>
-            <CardContent className="px-5">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-semibold text-lg">{product.name}</h3>
-                    {!product.active && (
-                      <Badge variant="secondary">Inactive</Badge>
-                    )}
+          return (
+            <Card key={product.id}>
+              <CardContent className="px-5">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-semibold text-lg">{product.name}</h3>
+                      {!product.active && (
+                        <Badge variant="secondary">Inactive</Badge>
+                      )}
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      SKU: {product.sku}
+                    </p>
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    SKU: {product.sku}
-                  </p>
-                </div>
-                <PermissionGuard permission="inventory:delete">
-                  <ProductActions product={product} />
-                </PermissionGuard>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Category</span>
-                  <Badge variant="outline">{product.category}</Badge>
+                  <PermissionGuard permission="inventory:delete">
+                    <ProductActions product={product} />
+                  </PermissionGuard>
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Stock</span>
-                  <div className="flex items-center gap-2">
-                    {isLowStock && (
-                      <AlertTriangle className="w-4 h-4 text-orange-600" />
-                    )}
-                    <span
-                      className={`font-semibold ${
-                        isLowStock ? "text-orange-600" : ""
-                      }`}
-                    >
-                      {product.stock} units
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">Category</span>
+                    <Badge variant="outline">{product.category}</Badge>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Stock</span>
+                    <div className="flex items-center gap-2">
+                      {isLowStock && (
+                        <AlertTriangle className="w-4 h-4 text-orange-600" />
+                      )}
+                      <span
+                        className={`font-semibold ${
+                          isLowStock ? "text-orange-600" : ""
+                        }`}
+                      >
+                        {product.stock} units
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-muted-foreground">Price</span>
+                    <span className="font-semibold text-sm">
+                      Rs. {product.price.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">Cost</span>
+                    <span>Rs. {product.cost.toLocaleString()}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm mt-1">
+                    <span className="text-muted-foreground">Profit Margin</span>
+                    <span className="text-green-600 font-medium">
+                      {profitMargin.toFixed(2)}%
                     </span>
                   </div>
                 </div>
-
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Price</span>
-                  <span className="font-semibold text-sm">
-                    Rs. {product.price.toLocaleString()}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Cost</span>
-                  <span>Rs. {product.cost.toLocaleString()}</span>
-                </div>
-                <div className="flex items-center justify-between text-sm mt-1">
-                  <span className="text-muted-foreground">Profit Margin</span>
-                  <span className="text-green-600 font-medium">
-                    {profitMargin.toFixed(2)}%
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        );
-      })}
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
     </div>
   );
 };
