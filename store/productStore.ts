@@ -41,7 +41,17 @@ export const useProductStore = create<ProductStore>()((set) => ({
 
     loadProducts: async () => {
         set({ loading: true, error: null });
-
+        try {
+            const response = await fetch('/api/inventory?showInactive=false');
+            if (!response.ok) throw new Error('Failed to load products');
+            const data = await response.json();
+            set({ products: data, loading: false });
+        } catch (error) {
+            set({
+                error: error instanceof Error ? error.message : 'Failed to load products',
+                loading: false,
+            });
+        }
     },
 
     addProduct: (productData) =>
