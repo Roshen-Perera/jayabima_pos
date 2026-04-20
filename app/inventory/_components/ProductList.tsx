@@ -13,7 +13,7 @@ const ProductList = () => {
   const search = useProductStore((s) => s.search);
   const categoryFilter = useProductStore((s) => s.categoryFilter);
   const loadProducts = useProductStore((s) => s.loadProducts);
-
+  const loadInactiveProducts = useProductStore((s) => s.loadInactiveProducts);
 
   const filteredProducts = React.useMemo(() => {
     let filtered = products;
