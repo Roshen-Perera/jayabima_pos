@@ -154,6 +154,10 @@ export const useProductStore = create<ProductStore>()((set) => ({
         }
     },
 
+    reactivateProduct: async (id) => {
+
+    },
+
     updateStock: (id, quantity) =>
         set((state) => ({
             products: state.products.map((product) =>
