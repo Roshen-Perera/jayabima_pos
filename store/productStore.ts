@@ -26,6 +26,7 @@ interface ProductStore {
 
 export const useProductStore = create<ProductStore>()((set) => ({
     products: [],
+    inactiveProducts: [],
     search: '',
     categoryFilter: 'all',
 
