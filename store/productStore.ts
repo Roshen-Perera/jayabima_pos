@@ -170,6 +170,7 @@ export const useProductStore = create<ProductStore>()((set) => ({
                 body: JSON.stringify({ active: true }),
             });
             if (!response.ok) throw new Error('Failed to reactivate product');
+            set({ loading: false });
         } catch (error) {
 
         }
