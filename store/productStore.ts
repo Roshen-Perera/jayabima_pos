@@ -195,6 +195,8 @@ export const useProductStore = create<ProductStore>()((set) => ({
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ stock: quantity }),
             });
+            if (!response.ok) throw new Error('Failed to update stock');
+
         } catch (error) {
 
         }
