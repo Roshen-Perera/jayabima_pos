@@ -137,7 +137,7 @@ export const useProductStore = create<ProductStore>()((set) => ({
                 method: 'DELETE',
             });
             if (!response.ok) throw new Error('Failed to deactivate product');
-
+            set({ loading: false });
         } catch (error) {
 
         }
