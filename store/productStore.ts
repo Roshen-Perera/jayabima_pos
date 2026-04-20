@@ -16,6 +16,7 @@ interface ProductStore {
     addProduct: (product: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
     updateProduct: (id: string, updates: Partial<Product>) => void;
     deactivateProduct: (id: string) => Promise<void>;
+    reactivateProduct: (id: string) => Promise<void>;
     updateStock: (id: string, quantity: number) => void;
     setSearch: (search: string) => void;
     setCategoryFilter: (category: string) => void;
@@ -33,7 +34,7 @@ export const useProductStore = create<ProductStore>()((set) => ({
             products: [
                 ...state.products,
                 {
-                    id: "ITM-"+Date.now().toString(),
+                    id: "ITM-" + Date.now().toString(),
                     ...productData,
                     createdAt: new Date(),
                     updatedAt: new Date(),
