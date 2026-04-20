@@ -156,7 +156,11 @@ export const useProductStore = create<ProductStore>()((set) => ({
 
     reactivateProduct: async (id) => {
         set({ loading: true, error: null });
+        try {
 
+        } catch (error) {
+            
+        }
     },
 
     updateStock: (id, quantity) =>
