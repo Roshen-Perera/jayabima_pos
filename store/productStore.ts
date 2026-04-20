@@ -55,6 +55,8 @@ export const useProductStore = create<ProductStore>()((set) => ({
     },
 
     loadInactiveProducts: async () => {
+        set({ loading: true, error: null });
+
     },
 
     addProduct: (productData) =>
