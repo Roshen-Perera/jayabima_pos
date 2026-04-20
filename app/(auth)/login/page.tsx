@@ -21,7 +21,7 @@ const page = () => {
           </div>
           <LoginForm />
           <p className="text-center text-sm text-muted-foreground mt-8">
-            © 2026 JAYABIMA. All rights reserved.
+            © 2026 Roshen Perera. All rights reserved.
           </p>
         </div>
       </div>
