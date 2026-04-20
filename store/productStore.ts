@@ -13,8 +13,7 @@ interface ProductStore {
     setInactiveProducts: (products: Product[]) => void;
     loadProducts: () => Promise<void>;
     loadInactiveProducts: () => Promise<void>;
-
-    addProduct: (product: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => void;
+    addProduct: (product: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
     updateProduct: (id: string, updates: Partial<Product>) => void;
     deleteProduct: (id: string) => void;
     updateStock: (id: string, quantity: number) => void;
