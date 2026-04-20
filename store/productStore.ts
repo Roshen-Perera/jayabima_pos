@@ -108,7 +108,12 @@ export const useProductStore = create<ProductStore>()((set) => ({
             });
             if (!response.ok) throw new Error('Failed to update product');
             const updatedProduct = await response.json();
-
+            set((state) => ({
+                products: state.products.map((p) =>
+                    p.id === id ? updatedProduct : p
+                ),
+                loading: false,
+            }));
         } catch (error) {
 
         }
