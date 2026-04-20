@@ -139,7 +139,18 @@ export const useProductStore = create<ProductStore>()((set) => ({
             if (!response.ok) throw new Error('Failed to deactivate product');
             set({ loading: false });
         } catch (error) {
-
+            set((state) => {
+                const inactiveProduct = state.inactiveProducts.find((p) => p.id === id);
+                return {
+                    products: inactiveProduct
+                        ? [...state.products, inactiveProduct]
+                        : state.products,
+                    inactiveProducts: state.inactiveProducts.filter((p) => p.id !== id),
+                    error: error instanceof Error ? error.message : 'Failed to deactivate product',
+                    loading: false,
+                };
+            });
+            throw error;
         }
     },
 
