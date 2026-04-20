@@ -133,7 +133,9 @@ export const useProductStore = create<ProductStore>()((set) => ({
                 ],
                 products: state.products.filter((p) => p.id !== id),
             }));
-
+            const response = await fetch(`/api/inventory/${id}`, {
+                method: 'DELETE',
+            });
         } catch (error) {
 
         }
