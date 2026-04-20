@@ -155,6 +155,7 @@ export const useProductStore = create<ProductStore>()((set) => ({
     },
 
     reactivateProduct: async (id) => {
+        set({ loading: true, error: null });
 
     },
 
