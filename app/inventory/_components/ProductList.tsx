@@ -2,11 +2,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useProductStore } from "@/store/productStore";
 import { AlertTriangle, Package } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import ProductActions from "./ProductActions";
 import PermissionGuard from "@/lib/rbac/PermissionGuard";
 
 const ProductList = () => {
+  const [tab, setTab] = useState("active");
+
   const products = useProductStore((s) => s.products);
   const search = useProductStore((s) => s.search);
   const categoryFilter = useProductStore((s) => s.categoryFilter);
