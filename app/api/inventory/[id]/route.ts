@@ -46,6 +46,10 @@ export async function DELETE(
             product,
         });
     } catch (error) {
-
+        console.error('Error deactivating product:', error);
+        return NextResponse.json(
+            { error: 'Failed to deactivate product' },
+            { status: 500 }
+        );
     }
 }
