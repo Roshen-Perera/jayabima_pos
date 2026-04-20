@@ -187,20 +187,9 @@ export const useProductStore = create<ProductStore>()((set) => ({
         }
     },
 
-    updateStock: (id, quantity) =>
-        set((state) => ({
-            products: state.products.map((product) =>
-                product.id === id
-                    ? {
-                        ...product,
-                        stock: product.stock - quantity,
-                        updatedAt: new Date()
-                    }
-                    : product
-            ),
-        })),
-
+    updateStock: async (id, quantity) => {
+    },
+    
     setSearch: (search) => set({ search }),
-
     setCategoryFilter: (category) => set({ categoryFilter: category }),
 }));
