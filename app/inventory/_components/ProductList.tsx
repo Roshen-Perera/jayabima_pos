@@ -8,8 +8,8 @@ import PermissionGuard from "@/lib/rbac/PermissionGuard";
 
 const ProductList = () => {
   const [tab, setTab] = useState("active");
-
   const products = useProductStore((s) => s.products);
+  const inactiveProducts = useProductStore((s) => s.inactiveProducts);
   const search = useProductStore((s) => s.search);
   const categoryFilter = useProductStore((s) => s.categoryFilter);
 
