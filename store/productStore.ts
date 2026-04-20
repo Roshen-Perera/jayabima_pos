@@ -172,7 +172,18 @@ export const useProductStore = create<ProductStore>()((set) => ({
             if (!response.ok) throw new Error('Failed to reactivate product');
             set({ loading: false });
         } catch (error) {
-
+            set((state) => {
+                const activeProduct = state.products.find((p) => p.id === id);
+                return {
+                    inactiveProducts: activeProduct
+                        ? [...state.inactiveProducts, activeProduct]
+                        : state.inactiveProducts,
+                    products: state.products.filter((p) => p.id !== id),
+                    error: error instanceof Error ? error.message : 'Failed to reactivate product',
+                    loading: false,
+                };
+            });
+            throw error;
         }
     },
 
