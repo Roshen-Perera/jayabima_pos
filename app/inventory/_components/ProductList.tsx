@@ -38,23 +38,10 @@ const ProductList = () => {
     });
   }, [products, inactiveProducts, search, categoryFilter, tab]);
 
-  if (filteredProducts.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <Package className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-        <h3 className="text-lg font-semibold mb-2">No products found</h3>
-        <p className="text-muted-foreground">
-          {search || categoryFilter !== "all"
-            ? "Try adjusting your filters"
-            : "Add your first product to get started"}
-        </p>
-      </div>
-    );
-  }
 
   return (
     <div>
-            <Tabs value={tab} onValueChange={setTab} className="w-full">
+        <Tabs value={tab} onValueChange={setTab} className="w-full">
         <TabsList className="grid w-full max-w-md grid-cols-2">
           <TabsTrigger value="active">Active Products</TabsTrigger>
           <TabsTrigger value="inactive">Inactive Products</TabsTrigger>
@@ -137,7 +124,7 @@ const ProductList = () => {
         })}
       </div>
       </TabsContent>
-      
+
     </div>
   );
 };
