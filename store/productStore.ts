@@ -157,9 +157,15 @@ export const useProductStore = create<ProductStore>()((set) => ({
     reactivateProduct: async (id) => {
         set({ loading: true, error: null });
         try {
-
+            set((state) => ({
+                products: [
+                    ...state.products,
+                    state.inactiveProducts.find((p) => p.id === id)!,
+                ],
+                inactiveProducts: state.inactiveProducts.filter((p) => p.id !== id),
+            }));
         } catch (error) {
-            
+
         }
     },
 
