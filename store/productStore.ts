@@ -124,6 +124,7 @@ export const useProductStore = create<ProductStore>()((set) => ({
     },
 
     deactivateProduct: async (id) => {
+        set({ loading: true, error: null });
 
     },
 
