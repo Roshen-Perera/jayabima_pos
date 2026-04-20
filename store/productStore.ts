@@ -190,8 +190,13 @@ export const useProductStore = create<ProductStore>()((set) => ({
     updateStock: async (id, quantity) => {
         set({ loading: true, error: null });
         try {
+            const response = await fetch(`/api/inventory/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ stock: quantity }),
+            });
         } catch (error) {
-            
+
         }
     },
 
