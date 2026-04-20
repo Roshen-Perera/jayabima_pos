@@ -40,7 +40,8 @@ export const useProductStore = create<ProductStore>()((set) => ({
     setError: (error) => set({ error }),
 
     loadProducts: async () => {
-    
+        set({ loading: true, error: null });
+
     },
 
     addProduct: (productData) =>
