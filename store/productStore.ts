@@ -125,7 +125,11 @@ export const useProductStore = create<ProductStore>()((set) => ({
 
     deactivateProduct: async (id) => {
         set({ loading: true, error: null });
+        try {
 
+        } catch (error) {
+            
+        }
     },
 
     updateStock: (id, quantity) =>
