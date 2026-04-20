@@ -9,6 +9,7 @@ export async function GET(request: NextRequest) {
             where: { active: !showInactive, deletedAt: null },
             orderBy: { createdAt: 'desc' },
         });
+        return new Response(JSON.stringify(products), { status: 200 });
     } catch (error) {
 
     }
