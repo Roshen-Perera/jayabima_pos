@@ -132,7 +132,6 @@ model Product {
   @@index([name])
   @@index([category])
   @@index([stock])
-  @@index([deletedAt])
 }
 
 model Sale {
