@@ -126,7 +126,6 @@ model Product {
   saleItems      SaleItem[]
   inventoryLogs  InventoryLog[]
 
-  deletedAt   DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
