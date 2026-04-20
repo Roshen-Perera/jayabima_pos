@@ -30,6 +30,7 @@ export const useProductStore = create<ProductStore>()((set) => ({
     search: '',
     categoryFilter: 'all',
     loading: false,
+    error: null,
 
     setProducts: (products) => set({ products }),
 
