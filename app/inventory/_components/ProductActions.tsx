@@ -28,14 +28,14 @@ interface ProductActionsProps {
 }
 
 const ProductActions = ({ product }: ProductActionsProps) => {
-  const deleteProduct = useProductStore((s) => s.deleteProduct);
+  // const deleteProduct = useProductStore((s) => s.deleteProduct);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
 
-  const handleDelete = () => {
-    deleteProduct(product.id);
-    alert.success("Product deleted!", `${product.name} has been removed.`);
-  };
+  // const handleDelete = () => {
+  //   deleteProduct(product.id);
+  //   alert.success("Product deleted!", `${product.name} has been removed.`);
+  // };
   return (
     <>
       <DropdownMenu modal={false}>
@@ -83,12 +83,12 @@ const ProductActions = ({ product }: ProductActionsProps) => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
+            {/* <AlertDialogAction
               onClick={handleDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               Delete Customer
-            </AlertDialogAction>
+            </AlertDialogAction> */}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
