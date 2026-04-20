@@ -189,7 +189,10 @@ export const useProductStore = create<ProductStore>()((set) => ({
 
     updateStock: async (id, quantity) => {
         set({ loading: true, error: null });
-
+        try {
+        } catch (error) {
+            
+        }
     },
 
     setSearch: (search) => set({ search }),
