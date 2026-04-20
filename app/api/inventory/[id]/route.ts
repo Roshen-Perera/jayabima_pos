@@ -41,6 +41,10 @@ export async function DELETE(
             where: { id },
             data: { active: false },
         });
+        return NextResponse.json({
+            message: 'Product deactivated successfully',
+            product,
+        });
     } catch (error) {
 
     }
