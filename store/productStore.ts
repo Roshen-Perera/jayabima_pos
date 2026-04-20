@@ -39,6 +39,9 @@ export const useProductStore = create<ProductStore>()((set) => ({
     setLoading: (loading) => set({ loading }),
     setError: (error) => set({ error }),
 
+    loadProducts: async () => {
+    
+    },
 
     addProduct: (productData) =>
         set((state) => ({
