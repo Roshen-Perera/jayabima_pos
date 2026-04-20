@@ -23,5 +23,7 @@ export async function PUT(
                 { status: 400 }
             );
         }
+        console.error('Error updating product:', error);
+
     }
 }
