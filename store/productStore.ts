@@ -196,6 +196,7 @@ export const useProductStore = create<ProductStore>()((set) => ({
                 body: JSON.stringify({ stock: quantity }),
             });
             if (!response.ok) throw new Error('Failed to update stock');
+            const updatedProduct = await response.json();
 
         } catch (error) {
 
