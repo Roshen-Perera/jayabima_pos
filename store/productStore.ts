@@ -5,6 +5,7 @@ import { create } from "zustand";
 
 interface ProductStore {
     products: Product[];
+    inactiveProducts: Product[];
     search: string;
     categoryFilter: string;
 
