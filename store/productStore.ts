@@ -25,7 +25,7 @@ interface ProductStore {
 }
 
 export const useProductStore = create<ProductStore>()((set) => ({
-    products: dummyProducts,
+    products: [],
     search: '',
     categoryFilter: 'all',
 
