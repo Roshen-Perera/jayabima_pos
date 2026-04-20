@@ -21,25 +21,21 @@ const ProductList = () => {
   }, [loadProducts, loadInactiveProducts]);
 
   const filteredProducts = React.useMemo(() => {
-    let filtered = products;
+    const list = tab === "active" ? products : inactiveProducts;
+    if (!search && categoryFilter === "all") return list;
 
-    // Search filter
-    if (search) {
-      const keyword = search.toLowerCase();
-      filtered = filtered.filter(
-        (p) =>
-          p.name.toLowerCase().includes(keyword) ||
-          p.sku.toLowerCase().includes(keyword) ||
-          p.category.toLowerCase().includes(keyword),
-      );
-    }
+    return list.filter((p) => {
+      const matchesSearch =
+        p.name.toLowerCase().includes(search.toLowerCase()) ||
+        p.sku.toLowerCase().includes(search.toLowerCase()) ||
+        p.category.toLowerCase().includes(search.toLowerCase());
 
-    if (categoryFilter && categoryFilter !== "all") {
-      filtered = filtered.filter((p) => p.category === categoryFilter);
-    }
+      const matchesCategory =
+        categoryFilter === "all" || p.category === categoryFilter;
 
-    return filtered;
-  }, [products, search, categoryFilter]);
+      return matchesSearch && matchesCategory;
+    });
+  }, [products, inactiveProducts, search, categoryFilter, tab]);
 
   if (filteredProducts.length === 0) {
     return (
