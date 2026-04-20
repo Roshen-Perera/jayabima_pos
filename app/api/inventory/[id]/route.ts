@@ -5,8 +5,9 @@ export async function PUT(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try{
+        const { id } = await params;
 
     } catch (error) {
-        
+
     }
 }
