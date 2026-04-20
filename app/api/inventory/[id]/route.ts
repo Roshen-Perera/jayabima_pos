@@ -36,7 +36,7 @@ export async function DELETE(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-
+        const { id } = await params;
     } catch (error) {
 
     }
