@@ -100,7 +100,11 @@ export const useProductStore = create<ProductStore>()((set) => ({
 
     updateProduct: async (id, updates) => {
         set({ loading: true, error: null });
+        try {
 
+        } catch (error) {
+
+        }
     },
 
     deleteProduct: (id) =>
