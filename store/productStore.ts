@@ -1,5 +1,4 @@
 import { Product } from "@/app/inventory/_types/product.types";
-import { dummyProducts } from "@/data/data";
 import { create } from "zustand";
 
 
