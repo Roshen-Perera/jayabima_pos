@@ -32,6 +32,7 @@ const ProductActions = ({ product, type = "active" }: ProductActionsProps) => {
   const deactivateProduct = useProductStore((s) => s.deactivateProduct);
   const reactivateProduct = useProductStore((s) => s.reactivateProduct);
   const [showActionAlert, setShowActionAlert] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
 
   const handleDeactivate = async () => {
     try {
