@@ -45,6 +45,7 @@ export const productSchema = z.object({
         .optional(),
 
     active: z.boolean().optional(),
+    supplierId: z.string().optional(),
 });
 
 export type ProductFormData = z.infer<typeof productSchema>;
