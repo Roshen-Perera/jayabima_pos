@@ -31,7 +31,7 @@ interface ProductActionsProps {
 const ProductActions = ({ product, type = "active" }: ProductActionsProps) => {
   const deactivateProduct = useProductStore((s) => s.deactivateProduct);
   const reactivateProduct = useProductStore((s) => s.reactivateProduct);
-  const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showActionAlert, setShowActionAlert] = useState(false);
 
   // const handleDelete = () => {
   //   deleteProduct(product.id);
