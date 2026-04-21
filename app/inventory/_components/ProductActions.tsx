@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { MoreVertical, Pencil, RotateCcw, Trash2 } from "lucide-react";
 import ProductForm from "./ProductForm";
 import {
   AlertDialogHeader,
