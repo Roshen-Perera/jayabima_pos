@@ -33,10 +33,15 @@ const ProductActions = ({ product, type = "active" }: ProductActionsProps) => {
   const reactivateProduct = useProductStore((s) => s.reactivateProduct);
   const [showActionAlert, setShowActionAlert] = useState(false);
 
-  // const handleDelete = () => {
-  //   deleteProduct(product.id);
-  //   alert.success("Product deleted!", `${product.name} has been removed.`);
-  // };
+  const handleDeactivate = async () => {
+    try {
+      await deactivateProduct(product.id);
+      alert.success(`Product ${product.name} has been deactivated.`);
+      setShowActionAlert(false);
+    } catch (error) {
+      alert.error("Failed to deactivate product");
+    }
+  };
   return (
     <>
       <DropdownMenu modal={false}>
