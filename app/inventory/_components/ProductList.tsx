@@ -76,7 +76,7 @@ const ProductList = () => {
                           </p>
                         </div>
                         <PermissionGuard permission="inventory:delete">
-                          <ProductActions product={product} />
+                          <ProductActions product={product} type="active" />
                         </PermissionGuard>
                       </div>
 
