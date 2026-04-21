@@ -75,7 +75,12 @@ export const useProductStore = create<ProductStore>()((set) => ({
             const response = await fetch('/api/inventory', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(productData),
+                body: JSON.stringify({
+                    ...productData,
+                    stock: productData.stock ?? 0,
+                    minStock: productData.minStock ?? 0,
+                    active: productData.active ?? true,
+                }),
             });
 
             if (!response.ok) {
