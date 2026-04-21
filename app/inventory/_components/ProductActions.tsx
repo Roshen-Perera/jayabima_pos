@@ -25,6 +25,7 @@ import {
 
 interface ProductActionsProps {
   product: Product;
+  type?: "active" | "inactive";
 }
 
 const ProductActions = ({ product }: ProductActionsProps) => {
