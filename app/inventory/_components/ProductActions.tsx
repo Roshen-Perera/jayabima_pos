@@ -43,6 +43,15 @@ const ProductActions = ({ product, type = "active" }: ProductActionsProps) => {
       alert.error("Failed to deactivate product");
     }
   };
+  const handleReactivate = async () => {
+    try {
+      await reactivateProduct(product.id);
+      alert.success(`Product ${product.name} has been reactivated.`);
+      setShowActionAlert(false);
+    } catch (error) {
+      alert.error("Failed to reactivate product");
+    }
+  };
   return (
     <>
       <DropdownMenu modal={false}>
