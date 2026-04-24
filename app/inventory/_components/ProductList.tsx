@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useProductStore } from "@/store/productStore";
-import { AlertTriangle, Package } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import ProductActions from "./ProductActions";
 import PermissionGuard from "@/lib/rbac/PermissionGuard";
