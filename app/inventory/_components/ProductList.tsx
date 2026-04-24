@@ -133,7 +133,6 @@ const ProductList = () => {
               })}
             </div>
           )}
-          ;
         </TabsContent>
         <TabsContent value="inactive" className="mt-6">
           {filteredProducts.length === 0 ? (
