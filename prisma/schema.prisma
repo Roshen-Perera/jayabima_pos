@@ -122,6 +122,9 @@ model Product {
   description String?
   active      Boolean   @default(true)
   image       String?
+  supplierId  String?
+  supplier    Supplier?   @relation(fields: [supplierId], references: [id], onDelete: SetNull)
+
 
   saleItems      SaleItem[]
   inventoryLogs  InventoryLog[]
@@ -132,6 +135,25 @@ model Product {
   @@index([name])
   @@index([category])
   @@index([stock])
+}
+
+model Supplier {
+  id              String    @id @default(cuid())
+  name            String
+  contactPerson   String?
+  email           String?   @unique
+  phone           String?
+  address         String?
+  active          Boolean   @default(true)
+
+  products        Product[]
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([name])
+  @@index([email])
+  @@index([active])
 }
 
 model Sale {
