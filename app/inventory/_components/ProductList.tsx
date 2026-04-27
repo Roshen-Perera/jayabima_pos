@@ -221,7 +221,6 @@ const ProductList = () => {
               })}
             </div>
           )}
-          ;
         </TabsContent>
       </Tabs>
     </div>
