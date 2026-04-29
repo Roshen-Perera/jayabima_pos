@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { usePOSStore } from "@/store/posStore";
 import { productCategories } from "@/data/data";
 
@@ -23,6 +23,8 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/
 
 export default function POSPage() {
   const { products } = useProductStore();
+  const loadProducts = useProductStore((s) => s.loadProducts);
+  const loadInactiveProducts = useProductStore((s) => s.loadInactiveProducts);
   const { cart, addToCart } = usePOSStore();
 
   // UI State
@@ -43,6 +45,11 @@ export default function POSPage() {
     setCompletedSale(sale);
     setIsReceiptOpen(true);
   };
+
+  useEffect(() => {
+    loadProducts();
+    loadInactiveProducts();
+  }, [loadProducts, loadInactiveProducts]);
 
   return (
     <div className="flex h-[calc(100vh-7rem)] xl:h-[calc(100vh-7rem)] gap-4 overflow-hidden">
