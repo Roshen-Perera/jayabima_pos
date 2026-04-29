@@ -25,7 +25,7 @@ interface ProductStore {
     setError: (error: string | null) => void;
 }
 
-export const useProductStore = create<ProductStore>()((set) => ({
+export const useProductStore = create<ProductStore>()((set, get) => ({
     products: [],
     inactiveProducts: [],
     search: '',
@@ -194,10 +194,19 @@ export const useProductStore = create<ProductStore>()((set) => ({
     updateStock: async (id, quantity) => {
         set({ loading: true, error: null });
         try {
+            // Get the current product to calculate new stock (deduction)
+            const currentProduct = get().products.find(p => p.id === id);
+            if (!currentProduct) {
+                throw new Error('Product not found');
+            }
+
+            // Deduct quantity from existing stock (prevent negative stock)
+            const newStock = Math.max(0, currentProduct.stock - quantity);
+
             const response = await fetch(`/api/inventory/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ stock: quantity }),
+                body: JSON.stringify({ stock: newStock }),
             });
             if (!response.ok) throw new Error('Failed to update stock');
             const updatedProduct = await response.json();
