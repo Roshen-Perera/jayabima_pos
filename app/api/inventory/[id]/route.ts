@@ -2,11 +2,14 @@ import { productSchema } from "@/app/inventory/lib/validation";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import { requirePermission } from "@/lib/rbac/api-guard";
 
 export async function PUT(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    const { authorized, response } = await requirePermission(request, 'inventory:update');
+    if (!authorized) return response;
     try {
         const { id } = await params;
         const body = await request.json();
@@ -35,6 +38,8 @@ export async function DELETE(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    const { authorized, response } = await requirePermission(request, 'inventory:delete');
+    if (!authorized) return response;
     try {
         const { id } = await params;
         const product = await prisma.product.update({
