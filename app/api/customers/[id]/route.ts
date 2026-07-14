@@ -7,6 +7,8 @@ export async function PUT(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    const { authorized, response } = await requirePermission(request, 'customers:update');
+    if (!authorized) return response;
     try {
         const { id } = await params;
         const body = await request.json();
@@ -35,6 +37,8 @@ export async function DELETE(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    const { authorized, response } = await requirePermission(request, 'customers:delete');
+    if (!authorized) return response;
     try {
         const { id } = await params;
         const customer = await prisma.customer.update({
