@@ -1,5 +1,6 @@
 import { customerSchema } from '@/app/customers/lib/validation';
 import { prisma } from '@/lib/prisma';
+import { requirePermission } from '@/lib/rbac/api-guard';
 import { NextRequest, NextResponse } from 'next/server';
 import z from 'zod';
 
