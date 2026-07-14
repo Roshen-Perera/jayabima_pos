@@ -2,8 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { productSchema } from "@/app/inventory/lib/validation";
 import { z } from "zod";
+import { requirePermission } from "@/lib/rbac/api-guard";
 
 export async function GET(request: NextRequest) {
+    const { authorized, response } = await requirePermission(request, 'inventory:view');
+    if (!authorized) return response;
     try {
         const searchParams = request.nextUrl.searchParams;
         const showInactive = searchParams.get('showInactive') === 'true';
@@ -22,6 +25,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+    const { authorized, response } = await requirePermission(request, 'inventory:create');
+    if (!authorized) return response;
     try {
         const body = await request.json();
         const validatedData = productSchema.parse(body);
