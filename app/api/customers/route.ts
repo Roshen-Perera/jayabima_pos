@@ -4,6 +4,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import z from 'zod';
 
 export async function GET(request: NextRequest) {
+    const { authorized, response } = await requirePermission(request, 'customers:view');
+    if (!authorized) return response;
     try {
         const searchParams = request.nextUrl.searchParams;
         const showInactive = searchParams.get('showInactive') === 'true';
@@ -19,6 +21,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+    const { authorized, response } = await requirePermission(request, 'customers:create');
+    if (!authorized) return response;
     try {
         const body = await request.json();
         const validatedData = customerSchema.parse(body);
