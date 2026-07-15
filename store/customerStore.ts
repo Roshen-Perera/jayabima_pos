@@ -72,7 +72,10 @@ export const useCustomerStore = create<CustomerStore>()(
                 const response = await fetch('/api/customers');
                 if (!response.ok) throw new Error('Failed to load customers');
                 const data = await response.json();
-                set({ customers: data, loading: false });
+                set({
+                    customers: (data as ApiCustomer[]).map(mapApiCustomer),
+                    loading: false
+                });
             } catch (error) {
                 set({
                     error: error instanceof Error ? error.message : 'Failed to load customers',
@@ -87,7 +90,10 @@ export const useCustomerStore = create<CustomerStore>()(
                 const response = await fetch('/api/customers?showInactive=true');
                 if (!response.ok) throw new Error('Failed to load inactive customers');
                 const data = await response.json();
-                set({ inactiveCustomers: data, loading: false });
+                set({
+                    inactiveCustomers: (data as ApiCustomer[]).map(mapApiCustomer),
+                    loading: false
+                });
             } catch (error) {
                 set({
                     error: error instanceof Error ? error.message : 'Failed to load inactive customers',
@@ -113,8 +119,11 @@ export const useCustomerStore = create<CustomerStore>()(
                 const newCustomer = await response.json();
 
                 set((state) => ({
-                    customers: [...state.customers, newCustomer],
-                    loading: false,
+                    customers: [
+                        ...state.customers,
+                        mapApiCustomer(newCustomer)
+                    ],
+                    loading: false
                 }));
             } catch (error) {
                 set({
@@ -205,7 +214,9 @@ export const useCustomerStore = create<CustomerStore>()(
                     body: JSON.stringify(updatedData),
                 });
                 if (!response.ok) throw new Error('Failed to update customer');
-                const updatedCustomer = await response.json();
+                const updatedCustomer = mapApiCustomer(
+                    await response.json()
+                );
                 set((state) => ({
                     customers: state.customers.map((c) =>
                         c.id === id ? updatedCustomer : c
