@@ -229,7 +229,11 @@ export const useProductStore = create<ProductStore>()((set, get) => ({
             const updatedProduct = mapApiProduct(await response.json());
 
             set((state) => ({
-                products: [...state.products, updatedProduct],
+                products: state.products.some((product) => product.id === id)
+                    ? state.products.map((product) =>
+                        product.id === id ? updatedProduct : product,
+                    )
+                    : [...state.products, updatedProduct],
                 inactiveProducts: state.inactiveProducts.filter((p) => p.id !== id),
                 loading: false,
             }));
