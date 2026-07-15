@@ -99,7 +99,7 @@ export function CustomerForm({
         // Add new customer
         addCustomer({
           ...data,
-          totalPurchases: 0,
+          isActive: true,
         });
         alert.success(
           "Customer created!",

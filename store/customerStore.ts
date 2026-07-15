@@ -9,6 +9,7 @@ interface ApiCustomer {
     address: string | null;
     loyaltyPoints: number;
     creditBalance: number;
+    totalPurchases: number;
     isActive: boolean;
     createdAt: string;
     updatedAt: string;
@@ -23,6 +24,7 @@ function mapApiCustomer(raw: ApiCustomer): Customer {
         address: raw.address ?? '',
         loyaltyPoints: raw.loyaltyPoints,
         creditBalance: raw.creditBalance,
+        totalPurchases: raw.totalPurchases,
         isActive: raw.isActive,
         createdAt: new Date(raw.createdAt),
         updatedAt: new Date(raw.updatedAt),
@@ -44,7 +46,12 @@ interface CustomerStore {
     addCustomer: (
         customer: Omit<
             Customer,
-            'id' | 'loyaltyPoints' | 'creditBalance' | 'createdAt' | 'updatedAt'
+            | 'id'
+            | 'loyaltyPoints'
+            | 'creditBalance'
+            | 'totalPurchases'
+            | 'createdAt'
+            | 'updatedAt'
         >
     ) => Promise<void>;
 
@@ -189,7 +196,7 @@ export const useCustomerStore = create<CustomerStore>()(
                 throw error;
             }
         },
-        
+
         reactivateCustomer: async (id) => {
             set({ loading: true, error: null });
 

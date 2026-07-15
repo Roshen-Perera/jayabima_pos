@@ -6,6 +6,7 @@ export interface Customer {
     address: string;
     loyaltyPoints: number;
     creditBalance: number;
+    totalPurchases: number;
     isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
