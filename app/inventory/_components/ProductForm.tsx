@@ -176,13 +176,13 @@ const ProductForm = ({
   const onSubmit = async (data: ProductFormData) => {
     try {
       if (mode === "edit" && product) {
-          await updateProduct(product.id, data);
+        await updateProduct(product.id, data);
         alert.success(
           "Product updated!",
           `${data.name} has been updated successfully.`,
         );
       } else {
-          await addProduct(data);
+        await addProduct(data);
         alert.success(
           "Product added!",
           `${data.name} has been added successfully.`,
