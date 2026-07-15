@@ -1,6 +1,58 @@
 import { Product } from "@/app/inventory/_types/product.types";
 import { create } from "zustand";
 
+interface ApiProduct {
+    id: string;
+    name: string;
+    category: string;
+    sku: string;
+    barcode: string | null;
+
+    supplierId?: string | null;
+
+    price: number;
+    cost: number;
+
+    stock: number;
+    minStock: number;
+
+    description?: string | null;
+
+    active: boolean;
+    image?: string | null;
+
+    createdAt: string;
+    updatedAt: string;
+}
+
+function mapApiProduct(raw: ApiProduct): Product {
+    return {
+        id: raw.id,
+
+        name: raw.name,
+        category: raw.category,
+
+        sku: raw.sku,
+        barcode: raw.barcode ?? undefined,
+
+        supplierId: raw.supplierId ?? undefined,
+
+        price: raw.price,
+        cost: raw.cost,
+
+        stock: raw.stock,
+        minStock: raw.minStock,
+
+        description: raw.description ?? undefined,
+
+        active: raw.active,
+
+        image: raw.image ?? undefined,
+
+        createdAt: new Date(raw.createdAt),
+        updatedAt: new Date(raw.updatedAt),
+    };
+}
 
 interface ProductStore {
     products: Product[];
@@ -15,10 +67,16 @@ interface ProductStore {
     loadProducts: () => Promise<void>;
     loadInactiveProducts: () => Promise<void>;
     addProduct: (product: Partial<Omit<Product, 'id' | 'createdAt' | 'updatedAt'>>) => Promise<void>;
-    updateProduct: (id: string, updates: Partial<Product>) => void;
+    updateProduct: (
+    id: string,
+    updates: Partial<Product>
+    ) => Promise<void>;
     deactivateProduct: (id: string) => Promise<void>;
     reactivateProduct: (id: string) => Promise<void>;
-    updateStock: (id: string, quantity: number) => void;
+    updateStock: (
+    id: string,
+    quantity: number
+) => Promise<void>;
     setSearch: (search: string) => void;
     setCategoryFilter: (category: string) => void;
     setLoading: (loading: boolean) => void;
@@ -44,7 +102,10 @@ export const useProductStore = create<ProductStore>()((set, get) => ({
             const response = await fetch('/api/inventory?showInactive=false');
             if (!response.ok) throw new Error('Failed to load products');
             const data = await response.json();
-            set({ products: data, loading: false });
+            set({
+                products: (data as ApiProduct[]).map(mapApiProduct),
+                loading: false
+            });
         } catch (error) {
             set({
                 error: error instanceof Error ? error.message : 'Failed to load products',
@@ -59,7 +120,10 @@ export const useProductStore = create<ProductStore>()((set, get) => ({
             const response = await fetch('/api/inventory?showInactive=true');
             if (!response.ok) throw new Error('Failed to load inactive products');
             const data = await response.json();
-            set({ inactiveProducts: data, loading: false });
+            set({
+                inactiveProducts: (data as ApiProduct[]).map(mapApiProduct),
+                loading: false
+            });
         } catch (error) {
             set({
                 error: error instanceof Error ? error.message : 'Failed to load inactive products',
@@ -90,8 +154,11 @@ export const useProductStore = create<ProductStore>()((set, get) => ({
             const newProduct = await response.json();
 
             set((state) => ({
-                products: [...state.products, newProduct],
-                loading: false,
+                products: [
+                    ...state.products,
+                    mapApiProduct(newProduct)
+                ],
+                loading: false
             }));
         } catch (error) {
             set({
@@ -111,7 +178,9 @@ export const useProductStore = create<ProductStore>()((set, get) => ({
                 body: JSON.stringify(updates),
             });
             if (!response.ok) throw new Error('Failed to update product');
-            const updatedProduct = await response.json();
+            const updatedProduct = mapApiProduct(
+                await response.json()
+            );
             set((state) => ({
                 products: state.products.map((p) =>
                     p.id === id ? updatedProduct : p
@@ -161,20 +230,32 @@ export const useProductStore = create<ProductStore>()((set, get) => ({
     reactivateProduct: async (id) => {
         set({ loading: true, error: null });
         try {
-            set((state) => ({
-                products: [
-                    ...state.products,
-                    state.inactiveProducts.find((p) => p.id === id)!,
-                ],
-                inactiveProducts: state.inactiveProducts.filter((p) => p.id !== id),
-            }));
             const response = await fetch(`/api/inventory/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ active: true }),
-            });
-            if (!response.ok) throw new Error('Failed to reactivate product');
-            set({ loading: false });
+    method: "PUT",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ active: true }),
+});
+
+if (!response.ok) {
+    throw new Error("Failed to reactivate product");
+}
+
+const updatedProduct = mapApiProduct(
+    await response.json()
+);
+
+set((state) => ({
+    products: [
+        ...state.products,
+        updatedProduct,
+    ],
+    inactiveProducts: state.inactiveProducts.filter(
+        (p) => p.id !== id
+    ),
+    loading: false,
+}));
         } catch (error) {
             set((state) => {
                 const activeProduct = state.products.find((p) => p.id === id);

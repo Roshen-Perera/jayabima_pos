@@ -4,6 +4,7 @@ export interface Product {
     name: string;
     category: string;
     sku: string;
+    barcode?: string;
     supplierId?: string;
     price: number;
     cost: number;
