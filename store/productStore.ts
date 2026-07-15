@@ -1,6 +1,58 @@
 import { Product } from "@/app/inventory/_types/product.types";
 import { create } from "zustand";
 
+interface ApiProduct {
+    id: string;
+    name: string;
+    category: string;
+    sku: string;
+    barcode: string | null;
+
+    supplierId?: string | null;
+
+    price: number;
+    cost: number;
+
+    stock: number;
+    minStock: number;
+
+    description?: string | null;
+
+    active: boolean;
+    image?: string | null;
+
+    createdAt: string;
+    updatedAt: string;
+}
+
+function mapApiProduct(raw: ApiProduct): Product {
+    return {
+        id: raw.id,
+
+        name: raw.name,
+        category: raw.category,
+
+        sku: raw.sku,
+        barcode: raw.barcode ?? undefined,
+
+        supplierId: raw.supplierId ?? undefined,
+
+        price: raw.price,
+        cost: raw.cost,
+
+        stock: raw.stock,
+        minStock: raw.minStock,
+
+        description: raw.description ?? undefined,
+
+        active: raw.active,
+
+        image: raw.image ?? undefined,
+
+        createdAt: new Date(raw.createdAt),
+        updatedAt: new Date(raw.updatedAt),
+    };
+}
 
 interface ProductStore {
     products: Product[];
