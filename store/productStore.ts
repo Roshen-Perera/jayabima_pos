@@ -163,6 +163,9 @@ export const useProductStore = create<ProductStore>()((set, get) => ({
             const updatedProduct = mapApiProduct(await response.json());
             set((state) => ({
                 products: state.products.map((p) => (p.id === id ? updatedProduct : p)),
+                inactiveProducts: state.inactiveProducts.map((p) =>
+                    p.id === id ? updatedProduct : p,
+                ),
                 loading: false,
             }));
         } catch (error) {
