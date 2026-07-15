@@ -67,10 +67,16 @@ interface ProductStore {
     loadProducts: () => Promise<void>;
     loadInactiveProducts: () => Promise<void>;
     addProduct: (product: Partial<Omit<Product, 'id' | 'createdAt' | 'updatedAt'>>) => Promise<void>;
-    updateProduct: (id: string, updates: Partial<Product>) => void;
+    updateProduct: (
+        id: string,
+        updates: Partial<Product>
+    ) => Promise<void>;
     deactivateProduct: (id: string) => Promise<void>;
     reactivateProduct: (id: string) => Promise<void>;
-    updateStock: (id: string, quantity: number) => void;
+    updateStock: (
+        id: string,
+        quantity: number
+    ) => Promise<void>;
     setSearch: (search: string) => void;
     setCategoryFilter: (category: string) => void;
     setLoading: (loading: boolean) => void;
@@ -224,20 +230,32 @@ export const useProductStore = create<ProductStore>()((set, get) => ({
     reactivateProduct: async (id) => {
         set({ loading: true, error: null });
         try {
+            const response = await fetch(`/api/inventory/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ active: true }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to reactivate product");
+            }
+
+            const updatedProduct = mapApiProduct(
+                await response.json()
+            );
+
             set((state) => ({
                 products: [
                     ...state.products,
-                    state.inactiveProducts.find((p) => p.id === id)!,
+                    updatedProduct,
                 ],
-                inactiveProducts: state.inactiveProducts.filter((p) => p.id !== id),
+                inactiveProducts: state.inactiveProducts.filter(
+                    (p) => p.id !== id
+                ),
+                loading: false,
             }));
-            const response = await fetch(`/api/inventory/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ active: true }),
-            });
-            if (!response.ok) throw new Error('Failed to reactivate product');
-            set({ loading: false });
         } catch (error) {
             set((state) => {
                 const activeProduct = state.products.find((p) => p.id === id);
