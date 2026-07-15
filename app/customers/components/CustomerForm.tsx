@@ -90,14 +90,14 @@ export function CustomerForm({
     try {
       if (mode === "edit" && customer) {
         // Update existing customer
-        updateCustomer(customer.id, data);
+        await updateCustomer(customer.id, data);
         alert.success(
           "Customer updated!",
           `${data.name} has been updated successfully.`,
         );
       } else {
         // Add new customer
-        addCustomer({
+        await addCustomer({
           ...data,
           isActive: true,
         });

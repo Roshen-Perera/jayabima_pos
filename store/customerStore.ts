@@ -273,6 +273,9 @@ export const useCustomerStore = create<CustomerStore>()(
                     customers: state.customers.map((c) =>
                         c.id === id ? updatedCustomer : c
                     ),
+                    inactiveCustomers: state.inactiveCustomers.map((c) =>
+                        c.id === id ? updatedCustomer : c
+                    ),
                     loading: false,
                 }));
             } catch (error) {

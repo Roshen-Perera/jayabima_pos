@@ -39,17 +39,27 @@ const CustomerActions = ({
   const [showEditDialog, setShowEditDialog] = useState(false);
 
   const handleDeactivate = () => {
-    deactivateCustomer(customer.id);
-    alert.success(`Customer ${customer.name} has been deactivated.`);
-
-    setShowActionAlert(false);
+    deactivateCustomer(customer.id)
+      .then(() => {
+        alert.success(`Customer ${customer.name} has been deactivated.`);
+        setShowActionAlert(false);
+      })
+      .catch((error) => {
+        console.error("Error deactivating customer:", error);
+        alert.error("Failed to deactivate customer");
+      });
   };
 
   const handleReactivate = () => {
-    reactivateCustomer(customer.id);
-    alert.success(`Customer ${customer.name} has been reactivated.`);
-
-    setShowActionAlert(false);
+    reactivateCustomer(customer.id)
+      .then(() => {
+        alert.success(`Customer ${customer.name} has been reactivated.`);
+        setShowActionAlert(false);
+      })
+      .catch((error) => {
+        console.error("Error reactivating customer:", error);
+        alert.error("Failed to reactivate customer");
+      });
   };
 
   return (
