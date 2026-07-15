@@ -124,9 +124,7 @@ export const useCustomerStore = create<CustomerStore>()(
                     const errorData = await response.json();
                     throw new Error(errorData.error || 'Failed to create customer');
                 }
-
                 const newCustomer = await response.json();
-
                 set((state) => ({
                     customers: [
                         ...state.customers,
@@ -145,7 +143,6 @@ export const useCustomerStore = create<CustomerStore>()(
 
         deactivateCustomer: async (id) => {
             set({ loading: true, error: null });
-
             const customer = get()
                 .customers
                 .find((c) => c.id === id);
@@ -157,9 +154,7 @@ export const useCustomerStore = create<CustomerStore>()(
                 });
                 return;
             }
-
             try {
-                // Optimistic update
                 set((state) => ({
                     inactiveCustomers: [
                         ...state.inactiveCustomers,
@@ -173,16 +168,11 @@ export const useCustomerStore = create<CustomerStore>()(
                 const response = await fetch(`/api/customers/${id}`, {
                     method: 'DELETE',
                 });
-
                 if (!response.ok) {
                     throw new Error('Failed to deactivate customer');
                 }
-
                 set({ loading: false });
-
             } catch (error) {
-
-                // rollback
                 set((state) => ({
                     customers: [
                         ...state.customers,
@@ -196,10 +186,10 @@ export const useCustomerStore = create<CustomerStore>()(
                         : 'Failed to deactivate customer',
                     loading: false,
                 }));
-
                 throw error;
             }
         },
+        
         reactivateCustomer: async (id) => {
             set({ loading: true, error: null });
 
