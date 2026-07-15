@@ -96,7 +96,10 @@ export const useProductStore = create<ProductStore>()((set, get) => ({
             const response = await fetch('/api/inventory?showInactive=false');
             if (!response.ok) throw new Error('Failed to load products');
             const data = await response.json();
-            set({ products: data, loading: false });
+            set({
+                products: (data as ApiProduct[]).map(mapApiProduct),
+                loading: false
+            });
         } catch (error) {
             set({
                 error: error instanceof Error ? error.message : 'Failed to load products',
@@ -111,7 +114,10 @@ export const useProductStore = create<ProductStore>()((set, get) => ({
             const response = await fetch('/api/inventory?showInactive=true');
             if (!response.ok) throw new Error('Failed to load inactive products');
             const data = await response.json();
-            set({ inactiveProducts: data, loading: false });
+            set({
+                inactiveProducts: (data as ApiProduct[]).map(mapApiProduct),
+                loading: false
+            });
         } catch (error) {
             set({
                 error: error instanceof Error ? error.message : 'Failed to load inactive products',
@@ -142,8 +148,11 @@ export const useProductStore = create<ProductStore>()((set, get) => ({
             const newProduct = await response.json();
 
             set((state) => ({
-                products: [...state.products, newProduct],
-                loading: false,
+                products: [
+                    ...state.products,
+                    mapApiProduct(newProduct)
+                ],
+                loading: false
             }));
         } catch (error) {
             set({
@@ -163,7 +172,9 @@ export const useProductStore = create<ProductStore>()((set, get) => ({
                 body: JSON.stringify(updates),
             });
             if (!response.ok) throw new Error('Failed to update product');
-            const updatedProduct = await response.json();
+            const updatedProduct = mapApiProduct(
+                await response.json()
+            );
             set((state) => ({
                 products: state.products.map((p) =>
                     p.id === id ? updatedProduct : p
