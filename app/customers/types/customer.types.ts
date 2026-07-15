@@ -4,7 +4,9 @@ export interface Customer {
     email: string;
     phone: string;
     address: string;
-    creditBalance: number;
     loyaltyPoints: number;
-    totalPurchases: number;
+    creditBalance: number;
+    isActive: boolean;
+    createdAt: Date;
+    updatedAt: Date;
 }

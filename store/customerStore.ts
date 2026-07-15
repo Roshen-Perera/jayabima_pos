@@ -1,5 +1,34 @@
 import { Customer } from '@/app/customers/types/customer.types';
 import { create } from 'zustand';
+
+interface ApiCustomer {
+    id: string;
+    name: string;
+    email: string | null;
+    phone: string | null;
+    address: string | null;
+    loyaltyPoints: number;
+    creditBalance: number;
+    isActive: boolean;
+    createdAt: string;
+    updatedAt: string;
+}
+
+function mapApiCustomer(raw: ApiCustomer): Customer {
+    return {
+        id: raw.id,
+        name: raw.name,
+        email: raw.email ?? '',
+        phone: raw.phone ?? '',
+        address: raw.address ?? '',
+        loyaltyPoints: raw.loyaltyPoints,
+        creditBalance: raw.creditBalance,
+        isActive: raw.isActive,
+        createdAt: new Date(raw.createdAt),
+        updatedAt: new Date(raw.updatedAt),
+    };
+}
+
 interface CustomerStore {
     customers: Customer[];
     inactiveCustomers: Customer[];
