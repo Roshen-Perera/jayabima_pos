@@ -41,10 +41,19 @@ interface CustomerStore {
     setInactiveCustomers: (customers: Customer[]) => void;
     loadCustomers: () => Promise<void>;
     loadInactiveCustomers: () => Promise<void>;
-    addCustomer: (customer: Omit<Customer, 'id' | 'loyaltyPoints' | 'creditBalance'>) => void;
-    deactivateCustomer: (id: string) => void;
+    addCustomer: (
+        customer: Omit<
+            Customer,
+            'id' | 'loyaltyPoints' | 'creditBalance' | 'createdAt' | 'updatedAt'
+        >
+    ) => Promise<void>;
+
+    deactivateCustomer: (id: string) => Promise<void>;
     reactivateCustomer: (id: string) => Promise<void>;
-    updateCustomer: (id: string, updatedData: Partial<Customer>) => void;
+    updateCustomer: (
+        id: string,
+        updatedData: Partial<Customer>
+    ) => Promise<void>;
     setSearch: (search: string) => void;
     setLoading: (loading: boolean) => void;
     setError: (error: string | null) => void;
@@ -52,7 +61,7 @@ interface CustomerStore {
 }
 
 export const useCustomerStore = create<CustomerStore>()(
-    (set) => ({
+    (set, get) => ({
         // Initial state (your dummyCustomers)
         customers: [],
         inactiveCustomers: [],
@@ -134,72 +143,118 @@ export const useCustomerStore = create<CustomerStore>()(
             }
         },
 
-        deactivateCustomer: async (id) => {  // Changed from deleteCustomer
+        deactivateCustomer: async (id) => {
             set({ loading: true, error: null });
+
+            const customer = get()
+                .customers
+                .find((c) => c.id === id);
+
+            if (!customer) {
+                set({
+                    loading: false,
+                    error: "Customer not found"
+                });
+                return;
+            }
+
             try {
+                // Optimistic update
                 set((state) => ({
                     inactiveCustomers: [
                         ...state.inactiveCustomers,
-                        state.customers.find((c) => c.id === id)!,
+                        customer,
                     ],
-                    customers: state.customers.filter((c) => c.id !== id),
+                    customers: state.customers.filter(
+                        (c) => c.id !== id
+                    ),
                 }));
 
                 const response = await fetch(`/api/customers/${id}`, {
                     method: 'DELETE',
                 });
 
-                if (!response.ok) throw new Error('Failed to deactivate customer');
+                if (!response.ok) {
+                    throw new Error('Failed to deactivate customer');
+                }
 
-                set((state) => ({
-                    customers: state.customers.filter((c) => c.id !== id),
-                    loading: false,
-                }));
+                set({ loading: false });
+
             } catch (error) {
-                set((state) => {
-                    const inactiveCustomer = state.inactiveCustomers.find((c) => c.id === id);
-                    return {
-                        customers: inactiveCustomer
-                            ? [...state.customers, inactiveCustomer]
-                            : state.customers,
-                        inactiveCustomers: state.inactiveCustomers.filter((c) => c.id !== id),
-                        error: error instanceof Error ? error.message : 'Failed to deactivate customer',
-                        loading: false,
-                    };
-                });
-                throw error;
-            }
-        },
 
-        reactivateCustomer: async (id) => {  // Add this
-            set({ loading: true, error: null });
-            try {
+                // rollback
                 set((state) => ({
                     customers: [
                         ...state.customers,
-                        state.inactiveCustomers.find((c) => c.id === id)!,
+                        customer
                     ],
-                    inactiveCustomers: state.inactiveCustomers.filter((c) => c.id !== id),
+                    inactiveCustomers: state.inactiveCustomers.filter(
+                        (c) => c.id !== id
+                    ),
+                    error: error instanceof Error
+                        ? error.message
+                        : 'Failed to deactivate customer',
+                    loading: false,
                 }));
+
+                throw error;
+            }
+        },
+        reactivateCustomer: async (id) => {
+            set({ loading: true, error: null });
+
+            const customer = get()
+                .inactiveCustomers
+                .find((c) => c.id === id);
+
+            if (!customer) {
+                set({
+                    loading: false,
+                    error: "Customer not found"
+                });
+                return;
+            }
+
+            try {
+
                 const response = await fetch(`/api/customers/${id}`, {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ isActive: true }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        isActive: true
+                    }),
                 });
 
-                if (!response.ok) throw new Error('Failed to reactivate customer');
+                if (!response.ok) {
+                    throw new Error('Failed to reactivate customer');
+                }
+
+                const updatedCustomer = mapApiCustomer(
+                    await response.json()
+                );
+
+                set((state) => ({
+                    customers: [
+                        ...state.customers,
+                        updatedCustomer
+                    ],
+                    inactiveCustomers: state.inactiveCustomers.filter(
+                        (c) => c.id !== id
+                    ),
+                    loading: false,
+                }));
+
             } catch (error) {
-                set((state) => {
-                    const activeCustomer = state.customers.find((c) => c.id === id);
-                    return {
-                        inactiveCustomers: activeCustomer
-                            ? [...state.inactiveCustomers, activeCustomer]
-                            : state.inactiveCustomers,
-                        customers: state.customers.filter((c) => c.id !== id),
-                        error: error instanceof Error ? error.message : 'Failed to reactivate customer',
-                        loading: false,
-                    };
+
+                set({
+                    error: error instanceof Error
+                        ? error.message
+                        : 'Failed to reactivate customer',
+                    loading: false,
                 });
+
                 throw error;
             }
         },
