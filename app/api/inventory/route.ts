@@ -41,7 +41,8 @@ export async function POST(request: NextRequest) {
                 minStock: validatedData.minStock || 0,
                 description: validatedData.description || null,
                 image: validatedData.image || null,
-                active: true,
+                supplierId: validatedData.supplierId || null,
+                active: validatedData.active ?? true,
             },
         });
         return NextResponse.json(product, { status: 201 });
