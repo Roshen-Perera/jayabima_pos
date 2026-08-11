@@ -52,16 +52,20 @@ export const SupplierForm = ({
     reset,
     setValue,
     watch,
-  } = useForm<SupplierFormData>({
+  } = useForm({
     resolver: zodResolver(supplierSchema),
     mode: "onChange",
     defaultValues: supplier
       ? {
           name: supplier.name,
-          contactPerson: supplier.contactPerson,
-          email: supplier.email,
-          phone: supplier.phone,
-          address: supplier.address,
+          contactPerson: supplier.contactPerson || "",
+          email: supplier.email || "",
+          phone: supplier.phone || "",
+          address: supplier.address || "",
+          payableBalance: Number(supplier.payableBalance) || 0,
+          taxId: supplier.taxId || "",
+          bankName: supplier.bankName || "",
+          accountNumber: supplier.accountNumber || "",
           active: supplier.active,
         }
       : {
@@ -70,6 +74,10 @@ export const SupplierForm = ({
           email: "",
           phone: "",
           address: "",
+          payableBalance: 0,
+          taxId: "",
+          bankName: "",
+          accountNumber: "",
           active: true,
         },
   });
@@ -78,10 +86,14 @@ export const SupplierForm = ({
     if (open && supplier) {
       reset({
         name: supplier.name,
-        contactPerson: supplier.contactPerson,
-        email: supplier.email,
-        phone: supplier.phone,
-        address: supplier.address,
+        contactPerson: supplier.contactPerson || "",
+        email: supplier.email || "",
+        phone: supplier.phone || "",
+        address: supplier.address || "",
+        payableBalance: Number(supplier.payableBalance) || 0,
+        taxId: supplier.taxId || "",
+        bankName: supplier.bankName || "",
+        accountNumber: supplier.accountNumber || "",
         active: supplier.active,
       });
     } else if (open && !supplier) {
@@ -91,6 +103,10 @@ export const SupplierForm = ({
         email: "",
         phone: "",
         address: "",
+        payableBalance: 0,
+        taxId: "",
+        bankName: "",
+        accountNumber: "",
         active: true,
       });
     }
@@ -99,24 +115,24 @@ export const SupplierForm = ({
   const onSubmit = async (data: SupplierFormData) => {
     try {
       if (mode === "edit" && supplier) {
-        updateSupplier(supplier.id, data);
+        await updateSupplier(supplier.id, data);
         alert.success(
           "Supplier updated!",
-          `${data.name} has been updated successfully.`,
+          `${data.name} has been updated successfully.`
         );
       } else {
-        addSupplier(data);
+        await addSupplier(data);
         alert.success(
           "Supplier added!",
-          `${data.name} has been added successfully.`,
+          `${data.name} has been added successfully.`
         );
       }
 
       reset();
       setOpen(false);
-    } catch (error) {
-      console.error("Error:", error);
-      alert.error("Failed to save", "Something went wrong. Please try again.");
+    } catch (error: any) {
+      console.error("Error saving supplier:", error);
+      alert.error("Failed to save", error.message || "Something went wrong. Please try again.");
     }
   };
 
@@ -147,13 +163,13 @@ export const SupplierForm = ({
               <DialogDescription>
                 {mode === "edit"
                   ? "Make changes to supplier information."
-                  : "Add a new supplier to your list."}
+                  : "Add a new supplier to your database."}
               </DialogDescription>
             </DialogHeader>
 
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="name">Supplier Name</Label>
+                <Label htmlFor="name">Supplier Name *</Label>
                 <Input
                   id="name"
                   placeholder="Tech Wholesale Ltd"
@@ -214,6 +230,15 @@ export const SupplierForm = ({
                     </p>
                   )}
                 </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="taxId">Tax / BRN No</Label>
+                  <Input
+                    id="taxId"
+                    placeholder="VAT-98765432"
+                    {...register("taxId")}
+                  />
+                </div>
               </div>
 
               <div className="grid gap-2">
@@ -231,11 +256,42 @@ export const SupplierForm = ({
                 )}
               </div>
 
-              <div className="flex items-center justify-between">
+              <div className="grid grid-cols-2 gap-4 border-t pt-3">
+                <div className="grid gap-2">
+                  <Label htmlFor="bankName">Bank Name</Label>
+                  <Input
+                    id="bankName"
+                    placeholder="Commercial Bank"
+                    {...register("bankName")}
+                  />
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="accountNumber">Account Number</Label>
+                  <Input
+                    id="accountNumber"
+                    placeholder="8001234567"
+                    {...register("accountNumber")}
+                  />
+                </div>
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="payableBalance">Accounts Payable Balance (LKR)</Label>
+                <Input
+                  id="payableBalance"
+                  type="number"
+                  step="0.01"
+                  placeholder="0.00"
+                  {...register("payableBalance", { valueAsNumber: true })}
+                />
+              </div>
+
+              <div className="flex items-center justify-between border-t pt-3">
                 <div>
                   <Label htmlFor="active">Active Supplier</Label>
                   <p className="text-sm text-muted-foreground">
-                    Inactive suppliers won&apos;t appear in product forms
+                    Inactive suppliers won&apos;t appear in purchase orders
                   </p>
                 </div>
                 <Switch
