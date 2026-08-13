@@ -10,7 +10,7 @@ declare global {
 }
 
 export const prisma =
-    (global.prisma && 'supplierPayment' in global.prisma ? global.prisma : undefined) ||
+    global.prisma ||
     new PrismaClient({
         adapter,
         log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
