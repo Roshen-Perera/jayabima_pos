@@ -17,7 +17,7 @@ export interface Cart {
     total: number;      // subtotal − cart discount
 }
 
-export type PaymentMethod = 'CASH' | 'CARD' | 'BANK_TRANSFER' | 'CHEQUE' | 'CREDIT' | 'MOBILE' | 'OTHER';
+export type PaymentMethod = 'CASH' | 'CARD' | 'BANK_TRANSFER' | 'CHEQUE' | 'CREDIT' | 'SPLIT' | 'PARTIAL' | 'MOBILE' | 'OTHER';
 export type SaleStatus = 'COMPLETED' | 'PENDING' | 'CANCELLED' | 'REFUNDED';
 
 export interface Sale {

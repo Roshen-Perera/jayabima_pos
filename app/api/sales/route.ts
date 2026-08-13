@@ -11,6 +11,13 @@ const saleItemSchema = z.object({
     total: z.coerce.number().nonnegative(),
 });
 
+const paymentLineSchema = z.object({
+    method: z.enum(['CASH', 'CARD', 'BANK_TRANSFER', 'CHEQUE']),
+    amount: z.coerce.number().positive(),
+    reference: z.string().optional().nullable(),
+    chequeDate: z.string().optional().nullable(),
+});
+
 const createSaleSchema = z.object({
     customerId: z.string().optional().nullable(),
     customerName: z.string().optional().nullable(),
@@ -20,13 +27,14 @@ const createSaleSchema = z.object({
     discount: z.coerce.number().nonnegative().default(0),
     totalSavings: z.coerce.number().nonnegative().default(0),
     total: z.coerce.number().nonnegative(),
-    paymentMethod: z.enum(['CASH', 'CARD', 'BANK_TRANSFER', 'CHEQUE', 'CREDIT', 'MOBILE', 'OTHER']),
+    paymentMethod: z.enum(['CASH', 'CARD', 'BANK_TRANSFER', 'CHEQUE', 'CREDIT', 'SPLIT', 'PARTIAL', 'MOBILE', 'OTHER']),
     cashPaid: z.coerce.number().nonnegative().optional().nullable(),
     cashBalance: z.coerce.number().optional().nullable(),
     reference: z.string().optional().nullable(),
     chequeDate: z.string().optional().nullable(),
     status: z.enum(['COMPLETED', 'PENDING', 'CANCELLED', 'REFUNDED']).default('COMPLETED'),
     items: z.array(saleItemSchema).min(1),
+    payments: z.array(paymentLineSchema).optional(),
 });
 
 /**
@@ -64,11 +72,11 @@ export async function GET(request: NextRequest) {
 
 /**
  * POST /api/sales
- * Persists a completed sale to the database atomically:
+ * Persists a completed sale to the database:
  * - Creates Sale record with all SaleItems
  * - Decrements stock for each product sold
- * - Increments customer.totalPurchases if linked to a customer
- * - Increments customer.creditBalance if paid with CREDIT
+ * - Creates CustomerPayment ledger records for paid portions (cash, cheques, transfers)
+ * - Increments customer.totalPurchases and updates customer.creditBalance for unpaid portions
  */
 export async function POST(request: NextRequest) {
     const { authorized, response, user: authUser } = await requirePermission(request, 'pos:create_sale');
@@ -81,9 +89,9 @@ export async function POST(request: NextRequest) {
         const bodyWithAuthUser = { ...body, userId: authUser?.id ?? body.userId };
         const data = createSaleSchema.parse(bodyWithAuthUser);
 
-        if (data.paymentMethod === 'CREDIT' && !data.customerId) {
+        if ((data.paymentMethod === 'CREDIT' || data.paymentMethod === 'SPLIT' || data.paymentMethod === 'PARTIAL') && !data.customerId) {
             return NextResponse.json(
-                { error: 'A customer account must be selected for Credit sales.' },
+                { error: 'A customer account must be selected for Credit, Partial, or Split payment sales.' },
                 { status: 400 }
             );
         }
@@ -130,15 +138,48 @@ export async function POST(request: NextRequest) {
             )
         );
 
-        // 3. Sync customer: increment totalPurchases & creditBalance (if CREDIT sale)
+        // 3. Sync customer ledger: record payments and credit balance
         if (data.customerId) {
-            const isCredit = data.paymentMethod === 'CREDIT';
+            let totalPaidUpfront = 0;
+
+            if (data.payments && data.payments.length > 0) {
+                for (const p of data.payments) {
+                    totalPaidUpfront += p.amount;
+                    if (p.method === 'CASH' || p.method === 'CHEQUE' || p.method === 'BANK_TRANSFER') {
+                        await prisma.customerPayment.create({
+                            data: {
+                                customerId: data.customerId,
+                                amount: p.amount,
+                                method: p.method === 'CHEQUE' ? 'CHEQUE' : p.method === 'BANK_TRANSFER' ? 'BANK_TRANSFER' : 'CASH',
+                                reference: p.reference || null,
+                                chequeDate: p.chequeDate ? new Date(p.chequeDate) : null,
+                                note: `POS Sale #${sale.id.substring(0, 8)} payment line (${p.method})`,
+                            },
+                        });
+                    }
+                }
+            } else if (data.paymentMethod === 'CASH' || data.paymentMethod === 'CHEQUE' || data.paymentMethod === 'BANK_TRANSFER') {
+                totalPaidUpfront = data.total;
+                await prisma.customerPayment.create({
+                    data: {
+                        customerId: data.customerId,
+                        amount: data.total,
+                        method: data.paymentMethod === 'CHEQUE' ? 'CHEQUE' : data.paymentMethod === 'BANK_TRANSFER' ? 'BANK_TRANSFER' : 'CASH',
+                        reference: data.reference || null,
+                        chequeDate: data.chequeDate ? new Date(data.chequeDate) : null,
+                        note: `POS Sale #${sale.id.substring(0, 8)} full payment (${data.paymentMethod})`,
+                    },
+                });
+            }
+
+            const remainderUnpaid = Math.max(0, data.total - totalPaidUpfront);
+
             await prisma.customer.update({
                 where: { id: data.customerId },
                 data: {
                     totalPurchases: { increment: data.total },
-                    ...(isCredit && {
-                        creditBalance: { increment: data.total },
+                    ...(remainderUnpaid > 0 && {
+                        creditBalance: { increment: remainderUnpaid },
                     }),
                 },
             });

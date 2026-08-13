@@ -265,6 +265,8 @@ enum PaymentMethod {
   BANK_TRANSFER
   CHEQUE
   CREDIT
+  SPLIT
+  PARTIAL
   MOBILE
   OTHER
 }
