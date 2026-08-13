@@ -747,13 +747,120 @@ export const PurchaseOrdersTab = () => {
                   value={paymentTerm}
                   onChange={(e) => setPaymentTerm(e.target.value as any)}
                 >
-                  <option value="CREDIT">🔴 Credit (Pay Later — adds to supplier balance)</option>
+                  <option value="CREDIT">🔴 Credit (Pay Later — adds full amount to supplier balance)</option>
                   <option value="CASH">🟢 Cash (Paid immediately on delivery)</option>
                   <option value="CHEQUE">🟣 Cheque (Post-dated or immediate cheque)</option>
                   <option value="BANK_TRANSFER">🔵 Bank Transfer (Direct transfer)</option>
-                  <option value="PARTIAL">🟡 Partial Upfront Payment (Part cash/cheque, part credit)</option>
+                  <option value="PARTIAL">🟡 Single Partial Payment (Part upfront, part credit)</option>
+                  <option value="SPLIT">⚡ Split / Multi-Payment (Cash + Multiple Cheques + Credit)</option>
                 </select>
               </div>
+
+              {/* Split Multi-Payment Builder */}
+              {paymentTerm === "SPLIT" && (
+                <div className="space-y-3 p-3 border rounded-md bg-blue-50/50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-semibold text-blue-900 dark:text-blue-200">
+                      Payment Breakdown Rows
+                    </span>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => addSplitRow("CHEQUE")}
+                      className="h-7 text-xs gap-1"
+                    >
+                      <Plus className="w-3 h-3" /> Add Cheque / Line
+                    </Button>
+                  </div>
+
+                  <div className="space-y-2">
+                    {splitRows.map((row, idx) => (
+                      <div key={idx} className="p-2 border rounded bg-card text-xs space-y-2">
+                        <div className="flex items-center gap-2">
+                          <select
+                            className="border rounded p-1 text-xs bg-background shrink-0"
+                            value={row.method}
+                            onChange={(e) => updateSplitRow(idx, "method", e.target.value)}
+                          >
+                            <option value="CASH">Cash</option>
+                            <option value="CHEQUE">Cheque</option>
+                            <option value="BANK_TRANSFER">Bank Transfer</option>
+                          </select>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            placeholder="Amount (LKR)"
+                            className="h-7 text-xs flex-1"
+                            value={row.amount}
+                            onChange={(e) => updateSplitRow(idx, "amount", e.target.value)}
+                          />
+                          {splitRows.length > 1 && (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => removeSplitRow(idx)}
+                              className="h-7 w-7 p-0 text-red-500 hover:text-red-700 shrink-0"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </Button>
+                          )}
+                        </div>
+
+                        {row.method === "CHEQUE" && (
+                          <div className="grid grid-cols-2 gap-2 pt-1 border-t border-dashed">
+                            <Input
+                              placeholder="Cheque No. (e.g. CHQ-001)"
+                              className="h-7 text-xs"
+                              value={row.reference}
+                              onChange={(e) => updateSplitRow(idx, "reference", e.target.value)}
+                            />
+                            <Input
+                              type="date"
+                              className="h-7 text-xs"
+                              value={row.chequeDate}
+                              onChange={(e) => updateSplitRow(idx, "chequeDate", e.target.value)}
+                            />
+                          </div>
+                        )}
+
+                        {row.method === "BANK_TRANSFER" && (
+                          <Input
+                            placeholder="Bank Ref / Txn ID"
+                            className="h-7 text-xs"
+                            value={row.reference}
+                            onChange={(e) => updateSplitRow(idx, "reference", e.target.value)}
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="pt-2 border-t text-xs space-y-1">
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Total Payments Added:</span>
+                      <span className="font-semibold text-foreground">
+                        LKR{" "}
+                        {splitRows
+                          .reduce((sum, r) => sum + (Number(r.amount) || 0), 0)
+                          .toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Remaining Unpaid (Added to Credit):</span>
+                      <span className="font-bold text-blue-600 dark:text-blue-400">
+                        LKR{" "}
+                        {Math.max(
+                          0,
+                          Number(targetPo.totalAmount) -
+                            splitRows.reduce((sum, r) => sum + (Number(r.amount) || 0), 0)
+                        ).toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Partial payment details */}
               {paymentTerm === "PARTIAL" && (
