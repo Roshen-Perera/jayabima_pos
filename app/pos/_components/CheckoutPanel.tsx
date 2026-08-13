@@ -69,6 +69,7 @@ export default function CheckoutPanel({
 }: CheckoutPanelProps) {
   const { cart, customerId, customerName, setCustomer, clearCart } =
     usePOSStore();
+  const { customers } = useCustomerStore();
   const { updateStock } = useProductStore();
   const { user } = useAuthStore();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("CASH");
