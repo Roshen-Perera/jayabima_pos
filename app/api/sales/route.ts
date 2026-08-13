@@ -89,11 +89,26 @@ export async function POST(request: NextRequest) {
         const bodyWithAuthUser = { ...body, userId: authUser?.id ?? body.userId };
         const data = createSaleSchema.parse(bodyWithAuthUser);
 
-        if ((data.paymentMethod === 'CREDIT' || data.paymentMethod === 'SPLIT' || data.paymentMethod === 'PARTIAL') && !data.customerId) {
+        if ((data.paymentMethod === 'CREDIT' || data.paymentMethod === 'CHEQUE' || data.paymentMethod === 'SPLIT' || data.paymentMethod === 'PARTIAL') && !data.customerId) {
             return NextResponse.json(
-                { error: 'A customer account must be selected for Credit, Partial, or Split payment sales.' },
+                { error: 'Walking Customers can pay via Cash, Card, or Bank Transfer. Please select a registered customer for Credit, Cheque, or Split payments.' },
                 { status: 400 }
             );
+        }
+
+        // Determine primary payment method for Sale record
+        let dbPaymentMethod: any = data.paymentMethod;
+        if (data.paymentMethod === 'SPLIT' || data.paymentMethod === 'PARTIAL') {
+            let paidUpfront = 0;
+            if (data.payments && data.payments.length > 0) {
+                paidUpfront = data.payments.reduce((sum, p) => sum + p.amount, 0);
+            }
+            const remainder = data.total - paidUpfront;
+            if (remainder > 0) {
+                dbPaymentMethod = 'CREDIT';
+            } else {
+                dbPaymentMethod = (data.payments && data.payments[0]?.method) || 'CASH';
+            }
         }
 
         // 1. Create the sale & items
@@ -106,7 +121,7 @@ export async function POST(request: NextRequest) {
                 discount: data.discount,
                 totalSavings: data.totalSavings,
                 total: data.total,
-                paymentMethod: data.paymentMethod,
+                paymentMethod: dbPaymentMethod,
                 cashPaid: data.cashPaid ?? null,
                 cashBalance: data.cashBalance ?? null,
                 reference: data.reference || null,

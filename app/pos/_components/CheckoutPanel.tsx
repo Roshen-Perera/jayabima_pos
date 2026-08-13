@@ -340,29 +340,72 @@ export default function CheckoutPanel({
             </div>
           </div>
 
+          {/* Customer Context Badge */}
+          <div className="text-xs p-2.5 rounded-lg border flex items-center justify-between bg-muted/40">
+            <div className="flex items-center gap-2">
+              <UserCheck className="w-4 h-4 text-primary" />
+              <div>
+                <span className="font-semibold text-foreground">
+                  {customerName || "Walking Customer"}
+                </span>
+                <span className="block text-[11px] text-muted-foreground">
+                  {!customerId || customerName === "Walking Customer"
+                    ? "Walking Customer — Cash, Card, Bank Transfer"
+                    : "Registered Account — All Ledgers & Terms Enabled"}
+                </span>
+              </div>
+            </div>
+          </div>
+
           {/* Payment method selector */}
           <div className="space-y-2">
             <Label className="text-sm font-medium">Payment Method</Label>
             <div className="grid grid-cols-2 gap-2">
-              {PAYMENT_OPTIONS.map((opt) => (
-                <button
-                  key={opt.value}
-                  type="button"
-                  onClick={() => {
-                    setPaymentMethod(opt.value);
-                    setCashInput("");
-                  }}
-                  className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border text-sm font-medium transition-colors
-                    ${
-                      paymentMethod === opt.value
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border bg-background text-muted-foreground hover:border-primary/50 hover:text-foreground"
-                    }`}
-                >
-                  {opt.icon}
-                  {opt.label}
-                </button>
-              ))}
+              {PAYMENT_OPTIONS.map((opt) => {
+                const isWalkingCustomer = !customerId || customerName === "Walking Customer";
+                const isAccountReq =
+                  opt.value === "CREDIT" ||
+                  opt.value === "CHEQUE" ||
+                  opt.value === "PARTIAL" ||
+                  opt.value === "SPLIT";
+                const isDisabled = isWalkingCustomer && isAccountReq;
+
+                return (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => {
+                      if (isDisabled) {
+                        alert.error(
+                          "Registered Customer Required",
+                          "Walking Customers can pay via Cash, Card, or Bank Transfer. Please select a registered customer for Credit, Cheque, or Split payments."
+                        );
+                        return;
+                      }
+                      setPaymentMethod(opt.value);
+                      setCashInput("");
+                    }}
+                    className={`flex items-center justify-between px-3 py-2.5 rounded-lg border text-sm font-medium transition-colors text-left
+                      ${
+                        paymentMethod === opt.value
+                          ? "border-primary bg-primary/10 text-primary font-bold"
+                          : isDisabled
+                            ? "border-border bg-muted/40 text-muted-foreground/60 cursor-not-allowed"
+                            : "border-border bg-background text-muted-foreground hover:border-primary/50 hover:text-foreground"
+                      }`}
+                  >
+                    <div className="flex items-center gap-2 truncate">
+                      {opt.icon}
+                      <span className="truncate">{opt.label}</span>
+                    </div>
+                    {isDisabled && (
+                      <span className="text-[9px] px-1 py-0.5 rounded bg-muted text-muted-foreground shrink-0 border">
+                        Account Req
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
