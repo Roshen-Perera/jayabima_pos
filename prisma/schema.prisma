@@ -30,19 +30,20 @@ model User {
 }
 
 model Customer {
-  id             String    @id @default(cuid())
+  id             String            @id @default(cuid())
   name           String
-  email          String?   @unique
+  email          String?           @unique
   phone          String?
   address        String?
-  creditBalance  Decimal   @default(0) @db.Decimal(12, 2)
-  loyaltyPoints  Int       @default(0)
-  totalPurchases Decimal   @default(0) @db.Decimal(12, 2)
-  isActive       Boolean   @default(true)
+  creditBalance  Decimal           @default(0) @db.Decimal(12, 2)
+  loyaltyPoints  Int               @default(0)
+  totalPurchases Decimal           @default(0) @db.Decimal(12, 2)
+  isActive       Boolean           @default(true)
   deletedAt      DateTime?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
   sales          Sale[]
+  payments       CustomerPayment[]
 
   @@index([name])
   @@index([phone])
@@ -148,6 +149,22 @@ model SupplierPayment {
   supplier   Supplier              @relation(fields: [supplierId], references: [id])
 
   @@index([supplierId])
+  @@index([paidAt])
+}
+
+model CustomerPayment {
+  id         String                @id @default(cuid())
+  customerId String
+  amount     Decimal               @db.Decimal(12, 2)
+  method     CustomerPaymentMethod
+  reference  String?               // cheque no., bank ref, transfer ID, etc.
+  chequeDate DateTime?             // for post-dated cheques
+  note       String?
+  paidAt     DateTime              @default(now())
+  createdAt  DateTime              @default(now())
+  customer   Customer              @relation(fields: [customerId], references: [id])
+
+  @@index([customerId])
   @@index([paidAt])
 }
 
@@ -285,6 +302,12 @@ enum PurchaseOrderStatus {
 }
 
 enum SupplierPaymentMethod {
+  CASH
+  BANK_TRANSFER
+  CHEQUE
+}
+
+enum CustomerPaymentMethod {
   CASH
   BANK_TRANSFER
   CHEQUE
