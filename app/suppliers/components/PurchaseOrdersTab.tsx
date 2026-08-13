@@ -238,11 +238,39 @@ export const PurchaseOrdersTab = () => {
     }
   };
 
-  const handleReceivePO = async (poId: string) => {
-    setReceivingId(poId);
+  // Receive PO Modal State
+  const [receiveModalOpen, setReceiveModalOpen] = useState(false);
+  const [targetPo, setTargetPo] = useState<PurchaseOrder | null>(null);
+  const [paymentTerm, setPaymentTerm] = useState<"CREDIT" | "CASH" | "CHEQUE" | "BANK_TRANSFER" | "PARTIAL">("CREDIT");
+  const [paidAmount, setPaidAmount] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<"CASH" | "BANK_TRANSFER" | "CHEQUE">("CASH");
+  const [reference, setReference] = useState("");
+  const [chequeDate, setChequeDate] = useState("");
+
+  const openReceiveModal = (po: PurchaseOrder) => {
+    setTargetPo(po);
+    setPaymentTerm("CREDIT");
+    setPaidAmount(Number(po.totalAmount).toString());
+    setPaymentMethod("CASH");
+    setReference("");
+    setChequeDate("");
+    setReceiveModalOpen(true);
+  };
+
+  const handleReceivePO = async () => {
+    if (!targetPo) return;
+    setReceivingId(targetPo.id);
     try {
-      const res = await fetch(`/api/purchase-orders/${poId}/receive`, {
+      const res = await fetch(`/api/purchase-orders/${targetPo.id}/receive`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          paymentTerm,
+          paidAmount: paymentTerm === "PARTIAL" ? parseFloat(paidAmount) || 0 : undefined,
+          paymentMethod,
+          reference: reference.trim() || undefined,
+          chequeDate: chequeDate || undefined,
+        }),
       });
 
       if (!res.ok) {
@@ -252,8 +280,12 @@ export const PurchaseOrdersTab = () => {
 
       alert.success(
         "Stock Received!",
-        "Inventory stock levels and inventory logs have been updated automatically."
+        paymentTerm === "CREDIT"
+          ? "Stock updated and full order amount added to supplier credit balance."
+          : "Stock updated and payment settlement recorded automatically."
       );
+      setReceiveModalOpen(false);
+      setTargetPo(null);
       fetchPurchaseOrders();
       useSupplierStore.getState().fetchSuppliers();
     } catch (err: any) {
@@ -599,7 +631,7 @@ export const PurchaseOrdersTab = () => {
                     {po.status === "ORDERED" && (
                       <Button
                         size="sm"
-                        onClick={() => handleReceivePO(po.id)}
+                        onClick={() => openReceiveModal(po)}
                         disabled={receivingId === po.id}
                         className="bg-emerald-600 hover:bg-emerald-700 gap-1.5"
                       >
@@ -638,6 +670,133 @@ export const PurchaseOrdersTab = () => {
           ))}
         </div>
       )}
+
+      {/* ── Receive Goods Payment Settlement Dialog ───────────────── */}
+      <Dialog open={receiveModalOpen} onOpenChange={setReceiveModalOpen}>
+        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Receive Goods &amp; Settle Order</DialogTitle>
+            <DialogDescription>
+              Confirming stock intake for order <span className="font-bold text-foreground">{targetPo?.orderNumber}</span>.
+              Choose how this purchase is being settled.
+            </DialogDescription>
+          </DialogHeader>
+
+          {targetPo && (
+            <div className="space-y-4 py-3">
+              <div className="p-3 bg-muted rounded-lg flex justify-between items-center text-sm">
+                <span className="text-muted-foreground font-medium">Total Order Amount:</span>
+                <span className="font-bold text-lg text-primary">
+                  LKR {Number(targetPo.totalAmount).toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                </span>
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="receivePaymentTerm">Payment Settlement *</Label>
+                <select
+                  id="receivePaymentTerm"
+                  className="w-full border rounded-md p-2 text-sm bg-background"
+                  value={paymentTerm}
+                  onChange={(e) => setPaymentTerm(e.target.value as any)}
+                >
+                  <option value="CREDIT">🔴 Credit (Pay Later — adds to supplier balance)</option>
+                  <option value="CASH">🟢 Cash (Paid immediately on delivery)</option>
+                  <option value="CHEQUE">🟣 Cheque (Post-dated or immediate cheque)</option>
+                  <option value="BANK_TRANSFER">🔵 Bank Transfer (Direct transfer)</option>
+                  <option value="PARTIAL">🟡 Partial Upfront Payment (Part cash/cheque, part credit)</option>
+                </select>
+              </div>
+
+              {/* Partial payment details */}
+              {paymentTerm === "PARTIAL" && (
+                <div className="grid gap-3 p-3 border rounded-md bg-yellow-50/50 dark:bg-yellow-950/20 border-yellow-200 dark:border-yellow-800">
+                  <div className="grid gap-1">
+                    <Label className="text-xs font-semibold">Upfront Amount Paid (LKR) *</Label>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      placeholder="e.g. 20000"
+                      value={paidAmount}
+                      onChange={(e) => setPaidAmount(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid gap-1">
+                    <Label className="text-xs font-semibold">Payment Method *</Label>
+                    <select
+                      className="w-full border rounded-md p-2 text-sm bg-background"
+                      value={paymentMethod}
+                      onChange={(e) => setPaymentMethod(e.target.value as any)}
+                    >
+                      <option value="CASH">Cash</option>
+                      <option value="BANK_TRANSFER">Bank Transfer</option>
+                      <option value="CHEQUE">Cheque</option>
+                    </select>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Remaining balance:{" "}
+                    <span className="font-bold text-foreground">
+                      LKR {Math.max(0, Number(targetPo.totalAmount) - (parseFloat(paidAmount) || 0)).toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                    </span>{" "}
+                    will be added to supplier credit.
+                  </p>
+                </div>
+              )}
+
+              {/* Cheque / Reference fields */}
+              {(paymentTerm === "CHEQUE" || (paymentTerm === "PARTIAL" && paymentMethod === "CHEQUE")) && (
+                <div className="grid gap-3 p-3 border rounded-md bg-purple-50/50 dark:bg-purple-950/20 border-purple-200 dark:border-purple-800">
+                  <div className="grid gap-1">
+                    <Label className="text-xs font-semibold">Cheque Number *</Label>
+                    <Input
+                      placeholder="e.g. CHQ-889900"
+                      value={reference}
+                      onChange={(e) => setReference(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid gap-1">
+                    <Label className="text-xs font-semibold">Cheque Date / Realization Date</Label>
+                    <Input
+                      type="date"
+                      value={chequeDate}
+                      onChange={(e) => setChequeDate(e.target.value)}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {(paymentTerm === "BANK_TRANSFER" || (paymentTerm === "PARTIAL" && paymentMethod === "BANK_TRANSFER")) && (
+                <div className="grid gap-1">
+                  <Label className="text-xs font-semibold">Bank Transfer Reference / Txn ID</Label>
+                  <Input
+                    placeholder="e.g. TRX-991200"
+                    value={reference}
+                    onChange={(e) => setReference(e.target.value)}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setReceiveModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleReceivePO}
+              disabled={receivingId !== null}
+              className="bg-emerald-600 hover:bg-emerald-700"
+            >
+              {receivingId ? (
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+              ) : (
+                <CheckCircle2 className="w-4 h-4 mr-2" />
+              )}
+              Confirm &amp; Receive Goods
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
+
