@@ -33,6 +33,42 @@ export async function POST(
             return NextResponse.json({ error: 'Cannot receive a cancelled Purchase Order' }, { status: 400 });
         }
 
+        // Parse optional payment settlement details from request body
+        let paymentTerm = 'CREDIT';
+        let paidAmount = 0;
+        let paymentMethod: 'CASH' | 'BANK_TRANSFER' | 'CHEQUE' = 'CASH';
+        let reference: string | null = null;
+        let chequeDate: Date | null = null;
+
+        try {
+            const body = await request.json();
+            if (body && body.paymentTerm) {
+                paymentTerm = body.paymentTerm;
+                if (paymentTerm === 'CASH') {
+                    paidAmount = Number(po.totalAmount);
+                    paymentMethod = 'CASH';
+                } else if (paymentTerm === 'CHEQUE') {
+                    paidAmount = Number(po.totalAmount);
+                    paymentMethod = 'CHEQUE';
+                    reference = body.reference || null;
+                    chequeDate = body.chequeDate ? new Date(body.chequeDate) : null;
+                } else if (paymentTerm === 'BANK_TRANSFER') {
+                    paidAmount = Number(po.totalAmount);
+                    paymentMethod = 'BANK_TRANSFER';
+                    reference = body.reference || null;
+                } else if (paymentTerm === 'PARTIAL') {
+                    paidAmount = Math.min(Number(po.totalAmount), Math.max(0, Number(body.paidAmount || 0)));
+                    paymentMethod = body.paymentMethod || 'CASH';
+                    reference = body.reference || null;
+                    chequeDate = body.chequeDate ? new Date(body.chequeDate) : null;
+                }
+            }
+        } catch {
+            // Body empty or invalid JSON -> defaults to CREDIT
+        }
+
+        const netCreditAmount = Number(po.totalAmount) - paidAmount;
+
         // Execute receiving in a database transaction
         const updatedPO = await prisma.$transaction(async (tx) => {
             // 1. Update PO status
@@ -87,15 +123,32 @@ export async function POST(
                 }
             }
 
-            // 3. Update supplier payable balance
-            await tx.supplier.update({
-                where: { id: po.supplierId },
-                data: {
-                    payableBalance: {
-                        increment: po.totalAmount,
+            // 3. Update supplier payable balance (only by net credit amount)
+            if (netCreditAmount !== 0) {
+                await tx.supplier.update({
+                    where: { id: po.supplierId },
+                    data: {
+                        payableBalance: {
+                            increment: netCreditAmount,
+                        },
                     },
-                },
-            });
+                });
+            }
+
+            // 4. If an upfront/immediate payment was made, record SupplierPayment
+            if (paidAmount > 0) {
+                await tx.supplierPayment.create({
+                    data: {
+                        supplierId: po.supplierId,
+                        amount: paidAmount,
+                        method: paymentMethod,
+                        reference,
+                        chequeDate,
+                        note: `Settlement at receipt of PO ${po.orderNumber}`,
+                        paidAt: new Date(),
+                    },
+                });
+            }
 
             return updated;
         });
@@ -109,3 +162,4 @@ export async function POST(
         );
     }
 }
+
