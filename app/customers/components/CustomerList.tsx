@@ -1,12 +1,16 @@
-import { Users, Mail, MapPin } from "lucide-react";
+import { Users, Mail, MapPin, ExternalLink } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCustomerStore } from "@/store/customerStore";
 import CustomerActions from "./CustomerActions";
+import { CustomerDetailModal } from "./CustomerDetailModal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const CustomerList = () => {
   const [tab, setTab] = useState("active");
+  const [selectedCustomer, setSelectedCustomer] = useState<any | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
+
   const customers = useCustomerStore((s) => s.customers);
   const inactiveCustomers = useCustomerStore((s) => s.inactiveCustomers);
   const search = useCustomerStore((s) => s.search);
@@ -19,6 +23,11 @@ const CustomerList = () => {
     loadCustomers();
     loadInactiveCustomers();
   }, [loadCustomers, loadInactiveCustomers]);
+
+  const handleOpenDetail = (customer: any) => {
+    setSelectedCustomer(customer);
+    setDetailOpen(true);
+  };
 
   const filteredCustomers = React.useMemo(() => {
     const list = tab === "active" ? customers : inactiveCustomers;
