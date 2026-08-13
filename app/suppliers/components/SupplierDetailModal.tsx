@@ -208,47 +208,47 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-220 max-h-[92vh] overflow-y-auto p-6">
           {/* Supplier Header */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b pb-4">
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold text-foreground">{supplier.name}</h2>
-                <Badge
-                  variant={supplier.active ? "default" : "secondary"}
-                  className={supplier.active ? "bg-emerald-600 hover:bg-emerald-700" : ""}
-                >
-                  {supplier.active ? "Active Supplier" : "Inactive"}
-                </Badge>
-              </div>
-              {supplier.contactPerson && (
-                <p className="text-sm text-muted-foreground font-medium mt-0.5">
-                  Contact Person: {supplier.contactPerson}
-                </p>
-              )}
-            </div>
-
-            {/* Payable balance card & quick pay */}
-            <div className="flex items-center gap-3 bg-muted/60 p-3 rounded-lg border">
+          <DialogHeader className="border-b pb-4 space-y-1">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
-                <p className="text-xs text-muted-foreground font-medium">Outstanding Balance</p>
-                <p
-                  className={`text-lg font-bold ${
-                    Number(supplier.payableBalance) > 0
-                      ? "text-red-600 dark:text-red-400"
-                      : "text-emerald-600 dark:text-emerald-400"
-                  }`}
-                >
-                  LKR {Number(supplier.payableBalance).toLocaleString("en-US", { minimumFractionDigits: 2 })}
-                </p>
+                <DialogTitle className="text-xl font-bold text-foreground flex items-center gap-2">
+                  {supplier.name}
+                  <Badge
+                    variant={supplier.active ? "default" : "secondary"}
+                    className={supplier.active ? "bg-emerald-600 hover:bg-emerald-700" : ""}
+                  >
+                    {supplier.active ? "Active Supplier" : "Inactive"}
+                  </Badge>
+                </DialogTitle>
+                <DialogDescription className="text-sm text-muted-foreground font-medium mt-1">
+                  {supplier.contactPerson ? `Contact Person: ${supplier.contactPerson}` : "Supplier 360 Ledger & Details"}
+                </DialogDescription>
               </div>
-              <Button
-                size="sm"
-                onClick={() => setPaymentDialogOpen(true)}
-                className="gap-1.5 ml-2"
-              >
-                <Plus className="w-4 h-4" /> Record Payment
-              </Button>
+
+              {/* Payable balance card & quick pay */}
+              <div className="flex items-center gap-3 bg-muted/60 p-3 rounded-lg border">
+                <div>
+                  <p className="text-xs text-muted-foreground font-medium">Outstanding Balance</p>
+                  <p
+                    className={`text-lg font-bold ${
+                      Number(supplier.payableBalance) > 0
+                        ? "text-red-600 dark:text-red-400"
+                        : "text-emerald-600 dark:text-emerald-400"
+                    }`}
+                  >
+                    LKR {Number(supplier.payableBalance).toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                  </p>
+                </div>
+                <Button
+                  size="sm"
+                  onClick={() => setPaymentDialogOpen(true)}
+                  className="gap-1.5 ml-2"
+                >
+                  <Plus className="w-4 h-4" /> Record Payment
+                </Button>
+              </div>
             </div>
-          </div>
+          </DialogHeader>
 
           {/* Supplier Metadata Contact Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 py-3 text-xs bg-muted/30 p-3 rounded-lg border">
