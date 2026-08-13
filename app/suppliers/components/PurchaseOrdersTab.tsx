@@ -284,16 +284,41 @@ export const PurchaseOrdersTab = () => {
     if (!targetPo) return;
     setReceivingId(targetPo.id);
     try {
-      const res = await fetch(`/api/purchase-orders/${targetPo.id}/receive`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      let bodyData: any = {};
+      if (paymentTerm === "SPLIT") {
+        const formattedPayments = splitRows
+          .filter((r) => Number(r.amount) > 0)
+          .map((r) => ({
+            method: r.method,
+            amount: Number(r.amount),
+            reference: r.reference.trim() || undefined,
+            chequeDate: r.chequeDate || undefined,
+          }));
+
+        if (formattedPayments.length === 0) {
+          alert.error("Payments required", "Please enter an amount for at least one split payment row.");
+          setReceivingId(null);
+          return;
+        }
+
+        bodyData = {
+          paymentTerm: "SPLIT",
+          payments: formattedPayments,
+        };
+      } else {
+        bodyData = {
           paymentTerm,
           paidAmount: paymentTerm === "PARTIAL" ? parseFloat(paidAmount) || 0 : undefined,
           paymentMethod,
           reference: reference.trim() || undefined,
           chequeDate: chequeDate || undefined,
-        }),
+        };
+      }
+
+      const res = await fetch(`/api/purchase-orders/${targetPo.id}/receive`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bodyData),
       });
 
       if (!res.ok) {
@@ -305,7 +330,7 @@ export const PurchaseOrdersTab = () => {
         "Stock Received!",
         paymentTerm === "CREDIT"
           ? "Stock updated and full order amount added to supplier credit balance."
-          : "Stock updated and payment settlement recorded automatically."
+          : "Stock updated and all payment settlements recorded automatically."
       );
       setReceiveModalOpen(false);
       setTargetPo(null);
