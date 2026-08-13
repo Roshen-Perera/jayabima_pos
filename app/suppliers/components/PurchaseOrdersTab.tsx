@@ -241,11 +241,30 @@ export const PurchaseOrdersTab = () => {
   // Receive PO Modal State
   const [receiveModalOpen, setReceiveModalOpen] = useState(false);
   const [targetPo, setTargetPo] = useState<PurchaseOrder | null>(null);
-  const [paymentTerm, setPaymentTerm] = useState<"CREDIT" | "CASH" | "CHEQUE" | "BANK_TRANSFER" | "PARTIAL">("CREDIT");
+  const [paymentTerm, setPaymentTerm] = useState<"CREDIT" | "CASH" | "CHEQUE" | "BANK_TRANSFER" | "PARTIAL" | "SPLIT">("CREDIT");
   const [paidAmount, setPaidAmount] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<"CASH" | "BANK_TRANSFER" | "CHEQUE">("CASH");
   const [reference, setReference] = useState("");
   const [chequeDate, setChequeDate] = useState("");
+
+  // Split payment rows state (e.g. Cash + Cheque 1 + Cheque 2)
+  const [splitRows, setSplitRows] = useState<
+    { method: "CASH" | "BANK_TRANSFER" | "CHEQUE"; amount: number | ""; reference: string; chequeDate: string }[]
+  >([]);
+
+  const addSplitRow = (defaultMethod: "CASH" | "BANK_TRANSFER" | "CHEQUE" = "CHEQUE") => {
+    setSplitRows((prev) => [...prev, { method: defaultMethod, amount: "", reference: "", chequeDate: "" }]);
+  };
+
+  const removeSplitRow = (index: number) => {
+    setSplitRows((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const updateSplitRow = (index: number, field: string, value: any) => {
+    setSplitRows((prev) =>
+      prev.map((row, i) => (i === index ? { ...row, [field]: value } : row))
+    );
+  };
 
   const openReceiveModal = (po: PurchaseOrder) => {
     setTargetPo(po);
@@ -254,6 +273,10 @@ export const PurchaseOrdersTab = () => {
     setPaymentMethod("CASH");
     setReference("");
     setChequeDate("");
+    setSplitRows([
+      { method: "CASH", amount: "", reference: "", chequeDate: "" },
+      { method: "CHEQUE", amount: "", reference: "", chequeDate: "" },
+    ]);
     setReceiveModalOpen(true);
   };
 
