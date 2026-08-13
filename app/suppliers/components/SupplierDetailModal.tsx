@@ -206,31 +206,31 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-220 max-h-[92vh] overflow-y-auto p-6">
+        <DialogContent className="w-[95vw] sm:max-w-4xl max-h-[92vh] overflow-y-auto p-4 sm:p-6">
           {/* Supplier Header */}
           <DialogHeader className="border-b pb-4 space-y-1">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <DialogTitle className="text-xl font-bold text-foreground flex items-center gap-2">
+                <DialogTitle className="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2 flex-wrap">
                   {supplier.name}
                   <Badge
                     variant={supplier.active ? "default" : "secondary"}
                     className={supplier.active ? "bg-emerald-600 hover:bg-emerald-700" : ""}
                   >
-                    {supplier.active ? "Active Supplier" : "Inactive"}
+                    {supplier.active ? "Active" : "Inactive"}
                   </Badge>
                 </DialogTitle>
-                <DialogDescription className="text-sm text-muted-foreground font-medium mt-1">
-                  {supplier.contactPerson ? `Contact Person: ${supplier.contactPerson}` : "Supplier 360 Ledger & Details"}
+                <DialogDescription className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">
+                  {supplier.contactPerson ? `Contact: ${supplier.contactPerson}` : "Supplier 360 Ledger & Details"}
                 </DialogDescription>
               </div>
 
               {/* Payable balance card & quick pay */}
-              <div className="flex items-center gap-3 bg-muted/60 p-3 rounded-lg border">
+              <div className="flex items-center justify-between sm:justify-end gap-3 bg-muted/60 p-3 rounded-lg border w-full sm:w-auto">
                 <div>
                   <p className="text-xs text-muted-foreground font-medium">Outstanding Balance</p>
                   <p
-                    className={`text-lg font-bold ${
+                    className={`text-base sm:text-lg font-bold ${
                       Number(supplier.payableBalance) > 0
                         ? "text-red-600 dark:text-red-400"
                         : "text-emerald-600 dark:text-emerald-400"
@@ -242,7 +242,7 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
                 <Button
                   size="sm"
                   onClick={() => setPaymentDialogOpen(true)}
-                  className="gap-1.5 ml-2"
+                  className="gap-1.5 ml-2 shrink-0 text-xs sm:text-sm"
                 >
                   <Plus className="w-4 h-4" /> Record Payment
                 </Button>
@@ -288,18 +288,18 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
 
           {/* Tabs Section: Orders | Payments | Products */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-2 w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="orders" className="gap-2">
+            <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 h-auto sm:h-10 gap-1 sm:gap-0">
+              <TabsTrigger value="orders" className="gap-2 text-xs sm:text-sm py-2 sm:py-1">
                 <Truck className="w-4 h-4" />
-                Purchase Orders ({orders.length})
+                Orders ({orders.length})
               </TabsTrigger>
-              <TabsTrigger value="payments" className="gap-2">
+              <TabsTrigger value="payments" className="gap-2 text-xs sm:text-sm py-2 sm:py-1">
                 <Receipt className="w-4 h-4" />
-                Payment History ({payments.length})
+                Payments ({payments.length})
               </TabsTrigger>
-              <TabsTrigger value="products" className="gap-2">
+              <TabsTrigger value="products" className="gap-2 text-xs sm:text-sm py-2 sm:py-1">
                 <Package className="w-4 h-4" />
-                Supplied Products ({products.length})
+                Products ({products.length})
               </TabsTrigger>
             </TabsList>
 
