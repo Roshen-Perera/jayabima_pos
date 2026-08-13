@@ -44,9 +44,8 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         const data = supplierPaymentSchema.parse(body);
 
-        const result = await prisma.$transaction(async (tx) => {
-            // 1. Create the payment record
-            const payment = await tx.supplierPayment.create({
+        const [payment] = await prisma.$transaction([
+            prisma.supplierPayment.create({
                 data: {
                     supplierId: data.supplierId,
                     amount: data.amount,
@@ -59,22 +58,18 @@ export async function POST(request: NextRequest) {
                 include: {
                     supplier: { select: { id: true, name: true } },
                 },
-            });
-
-            // 2. Decrement supplier payable balance (can go negative for advances)
-            await tx.supplier.update({
+            }),
+            prisma.supplier.update({
                 where: { id: data.supplierId },
                 data: {
                     payableBalance: {
                         decrement: data.amount,
                     },
                 },
-            });
+            }),
+        ]);
 
-            return payment;
-        });
-
-        return NextResponse.json(result, { status: 201 });
+        return NextResponse.json(payment, { status: 201 });
     } catch (error) {
         if (error instanceof z.ZodError) {
             return NextResponse.json(
