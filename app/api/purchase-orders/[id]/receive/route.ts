@@ -33,41 +33,66 @@ export async function POST(
             return NextResponse.json({ error: 'Cannot receive a cancelled Purchase Order' }, { status: 400 });
         }
 
-        // Parse optional payment settlement details from request body
-        let paymentTerm = 'CREDIT';
-        let paidAmount = 0;
-        let paymentMethod: 'CASH' | 'BANK_TRANSFER' | 'CHEQUE' = 'CASH';
-        let reference: string | null = null;
-        let chequeDate: Date | null = null;
+        // Parse payment settlement details from request body
+        interface PaymentItemToCreate {
+            method: 'CASH' | 'BANK_TRANSFER' | 'CHEQUE';
+            amount: number;
+            reference: string | null;
+            chequeDate: Date | null;
+        }
+
+        let paymentsToCreate: PaymentItemToCreate[] = [];
 
         try {
             const body = await request.json();
-            if (body && body.paymentTerm) {
-                paymentTerm = body.paymentTerm;
-                if (paymentTerm === 'CASH') {
-                    paidAmount = Number(po.totalAmount);
-                    paymentMethod = 'CASH';
-                } else if (paymentTerm === 'CHEQUE') {
-                    paidAmount = Number(po.totalAmount);
-                    paymentMethod = 'CHEQUE';
-                    reference = body.reference || null;
-                    chequeDate = body.chequeDate ? new Date(body.chequeDate) : null;
-                } else if (paymentTerm === 'BANK_TRANSFER') {
-                    paidAmount = Number(po.totalAmount);
-                    paymentMethod = 'BANK_TRANSFER';
-                    reference = body.reference || null;
-                } else if (paymentTerm === 'PARTIAL') {
-                    paidAmount = Math.min(Number(po.totalAmount), Math.max(0, Number(body.paidAmount || 0)));
-                    paymentMethod = body.paymentMethod || 'CASH';
-                    reference = body.reference || null;
-                    chequeDate = body.chequeDate ? new Date(body.chequeDate) : null;
+            if (body) {
+                if (Array.isArray(body.payments) && body.payments.length > 0) {
+                    paymentsToCreate = body.payments
+                        .map((p: any) => ({
+                            method: (p.method || 'CASH') as 'CASH' | 'BANK_TRANSFER' | 'CHEQUE',
+                            amount: Math.max(0, Number(p.amount) || 0),
+                            reference: p.reference || null,
+                            chequeDate: p.chequeDate ? new Date(p.chequeDate) : null,
+                        }))
+                        .filter((p: PaymentItemToCreate) => p.amount > 0);
+                } else if (body.paymentTerm) {
+                    const term = body.paymentTerm;
+                    const poTotal = Number(po.totalAmount);
+                    if (term === 'CASH') {
+                        paymentsToCreate.push({ method: 'CASH', amount: poTotal, reference: null, chequeDate: null });
+                    } else if (term === 'CHEQUE') {
+                        paymentsToCreate.push({
+                            method: 'CHEQUE',
+                            amount: poTotal,
+                            reference: body.reference || null,
+                            chequeDate: body.chequeDate ? new Date(body.chequeDate) : null,
+                        });
+                    } else if (term === 'BANK_TRANSFER') {
+                        paymentsToCreate.push({
+                            method: 'BANK_TRANSFER',
+                            amount: poTotal,
+                            reference: body.reference || null,
+                            chequeDate: null,
+                        });
+                    } else if (term === 'PARTIAL') {
+                        const paid = Math.min(poTotal, Math.max(0, Number(body.paidAmount || 0)));
+                        if (paid > 0) {
+                            paymentsToCreate.push({
+                                method: body.paymentMethod || 'CASH',
+                                amount: paid,
+                                reference: body.reference || null,
+                                chequeDate: body.chequeDate ? new Date(body.chequeDate) : null,
+                            });
+                        }
+                    }
                 }
             }
         } catch {
-            // Body empty or invalid JSON -> defaults to CREDIT
+            // Body empty or invalid JSON -> defaults to CREDIT (0 payments)
         }
 
-        const netCreditAmount = Number(po.totalAmount) - paidAmount;
+        const totalPaid = paymentsToCreate.reduce((acc, p) => acc + p.amount, 0);
+        const netCreditAmount = Number(po.totalAmount) - totalPaid;
 
         // Execute receiving in a database transaction
         const updatedPO = await prisma.$transaction(async (tx) => {
@@ -135,15 +160,15 @@ export async function POST(
                 });
             }
 
-            // 4. If an upfront/immediate payment was made, record SupplierPayment
-            if (paidAmount > 0) {
+            // 4. Create all payment records for immediate/split payments
+            for (const p of paymentsToCreate) {
                 await tx.supplierPayment.create({
                     data: {
                         supplierId: po.supplierId,
-                        amount: paidAmount,
-                        method: paymentMethod,
-                        reference,
-                        chequeDate,
+                        amount: p.amount,
+                        method: p.method,
+                        reference: p.reference,
+                        chequeDate: p.chequeDate,
                         note: `Settlement at receipt of PO ${po.orderNumber}`,
                         paidAt: new Date(),
                     },
