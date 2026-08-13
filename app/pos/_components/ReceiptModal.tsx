@@ -227,6 +227,28 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
                 <span className="font-medium">{sale.userName}</span>
               </p>
             )}
+
+            {/* Customer Account Credit Balance Statement on Receipt */}
+            {sale.customerId && sale.customerName && sale.customerName !== "Walking Customer" && (
+              <div className="border-t border-dashed pt-2 mt-2 space-y-1 text-xs text-left bg-muted/30 p-2 rounded">
+                <p className="font-bold text-center text-foreground text-[11px] uppercase tracking-wide">
+                  Account Credit Statement
+                </p>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Customer:</span>
+                  <span className="font-medium truncate">{sale.customerName}</span>
+                </div>
+                <div className="flex justify-between font-bold text-destructive">
+                  <span>Current Total Credit Owed:</span>
+                  <span>
+                    Rs. {Number(
+                      (typeof window !== "undefined" ? (window as any).__LAST_CUST_CREDIT__ : 0) || 0
+                    ).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  </span>
+                </div>
+              </div>
+            )}
+
             <p className="text-muted-foreground mt-2">
               Thank you for your purchase!
             </p>
