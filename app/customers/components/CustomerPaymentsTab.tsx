@@ -105,6 +105,41 @@ export const CustomerPaymentsTab = () => {
       return;
     }
 
+    const selectedCust = customers.find((c) => c.id === customerId);
+    const currentBalance = Number(selectedCust?.creditBalance || 0);
+
+    if (currentBalance <= 0) {
+      alert.error(
+        "No Credit Owed",
+        `Customer "${selectedCust?.name}" has no outstanding credit balance to settle.`
+      );
+      return;
+    }
+
+    if (numAmount > currentBalance) {
+      alert.error(
+        "Overpayment Exceeded",
+        `Payment amount (LKR ${numAmount.toLocaleString()}) cannot exceed the customer's current balance of LKR ${currentBalance.toLocaleString("en-US", { minimumFractionDigits: 2 })}.`
+      );
+      return;
+    }
+
+    if (method === "CHEQUE") {
+      if (!reference.trim()) {
+        alert.error("Cheque Number Required", "Please enter the cheque number (e.g. CHQ-554411).");
+        return;
+      }
+      if (!chequeDate) {
+        alert.error("Cheque Date Required", "Please select the cheque realization date.");
+        return;
+      }
+    }
+
+    if (method === "BANK_TRANSFER" && !reference.trim()) {
+      alert.error("Bank Reference Required", "Please enter the bank transfer reference or transaction ID.");
+      return;
+    }
+
     setSubmitting(true);
     try {
       const res = await fetch("/api/customer-payments", {
@@ -123,7 +158,8 @@ export const CustomerPaymentsTab = () => {
 
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.error || "Failed to record payment");
+        const detailsMsg = err.details?.[0]?.message || err.error || "Failed to record payment";
+        throw new Error(detailsMsg);
       }
 
       alert.success(

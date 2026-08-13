@@ -92,6 +92,41 @@ export const SupplierPaymentsTab = () => {
       return;
     }
 
+    const selectedSupp = suppliers.find((s) => s.id === supplierId);
+    const currentBalance = Number(selectedSupp?.payableBalance || 0);
+
+    if (currentBalance <= 0) {
+      alert.error(
+        "No Payable Balance",
+        `Supplier "${selectedSupp?.name}" has no outstanding payable balance to settle.`
+      );
+      return;
+    }
+
+    if (numAmount > currentBalance) {
+      alert.error(
+        "Overpayment Exceeded",
+        `Payment amount (LKR ${numAmount.toLocaleString()}) cannot exceed the supplier's payable balance of LKR ${currentBalance.toLocaleString("en-US", { minimumFractionDigits: 2 })}.`
+      );
+      return;
+    }
+
+    if (method === "CHEQUE") {
+      if (!reference.trim()) {
+        alert.error("Cheque Number Required", "Please enter the cheque number (e.g. CHQ-554411).");
+        return;
+      }
+      if (!chequeDate) {
+        alert.error("Cheque Date Required", "Please select the cheque realization date.");
+        return;
+      }
+    }
+
+    if (method === "BANK_TRANSFER" && !reference.trim()) {
+      alert.error("Bank Reference Required", "Please enter the bank transfer reference or transaction ID.");
+      return;
+    }
+
     setSubmitting(true);
     try {
       const res = await fetch("/api/supplier-payments", {
@@ -110,7 +145,8 @@ export const SupplierPaymentsTab = () => {
 
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.error || "Failed to record payment");
+        const detailsMsg = err.details?.[0]?.message || err.error || "Failed to record payment";
+        throw new Error(detailsMsg);
       }
 
       alert.success(

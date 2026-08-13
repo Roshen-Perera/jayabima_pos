@@ -46,6 +46,31 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         const data = supplierPaymentSchema.parse(body);
 
+        const supplier = await prisma.supplier.findUnique({
+            where: { id: data.supplierId },
+            select: { id: true, name: true, payableBalance: true },
+        });
+
+        if (!supplier) {
+            return NextResponse.json({ error: 'Supplier not found' }, { status: 404 });
+        }
+
+        const currentBalance = Number(supplier.payableBalance || 0);
+
+        if (currentBalance <= 0) {
+            return NextResponse.json(
+                { error: `Supplier "${supplier.name}" has no outstanding payable balance to settle (Current Owed: LKR 0.00).` },
+                { status: 400 }
+            );
+        }
+
+        if (data.amount > currentBalance) {
+            return NextResponse.json(
+                { error: `Payment amount (LKR ${data.amount.toLocaleString()}) cannot exceed the supplier's payable balance of LKR ${currentBalance.toLocaleString("en-US", { minimumFractionDigits: 2 })}.` },
+                { status: 400 }
+            );
+        }
+
         const [payment] = await prisma.$transaction([
             prisma.supplierPayment.create({
                 data: {

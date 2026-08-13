@@ -135,6 +135,40 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
       return;
     }
 
+    const currentBalance = Number(supplier.payableBalance || 0);
+
+    if (currentBalance <= 0) {
+      alert.error(
+        "No Payable Balance",
+        `Supplier "${supplier.name}" has no outstanding payable balance to settle.`
+      );
+      return;
+    }
+
+    if (numAmt > currentBalance) {
+      alert.error(
+        "Overpayment Exceeded",
+        `Payment amount (LKR ${numAmt.toLocaleString()}) cannot exceed the supplier's payable balance of LKR ${currentBalance.toLocaleString("en-US", { minimumFractionDigits: 2 })}.`
+      );
+      return;
+    }
+
+    if (payMethod === "CHEQUE") {
+      if (!payRef.trim()) {
+        alert.error("Cheque Number Required", "Please enter the cheque number (e.g. CHQ-554411).");
+        return;
+      }
+      if (!payChequeDate) {
+        alert.error("Cheque Date Required", "Please select the cheque realization date.");
+        return;
+      }
+    }
+
+    if (payMethod === "BANK_TRANSFER" && !payRef.trim()) {
+      alert.error("Bank Reference Required", "Please enter the bank transfer reference or transaction ID.");
+      return;
+    }
+
     setSubmittingPayment(true);
     try {
       const res = await fetch("/api/supplier-payments", {
@@ -152,7 +186,8 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
 
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.error || "Failed to record payment");
+        const detailsMsg = err.details?.[0]?.message || err.error || "Failed to record payment";
+        throw new Error(detailsMsg);
       }
 
       alert.success(

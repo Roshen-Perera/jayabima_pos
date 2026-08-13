@@ -114,6 +114,40 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
       return;
     }
 
+    const currentBalance = Number(customer.creditBalance || 0);
+
+    if (currentBalance <= 0) {
+      alert.error(
+        "No Credit Owed",
+        `Customer "${customer.name}" has no outstanding credit balance to settle.`
+      );
+      return;
+    }
+
+    if (numAmt > currentBalance) {
+      alert.error(
+        "Overpayment Exceeded",
+        `Payment amount (LKR ${numAmt.toLocaleString()}) cannot exceed the customer's current balance of LKR ${currentBalance.toLocaleString("en-US", { minimumFractionDigits: 2 })}.`
+      );
+      return;
+    }
+
+    if (payMethod === "CHEQUE") {
+      if (!payRef.trim()) {
+        alert.error("Cheque Number Required", "Please enter the cheque number (e.g. CHQ-554411).");
+        return;
+      }
+      if (!payChequeDate) {
+        alert.error("Cheque Date Required", "Please select the cheque realization date.");
+        return;
+      }
+    }
+
+    if (payMethod === "BANK_TRANSFER" && !payRef.trim()) {
+      alert.error("Bank Reference Required", "Please enter the bank transfer reference or transaction ID.");
+      return;
+    }
+
     setSubmittingPayment(true);
     try {
       const res = await fetch("/api/customer-payments", {
@@ -131,7 +165,8 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
 
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.error || "Failed to record payment");
+        const detailsMsg = err.details?.[0]?.message || err.error || "Failed to record payment";
+        throw new Error(detailsMsg);
       }
 
       alert.success(
