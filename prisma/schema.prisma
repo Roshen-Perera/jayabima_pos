@@ -180,6 +180,8 @@ model Sale {
   paymentMethod PaymentMethod
   cashPaid      Decimal?      @db.Decimal(12, 2)
   cashBalance   Decimal?      @db.Decimal(12, 2)
+  reference     String?       // Cheque no. or Bank Txn ID
+  chequeDate    DateTime?     // Post-dated cheque realization date
   status        SaleStatus    @default(COMPLETED)
   deletedAt     DateTime?
   createdAt     DateTime      @default(now())
@@ -260,6 +262,9 @@ enum UserStatus {
 enum PaymentMethod {
   CASH
   CARD
+  BANK_TRANSFER
+  CHEQUE
+  CREDIT
   MOBILE
   OTHER
 }

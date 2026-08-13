@@ -15,10 +15,15 @@ import { usePOSStore } from "@/store/posStore";
 import { useProductStore } from "@/store/productStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import {
+  AlertCircle,
   Banknote,
+  Building2,
   CreditCard,
+  Landmark,
+  Receipt,
   ShoppingBag,
   Smartphone,
+  UserCheck,
   Wallet,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -36,14 +41,13 @@ const PAYMENT_OPTIONS: {
   label: string;
   icon: React.ReactNode;
 }[] = [
-  { value: "CASH", label: "Cash", icon: <Banknote className="w-5 h-5" /> },
-  { value: "CARD", label: "Card", icon: <CreditCard className="w-5 h-5" /> },
-  {
-    value: "MOBILE",
-    label: "Mobile Pay",
-    icon: <Smartphone className="w-5 h-5" />, 
-  },
-  { value: "OTHER", label: "Other", icon: <Wallet className="w-5 h-5" /> },
+  { value: "CASH", label: "Cash", icon: <Banknote className="w-4 h-4" /> },
+  { value: "CARD", label: "Card", icon: <CreditCard className="w-4 h-4" /> },
+  { value: "CREDIT", label: "Credit (Pay Later)", icon: <UserCheck className="w-4 h-4" /> },
+  { value: "CHEQUE", label: "Cheque", icon: <Receipt className="w-4 h-4" /> },
+  { value: "BANK_TRANSFER", label: "Bank Transfer", icon: <Landmark className="w-4 h-4" /> },
+  { value: "MOBILE", label: "Mobile Pay", icon: <Smartphone className="w-4 h-4" /> },
+  { value: "OTHER", label: "Other", icon: <Wallet className="w-4 h-4" /> },
 ];
 
 export default function CheckoutPanel({
@@ -57,6 +61,8 @@ export default function CheckoutPanel({
   const { user } = useAuthStore();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("CASH");
   const [cashInput, setCashInput] = useState("");
+  const [reference, setReference] = useState("");
+  const [chequeDate, setChequeDate] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const { addSale } = useSalesStore();
 
@@ -65,6 +71,8 @@ export default function CheckoutPanel({
     if (open) {
       setPaymentMethod("CASH");
       setCashInput("");
+      setReference("");
+      setChequeDate("");
       setIsProcessing(false);
       if (!customerId && customerName !== "Walking Customer") {
         setCustomer(undefined, "Walking Customer");
@@ -78,7 +86,13 @@ export default function CheckoutPanel({
   const cashPaid = parseFloat(cashInput) || 0;
   const cashBalance = cashPaid - total;
   const isCash = paymentMethod === "CASH";
+  const isCredit = paymentMethod === "CREDIT";
+  const isCheque = paymentMethod === "CHEQUE";
+  const isBank = paymentMethod === "BANK_TRANSFER";
+
+  const isCreditValid = !isCredit || (!!customerId && customerName !== "Walking Customer");
   const cashInputValid = !isCash || (cashInput !== "" && cashPaid >= total);
+  const isFormValid = cashInputValid && isCreditValid;
 
   // Quick cash presets (round numbers >= total)
   const presets = Array.from(
@@ -98,6 +112,14 @@ export default function CheckoutPanel({
       return;
     }
 
+    if (isCredit && (!customerId || customerName === "Walking Customer")) {
+      alert.error(
+        "Customer Required",
+        "Please select a registered customer account for Credit (Pay Later) sales.",
+      );
+      return;
+    }
+
     setIsProcessing(true);
 
     try {
@@ -111,7 +133,7 @@ export default function CheckoutPanel({
       );
       const totalSavings = itemDiscount + (cart.discount ?? 0);
 
-      // Persist sale to database (also decrements stock & syncs customer.totalPurchases)
+      // Persist sale to database (also decrements stock & syncs customer.totalPurchases & creditBalance)
       const res = await fetch("/api/sales", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -127,13 +149,15 @@ export default function CheckoutPanel({
           paymentMethod,
           cashPaid: isCash ? cashPaid : null,
           cashBalance: isCash ? cashBalance : null,
+          reference: reference.trim() || undefined,
+          chequeDate: isCheque && chequeDate ? chequeDate : undefined,
           status: "COMPLETED",
           items: cart.items.map((i) => ({
             productId: i.productId,
             productName: i.name,
-            quantity: i.quantity,
-            price: i.overridePrice ?? i.price,
-            total: (i.overridePrice ?? i.price) * i.quantity,
+            quantity: Number(i.quantity),
+            price: Number(i.overridePrice ?? i.price),
+            total: Number(i.overridePrice ?? i.price) * Number(i.quantity),
           })),
         }),
       });
@@ -174,7 +198,10 @@ export default function CheckoutPanel({
       onClose();
     } catch (err: any) {
       console.error("Checkout error:", err);
-      alert.error("Checkout failed", err.message || "An error occurred. Please try again.");
+      // Show detailed validation errors if available
+      const message = err.message || "An error occurred. Please try again.";
+      alert.error("Checkout failed", message);
+      setIsProcessing(false); // explicitly reset so user can retry without closing dialog
     } finally {
       setIsProcessing(false);
     }
@@ -329,18 +356,83 @@ export default function CheckoutPanel({
             </div>
           )}
 
+          {/* Cheque Inputs */}
+          {isCheque && (
+            <div className="space-y-3 bg-purple-50/50 dark:bg-purple-950/20 p-3 rounded-lg border border-purple-200 dark:border-purple-800 text-xs">
+              <div className="space-y-1">
+                <Label htmlFor="chequeRef" className="text-xs font-semibold">Cheque Number *</Label>
+                <Input
+                  id="chequeRef"
+                  placeholder="e.g. CHQ-889922"
+                  value={reference}
+                  onChange={(e) => setReference(e.target.value)}
+                  className="bg-background text-xs h-8"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="chequeDate" className="text-xs font-semibold">Cheque Realization Date</Label>
+                <Input
+                  id="chequeDate"
+                  type="date"
+                  value={chequeDate}
+                  onChange={(e) => setChequeDate(e.target.value)}
+                  className="bg-background text-xs h-8"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Bank Transfer Inputs */}
+          {isBank && (
+            <div className="space-y-2 bg-blue-50/50 dark:bg-blue-950/20 p-3 rounded-lg border border-blue-200 dark:border-blue-800 text-xs">
+              <Label htmlFor="bankRef" className="text-xs font-semibold">Bank Transfer Reference / Txn ID</Label>
+              <Input
+                id="bankRef"
+                placeholder="e.g. TRX-998811"
+                value={reference}
+                onChange={(e) => setReference(e.target.value)}
+                className="bg-background text-xs h-8"
+              />
+            </div>
+          )}
+
+          {/* Credit Pay Later Warning */}
+          {isCredit && (
+            <div className="space-y-2 bg-amber-50 dark:bg-amber-950/40 p-3 rounded-lg border border-amber-200 dark:border-amber-800 text-xs">
+              <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300 font-semibold">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                Credit Purchase (Pay Later)
+              </div>
+              <p className="text-muted-foreground text-[11px] leading-relaxed">
+                This purchase total of <strong className="text-foreground">Rs. {total.toLocaleString()}</strong> will be added directly to the customer's outstanding credit balance ledger.
+              </p>
+
+              {(!customerId || customerName === "Walking Customer") ? (
+                <div className="p-2 bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300 font-medium rounded border border-red-200 text-[11px]">
+                  ⚠️ Please close this panel and select a registered customer from the POS cart header before proceeding with Credit sale.
+                </div>
+              ) : (
+                <div className="p-2 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-medium rounded border border-emerald-200 text-[11px]">
+                  Selected Customer: <strong>{customerName}</strong>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Confirm button */}
           <Button
             className="w-full"
             size="lg"
             onClick={handleCheckout}
-            disabled={isProcessing || !cashInputValid}
+            disabled={isProcessing || !isFormValid}
           >
             {isProcessing
               ? "Processing…"
               : isCash && cashInput === ""
                 ? "Enter Cash Amount"
-                : `Confirm Payment · Rs. ${total.toLocaleString()}`}
+                : isCredit && (!customerId || customerName === "Walking Customer")
+                  ? "Select Customer for Credit"
+                  : `Confirm Payment · Rs. ${total.toLocaleString()}`}
           </Button>
         </div>
       </DialogContent>
