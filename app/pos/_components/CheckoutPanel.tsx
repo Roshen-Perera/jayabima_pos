@@ -69,7 +69,7 @@ export default function CheckoutPanel({
 }: CheckoutPanelProps) {
   const { cart, customerId, customerName, setCustomer, clearCart } =
     usePOSStore();
-  const { customers } = useCustomerStore();
+  const { customers, loadCustomers } = useCustomerStore();
   const { updateStock } = useProductStore();
   const { user } = useAuthStore();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("CASH");
@@ -269,11 +269,12 @@ export default function CheckoutPanel({
         createdAt: new Date(savedSale.createdAt),
       };
 
-      // Update local product stock cache
+      // Update local product stock cache & refresh customer credit balance store
       cart.items.forEach((item) => {
         updateStock(item.productId, item.quantity);
       });
 
+      await loadCustomers();
       addSale(sale);
       clearCart();
       onSuccess(sale);
@@ -363,16 +364,24 @@ export default function CheckoutPanel({
             </div>
 
             {customerId && customerName !== "Walking Customer" && (
-              <div className="pt-1 border-t border-dashed grid grid-cols-2 gap-2 text-[11px]">
-                <div>
-                  <span className="text-muted-foreground block">Previous Owed:</span>
-                  <span className="font-semibold text-destructive">
+              <div className="pt-2 border-t border-dashed space-y-1 text-[11px]">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Previous Credit Owed:</span>
+                  <span className="font-semibold text-slate-700 dark:text-slate-300">
                     Rs. {Number(customers.find((c) => c.id === customerId)?.creditBalance || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                   </span>
                 </div>
-                <div className="text-right">
-                  <span className="text-muted-foreground block">New Owed (Est):</span>
-                  <span className="font-bold text-primary">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">This Bill Credit Added:</span>
+                  <span className="font-semibold text-amber-600">
+                    +Rs. {(
+                      isCredit ? total : isPartial ? partialUnpaidAmt : isSplit ? splitUnpaidAmt : 0
+                    ).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  </span>
+                </div>
+                <div className="flex justify-between font-bold text-xs pt-1 border-t text-destructive">
+                  <span>Total Debt Owed After Bill:</span>
+                  <span>
                     Rs. {(
                       Number(customers.find((c) => c.id === customerId)?.creditBalance || 0) +
                       (isCredit ? total : isPartial ? partialUnpaidAmt : isSplit ? splitUnpaidAmt : 0)
