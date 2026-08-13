@@ -76,7 +76,7 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
       const res = await fetch(`/api/sales?customerId=${id}`);
       if (res.ok) {
         const data = await res.json();
-        setSales(Array.isArray(data) ? data : data.sales || []);
+        setSales(Array.isArray(data) ? data : []);
       }
     } catch (err) {
       console.error(err);

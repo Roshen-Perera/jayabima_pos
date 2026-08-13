@@ -11,7 +11,7 @@ interface SalesState {
     paymentFilter: string;
 
     addSale: (sale: Sale) => void;
-    fetchSales: () => Promise<void>;
+    fetchSales: (customerId?: string) => Promise<void>;
     setSelectedSale: (sale: Sale | null) => void;
     setSearchQuery: (query: string) => void;
     setDateFilter: (filter: 'today' | 'week' | 'month' | 'all') => void;
@@ -39,11 +39,43 @@ export const useSalesStore = create<SalesState>((set, get) => ({
         }));
     },
 
-    fetchSales: async () => {
+    fetchSales: async (customerId?: string) => {
         set({ isLoading: true });
         try {
-            // TODO: Later replace with API call
-            await new Promise((resolve) => setTimeout(resolve, 300));
+            const url = customerId
+                ? `/api/sales?customerId=${customerId}`
+                : '/api/sales';
+            const res = await fetch(url);
+            if (!res.ok) throw new Error('Failed to fetch sales');
+            const data = await res.json();
+
+            // Normalize DB format to local Sale format
+            const sales: Sale[] = data.map((s: any) => ({
+                id: s.id,
+                items: (s.items || []).map((item: any) => ({
+                    id: item.id,
+                    productId: item.productId,
+                    name: item.productName,
+                    price: Number(item.price),
+                    quantity: item.quantity,
+                })),
+                customerId: s.customerId,
+                customerName: s.customer?.name ?? s.customerName ?? 'Walking Customer',
+                userId: s.userId,
+                userName: s.user?.name ?? 'Staff',
+                originalTotal: Number(s.originalTotal),
+                itemDiscount: Number(s.itemDiscount),
+                discount: Number(s.discount),
+                totalSavings: Number(s.totalSavings),
+                total: Number(s.total),
+                paymentMethod: s.paymentMethod,
+                cashPaid: s.cashPaid ? Number(s.cashPaid) : undefined,
+                cashBalance: s.cashBalance ? Number(s.cashBalance) : undefined,
+                status: s.status,
+                createdAt: new Date(s.createdAt),
+            }));
+
+            set({ sales });
         } catch (error) {
             console.error('Fetch sales error:', error);
         } finally {

@@ -111,8 +111,42 @@ export default function CheckoutPanel({
       );
       const totalSavings = itemDiscount + (cart.discount ?? 0);
 
+      // Persist sale to database (also decrements stock & syncs customer.totalPurchases)
+      const res = await fetch("/api/sales", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerId: customerId || null,
+          customerName: customerName || null,
+          userId: user?.id ?? "unknown",
+          originalTotal,
+          itemDiscount,
+          discount: cart.discount,
+          totalSavings,
+          total,
+          paymentMethod,
+          cashPaid: isCash ? cashPaid : null,
+          cashBalance: isCash ? cashBalance : null,
+          status: "COMPLETED",
+          items: cart.items.map((i) => ({
+            productId: i.productId,
+            productName: i.name,
+            quantity: i.quantity,
+            price: i.overridePrice ?? i.price,
+            total: (i.overridePrice ?? i.price) * i.quantity,
+          })),
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Failed to record sale");
+      }
+
+      const savedSale = await res.json();
+
       const sale: Sale = {
-        id: `sale-${Date.now()}`,
+        id: savedSale.id,
         items: cart.items,
         customerId,
         customerName,
@@ -126,10 +160,10 @@ export default function CheckoutPanel({
         paymentMethod,
         ...(isCash && { cashPaid, cashBalance }),
         status: "COMPLETED",
-        createdAt: new Date(),
+        createdAt: new Date(savedSale.createdAt),
       };
 
-      // Deduct sold quantities from product stock
+      // Update local product stock cache
       cart.items.forEach((item) => {
         updateStock(item.productId, item.quantity);
       });
@@ -138,8 +172,9 @@ export default function CheckoutPanel({
       clearCart();
       onSuccess(sale);
       onClose();
-    } catch {
-      alert.error("Checkout failed", "An error occurred. Please try again.");
+    } catch (err: any) {
+      console.error("Checkout error:", err);
+      alert.error("Checkout failed", err.message || "An error occurred. Please try again.");
     } finally {
       setIsProcessing(false);
     }
