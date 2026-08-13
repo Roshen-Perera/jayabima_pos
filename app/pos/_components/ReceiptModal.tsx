@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Download, Printer, ShoppingBag } from "lucide-react";
 import { Sale } from "../_types/pos.types";
+import { useCustomerStore } from "@/store/customerStore";
 
 interface ReceiptModalProps {
   open: boolean;
@@ -17,9 +18,11 @@ interface ReceiptModalProps {
 }
 
 const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
+  const { customers } = useCustomerStore();
   if (!sale) return null;
 
   const handlePrint = () => window.print();
+  const customerObj = sale.customerId ? customers.find((c) => c.id === sale.customerId) : null;
 
   // Derived totals from sale
   const originalTotal =
@@ -229,7 +232,7 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
             )}
 
             {/* Customer Account Credit Balance Statement on Receipt */}
-            {sale.customerId && sale.customerName && sale.customerName !== "Walking Customer" && (
+            {sale.customerName && sale.customerName !== "Walking Customer" && (
               <div className="border-t border-dashed pt-2 mt-2 space-y-1 text-xs text-left bg-muted/30 p-2 rounded">
                 <p className="font-bold text-center text-foreground text-[11px] uppercase tracking-wide">
                   Account Credit Statement
@@ -238,14 +241,14 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
                   <span className="text-muted-foreground">Customer:</span>
                   <span className="font-medium truncate">{sale.customerName}</span>
                 </div>
-                <div className="flex justify-between font-bold text-destructive">
-                  <span>Current Total Credit Owed:</span>
-                  <span>
-                    Rs. {Number(
-                      (typeof window !== "undefined" ? (window as any).__LAST_CUST_CREDIT__ : 0) || 0
-                    ).toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                  </span>
-                </div>
+                {customerObj && (
+                  <div className="flex justify-between font-bold text-destructive">
+                    <span>Total Credit Outstanding:</span>
+                    <span>
+                      Rs. {Number(customerObj.creditBalance || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    </span>
+                  </div>
+                )}
               </div>
             )}
 
