@@ -14,6 +14,7 @@ import { alert } from "@/lib/alert";
 import { usePOSStore } from "@/store/posStore";
 import { useProductStore } from "@/store/productStore";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useCustomerStore } from "@/store/customerStore";
 import {
   AlertCircle,
   BadgePercent,
@@ -340,21 +341,45 @@ export default function CheckoutPanel({
             </div>
           </div>
 
-          {/* Customer Context Badge */}
-          <div className="text-xs p-2.5 rounded-lg border flex items-center justify-between bg-muted/40">
-            <div className="flex items-center gap-2">
-              <UserCheck className="w-4 h-4 text-primary" />
-              <div>
-                <span className="font-semibold text-foreground">
+          {/* Customer Context & Accounts Receivable Summary */}
+          <div className="text-xs p-3 rounded-lg border bg-muted/40 space-y-1.5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <UserCheck className="w-4 h-4 text-primary" />
+                <span className="font-bold text-foreground">
                   {customerName || "Walking Customer"}
                 </span>
-                <span className="block text-[11px] text-muted-foreground">
-                  {!customerId || customerName === "Walking Customer"
-                    ? "Walking Customer — Cash, Card, Bank Transfer"
-                    : "Registered Account — All Ledgers & Terms Enabled"}
-                </span>
               </div>
+              {!customerId || customerName === "Walking Customer" ? (
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted font-medium text-muted-foreground border">
+                  Walk-In
+                </span>
+              ) : (
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 font-semibold border border-blue-200">
+                  Registered Account
+                </span>
+              )}
             </div>
+
+            {customerId && customerName !== "Walking Customer" && (
+              <div className="pt-1 border-t border-dashed grid grid-cols-2 gap-2 text-[11px]">
+                <div>
+                  <span className="text-muted-foreground block">Previous Owed:</span>
+                  <span className="font-semibold text-destructive">
+                    Rs. {Number(customers.find((c) => c.id === customerId)?.creditBalance || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  </span>
+                </div>
+                <div className="text-right">
+                  <span className="text-muted-foreground block">New Owed (Est):</span>
+                  <span className="font-bold text-primary">
+                    Rs. {(
+                      Number(customers.find((c) => c.id === customerId)?.creditBalance || 0) +
+                      (isCredit ? total : isPartial ? partialUnpaidAmt : isSplit ? splitUnpaidAmt : 0)
+                    ).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Payment method selector */}
