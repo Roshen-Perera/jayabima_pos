@@ -18,7 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Calculator, Plus } from "lucide-react";
+import { Calculator, Plus, ShoppingCart } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -99,6 +99,7 @@ const ProductForm = ({
           description: "",
           active: true,
         },
+        // Note: stock is always 0 for new products — use a Purchase Order to receive stock
   });
 
   useEffect(() => {
@@ -519,40 +520,56 @@ const ProductForm = ({
                 </Tabs>
               </div>
 
-              {/* Stock & Min Stock */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="stock">Stock Quantity</Label>
-                  <Input
-                    id="stock"
-                    type="number"
-                    placeholder="45"
-                    {...register("stock", { valueAsNumber: true })}
-                    className={errors.stock ? "border-red-500" : ""}
-                  />
-                  {errors.stock && (
-                    <p className="text-sm text-red-500">
-                      {errors.stock.message}
-                    </p>
-                  )}
-                </div>
+              {/* Stock & Min Stock — only editable in edit mode */}
+              {mode === "edit" ? (
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="stock">Stock Quantity</Label>
+                    <Input
+                      id="stock"
+                      type="number"
+                      placeholder="45"
+                      {...register("stock", { valueAsNumber: true })}
+                      className={errors.stock ? "border-red-500" : ""}
+                    />
+                    {errors.stock && (
+                      <p className="text-sm text-red-500">
+                        {errors.stock.message}
+                      </p>
+                    )}
+                  </div>
 
-                <div className="grid gap-2">
-                  <Label htmlFor="minStock">Min Stock Alert</Label>
-                  <Input
-                    id="minStock"
-                    type="number"
-                    placeholder="10"
-                    {...register("minStock", { valueAsNumber: true })}
-                    className={errors.minStock ? "border-red-500" : ""}
-                  />
-                  {errors.minStock && (
-                    <p className="text-sm text-red-500">
-                      {errors.minStock.message}
-                    </p>
-                  )}
+                  <div className="grid gap-2">
+                    <Label htmlFor="minStock">Min Stock Alert</Label>
+                    <Input
+                      id="minStock"
+                      type="number"
+                      placeholder="10"
+                      {...register("minStock", { valueAsNumber: true })}
+                      className={errors.minStock ? "border-red-500" : ""}
+                    />
+                    {errors.minStock && (
+                      <p className="text-sm text-red-500">
+                        {errors.minStock.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="flex items-start gap-3 rounded-lg border border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950/40 p-3">
+                  <ShoppingCart className="w-4 h-4 mt-0.5 shrink-0 text-blue-600 dark:text-blue-400" />
+                  <div>
+                    <p className="text-sm font-medium text-blue-800 dark:text-blue-300">
+                      Initial stock will be set to 0
+                    </p>
+                    <p className="text-xs text-blue-600 dark:text-blue-400 mt-0.5">
+                      To receive stock, create a{" "}
+                      <span className="font-semibold">Purchase Order</span> under
+                      the Suppliers section and mark it as received.
+                    </p>
+                  </div>
+                </div>
+              )}
 
               {/* Description */}
               <div className="grid gap-2">
