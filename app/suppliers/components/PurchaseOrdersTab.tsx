@@ -238,11 +238,87 @@ export const PurchaseOrdersTab = () => {
     }
   };
 
-  const handleReceivePO = async (poId: string) => {
-    setReceivingId(poId);
+  // Receive PO Modal State
+  const [receiveModalOpen, setReceiveModalOpen] = useState(false);
+  const [targetPo, setTargetPo] = useState<PurchaseOrder | null>(null);
+  const [paymentTerm, setPaymentTerm] = useState<"CREDIT" | "CASH" | "CHEQUE" | "BANK_TRANSFER" | "PARTIAL" | "SPLIT">("CREDIT");
+  const [paidAmount, setPaidAmount] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<"CASH" | "BANK_TRANSFER" | "CHEQUE">("CASH");
+  const [reference, setReference] = useState("");
+  const [chequeDate, setChequeDate] = useState("");
+
+  // Split payment rows state (e.g. Cash + Cheque 1 + Cheque 2)
+  const [splitRows, setSplitRows] = useState<
+    { method: "CASH" | "BANK_TRANSFER" | "CHEQUE"; amount: number | ""; reference: string; chequeDate: string }[]
+  >([]);
+
+  const addSplitRow = (defaultMethod: "CASH" | "BANK_TRANSFER" | "CHEQUE" = "CHEQUE") => {
+    setSplitRows((prev) => [...prev, { method: defaultMethod, amount: "", reference: "", chequeDate: "" }]);
+  };
+
+  const removeSplitRow = (index: number) => {
+    setSplitRows((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const updateSplitRow = (index: number, field: string, value: any) => {
+    setSplitRows((prev) =>
+      prev.map((row, i) => (i === index ? { ...row, [field]: value } : row))
+    );
+  };
+
+  const openReceiveModal = (po: PurchaseOrder) => {
+    setTargetPo(po);
+    setPaymentTerm("CREDIT");
+    setPaidAmount(Number(po.totalAmount).toString());
+    setPaymentMethod("CASH");
+    setReference("");
+    setChequeDate("");
+    setSplitRows([
+      { method: "CASH", amount: "", reference: "", chequeDate: "" },
+      { method: "CHEQUE", amount: "", reference: "", chequeDate: "" },
+    ]);
+    setReceiveModalOpen(true);
+  };
+
+  const handleReceivePO = async () => {
+    if (!targetPo) return;
+    setReceivingId(targetPo.id);
     try {
-      const res = await fetch(`/api/purchase-orders/${poId}/receive`, {
+      let bodyData: any = {};
+      if (paymentTerm === "SPLIT") {
+        const formattedPayments = splitRows
+          .filter((r) => Number(r.amount) > 0)
+          .map((r) => ({
+            method: r.method,
+            amount: Number(r.amount),
+            reference: r.reference.trim() || undefined,
+            chequeDate: r.chequeDate || undefined,
+          }));
+
+        if (formattedPayments.length === 0) {
+          alert.error("Payments required", "Please enter an amount for at least one split payment row.");
+          setReceivingId(null);
+          return;
+        }
+
+        bodyData = {
+          paymentTerm: "SPLIT",
+          payments: formattedPayments,
+        };
+      } else {
+        bodyData = {
+          paymentTerm,
+          paidAmount: paymentTerm === "PARTIAL" ? parseFloat(paidAmount) || 0 : undefined,
+          paymentMethod,
+          reference: reference.trim() || undefined,
+          chequeDate: chequeDate || undefined,
+        };
+      }
+
+      const res = await fetch(`/api/purchase-orders/${targetPo.id}/receive`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bodyData),
       });
 
       if (!res.ok) {
@@ -252,8 +328,12 @@ export const PurchaseOrdersTab = () => {
 
       alert.success(
         "Stock Received!",
-        "Inventory stock levels and inventory logs have been updated automatically."
+        paymentTerm === "CREDIT"
+          ? "Stock updated and full order amount added to supplier credit balance."
+          : "Stock updated and all payment settlements recorded automatically."
       );
+      setReceiveModalOpen(false);
+      setTargetPo(null);
       fetchPurchaseOrders();
       useSupplierStore.getState().fetchSuppliers();
     } catch (err: any) {
@@ -599,7 +679,7 @@ export const PurchaseOrdersTab = () => {
                     {po.status === "ORDERED" && (
                       <Button
                         size="sm"
-                        onClick={() => handleReceivePO(po.id)}
+                        onClick={() => openReceiveModal(po)}
                         disabled={receivingId === po.id}
                         className="bg-emerald-600 hover:bg-emerald-700 gap-1.5"
                       >
@@ -638,6 +718,240 @@ export const PurchaseOrdersTab = () => {
           ))}
         </div>
       )}
+
+      {/* ── Receive Goods Payment Settlement Dialog ───────────────── */}
+      <Dialog open={receiveModalOpen} onOpenChange={setReceiveModalOpen}>
+        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Receive Goods &amp; Settle Order</DialogTitle>
+            <DialogDescription>
+              Confirming stock intake for order <span className="font-bold text-foreground">{targetPo?.orderNumber}</span>.
+              Choose how this purchase is being settled.
+            </DialogDescription>
+          </DialogHeader>
+
+          {targetPo && (
+            <div className="space-y-4 py-3">
+              <div className="p-3 bg-muted rounded-lg flex justify-between items-center text-sm">
+                <span className="text-muted-foreground font-medium">Total Order Amount:</span>
+                <span className="font-bold text-lg text-primary">
+                  LKR {Number(targetPo.totalAmount).toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                </span>
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="receivePaymentTerm">Payment Settlement *</Label>
+                <select
+                  id="receivePaymentTerm"
+                  className="w-full border rounded-md p-2 text-sm bg-background"
+                  value={paymentTerm}
+                  onChange={(e) => setPaymentTerm(e.target.value as any)}
+                >
+                  <option value="CREDIT">🔴 Credit (Pay Later — adds full amount to supplier balance)</option>
+                  <option value="CASH">🟢 Cash (Paid immediately on delivery)</option>
+                  <option value="CHEQUE">🟣 Cheque (Post-dated or immediate cheque)</option>
+                  <option value="BANK_TRANSFER">🔵 Bank Transfer (Direct transfer)</option>
+                  <option value="PARTIAL">🟡 Single Partial Payment (Part upfront, part credit)</option>
+                  <option value="SPLIT">⚡ Split / Multi-Payment (Cash + Multiple Cheques + Credit)</option>
+                </select>
+              </div>
+
+              {/* Split Multi-Payment Builder */}
+              {paymentTerm === "SPLIT" && (
+                <div className="space-y-3 p-3 border rounded-md bg-blue-50/50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-semibold text-blue-900 dark:text-blue-200">
+                      Payment Breakdown Rows
+                    </span>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => addSplitRow("CHEQUE")}
+                      className="h-7 text-xs gap-1"
+                    >
+                      <Plus className="w-3 h-3" /> Add Cheque / Line
+                    </Button>
+                  </div>
+
+                  <div className="space-y-2">
+                    {splitRows.map((row, idx) => (
+                      <div key={idx} className="p-2 border rounded bg-card text-xs space-y-2">
+                        <div className="flex items-center gap-2">
+                          <select
+                            className="border rounded p-1 text-xs bg-background shrink-0"
+                            value={row.method}
+                            onChange={(e) => updateSplitRow(idx, "method", e.target.value)}
+                          >
+                            <option value="CASH">Cash</option>
+                            <option value="CHEQUE">Cheque</option>
+                            <option value="BANK_TRANSFER">Bank Transfer</option>
+                          </select>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            placeholder="Amount (LKR)"
+                            className="h-7 text-xs flex-1"
+                            value={row.amount}
+                            onChange={(e) => updateSplitRow(idx, "amount", e.target.value)}
+                          />
+                          {splitRows.length > 1 && (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => removeSplitRow(idx)}
+                              className="h-7 w-7 p-0 text-red-500 hover:text-red-700 shrink-0"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </Button>
+                          )}
+                        </div>
+
+                        {row.method === "CHEQUE" && (
+                          <div className="grid grid-cols-2 gap-2 pt-1 border-t border-dashed">
+                            <Input
+                              placeholder="Cheque No. (e.g. CHQ-001)"
+                              className="h-7 text-xs"
+                              value={row.reference}
+                              onChange={(e) => updateSplitRow(idx, "reference", e.target.value)}
+                            />
+                            <Input
+                              type="date"
+                              className="h-7 text-xs"
+                              value={row.chequeDate}
+                              onChange={(e) => updateSplitRow(idx, "chequeDate", e.target.value)}
+                            />
+                          </div>
+                        )}
+
+                        {row.method === "BANK_TRANSFER" && (
+                          <Input
+                            placeholder="Bank Ref / Txn ID"
+                            className="h-7 text-xs"
+                            value={row.reference}
+                            onChange={(e) => updateSplitRow(idx, "reference", e.target.value)}
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="pt-2 border-t text-xs space-y-1">
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Total Payments Added:</span>
+                      <span className="font-semibold text-foreground">
+                        LKR{" "}
+                        {splitRows
+                          .reduce((sum, r) => sum + (Number(r.amount) || 0), 0)
+                          .toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Remaining Unpaid (Added to Credit):</span>
+                      <span className="font-bold text-blue-600 dark:text-blue-400">
+                        LKR{" "}
+                        {Math.max(
+                          0,
+                          Number(targetPo.totalAmount) -
+                            splitRows.reduce((sum, r) => sum + (Number(r.amount) || 0), 0)
+                        ).toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Partial payment details */}
+              {paymentTerm === "PARTIAL" && (
+                <div className="grid gap-3 p-3 border rounded-md bg-yellow-50/50 dark:bg-yellow-950/20 border-yellow-200 dark:border-yellow-800">
+                  <div className="grid gap-1">
+                    <Label className="text-xs font-semibold">Upfront Amount Paid (LKR) *</Label>
+                    <Input
+                      type="number"
+                      step="0.01"
+                      placeholder="e.g. 20000"
+                      value={paidAmount}
+                      onChange={(e) => setPaidAmount(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid gap-1">
+                    <Label className="text-xs font-semibold">Payment Method *</Label>
+                    <select
+                      className="w-full border rounded-md p-2 text-sm bg-background"
+                      value={paymentMethod}
+                      onChange={(e) => setPaymentMethod(e.target.value as any)}
+                    >
+                      <option value="CASH">Cash</option>
+                      <option value="BANK_TRANSFER">Bank Transfer</option>
+                      <option value="CHEQUE">Cheque</option>
+                    </select>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Remaining balance:{" "}
+                    <span className="font-bold text-foreground">
+                      LKR {Math.max(0, Number(targetPo.totalAmount) - (parseFloat(paidAmount) || 0)).toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                    </span>{" "}
+                    will be added to supplier credit.
+                  </p>
+                </div>
+              )}
+
+              {/* Cheque / Reference fields */}
+              {(paymentTerm === "CHEQUE" || (paymentTerm === "PARTIAL" && paymentMethod === "CHEQUE")) && (
+                <div className="grid gap-3 p-3 border rounded-md bg-purple-50/50 dark:bg-purple-950/20 border-purple-200 dark:border-purple-800">
+                  <div className="grid gap-1">
+                    <Label className="text-xs font-semibold">Cheque Number *</Label>
+                    <Input
+                      placeholder="e.g. CHQ-889900"
+                      value={reference}
+                      onChange={(e) => setReference(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid gap-1">
+                    <Label className="text-xs font-semibold">Cheque Date / Realization Date</Label>
+                    <Input
+                      type="date"
+                      value={chequeDate}
+                      onChange={(e) => setChequeDate(e.target.value)}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {(paymentTerm === "BANK_TRANSFER" || (paymentTerm === "PARTIAL" && paymentMethod === "BANK_TRANSFER")) && (
+                <div className="grid gap-1">
+                  <Label className="text-xs font-semibold">Bank Transfer Reference / Txn ID</Label>
+                  <Input
+                    placeholder="e.g. TRX-991200"
+                    value={reference}
+                    onChange={(e) => setReference(e.target.value)}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setReceiveModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleReceivePO}
+              disabled={receivingId !== null}
+              className="bg-emerald-600 hover:bg-emerald-700"
+            >
+              {receivingId ? (
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+              ) : (
+                <CheckCircle2 className="w-4 h-4 mr-2" />
+              )}
+              Confirm &amp; Receive Goods
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
+

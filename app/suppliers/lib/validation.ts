@@ -28,4 +28,16 @@ export const purchaseOrderSchema = z.object({
     items: z.array(purchaseOrderItemSchema).min(1, "At least one item is required"),
 });
 
-export type PurchaseOrderFormData = z.infer<typeof purchaseOrderSchema>;
+export type PurchaseOrderFormData = z.infer<typeof purchaseOrderSchema>;
+
+export const supplierPaymentSchema = z.object({
+    supplierId: z.string().min(1, "Supplier is required"),
+    amount: z.number().positive("Amount must be greater than 0"),
+    method: z.enum(["CASH", "BANK_TRANSFER", "CHEQUE"]),
+    reference: z.string().optional(),
+    chequeDate: z.string().optional(),  // ISO date string
+    note: z.string().optional(),
+    paidAt: z.string().optional(),      // ISO datetime string (defaults to now)
+});
+
+export type SupplierPaymentFormData = z.infer<typeof supplierPaymentSchema>;

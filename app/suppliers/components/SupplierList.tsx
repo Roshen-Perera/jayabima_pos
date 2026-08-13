@@ -1,11 +1,14 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useSupplierStore } from "@/store/supplierStore";
-import { Building2, CreditCard, FileText, Landmark, Loader2, Mail, MapPin, Phone } from "lucide-react";
-import React, { useEffect } from "react";
+import { Building2, CreditCard, ExternalLink, FileText, Landmark, Loader2, Mail, MapPin, Phone } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import SupplierActions from "./SupplierActions";
+import { SupplierDetailModal } from "./SupplierDetailModal";
+import { Supplier } from "../types/supplier.types";
 
 const SupplierList = () => {
   const suppliers = useSupplierStore((s) => s.suppliers);
@@ -13,9 +16,17 @@ const SupplierList = () => {
   const loading = useSupplierStore((s) => s.loading);
   const fetchSuppliers = useSupplierStore((s) => s.fetchSuppliers);
 
+  const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
+
   useEffect(() => {
     fetchSuppliers();
   }, [fetchSuppliers]);
+
+  const handleOpenDetail = (supplier: Supplier) => {
+    setSelectedSupplier(supplier);
+    setDetailOpen(true);
+  };
 
   const filteredSuppliers = React.useMemo(() => {
     if (!search) return suppliers;
@@ -54,76 +65,105 @@ const SupplierList = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-      {filteredSuppliers.map((supplier) => (
-        <Card key={supplier.id} className="relative overflow-hidden hover:shadow-md transition-shadow">
-          <CardContent className="px-5 pt-5 pb-4">
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex-1 pr-2">
-                <div className="flex items-center gap-2 mb-1">
-                  <h3 className="font-semibold text-lg leading-snug">{supplier.name}</h3>
-                  {!supplier.active && (
-                    <Badge variant="secondary" className="bg-red-100 text-red-700">Inactive</Badge>
+    <>
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+        {filteredSuppliers.map((supplier) => (
+          <Card
+            key={supplier.id}
+            className="relative overflow-hidden hover:shadow-md transition-all cursor-pointer group border hover:border-primary/50"
+            onClick={() => handleOpenDetail(supplier)}
+          >
+            <CardContent className="px-5 pt-5 pb-4">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex-1 pr-2">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-semibold text-lg leading-snug group-hover:text-primary transition-colors flex items-center gap-1.5">
+                      {supplier.name}
+                      <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-primary" />
+                    </h3>
+                    {!supplier.active && (
+                      <Badge variant="secondary" className="bg-red-100 text-red-700">
+                        Inactive
+                      </Badge>
+                    )}
+                  </div>
+                  {supplier.contactPerson && (
+                    <p className="text-sm text-muted-foreground font-medium">
+                      {supplier.contactPerson}
+                    </p>
                   )}
                 </div>
-                {supplier.contactPerson && (
-                  <p className="text-sm text-muted-foreground font-medium">
-                    {supplier.contactPerson}
-                  </p>
+                <div onClick={(e) => e.stopPropagation()}>
+                  <SupplierActions supplier={supplier} />
+                </div>
+              </div>
+
+              <div className="space-y-2 text-sm border-t pt-3 mt-1">
+                {supplier.email && (
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Mail className="w-4 h-4 text-primary shrink-0" />
+                    <span className="truncate">{supplier.email}</span>
+                  </div>
                 )}
+                {supplier.phone && (
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Phone className="w-4 h-4 text-primary shrink-0" />
+                    <span>{supplier.phone}</span>
+                  </div>
+                )}
+                {supplier.address && (
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <MapPin className="w-4 h-4 text-primary shrink-0" />
+                    <span className="truncate">{supplier.address}</span>
+                  </div>
+                )}
+
+                {(supplier.taxId || supplier.bankName) && (
+                  <div className="grid grid-cols-2 gap-2 pt-2 text-xs border-t text-muted-foreground">
+                    {supplier.taxId && (
+                      <div className="flex items-center gap-1.5">
+                        <FileText className="w-3.5 h-3.5" />
+                        <span className="truncate">Tax ID: {supplier.taxId}</span>
+                      </div>
+                    )}
+                    {supplier.bankName && (
+                      <div className="flex items-center gap-1.5">
+                        <Landmark className="w-3.5 h-3.5" />
+                        <span className="truncate">{supplier.bankName}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between pt-2 border-t mt-2">
+                  <span className="text-xs text-muted-foreground">Accounts Payable</span>
+                  <span
+                    className={`text-sm font-semibold ${
+                      Number(supplier.payableBalance) > 0
+                        ? "text-red-600 dark:text-red-400 font-bold"
+                        : "text-emerald-600 dark:text-emerald-400"
+                    }`}
+                  >
+                    LKR {Number(supplier.payableBalance || 0).toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </span>
+                </div>
               </div>
-              <SupplierActions supplier={supplier} />
-            </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
-            <div className="space-y-2 text-sm border-t pt-3 mt-1">
-              {supplier.email && (
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Mail className="w-4 h-4 text-primary shrink-0" />
-                  <span className="truncate">{supplier.email}</span>
-                </div>
-              )}
-              {supplier.phone && (
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Phone className="w-4 h-4 text-primary shrink-0" />
-                  <span>{supplier.phone}</span>
-                </div>
-              )}
-              {supplier.address && (
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <MapPin className="w-4 h-4 text-primary shrink-0" />
-                  <span className="truncate">{supplier.address}</span>
-                </div>
-              )}
-
-              {(supplier.taxId || supplier.bankName) && (
-                <div className="grid grid-cols-2 gap-2 pt-2 text-xs border-t text-muted-foreground">
-                  {supplier.taxId && (
-                    <div className="flex items-center gap-1.5">
-                      <FileText className="w-3.5 h-3.5" />
-                      <span className="truncate">Tax ID: {supplier.taxId}</span>
-                    </div>
-                  )}
-                  {supplier.bankName && (
-                    <div className="flex items-center gap-1.5">
-                      <Landmark className="w-3.5 h-3.5" />
-                      <span className="truncate">{supplier.bankName}</span>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              <div className="flex items-center justify-between pt-2 border-t mt-2">
-                <span className="text-xs text-muted-foreground">Accounts Payable</span>
-                <span className={`text-sm font-semibold ${Number(supplier.payableBalance) > 0 ? "text-amber-600 font-bold" : "text-emerald-600"}`}>
-                  LKR {Number(supplier.payableBalance || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+      {/* Supplier 360 Detail View Modal */}
+      <SupplierDetailModal
+        supplier={selectedSupplier}
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
+      />
+    </>
   );
 };
 
 export default SupplierList;
+
