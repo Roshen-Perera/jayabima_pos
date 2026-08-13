@@ -4,6 +4,8 @@ import { supplierPaymentSchema } from '@/app/suppliers/lib/validation';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
+// Reloaded Prisma client
+
 /**
  * GET /api/supplier-payments?supplierId=xxx
  * Returns all payments for a supplier (or all if no filter), newest first.
