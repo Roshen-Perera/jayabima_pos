@@ -9,12 +9,16 @@ import { Badge } from "@/components/ui/badge";
 import { User, Search, ChevronDown, X, PersonStanding } from "lucide-react";
 
 export default function CustomerSelector() {
-  const { customers } = useCustomerStore();
+  const { customers, loadCustomers } = useCustomerStore();
   const { customerId, customerName, setCustomer } = usePOSStore();
 
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    loadCustomers();
+  }, [loadCustomers]);
 
   const isWalkIn = !customerId && customerName === "Walking Customer";
   const hasCustomer = !!customerId;
