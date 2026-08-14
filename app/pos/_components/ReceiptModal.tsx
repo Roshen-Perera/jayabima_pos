@@ -232,23 +232,17 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
             )}
 
             {/* Customer Account Credit Balance Statement on Receipt */}
-            {sale.customerName && sale.customerName !== "Walking Customer" && (
+            {sale.customerName && sale.customerName !== "Walking Customer" && customerObj && (
               <div className="border-t border-dashed pt-2 mt-2 space-y-1 text-xs text-left bg-muted/30 p-2 rounded">
                 <p className="font-bold text-center text-foreground text-[11px] uppercase tracking-wide">
                   Account Credit Statement
                 </p>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Customer:</span>
-                  <span className="font-medium truncate">{sale.customerName}</span>
+                <div className="flex justify-between font-bold text-destructive">
+                  <span>Total Credit Outstanding:</span>
+                  <span>
+                    Rs. {Number(customerObj.creditBalance || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  </span>
                 </div>
-                {customerObj && (
-                  <div className="flex justify-between font-bold text-destructive">
-                    <span>Total Credit Outstanding:</span>
-                    <span>
-                      Rs. {Number(customerObj.creditBalance || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                    </span>
-                  </div>
-                )}
               </div>
             )}
 
