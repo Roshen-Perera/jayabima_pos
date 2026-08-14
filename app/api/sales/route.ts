@@ -27,7 +27,7 @@ const createSaleSchema = z.object({
     discount: z.coerce.number().nonnegative().default(0),
     totalSavings: z.coerce.number().nonnegative().default(0),
     total: z.coerce.number().nonnegative(),
-    paymentMethod: z.enum(['CASH', 'CARD', 'BANK_TRANSFER', 'CHEQUE', 'CREDIT', 'SPLIT', 'PARTIAL', 'MOBILE', 'OTHER']),
+    paymentMethod: z.enum(['CASH', 'CARD', 'BANK_TRANSFER', 'CHEQUE', 'CREDIT', 'SPLIT', 'PARTIAL']),
     cashPaid: z.coerce.number().nonnegative().optional().nullable(),
     cashBalance: z.coerce.number().optional().nullable(),
     reference: z.string().optional().nullable(),
