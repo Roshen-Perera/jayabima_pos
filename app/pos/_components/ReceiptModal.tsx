@@ -224,13 +224,6 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
                 </div>
               )}
 
-            {sale.userName && (
-              <p>
-                <span className="text-muted-foreground">Served by: </span>
-                <span className="font-medium">{sale.userName}</span>
-              </p>
-            )}
-
             {/* Customer Account Credit Balance Statement on Receipt */}
             {sale.customerName && sale.customerName !== "Walking Customer" && customerObj && (
               <div className="border-t border-dashed pt-2 mt-2 space-y-1 text-xs text-left bg-muted/30 p-2 rounded">
@@ -244,6 +237,13 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
                   </span>
                 </div>
               </div>
+            )}
+
+            {sale.userName && (
+              <p>
+                <span className="text-muted-foreground">Served by: </span>
+                <span className="font-medium">{sale.userName}</span>
+              </p>
             )}
 
             <p className="text-muted-foreground mt-2">
