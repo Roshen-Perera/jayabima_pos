@@ -341,7 +341,21 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
                     LKR {Number(customer.creditBalance || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}
                   </p>
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center gap-2 shrink-0 flex-wrap sm:flex-nowrap">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleDownloadLedgerPdf}
+                    disabled={downloadingPdf}
+                    className="gap-1.5 text-xs sm:text-sm border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800 font-medium"
+                  >
+                    {downloadingPdf ? (
+                      <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
+                    ) : (
+                      <Download className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                    )}
+                    Download PDF
+                  </Button>
                   <Button
                     size="sm"
                     variant="outline"
