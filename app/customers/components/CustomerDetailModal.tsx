@@ -36,10 +36,12 @@ import {
   MapPin,
   Phone,
   Plus,
+  Printer,
   Receipt,
   ShoppingBag,
   UserCheck,
 } from "lucide-react";
+import CustomerPaymentReceiptModal from "./CustomerPaymentReceiptModal";
 
 interface CustomerDetailModalProps {
   customer: any | null;
@@ -69,6 +71,10 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
   const [payChequeDate, setPayChequeDate] = useState("");
   const [payNote, setPayNote] = useState("");
   const [submittingPayment, setSubmittingPayment] = useState(false);
+
+  // Receipt modal state
+  const [receiptOpen, setReceiptOpen] = useState(false);
+  const [selectedPaymentForReceipt, setSelectedPaymentForReceipt] = useState<CustomerPayment | null>(null);
 
   const fetchCustomerSales = async (id: string) => {
     setLoadingSales(true);
@@ -169,6 +175,8 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
         throw new Error(detailsMsg);
       }
 
+      const createdPayment = await res.json();
+
       alert.success(
         "Payment Recorded!",
         `Received LKR ${numAmt.toLocaleString("en-US", { minimumFractionDigits: 2 })} from ${customer.name}`
@@ -180,6 +188,10 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
       setPayChequeDate("");
       setPayNote("");
       setPaymentDialogOpen(false);
+
+      // Open receipt modal
+      setSelectedPaymentForReceipt(createdPayment);
+      setReceiptOpen(true);
 
       // Refresh payments & parent
       fetchCustomerPayments(customer.id);
@@ -370,6 +382,7 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
                         <th className="p-2.5">Reference / Cheque</th>
                         <th className="p-2.5 text-right">Amount Received</th>
                         <th className="p-2.5">Note</th>
+                        <th className="p-2.5 text-center">Receipt</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y">
@@ -392,6 +405,20 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
                           </td>
                           <td className="p-2.5 text-muted-foreground truncate max-w-xs">
                             {pay.note || "-"}
+                          </td>
+                          <td className="p-2.5 text-center">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+                              onClick={() => {
+                                setSelectedPaymentForReceipt(pay);
+                                setReceiptOpen(true);
+                              }}
+                              title="Print Receipt"
+                            >
+                              <Printer className="w-3.5 h-3.5" />
+                            </Button>
                           </td>
                         </tr>
                       ))}
@@ -504,6 +531,14 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Payment Receipt Modal */}
+      <CustomerPaymentReceiptModal
+        open={receiptOpen}
+        onClose={() => setReceiptOpen(false)}
+        payment={selectedPaymentForReceipt}
+        customer={customer}
+      />
     </>
   );
 };

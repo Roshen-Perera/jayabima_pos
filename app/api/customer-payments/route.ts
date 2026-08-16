@@ -69,8 +69,18 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const [payment] = await prisma.$transaction([
-            prisma.customerPayment.create({
+        // Use an interactive transaction (callback form) to guarantee strict
+        // sequential execution: decrement the balance first, then create the
+        // payment record. This ensures payment.customer.creditBalance in the
+        // response always reflects the post-payment (remaining) balance.
+        const payment = await prisma.$transaction(async (tx) => {
+            const updatedCustomer = await tx.customer.update({
+                where: { id: data.customerId },
+                data: { creditBalance: { decrement: data.amount } },
+                select: { id: true, name: true, creditBalance: true, phone: true },
+            });
+
+            const created = await tx.customerPayment.create({
                 data: {
                     customerId: data.customerId,
                     amount: data.amount,
@@ -80,19 +90,12 @@ export async function POST(request: NextRequest) {
                     note: data.note || null,
                     paidAt: data.paidAt ? new Date(data.paidAt) : new Date(),
                 },
-                include: {
-                    customer: { select: { id: true, name: true, creditBalance: true } },
-                },
-            }),
-            prisma.customer.update({
-                where: { id: data.customerId },
-                data: {
-                    creditBalance: {
-                        decrement: data.amount,
-                    },
-                },
-            }),
-        ]);
+            });
+
+            // Attach the freshly-updated customer (with decremented balance) so
+            // the receipt modal can display the correct remaining balance.
+            return { ...created, customer: updatedCustomer };
+        });
 
         return NextResponse.json(payment, { status: 201 });
     } catch (error) {

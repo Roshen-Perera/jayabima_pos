@@ -33,17 +33,21 @@ import {
   FileCheck2,
   Loader2,
   Plus,
+  Printer,
   Receipt,
   UserCheck,
   Users,
 } from "lucide-react";
 import { CustomerPayment, CustomerPaymentMethod } from "../types/customerPayment.types";
+import CustomerPaymentReceiptModal from "./CustomerPaymentReceiptModal";
 
 export const CustomerPaymentsTab = () => {
   const [payments, setPayments] = useState<CustomerPayment[]>([]);
   const [loading, setLoading] = useState(true);
   const [createOpen, setCreateOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [receiptOpen, setReceiptOpen] = useState(false);
+  const [selectedPaymentForReceipt, setSelectedPaymentForReceipt] = useState<CustomerPayment | null>(null);
 
   const [customers, setCustomers] = useState<any[]>([]);
   const [selectedCustomerFilter, setSelectedCustomerFilter] = useState<string>("all");
@@ -162,6 +166,8 @@ export const CustomerPaymentsTab = () => {
         throw new Error(detailsMsg);
       }
 
+      const createdPayment = await res.json();
+
       alert.success(
         "Payment Recorded!",
         `Successfully received payment of LKR ${numAmount.toLocaleString("en-US", {
@@ -178,6 +184,10 @@ export const CustomerPaymentsTab = () => {
       setNote("");
       setPaidAt(new Date().toISOString().split("T")[0]);
       setCreateOpen(false);
+
+      // Show receipt modal
+      setSelectedPaymentForReceipt(createdPayment);
+      setReceiptOpen(true);
 
       // Refresh data
       fetchPayments(selectedCustomerFilter);
@@ -420,6 +430,7 @@ export const CustomerPaymentsTab = () => {
                     <th className="p-3">Reference / Cheque</th>
                     <th className="p-3 text-right">Amount Received</th>
                     <th className="p-3">Notes</th>
+                    <th className="p-3 text-center">Receipt</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y text-xs">
@@ -450,6 +461,20 @@ export const CustomerPaymentsTab = () => {
                       <td className="p-3 text-muted-foreground max-w-xs truncate">
                         {pay.note || "-"}
                       </td>
+                      <td className="p-3 text-center">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
+                          onClick={() => {
+                            setSelectedPaymentForReceipt(pay);
+                            setReceiptOpen(true);
+                          }}
+                          title="Print Receipt"
+                        >
+                          <Printer className="w-3.5 h-3.5" />
+                        </Button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -458,6 +483,14 @@ export const CustomerPaymentsTab = () => {
           </CardContent>
         </Card>
       )}
+
+      {/* Customer Payment Receipt Modal */}
+      <CustomerPaymentReceiptModal
+        open={receiptOpen}
+        onClose={() => setReceiptOpen(false)}
+        payment={selectedPaymentForReceipt}
+        customer={customers.find((c) => c.id === selectedPaymentForReceipt?.customerId)}
+      />
     </div>
   );
 };
