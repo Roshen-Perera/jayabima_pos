@@ -78,6 +78,9 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
   const [receiptOpen, setReceiptOpen] = useState(false);
   const [selectedPaymentForReceipt, setSelectedPaymentForReceipt] = useState<CustomerPayment | null>(null);
 
+  // Statement modal state
+  const [statementOpen, setStatementOpen] = useState(false);
+
   const fetchCustomerSales = async (id: string) => {
     setLoadingSales(true);
     try {
@@ -267,13 +270,24 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
                     LKR {Number(customer.creditBalance || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}
                   </p>
                 </div>
-                <Button
-                  size="sm"
-                  onClick={() => setPaymentDialogOpen(true)}
-                  className="gap-1.5 ml-2 shrink-0 text-xs sm:text-sm"
-                >
-                  <Plus className="w-4 h-4" /> Record Payment
-                </Button>
+                <div className="flex items-center gap-2 shrink-0">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setStatementOpen(true)}
+                    className="gap-1.5 text-xs sm:text-sm border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 font-medium"
+                  >
+                    <FileSpreadsheet className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    Print Statement
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={() => setPaymentDialogOpen(true)}
+                    className="gap-1.5 text-xs sm:text-sm"
+                  >
+                    <Plus className="w-4 h-4" /> Record Payment
+                  </Button>
+                </div>
               </div>
             </div>
           </DialogHeader>
