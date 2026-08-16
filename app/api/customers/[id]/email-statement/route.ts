@@ -5,13 +5,14 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> | { id: string } }
 ) {
   const { authorized, response } = await requirePermission(request, "customers:view");
   if (!authorized) return response;
 
   try {
-    const customerId = params.id;
+    const resolvedParams = await params;
+    const customerId = resolvedParams.id;
     const body = await request.json().catch(() => ({}));
     const { filteredEntries = [], totalBilled = 0, totalPaid = 0, netOutstanding = 0 } = body;
 
