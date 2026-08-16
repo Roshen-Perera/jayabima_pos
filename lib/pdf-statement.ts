@@ -1,4 +1,4 @@
-import PDFDocument from "pdfkit";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 
 export interface GenerateStatementPDFParams {
   customer: {
@@ -23,196 +23,241 @@ export interface GenerateStatementPDFParams {
   }>;
 }
 
-export function generateCustomerStatementPDF(data: GenerateStatementPDFParams): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    const doc = new PDFDocument({ size: "A4", margin: 36 });
-    const buffers: Buffer[] = [];
+export async function generateCustomerStatementPDF(data: GenerateStatementPDFParams): Promise<Buffer> {
+  const pdfDoc = await PDFDocument.create();
+  let page = pdfDoc.addPage([595.28, 841.89]); // Standard A4 Dimensions in points
 
-    doc.on("data", (chunk) => buffers.push(chunk));
-    doc.on("end", () => resolve(Buffer.concat(buffers)));
-    doc.on("error", (err) => reject(err));
+  const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
-    // Color definitions
-    const primaryColor = "#0f172a";
-    const secondaryColor = "#475569";
-    const accentBlue = "#1d4ed8";
-    const greenColor = "#047857";
-    const redColor = "#dc2626";
+  // Theme Palette
+  const primaryColor = rgb(0.06, 0.09, 0.16); // #0f172a
+  const secondaryColor = rgb(0.28, 0.33, 0.41); // #475569
+  const accentBlue = rgb(0.11, 0.31, 0.85); // #1d4ed8
+  const greenColor = rgb(0.02, 0.47, 0.34); // #047857
+  const redColor = rgb(0.86, 0.15, 0.15); // #dc2626
+  const bgLight = rgb(0.97, 0.98, 0.99); // #f8fafc
+  const borderColor = rgb(0.8, 0.84, 0.88); // #cbd5e1
 
-    // Header Branding
-    doc
-      .fillColor(primaryColor)
-      .fontSize(16)
-      .font("Helvetica-Bold")
-      .text("JAYABIMA HARDWARE & STORES", 36, 36);
+  const width = 595.28;
+  const height = 841.89;
+  const margin = 36;
+  const contentWidth = width - margin * 2; // 523.28
 
-    doc
-      .fillColor(secondaryColor)
-      .fontSize(9)
-      .font("Helvetica")
-      .text("No 28/D, Rathnapura Road, Diurumpitiya, Getaheththa", 36, 56)
-      .text("Tel: 0777187729 / 0362231535", 36, 68);
+  // Header Title
+  page.drawText("JAYABIMA HARDWARE & STORES", {
+    x: margin,
+    y: height - 50,
+    size: 15,
+    font: fontBold,
+    color: primaryColor,
+  });
 
-    // Right-aligned Document Title & Metadata
-    doc
-      .fillColor(accentBlue)
-      .fontSize(11)
-      .font("Helvetica-Bold")
-      .text("OFFICIAL STATEMENT OF ACCOUNT", 300, 36, { align: "right" });
+  page.drawText("No 28/D, Rathnapura Road, Diurumpitiya, Getaheththa", {
+    x: margin,
+    y: height - 64,
+    size: 9,
+    font: fontRegular,
+    color: secondaryColor,
+  });
 
-    doc
-      .fillColor(secondaryColor)
-      .fontSize(9)
-      .font("Helvetica")
-      .text(`Date Generated: ${data.statementDateStr}`, 300, 52, { align: "right" })
-      .text(`Ref: ${data.ref}`, 300, 66, { align: "right" });
+  page.drawText("Tel: 0777187729 / 0362231535", {
+    x: margin,
+    y: height - 76,
+    size: 9,
+    font: fontRegular,
+    color: secondaryColor,
+  });
 
-    // Divider Line
-    doc
-      .moveTo(36, 88)
-      .lineTo(559, 88)
-      .strokeColor("#cbd5e1")
-      .lineWidth(1)
-      .stroke();
+  // Right-aligned Document Metadata
+  const docTitle = "OFFICIAL STATEMENT OF ACCOUNT";
+  const docTitleWidth = fontBold.widthOfTextAtSize(docTitle, 10.5);
+  page.drawText(docTitle, {
+    x: width - margin - docTitleWidth,
+    y: height - 50,
+    size: 10.5,
+    font: fontBold,
+    color: accentBlue,
+  });
 
-    // Customer Info Card
-    doc.rect(36, 96, 523, 68).fillAndStroke("#f8fafc", "#cbd5e1");
+  const dateText = `Date Generated: ${data.statementDateStr}`;
+  const dateWidth = fontRegular.widthOfTextAtSize(dateText, 9);
+  page.drawText(dateText, {
+    x: width - margin - dateWidth,
+    y: height - 64,
+    size: 9,
+    font: fontRegular,
+    color: secondaryColor,
+  });
 
-    doc
-      .fillColor(secondaryColor)
-      .fontSize(8)
-      .font("Helvetica-Bold")
-      .text("STATEMENT FOR CUSTOMER", 46, 104);
+  const refText = `Ref: ${data.ref}`;
+  const refWidth = fontRegular.widthOfTextAtSize(refText, 9);
+  page.drawText(refText, {
+    x: width - margin - refWidth,
+    y: height - 76,
+    size: 9,
+    font: fontRegular,
+    color: secondaryColor,
+  });
 
-    doc
-      .fillColor(primaryColor)
-      .fontSize(12)
-      .font("Helvetica-Bold")
-      .text(data.customer.name, 46, 116);
+  // Horizontal Rule
+  page.drawLine({
+    start: { x: margin, y: height - 88 },
+    end: { x: width - margin, y: height - 88 },
+    thickness: 1,
+    color: borderColor,
+  });
 
-    let infoY = 132;
-    if (data.customer.phone) {
-      doc.fillColor(secondaryColor).fontSize(8.5).font("Helvetica").text(`Phone: ${data.customer.phone}`, 46, infoY);
-      infoY += 11;
+  // Customer Summary Card Box
+  const cardY = height - 165;
+  page.drawRectangle({
+    x: margin,
+    y: cardY,
+    width: contentWidth,
+    height: 68,
+    color: bgLight,
+    borderColor: borderColor,
+    borderWidth: 1,
+  });
+
+  page.drawText("STATEMENT FOR CUSTOMER", {
+    x: margin + 10,
+    y: cardY + 52,
+    size: 8,
+    font: fontBold,
+    color: secondaryColor,
+  });
+
+  page.drawText(data.customer.name, {
+    x: margin + 10,
+    y: cardY + 36,
+    size: 12,
+    font: fontBold,
+    color: primaryColor,
+  });
+
+  let custInfoY = cardY + 22;
+  if (data.customer.phone) {
+    page.drawText(`Phone: ${data.customer.phone}`, { x: margin + 10, y: custInfoY, size: 8.5, font: fontRegular, color: secondaryColor });
+    custInfoY -= 11;
+  }
+  if (data.customer.email) {
+    page.drawText(`Email: ${data.customer.email}`, { x: margin + 10, y: custInfoY, size: 8.5, font: fontRegular, color: secondaryColor });
+  }
+
+  // Financial Metric Tiles
+  const tileW = 88;
+  const tileH = 48;
+  const tileY = cardY + 10;
+  const startX = margin + 240;
+
+  // Billed Tile
+  page.drawRectangle({ x: startX, y: tileY, width: tileW, height: tileH, color: rgb(1, 1, 1), borderColor, borderWidth: 1 });
+  page.drawText("TOTAL BILLED", { x: startX + 12, y: tileY + 34, size: 7.5, font: fontBold, color: secondaryColor });
+  page.drawText(`LKR ${data.totalBilled.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, { x: startX + 6, y: tileY + 16, size: 8.5, font: fontBold, color: primaryColor });
+
+  // Paid Tile
+  page.drawRectangle({ x: startX + 93, y: tileY, width: tileW, height: tileH, color: rgb(1, 1, 1), borderColor, borderWidth: 1 });
+  page.drawText("TOTAL PAID", { x: startX + 93 + 16, y: tileY + 34, size: 7.5, font: fontBold, color: secondaryColor });
+  page.drawText(`LKR ${data.totalPaid.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, { x: startX + 93 + 6, y: tileY + 16, size: 8.5, font: fontBold, color: greenColor });
+
+  // Net Owed Tile
+  page.drawRectangle({ x: startX + 186, y: tileY, width: tileW, height: tileH, color: rgb(1, 1, 1), borderColor, borderWidth: 1 });
+  page.drawText("NET OWED", { x: startX + 186 + 20, y: tileY + 34, size: 7.5, font: fontBold, color: secondaryColor });
+  page.drawText(`LKR ${data.netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, { x: startX + 186 + 6, y: tileY + 16, size: 8.5, font: fontBold, color: data.netOutstanding > 0 ? redColor : greenColor });
+
+  // Table Header
+  let currentY = height - 192;
+
+  const drawTableHeader = (p: typeof page, posY: number) => {
+    p.drawRectangle({ x: margin, y: posY - 14, width: contentWidth, height: 18, color: rgb(0.94, 0.96, 0.98) });
+    p.drawText("DATE", { x: margin + 6, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
+    p.drawText("REF #", { x: margin + 66, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
+    p.drawText("TYPE", { x: margin + 131, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
+    p.drawText("DESCRIPTION", { x: margin + 176, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
+    p.drawText("DEBIT (+)", { x: margin + 331, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
+    p.drawText("CREDIT (-)", { x: margin + 396, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
+    p.drawText("BALANCE", { x: margin + 461, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
+  };
+
+  drawTableHeader(page, currentY);
+  currentY -= 20;
+
+  // Render Ledger Rows
+  data.entries.forEach((entry, idx) => {
+    if (currentY < 45) {
+      page = pdfDoc.addPage([595.28, 841.89]);
+      currentY = height - 45;
+      drawTableHeader(page, currentY);
+      currentY -= 20;
     }
-    if (data.customer.email) {
-      doc.fillColor(secondaryColor).fontSize(8.5).font("Helvetica").text(`Email: ${data.customer.email}`, 46, infoY);
+
+    if (idx % 2 === 1) {
+      page.drawRectangle({ x: margin, y: currentY - 12, width: contentWidth, height: 16, color: bgLight });
     }
 
-    // Financial Metric Tiles
-    const tileW = 88;
-    const tileH = 48;
-    const startX = 275;
-    const tileY = 106;
+    page.drawText(entry.dateStr, { x: margin + 6, y: currentY - 8, size: 8, font: fontRegular, color: primaryColor });
+    page.drawText(entry.ref, { x: margin + 66, y: currentY - 8, size: 7.5, font: fontRegular, color: secondaryColor });
 
-    // Tile 1: Total Billed
-    doc.rect(startX, tileY, tileW, tileH).fillAndStroke("#ffffff", "#cbd5e1");
-    doc.fillColor(secondaryColor).fontSize(7.5).font("Helvetica-Bold").text("TOTAL BILLED", startX, tileY + 6, { width: tileW, align: "center" });
-    doc.fillColor(primaryColor).fontSize(9.5).font("Helvetica-Bold").text(`LKR ${data.totalBilled.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, startX + 2, tileY + 22, { width: tileW - 4, align: "center" });
-
-    // Tile 2: Total Paid
-    doc.rect(startX + 93, tileY, tileW, tileH).fillAndStroke("#ffffff", "#cbd5e1");
-    doc.fillColor(secondaryColor).fontSize(7.5).font("Helvetica-Bold").text("TOTAL PAID", startX + 93, tileY + 6, { width: tileW, align: "center" });
-    doc.fillColor(greenColor).fontSize(9.5).font("Helvetica-Bold").text(`LKR ${data.totalPaid.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, startX + 95, tileY + 22, { width: tileW - 4, align: "center" });
-
-    // Tile 3: Net Owed
-    doc.rect(startX + 186, tileY, tileW, tileH).fillAndStroke("#ffffff", "#cbd5e1");
-    doc.fillColor(secondaryColor).fontSize(7.5).font("Helvetica-Bold").text("NET OWED", startX + 186, tileY + 6, { width: tileW, align: "center" });
-    doc.fillColor(data.netOutstanding > 0 ? redColor : greenColor).fontSize(9.5).font("Helvetica-Bold").text(`LKR ${data.netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, startX + 188, tileY + 22, { width: tileW - 4, align: "center" });
-
-    // Table Header
-    let y = 178;
-
-    const drawTableHeader = (posY: number) => {
-      doc.rect(36, posY, 523, 18).fill("#f1f5f9");
-      doc.fillColor("#334155").fontSize(8).font("Helvetica-Bold");
-      doc.text("DATE", 42, posY + 5, { width: 60 });
-      doc.text("REF #", 102, posY + 5, { width: 65 });
-      doc.text("TYPE", 167, posY + 5, { width: 45 });
-      doc.text("DESCRIPTION", 212, posY + 5, { width: 155 });
-      doc.text("DEBIT (+)", 367, posY + 5, { width: 60, align: "right" });
-      doc.text("CREDIT (-)", 427, posY + 5, { width: 60, align: "right" });
-      doc.text("BALANCE", 487, posY + 5, { width: 65, align: "right" });
-    };
-
-    drawTableHeader(y);
-    y += 22;
-
-    // Table Rows
-    doc.font("Helvetica").fontSize(8);
-
-    data.entries.forEach((entry, idx) => {
-      if (y > 750) {
-        doc.addPage();
-        y = 36;
-        drawTableHeader(y);
-        y += 22;
-      }
-
-      if (idx % 2 === 1) {
-        doc.rect(36, y - 2, 523, 18).fill("#f8fafc");
-      }
-
-      doc.fillColor(primaryColor).text(entry.dateStr, 42, y, { width: 60 });
-      doc.fillColor(secondaryColor).text(entry.ref, 102, y, { width: 65 });
-
-      // Type
-      doc
-        .fillColor(entry.type === "INVOICE" ? accentBlue : greenColor)
-        .font("Helvetica-Bold")
-        .text(entry.type === "INVOICE" ? "INV" : "PAY", 167, y, { width: 45 });
-
-      // Description
-      doc
-        .font("Helvetica")
-        .fillColor(secondaryColor)
-        .text(entry.description, 212, y, { width: 150, height: 14 });
-
-      // Debit
-      doc
-        .fillColor(primaryColor)
-        .text(entry.debit > 0 ? `LKR ${entry.debit.toLocaleString("en-US", { minimumFractionDigits: 2 })}` : "-", 367, y, { width: 60, align: "right" });
-
-      // Credit
-      doc
-        .fillColor(greenColor)
-        .font("Helvetica-Bold")
-        .text(entry.credit > 0 ? `LKR ${entry.credit.toLocaleString("en-US", { minimumFractionDigits: 2 })}` : "-", 427, y, { width: 60, align: "right" });
-
-      // Balance
-      doc
-        .fillColor(primaryColor)
-        .font("Helvetica-Bold")
-        .text(`LKR ${entry.runningBalance.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, 487, y, { width: 65, align: "right" });
-
-      y += 18;
+    // Type Tag
+    page.drawText(entry.type === "INVOICE" ? "INV" : "PAY", {
+      x: margin + 131,
+      y: currentY - 8,
+      size: 8,
+      font: fontBold,
+      color: entry.type === "INVOICE" ? accentBlue : greenColor,
     });
 
-    // Footer Summary
-    if (y > 740) {
-      doc.addPage();
-      y = 36;
-    }
+    // Description
+    const descText = entry.description.length > 32 ? entry.description.slice(0, 30) + "..." : entry.description;
+    page.drawText(descText, { x: margin + 176, y: currentY - 8, size: 8, font: fontRegular, color: secondaryColor });
 
-    doc
-      .moveTo(36, y + 10)
-      .lineTo(559, y + 10)
-      .strokeColor("#cbd5e1")
-      .lineWidth(0.5)
-      .stroke();
+    // Debit
+    const debitText = entry.debit > 0 ? `LKR ${entry.debit.toLocaleString("en-US", { minimumFractionDigits: 2 })}` : "-";
+    page.drawText(debitText, { x: margin + 331, y: currentY - 8, size: 8, font: fontRegular, color: primaryColor });
 
-    doc
-      .fillColor(secondaryColor)
-      .fontSize(8)
-      .font("Helvetica")
-      .text("Please review your account statement. If you have questions regarding any transaction, please contact Jayabima Hardware.", 36, y + 18, { width: 340 });
+    // Credit
+    const creditText = entry.credit > 0 ? `LKR ${entry.credit.toLocaleString("en-US", { minimumFractionDigits: 2 })}` : "-";
+    page.drawText(creditText, { x: margin + 396, y: currentY - 8, size: 8, font: fontBold, color: greenColor });
 
-    doc
-      .fillColor(primaryColor)
-      .fontSize(8.5)
-      .font("Helvetica-Bold")
-      .text(`Net Outstanding: LKR ${data.netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, 380, y + 18, { width: 175, align: "right" });
+    // Running Balance
+    const balText = `LKR ${entry.runningBalance.toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
+    page.drawText(balText, { x: margin + 461, y: currentY - 8, size: 8, font: fontBold, color: primaryColor });
 
-    doc.end();
+    currentY -= 18;
   });
+
+  // Footer Rule & Disclaimer
+  if (currentY < 40) {
+    page = pdfDoc.addPage([595.28, 841.89]);
+    currentY = height - 45;
+  }
+
+  page.drawLine({
+    start: { x: margin, y: currentY - 6 },
+    end: { x: width - margin, y: currentY - 6 },
+    thickness: 0.5,
+    color: borderColor,
+  });
+
+  page.drawText("Please review your account statement. If you have questions regarding any transaction, please contact Jayabima Hardware.", {
+    x: margin,
+    y: currentY - 20,
+    size: 7.5,
+    font: fontRegular,
+    color: secondaryColor,
+  });
+
+  const netText = `Net Outstanding: LKR ${data.netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
+  const netWidth = fontBold.widthOfTextAtSize(netText, 8.5);
+  page.drawText(netText, {
+    x: width - margin - netWidth,
+    y: currentY - 20,
+    size: 8.5,
+    font: fontBold,
+    color: primaryColor,
+  });
+
+  const pdfBytes = await pdfDoc.save();
+  return Buffer.from(pdfBytes);
 }
