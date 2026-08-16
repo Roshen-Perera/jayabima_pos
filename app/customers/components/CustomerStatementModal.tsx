@@ -396,13 +396,27 @@ export default function CustomerStatementModal({
               Customer Account Statement &amp; Ledger
             </DialogTitle>
 
-            {/* Print & Action Controls */}
+            {/* Print, Email & Action Controls */}
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" onClick={handlePrint} className="gap-1.5">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleEmailStatement}
+                disabled={sendingEmail}
+                className="gap-1.5 text-xs text-blue-700 bg-blue-50 border-blue-200 hover:bg-blue-100 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800"
+              >
+                {sendingEmail ? (
+                  <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                ) : (
+                  <Mail className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                )}
+                Email Statement
+              </Button>
+              <Button variant="outline" size="sm" onClick={handlePrint} className="gap-1.5 text-xs">
                 <Printer className="h-4 w-4" />
                 Print Statement
               </Button>
-              <Button variant="default" size="sm" onClick={onClose}>
+              <Button variant="default" size="sm" onClick={onClose} className="text-xs">
                 Close
               </Button>
             </div>
