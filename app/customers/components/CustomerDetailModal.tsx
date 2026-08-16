@@ -30,6 +30,7 @@ import {
   Calendar,
   CreditCard,
   DollarSign,
+  Download,
   FileSpreadsheet,
   FileText,
   Loader2,
@@ -78,8 +79,78 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
   const [receiptOpen, setReceiptOpen] = useState(false);
   const [selectedPaymentForReceipt, setSelectedPaymentForReceipt] = useState<CustomerPayment | null>(null);
 
-  // Statement modal state
+  // Statement & PDF Download state
   const [statementOpen, setStatementOpen] = useState(false);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
+
+  const handleDownloadLedgerPdf = async () => {
+    if (!customer) return;
+
+    try {
+      setDownloadingPdf(true);
+      const entries: any[] = [];
+      sales.forEach((s: any) => {
+        entries.push({
+          dateStr: new Date(s.createdAt || Date.now()).toLocaleDateString("en-LK"),
+          ref: s.reference || `INV-${s.id.slice(-6).toUpperCase()}`,
+          type: "INVOICE",
+          description: `[Sales Invoice] POS Sale`,
+          debit: Number(s.total || s.originalTotal || 0),
+          credit: 0,
+        });
+      });
+      payments.forEach((p: any) => {
+        entries.push({
+          dateStr: new Date(p.paidAt || p.createdAt || Date.now()).toLocaleDateString("en-LK"),
+          ref: `PAY-${p.id.slice(-6).toUpperCase()}`,
+          type: "PAYMENT",
+          description: `Payment Received [${p.method || "CASH"}]${p.note ? ` - ${p.note}` : ""}`,
+          debit: 0,
+          credit: Number(p.amount || 0),
+        });
+      });
+      entries.sort((a, b) => new Date(a.dateStr).getTime() - new Date(b.dateStr).getTime());
+
+      let bal = 0;
+      const finalEntries = entries.map((e) => {
+        bal += e.debit - e.credit;
+        return { ...e, runningBalance: bal };
+      });
+
+      const totalBilled = finalEntries.reduce((sum, e) => sum + e.debit, 0);
+      const totalPaid = finalEntries.reduce((sum, e) => sum + e.credit, 0);
+      const netOutstanding = Number(customer.creditBalance ?? (totalBilled - totalPaid));
+
+      const res = await fetch(`/api/customers/${customer.id}/pdf-statement`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          filteredEntries: finalEntries,
+          totalBilled,
+          totalPaid,
+          netOutstanding,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to download PDF ledger");
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `Statement_STMT-${customer.id.slice(-6).toUpperCase()}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.remove();
+
+      alert.success("PDF Downloaded!", `Statement_STMT-${customer.id.slice(-6).toUpperCase()}.pdf saved to downloads.`);
+    } catch (err: any) {
+      alert.error("Download Failed", err.message || "Failed to download PDF ledger");
+    } finally {
+      setDownloadingPdf(false);
+    }
+  };
 
   const fetchCustomerSales = async (id: string) => {
     setLoadingSales(true);
