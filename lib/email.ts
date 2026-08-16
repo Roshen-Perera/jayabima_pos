@@ -4,6 +4,7 @@ const EMAIL_HOST = process.env.EMAIL_HOST || 'smtp.gmail.com';
 const EMAIL_PORT = parseInt(process.env.EMAIL_PORT || '587', 10);
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
+const DEFAULT_FROM = process.env.EMAIL_FROM || (EMAIL_USER ? `"JAYABIMA POS" <${EMAIL_USER}>` : '"JAYABIMA POS" <noreply@jayabima.com>');
 
 if (!EMAIL_USER || !EMAIL_PASSWORD) {
     console.warn('⚠️ Warning: EMAIL_USER or EMAIL_PASSWORD not configured in .env!');
@@ -13,6 +14,7 @@ console.log('📧 Email Configuration:');
 console.log('   Host:', EMAIL_HOST);
 console.log('   Port:', EMAIL_PORT);
 console.log('   User:', EMAIL_USER || '❌ Missing');
+console.log('   From:', DEFAULT_FROM);
 console.log('   Password:', EMAIL_PASSWORD ? '✅ Set' : '❌ Missing');
 
 const transporter = nodemailer.createTransport({
@@ -51,7 +53,7 @@ export async function sendPasswordResetEmail({
     const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}`;
     try {
         const info = await transporter.sendMail({
-            from: process.env.EMAIL_FROM || '"JAYABIMA POS" <noreply@jayabima.com>',
+            from: DEFAULT_FROM,
             to: email,
             subject: 'Reset Your Password - JAYABIMA POS',
             html: `
@@ -133,7 +135,7 @@ export async function sendPasswordResetEmail({
 export async function sendWelcomeEmail(email: string, name: string) {
     try {
         const info = await transporter.sendMail({
-            from: process.env.EMAIL_FROM || '"JAYABIMA POS" <noreply@jayabima.com>',
+            from: DEFAULT_FROM,
             to: email,
             subject: 'Welcome to JAYABIMA POS!',
             html: `
@@ -215,7 +217,7 @@ JAYABIMA POS Team
 export async function testEmailConfiguration() {
     try {
         const info = await transporter.sendMail({
-            from: process.env.EMAIL_FROM,
+            from: DEFAULT_FROM,
             to: process.env.EMAIL_USER, // Send to yourself
             subject: 'JAYABIMA POS - Email Configuration Test',
             html: `
@@ -276,7 +278,7 @@ export async function sendNewAccountEmail({
 }> {
   try {
     const info = await transporter.sendMail({
-      from: process.env.EMAIL_FROM || '"JAYABIMA POS" <noreply@jayabima.com>',
+      from: DEFAULT_FROM,
       to: email,
       subject: '🎉 Welcome to JAYABIMA POS - Your Account Details',
       html: `
@@ -428,7 +430,7 @@ export async function sendPasswordResetByAdminEmail({
 }> {
   try {
     const info = await transporter.sendMail({
-      from: process.env.EMAIL_FROM || '"JAYABIMA POS" <noreply@jayabima.com>',
+      from: DEFAULT_FROM,
       to: email,
       subject: '🔒 Your Password Has Been Reset - JAYABIMA POS',
       html: `
