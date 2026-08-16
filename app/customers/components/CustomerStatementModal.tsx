@@ -187,7 +187,10 @@ export default function CustomerStatementModal({
           <table class="header-table">
             <tr>
               <td>
-                <img src="/dwd.png" style="height: 48px; width: auto; object-fit: contain; margin-bottom: 4px;" alt="Logo" />
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                  <img src="/favicon.png" style="height: 36px; width: 36px; object-fit: contain;" alt="Logo" />
+                  <div style="font-size: 15px; font-weight: bold; text-transform: uppercase; color: #0f172a;">JAYABIMA HARDWARE &amp; STORES</div>
+                </div>
                 <div class="store-sub">No 28/D, Rathnapura Road, Diurumpitiya, Getaheththa</div>
                 <div class="store-sub">Tel: 0777187729 / 0362231535</div>
               </td>
@@ -468,7 +471,7 @@ export default function CustomerStatementModal({
           <div className="border-b pb-4">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div className="flex items-center gap-3">
-                <img src="/dwd.png" alt="Jayabima Hardware Logo" className="h-12 w-auto object-contain" />
+                <img src="/favicon.png" alt="Jayabima Hardware Icon" className="h-10 w-10 object-contain shrink-0" />
                 <div>
                   <h1 className="text-base font-bold tracking-tight uppercase text-foreground">
                     JAYABIMA HARDWARE &amp; STORES

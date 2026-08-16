@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 
 export interface GenerateStatementPDFParams {
@@ -30,6 +32,18 @@ export async function generateCustomerStatementPDF(data: GenerateStatementPDFPar
   const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
+  // Load Store Icon PNG (public/favicon.png)
+  let iconEmbed = null;
+  try {
+    const iconPath = path.join(process.cwd(), "public", "favicon.png");
+    if (fs.existsSync(iconPath)) {
+      const iconBytes = fs.readFileSync(iconPath);
+      iconEmbed = await pdfDoc.embedPng(iconBytes);
+    }
+  } catch (e) {
+    console.warn("Favicon embedding skipped:", e);
+  }
+
   // Theme Palette
   const primaryColor = rgb(0.06, 0.09, 0.16); // #0f172a
   const secondaryColor = rgb(0.28, 0.33, 0.41); // #475569
@@ -44,27 +58,39 @@ export async function generateCustomerStatementPDF(data: GenerateStatementPDFPar
   const margin = 36;
   const contentWidth = width - margin * 2; // 523.28
 
-  // Header Title
+  // Header Icon + Title Details
+  let titleX = margin;
+  if (iconEmbed) {
+    const iconSize = 36;
+    page.drawImage(iconEmbed, {
+      x: margin,
+      y: height - 76,
+      width: iconSize,
+      height: iconSize,
+    });
+    titleX = margin + iconSize + 10;
+  }
+
   page.drawText("JAYABIMA HARDWARE & STORES", {
-    x: margin,
-    y: height - 50,
-    size: 15,
+    x: titleX,
+    y: height - 46,
+    size: 14,
     font: fontBold,
     color: primaryColor,
   });
 
   page.drawText("No 28/D, Rathnapura Road, Diurumpitiya, Getaheththa", {
-    x: margin,
-    y: height - 64,
-    size: 9,
+    x: titleX,
+    y: height - 60,
+    size: 8.5,
     font: fontRegular,
     color: secondaryColor,
   });
 
   page.drawText("Tel: 0777187729 / 0362231535", {
-    x: margin,
-    y: height - 76,
-    size: 9,
+    x: titleX,
+    y: height - 72,
+    size: 8.5,
     font: fontRegular,
     color: secondaryColor,
   });
@@ -74,28 +100,28 @@ export async function generateCustomerStatementPDF(data: GenerateStatementPDFPar
   const docTitleWidth = fontBold.widthOfTextAtSize(docTitle, 10.5);
   page.drawText(docTitle, {
     x: width - margin - docTitleWidth,
-    y: height - 50,
+    y: height - 46,
     size: 10.5,
     font: fontBold,
     color: accentBlue,
   });
 
   const dateText = `Date Generated: ${data.statementDateStr}`;
-  const dateWidth = fontRegular.widthOfTextAtSize(dateText, 9);
+  const dateWidth = fontRegular.widthOfTextAtSize(dateText, 8.5);
   page.drawText(dateText, {
     x: width - margin - dateWidth,
-    y: height - 64,
-    size: 9,
+    y: height - 60,
+    size: 8.5,
     font: fontRegular,
     color: secondaryColor,
   });
 
   const refText = `Ref: ${data.ref}`;
-  const refWidth = fontRegular.widthOfTextAtSize(refText, 9);
+  const refWidth = fontRegular.widthOfTextAtSize(refText, 8.5);
   page.drawText(refText, {
     x: width - margin - refWidth,
-    y: height - 76,
-    size: 9,
+    y: height - 72,
+    size: 8.5,
     font: fontRegular,
     color: secondaryColor,
   });
