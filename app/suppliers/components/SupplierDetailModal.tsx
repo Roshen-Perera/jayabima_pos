@@ -34,6 +34,7 @@ import {
   CheckCircle2,
   CreditCard,
   FileCheck2,
+  FileSpreadsheet,
   FileText,
   Landmark,
   Loader2,
@@ -44,7 +45,9 @@ import {
   Plus,
   Receipt,
   Truck,
+  UserCheck,
 } from "lucide-react";
+import SupplierStatementModal from "./SupplierStatementModal";
 
 interface SupplierDetailModalProps {
   supplier: Supplier | null;
@@ -65,6 +68,9 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
   const [orders, setOrders] = useState<PurchaseOrder[]>([]);
   const [payments, setPayments] = useState<SupplierPayment[]>([]);
   const [products, setProducts] = useState<any[]>([]);
+
+  // Statement modal state
+  const [statementOpen, setStatementOpen] = useState(false);
 
   // Payment dialog inside supplier detail
   const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
@@ -274,13 +280,24 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
                     LKR {Number(supplier.payableBalance).toLocaleString("en-US", { minimumFractionDigits: 2 })}
                   </p>
                 </div>
-                <Button
-                  size="sm"
-                  onClick={() => setPaymentDialogOpen(true)}
-                  className="gap-1.5 ml-2 shrink-0 text-xs sm:text-sm"
-                >
-                  <Plus className="w-4 h-4" /> Record Payment
-                </Button>
+                <div className="flex items-center gap-2 ml-2 shrink-0">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setStatementOpen(true)}
+                    className="gap-1.5 text-xs sm:text-sm border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 font-medium"
+                  >
+                    <FileSpreadsheet className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    View Statement
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={() => setPaymentDialogOpen(true)}
+                    className="gap-1.5 text-xs sm:text-sm"
+                  >
+                    <Plus className="w-4 h-4" /> Record Payment
+                  </Button>
+                </div>
               </div>
             </div>
           </DialogHeader>
@@ -575,6 +592,15 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Supplier Accounts Payable Statement Modal */}
+      <SupplierStatementModal
+        open={statementOpen}
+        onClose={() => setStatementOpen(false)}
+        supplier={supplier}
+        purchases={orders}
+        payments={payments}
+      />
     </>
   );
 };

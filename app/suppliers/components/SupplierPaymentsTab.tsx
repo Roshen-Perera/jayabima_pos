@@ -32,11 +32,13 @@ import {
   CreditCard,
   DollarSign,
   FileCheck2,
+  FileSpreadsheet,
   Loader2,
   Plus,
   Receipt,
 } from "lucide-react";
 import { SupplierPayment, SupplierPaymentMethod } from "../types/supplierPayment.types";
+import SupplierStatementModal from "./SupplierStatementModal";
 
 export const SupplierPaymentsTab = () => {
   const [payments, setPayments] = useState<SupplierPayment[]>([]);
@@ -44,6 +46,9 @@ export const SupplierPaymentsTab = () => {
   const [createOpen, setCreateOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [selectedSupplierFilter, setSelectedSupplierFilter] = useState<string>("all");
+
+  const [statementOpen, setStatementOpen] = useState(false);
+  const [supplierOrders, setSupplierOrders] = useState<any[]>([]);
 
   const suppliers = useSupplierStore((s) => s.suppliers);
   const fetchSuppliers = useSupplierStore((s) => s.fetchSuppliers);
@@ -364,21 +369,43 @@ export const SupplierPaymentsTab = () => {
       </div>
 
       {/* Filter Toolbar */}
-      <div className="flex items-center gap-3 bg-card p-3 rounded-lg border">
-        <Building2 className="w-4 h-4 text-muted-foreground" />
-        <span className="text-xs font-medium text-muted-foreground">Filter by Supplier:</span>
-        <select
-          className="border rounded-md px-3 py-1 text-sm bg-background text-foreground"
-          value={selectedSupplierFilter}
-          onChange={(e) => setSelectedSupplierFilter(e.target.value)}
-        >
-          <option value="all">All Suppliers</option>
-          {suppliers.map((s) => (
-            <option key={s.id} value={s.id}>
-              {s.name} (Balance: LKR {Number(s.payableBalance).toLocaleString()})
-            </option>
-          ))}
-        </select>
+      <div className="flex items-center justify-between gap-3 bg-card p-3 rounded-lg border flex-wrap">
+        <div className="flex items-center gap-3">
+          <Building2 className="w-4 h-4 text-muted-foreground" />
+          <span className="text-xs font-medium text-muted-foreground">Filter by Supplier:</span>
+          <select
+            className="border rounded-md px-3 py-1 text-sm bg-background text-foreground"
+            value={selectedSupplierFilter}
+            onChange={(e) => setSelectedSupplierFilter(e.target.value)}
+          >
+            <option value="all">All Suppliers</option>
+            {suppliers.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name} (Balance: LKR {Number(s.payableBalance).toLocaleString()})
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {selectedSupplierFilter !== "all" && (
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={async () => {
+              try {
+                const res = await fetch(`/api/purchase-orders?supplierId=${selectedSupplierFilter}`);
+                if (res.ok) setSupplierOrders(await res.json());
+              } catch (e) {
+                console.error(e);
+              }
+              setStatementOpen(true);
+            }}
+            className="gap-1.5 text-xs border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 font-medium"
+          >
+            <FileSpreadsheet className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            View Supplier Statement
+          </Button>
+        )}
       </div>
 
       {/* Payments History List */}
@@ -445,6 +472,17 @@ export const SupplierPaymentsTab = () => {
             </div>
           </CardContent>
         </Card>
+      )}
+
+      {/* Supplier Accounts Payable Statement Modal */}
+      {selectedSupplierFilter !== "all" && (
+        <SupplierStatementModal
+          open={statementOpen}
+          onClose={() => setStatementOpen(false)}
+          supplier={suppliers.find((s) => s.id === selectedSupplierFilter) || null}
+          purchases={supplierOrders}
+          payments={payments.filter((p) => (p as any).supplierId === selectedSupplierFilter || (p as any).supplier?.id === selectedSupplierFilter)}
+        />
       )}
     </div>
   );
