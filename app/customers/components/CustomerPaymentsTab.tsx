@@ -31,6 +31,7 @@ import {
   CreditCard,
   DollarSign,
   FileCheck2,
+  FileSpreadsheet,
   Loader2,
   Plus,
   Printer,
@@ -40,6 +41,7 @@ import {
 } from "lucide-react";
 import { CustomerPayment, CustomerPaymentMethod } from "../types/customerPayment.types";
 import CustomerPaymentReceiptModal from "./CustomerPaymentReceiptModal";
+import CustomerStatementModal from "./CustomerStatementModal";
 
 export const CustomerPaymentsTab = () => {
   const [payments, setPayments] = useState<CustomerPayment[]>([]);
@@ -48,6 +50,27 @@ export const CustomerPaymentsTab = () => {
   const [submitting, setSubmitting] = useState(false);
   const [receiptOpen, setReceiptOpen] = useState(false);
   const [selectedPaymentForReceipt, setSelectedPaymentForReceipt] = useState<CustomerPayment | null>(null);
+
+  // Statement modal state
+  const [statementOpen, setStatementOpen] = useState(false);
+  const [statementCustomer, setStatementCustomer] = useState<any | null>(null);
+  const [statementSales, setStatementSales] = useState<any[]>([]);
+  const [statementPayments, setStatementPayments] = useState<any[]>([]);
+
+  const handleOpenStatement = async (cust: any) => {
+    setStatementCustomer(cust);
+    try {
+      const [salesRes, payRes] = await Promise.all([
+        fetch(`/api/sales?customerId=${cust.id}`),
+        fetch(`/api/customer-payments?customerId=${cust.id}`),
+      ]);
+      if (salesRes.ok) setStatementSales(await salesRes.json());
+      if (payRes.ok) setStatementPayments(await payRes.json());
+    } catch (err) {
+      console.error("Error fetching statement data:", err);
+    }
+    setStatementOpen(true);
+  };
 
   const [customers, setCustomers] = useState<any[]>([]);
   const [selectedCustomerFilter, setSelectedCustomerFilter] = useState<string>("all");
@@ -386,21 +409,38 @@ export const CustomerPaymentsTab = () => {
       </div>
 
       {/* Filter Toolbar */}
-      <div className="flex items-center gap-3 bg-card p-3 rounded-lg border">
-        <Users className="w-4 h-4 text-muted-foreground" />
-        <span className="text-xs font-medium text-muted-foreground">Filter by Customer:</span>
-        <select
-          className="border rounded-md px-3 py-1 text-sm bg-background text-foreground"
-          value={selectedCustomerFilter}
-          onChange={(e) => setSelectedCustomerFilter(e.target.value)}
-        >
-          <option value="all">All Customers</option>
-          {customers.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name} (Owed: LKR {Number(c.creditBalance || 0).toLocaleString()})
-            </option>
-          ))}
-        </select>
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-card p-3 rounded-lg border">
+        <div className="flex items-center gap-3">
+          <Users className="w-4 h-4 text-muted-foreground" />
+          <span className="text-xs font-medium text-muted-foreground">Filter by Customer:</span>
+          <select
+            className="border rounded-md px-3 py-1 text-sm bg-background text-foreground"
+            value={selectedCustomerFilter}
+            onChange={(e) => setSelectedCustomerFilter(e.target.value)}
+          >
+            <option value="all">All Customers</option>
+            {customers.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name} (Owed: LKR {Number(c.creditBalance || 0).toLocaleString()})
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {selectedCustomerFilter !== "all" && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const cust = customers.find((c) => c.id === selectedCustomerFilter);
+              if (cust) handleOpenStatement(cust);
+            }}
+            className="gap-1.5 text-xs border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800"
+          >
+            <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            View Customer Statement
+          </Button>
+        )}
       </div>
 
       {/* Payments History List */}
@@ -490,6 +530,15 @@ export const CustomerPaymentsTab = () => {
         onClose={() => setReceiptOpen(false)}
         payment={selectedPaymentForReceipt}
         customer={customers.find((c) => c.id === selectedPaymentForReceipt?.customerId)}
+      />
+
+      {/* Account Statement & Ledger Modal */}
+      <CustomerStatementModal
+        open={statementOpen}
+        onClose={() => setStatementOpen(false)}
+        customer={statementCustomer}
+        sales={statementSales}
+        payments={statementPayments}
       />
     </div>
   );

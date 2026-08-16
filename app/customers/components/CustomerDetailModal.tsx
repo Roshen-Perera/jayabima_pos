@@ -278,7 +278,7 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
                     className="gap-1.5 text-xs sm:text-sm border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 font-medium"
                   >
                     <FileSpreadsheet className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                    Print Statement
+                    View Statement
                   </Button>
                   <Button
                     size="sm"
@@ -554,6 +554,15 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
         onClose={() => setReceiptOpen(false)}
         payment={selectedPaymentForReceipt}
         customer={customer}
+      />
+
+      {/* Account Statement & Ledger Modal */}
+      <CustomerStatementModal
+        open={statementOpen}
+        onClose={() => setStatementOpen(false)}
+        customer={customer}
+        sales={sales}
+        payments={payments}
       />
     </>
   );
