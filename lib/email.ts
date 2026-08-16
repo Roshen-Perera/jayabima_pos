@@ -550,3 +550,129 @@ JAYABIMA Hardware Team
     return { success: false, error };
   }
 }
+
+interface SendCustomerStatementEmailParams {
+  email: string;
+  name: string;
+  statementDateStr: string;
+  ref: string;
+  totalBilled: number;
+  totalPaid: number;
+  netOutstanding: number;
+  rowsHtml: string;
+}
+
+export async function sendCustomerStatementEmail({
+  email,
+  name,
+  statementDateStr,
+  ref,
+  totalBilled,
+  totalPaid,
+  netOutstanding,
+  rowsHtml,
+}: SendCustomerStatementEmailParams) {
+  try {
+    const info = await transporter.sendMail({
+      from: DEFAULT_FROM,
+      to: email,
+      subject: `Official Statement of Account (${statementDateStr}) - JAYABIMA HARDWARE`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <style>
+              body { font-family: 'Segoe UI', Arial, sans-serif; color: #0f172a; background-color: #f8fafc; padding: 20px; margin: 0; }
+              .container { max-width: 650px; background: #ffffff; margin: 0 auto; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden; padding: 24px; }
+              .header { border-bottom: 2px solid #0f172a; padding-bottom: 16px; margin-bottom: 20px; }
+              .store-name { font-size: 18px; font-weight: bold; text-transform: uppercase; color: #0f172a; }
+              .store-sub { font-size: 11px; color: #64748b; margin-top: 2px; }
+              .doc-title { text-align: right; font-size: 12px; font-weight: bold; text-transform: uppercase; color: #2563eb; }
+              .summary-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; margin-bottom: 20px; }
+              .stat-box { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 4px; padding: 8px; text-align: center; }
+              .stat-label { font-size: 9px; font-weight: bold; text-transform: uppercase; color: #64748b; }
+              .stat-val { font-size: 12px; font-weight: bold; margin-top: 2px; }
+              table.ledger { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 11px; }
+              table.ledger th { background: #f1f5f9; color: #334155; padding: 8px; border-bottom: 2px solid #cbd5e1; text-align: left; text-transform: uppercase; font-size: 9px; }
+              table.ledger td { padding: 8px; border-bottom: 1px solid #e2e8f0; }
+              .badge-debit { display: inline-block; padding: 2px 5px; border-radius: 3px; font-size: 9px; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-weight: 600; }
+              .badge-credit { display: inline-block; padding: 2px 5px; border-radius: 3px; font-size: 9px; background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; font-weight: 600; }
+              .footer { margin-top: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 11px; color: #64748b; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <table style="width: 100%;">
+                <tr>
+                  <td>
+                    <div class="store-name">JAYABIMA HARDWARE & STORES</div>
+                    <div class="store-sub">No 28/D, Rathnapura Road, Diurumpitiya, Getaheththa</div>
+                    <div class="store-sub">Tel: 0777187729 / 0362231535</div>
+                  </td>
+                  <td style="text-align: right;">
+                    <div class="doc-title">STATEMENT OF ACCOUNT</div>
+                    <div style="font-size: 11px; color: #64748b; margin-top: 4px;">Date: ${statementDateStr}</div>
+                    <div style="font-family: monospace; font-size: 10px; color: #64748b;">Ref: ${ref}</div>
+                  </td>
+                </tr>
+              </table>
+
+              <div class="summary-box">
+                <div style="font-size: 13px; font-weight: bold; margin-bottom: 6px;">Dear ${name},</div>
+                <div style="font-size: 11px; color: #475569; margin-bottom: 12px;">Here is your official account statement and transaction ledger history from Jayabima Hardware & Stores.</div>
+                
+                <table style="width: 100%; border-collapse: separate; border-spacing: 6px;">
+                  <tr>
+                    <td class="stat-box">
+                      <div class="stat-label">Total Billed</div>
+                      <div class="stat-val" style="color: #0f172a;">LKR ${totalBilled.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
+                    </td>
+                    <td class="stat-box">
+                      <div class="stat-label">Total Paid</div>
+                      <div class="stat-val" style="color: #047857;">LKR ${totalPaid.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
+                    </td>
+                    <td class="stat-box">
+                      <div class="stat-label">Net Outstanding</div>
+                      <div class="stat-val" style="color: ${netOutstanding > 0 ? "#dc2626" : "#047857"};">LKR ${netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+              <div style="font-weight: bold; font-size: 11px; margin-bottom: 6px;">Transaction History Ledger:</div>
+              <table class="ledger">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Ref #</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th style="text-align: right;">Billed (+)</th>
+                    <th style="text-align: right;">Paid (-)</th>
+                    <th style="text-align: right;">Balance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rowsHtml}
+                </tbody>
+              </table>
+
+              <div class="footer">
+                <p>If you have any questions regarding your account or statement, please contact Jayabima Hardware at 0777187729 / 0362231535.</p>
+                <p>&copy; ${new Date().getFullYear()} Jayabima Hardware & Stores. All rights reserved.</p>
+              </div>
+            </div>
+          </body>
+        </html>
+      `,
+    });
+
+    console.log('✅ Statement email sent successfully');
+    console.log('📧 Message ID:', info.messageId);
+    console.log('📬 Sent to:', email);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error('❌ Statement email sending failed:', error);
+    return { success: false, error };
+  }
+}
