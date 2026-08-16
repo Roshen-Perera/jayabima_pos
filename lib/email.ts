@@ -1,9 +1,9 @@
 import nodemailer from 'nodemailer';
 
-const EMAIL_HOST = process.env.EMAIL_HOST || 'smtp.gmail.com';
-const EMAIL_PORT = parseInt(process.env.EMAIL_PORT || '587');
-const EMAIL_USER = "yenovatetechnologies@gmail.com";
-const EMAIL_PASSWORD = "huwopaibyawbdsxo";
+const EMAIL_HOST = process.env.EMAIL_HOST;
+const EMAIL_PORT = process.env.EMAIL_PORT;
+const EMAIL_USER = process.env.EMAIL_USER;
+const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
 
 if (!EMAIL_USER || !EMAIL_PASSWORD) {
     console.error('❌ Missing email configuration!');
