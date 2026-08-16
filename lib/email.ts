@@ -551,7 +551,7 @@ JAYABIMA Hardware Team
   }
 }
 
-interface SendSupplierStatementEmailParams {
+interface SendCustomerStatementEmailParams {
   email: string;
   name: string;
   statementDateStr: string;
@@ -562,7 +562,7 @@ interface SendSupplierStatementEmailParams {
   pdfBuffer?: Buffer;
 }
 
-export async function sendSupplierStatementEmail({
+export async function sendCustomerStatementEmail({
   email,
   name,
   statementDateStr,
@@ -571,12 +571,12 @@ export async function sendSupplierStatementEmail({
   totalPaid,
   netOutstanding,
   pdfBuffer,
-}: SendSupplierStatementEmailParams) {
+}: SendCustomerStatementEmailParams) {
   try {
     const attachments = pdfBuffer
       ? [
           {
-            filename: `SupplierStatement_${ref}.pdf`,
+            filename: `Statement_${ref}.pdf`,
             content: pdfBuffer,
             contentType: "application/pdf",
           },
@@ -586,7 +586,7 @@ export async function sendSupplierStatementEmail({
     const info = await transporter.sendMail({
       from: DEFAULT_FROM,
       to: email,
-      subject: `Supplier Accounts Payable Statement (${statementDateStr}) - JAYABIMA HARDWARE`,
+      subject: `Official Statement of Account (${statementDateStr}) - JAYABIMA HARDWARE`,
       attachments,
       html: `
         <!DOCTYPE html>
@@ -599,11 +599,14 @@ export async function sendSupplierStatementEmail({
               .body-content { padding: 28px; }
               .greeting { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
               .subtext { font-size: 13px; color: #475569; line-height: 1.6; margin-bottom: 20px; }
+              
               .summary-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 20px; }
               .summary-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; margin-bottom: 12px; }
+              
               .pdf-alert-box { background: #eff6ff; border-left: 4px solid #2563eb; padding: 14px; border-radius: 6px; margin-bottom: 20px; }
               .pdf-alert-title { font-size: 12px; font-weight: 700; color: #1e40af; margin-bottom: 2px; }
               .pdf-alert-desc { font-size: 11px; color: #1e3a8a; line-height: 1.4; }
+
               .footer { background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 18px; text-align: center; font-size: 11px; color: #64748b; line-height: 1.5; }
             </style>
           </head>
@@ -617,15 +620,15 @@ export async function sendSupplierStatementEmail({
               <div class="body-content">
                 <div class="greeting">Dear ${name},</div>
                 <div class="subtext">
-                  Please find your official Accounts Payable Statement for <strong>${statementDateStr}</strong> (Ref: <code style="font-family: monospace; background: #e2e8f0; padding: 2px 4px; border-radius: 4px;">${ref}</code>).
+                  Please find your official Account Statement for <strong>${statementDateStr}</strong> (Ref: <code style="font-family: monospace; background: #e2e8f0; padding: 2px 4px; border-radius: 4px;">${ref}</code>).
                 </div>
 
                 <div class="summary-card">
-                  <div class="summary-title">Accounts Payable Balance Summary</div>
+                  <div class="summary-title">Account Balance Summary</div>
                   <table style="width: 100%; border-collapse: separate; border-spacing: 6px;">
                     <tr>
                       <td style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px; text-align: center; width: 33%;">
-                        <div style="font-size: 9px; font-weight: bold; text-transform: uppercase; color: #64748b;">Purchases</div>
+                        <div style="font-size: 9px; font-weight: bold; text-transform: uppercase; color: #64748b;">Total Billed</div>
                         <div style="font-size: 12px; font-weight: bold; color: #0f172a; margin-top: 4px;">LKR ${totalBilled.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
                       </td>
                       <td style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px; text-align: center; width: 33%;">
@@ -633,7 +636,7 @@ export async function sendSupplierStatementEmail({
                         <div style="font-size: 12px; font-weight: bold; color: #047857; margin-top: 4px;">LKR ${totalPaid.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
                       </td>
                       <td style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px; text-align: center; width: 33%;">
-                        <div style="font-size: 9px; font-weight: bold; text-transform: uppercase; color: #64748b;">Net Payable</div>
+                        <div style="font-size: 9px; font-weight: bold; text-transform: uppercase; color: #64748b;">Net Owed</div>
                         <div style="font-size: 12px; font-weight: bold; color: ${netOutstanding > 0 ? '#dc2626' : '#047857'}; margin-top: 4px;">LKR ${netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
                       </td>
                     </tr>
@@ -643,7 +646,7 @@ export async function sendSupplierStatementEmail({
                 <div class="pdf-alert-box">
                   <div class="pdf-alert-title">📎 Attached Statement Document</div>
                   <div class="pdf-alert-desc">
-                    Your complete purchase & payment transaction ledger history is securely attached to this email as a PDF document (<strong>SupplierStatement_${ref}.pdf</strong>).
+                    Your complete transaction ledger history is securely attached to this email as a PDF document (<strong>Statement_${ref}.pdf</strong>).
                   </div>
                 </div>
 
@@ -662,12 +665,12 @@ export async function sendSupplierStatementEmail({
       `,
     });
 
-    console.log('✅ Supplier statement email sent successfully');
+    console.log('✅ Statement email sent successfully');
     console.log('📧 Message ID:', info.messageId);
     console.log('📬 Sent to:', email);
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error('❌ Supplier statement email sending failed:', error);
+    console.error('❌ Statement email sending failed:', error);
     return { success: false, error };
   }
 }

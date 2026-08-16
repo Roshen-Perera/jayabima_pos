@@ -11,6 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -22,29 +23,33 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   Calendar,
-  Download,
+  CreditCard,
   FileSpreadsheet,
   Loader2,
   Mail,
   Printer,
+  Receipt,
+  Search,
 } from "lucide-react";
+import { Customer } from "../types/customer.types";
+import { CustomerPayment } from "../types/customerPayment.types";
 
 interface CustomerStatementModalProps {
   open: boolean;
   onClose: () => void;
-  customer: any | null;
+  customer: Customer | any | null;
   sales?: any[];
-  payments?: any[];
+  payments?: CustomerPayment[] | any[];
 }
 
-export type CustomerLedgerEntry = {
+export type LedgerEntry = {
   id: string;
   date: Date;
   dateStr: string;
   type: "INVOICE" | "PAYMENT";
   ref: string;
   description: string;
-  debit: number;   // Invoiced / Billed (+)
+  debit: number;   // Invoiced (+)
   credit: number;  // Paid (-)
   runningBalance: number;
 };
@@ -60,120 +65,21 @@ export default function CustomerStatementModal({
   const [customStartDate, setCustomStartDate] = useState<string>("");
   const [customEndDate, setCustomEndDate] = useState<string>("");
   const [sendingEmail, setSendingEmail] = useState<boolean>(false);
-  const [downloadingPdf, setDownloadingPdf] = useState<boolean>(false);
 
-  // Compute Chronological Ledger Entries
-  const ledgerEntries = useMemo(() => {
-    if (!customer) return [];
-
-    const entries: Omit<CustomerLedgerEntry, "runningBalance">[] = [];
-
-    // 1. Map Sales Invoices (Debits)
-    sales.forEach((sale: any) => {
-      const amount = Number(sale.total || sale.originalTotal || 0);
-      const itemsSummary = Array.isArray(sale.items) && sale.items.length > 0
-        ? sale.items.map((i: any) => `${i.productName || i.product?.name || "Item"} (${i.quantity}x)`).join(", ")
-        : "POS Invoice Sale";
-
-      entries.push({
-        id: `sale-${sale.id}`,
-        date: new Date(sale.createdAt || Date.now()),
-        dateStr: new Date(sale.createdAt || Date.now()).toLocaleDateString("en-LK"),
-        type: "INVOICE",
-        ref: sale.reference || `INV-${sale.id.slice(-6).toUpperCase()}`,
-        description: `[Sales Invoice] ${itemsSummary}`,
-        debit: amount,
-        credit: 0,
-      });
-    });
-
-    // 2. Map Customer Payments (Credits)
-    payments.forEach((pay: any) => {
-      const payMethodLabel = pay.method ? pay.method.replace("_", " ") : "Payment";
-      const refStr = pay.reference ? ` (${pay.reference})` : "";
-
-      entries.push({
-        id: `pay-${pay.id}`,
-        date: new Date(pay.paidAt || pay.createdAt || Date.now()),
-        dateStr: new Date(pay.paidAt || pay.createdAt || Date.now()).toLocaleDateString("en-LK"),
-        type: "PAYMENT",
-        ref: `PAY-${pay.id.slice(-6).toUpperCase()}`,
-        description: `Payment Received [${payMethodLabel}]${refStr}${pay.note ? ` - ${pay.note}` : ""}`,
-        debit: 0,
-        credit: Number(pay.amount || 0),
-      });
-    });
-
-    // 3. Sort Chronologically (Ascending)
-    entries.sort((a, b) => a.date.getTime() - b.date.getTime());
-
-    // 4. Calculate Line-by-Line Running Outstanding Balance
-    let currentBal = 0;
-    const finalEntries: CustomerLedgerEntry[] = entries.map((entry) => {
-      currentBal += entry.debit - entry.credit;
-      return {
-        ...entry,
-        runningBalance: currentBal,
-      };
-    });
-
-    return finalEntries;
-  }, [customer, sales, payments]);
-
-  // Date Filter
-  const filteredEntries = useMemo(() => {
-    if (dateFilter === "all") return ledgerEntries;
-
-    const now = new Date();
-    let startDate: Date | null = null;
-    let endDate: Date | null = null;
-
-    if (dateFilter === "30days") {
-      startDate = new Date();
-      startDate.setDate(now.getDate() - 30);
-    } else if (dateFilter === "thisMonth") {
-      startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-    } else if (dateFilter === "custom") {
-      if (customStartDate) startDate = new Date(customStartDate);
-      if (customEndDate) {
-        endDate = new Date(customEndDate);
-        endDate.setHours(23, 59, 59, 999);
-      }
-    }
-
-    return ledgerEntries.filter((entry) => {
-      if (startDate && entry.date < startDate) return false;
-      if (endDate && entry.date > endDate) return false;
-      return true;
-    });
-  }, [ledgerEntries, dateFilter, customStartDate, customEndDate]);
-
-  // Totals
-  const totalBilled = useMemo(
-    () => filteredEntries.reduce((sum, e) => sum + e.debit, 0),
-    [filteredEntries]
-  );
-  const totalPaid = useMemo(
-    () => filteredEntries.reduce((sum, e) => sum + e.credit, 0),
-    [filteredEntries]
-  );
-  const netOutstanding = Number(customer?.creditBalance ?? (totalBilled - totalPaid));
-
-  const statementDateStr = new Date().toLocaleDateString("en-LK", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-
-  const ref = `STMT-${customer?.id?.slice(-6)?.toUpperCase() || "CUST"}`;
-
-  // Download Vector PDF Handler
-  const handleDownloadPdf = async () => {
+  const handleEmailStatement = async () => {
     if (!customer) return;
 
+    if (!customer.email) {
+      alert.error(
+        "No Email Configured",
+        `Customer "${customer.name}" does not have an email address configured.`
+      );
+      return;
+    }
+
     try {
-      setDownloadingPdf(true);
-      const res = await fetch(`/api/customers/${customer.id}/pdf-statement`, {
+      setSendingEmail(true);
+      const res = await fetch(`/api/customers/${customer.id}/email-statement`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -185,25 +91,19 @@ export default function CustomerStatementModal({
         }),
       });
 
+      const data = await res.json();
       if (!res.ok) {
-        throw new Error("Failed to generate PDF download.");
+        throw new Error(data.error || "Failed to send email statement.");
       }
 
-      const blob = await res.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `Statement_${ref}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      a.remove();
-
-      alert.success("PDF Downloaded!", `Statement_${ref}.pdf has been saved to your downloads.`);
+      alert.success(
+        "Statement Emailed!",
+        `Official account statement successfully sent to ${customer.email}.`
+      );
     } catch (err: any) {
-      alert.error("Download Failed", err.message || "Could not download PDF statement.");
+      alert.error("Email Sending Failed", err.message || "Could not send statement email.");
     } finally {
-      setDownloadingPdf(false);
+      setSendingEmail(false);
     }
   };
 
@@ -249,13 +149,14 @@ export default function CustomerStatementModal({
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Customer Statement - ${customer.name}</title>
+          <title>Account Statement - ${customer.name}</title>
           <style>
             @page { size: A4 portrait; margin: 12mm 15mm 15mm 15mm; }
             * { box-sizing: border-box; }
             body { font-family: 'Segoe UI', Arial, sans-serif; color: #0f172a; margin: 0; padding: 0; font-size: 11px; background: #ffffff; }
             .header-table { width: 100%; border-bottom: 2px solid #0f172a; padding-bottom: 12px; margin-bottom: 15px; }
             .header-table td { vertical-align: top; }
+            .store-name { font-size: 16px; font-weight: bold; text-transform: uppercase; color: #0f172a; margin: 0 0 4px 0; }
             .store-sub { font-size: 10px; color: #64748b; margin: 2px 0; }
             .doc-title { text-align: right; font-size: 11px; font-weight: bold; text-transform: uppercase; color: #2563eb; letter-spacing: 0.5px; }
             .doc-meta { text-align: right; font-size: 10px; color: #64748b; margin-top: 4px; }
@@ -296,7 +197,7 @@ export default function CustomerStatementModal({
               <td style="text-align: right;">
                 <div class="doc-title">OFFICIAL STATEMENT OF ACCOUNT</div>
                 <div class="doc-meta">Date Generated: ${statementDateStr}</div>
-                <div class="doc-meta" style="font-family: monospace;">Ref: ${ref}</div>
+                <div class="doc-meta" style="font-family: monospace;">Ref: STMT-${customer.id?.slice(-6)?.toUpperCase() || "CUST"}</div>
               </td>
             </tr>
           </table>
@@ -322,7 +223,7 @@ export default function CustomerStatementModal({
                       <div class="stat-val" style="color: #047857;">LKR ${totalPaid.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
                     </td>
                     <td class="stat-box">
-                      <div class="stat-label">Net Outstanding</div>
+                      <div class="stat-label">Net Owed</div>
                       <div class="stat-val" style="color: ${netOutstanding > 0 ? "#dc2626" : "#047857"};">LKR ${netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
                     </td>
                   </tr>
@@ -338,16 +239,16 @@ export default function CustomerStatementModal({
                 <th>Ref #</th>
                 <th>Type</th>
                 <th>Description</th>
-                <th style="text-align: right;">Billed (+)</th>
-                <th style="text-align: right;">Paid (-)</th>
-                <th style="text-align: right;">Balance</th>
+                <th style="text-align: right;">Debit (+ Billed)</th>
+                <th style="text-align: right;">Credit (- Paid)</th>
+                <th style="text-align: right;">Running Balance</th>
               </tr>
             </thead>
             <tbody>
               ${filteredEntries.length === 0 ? `
                 <tr>
                   <td colspan="7" style="text-align: center; padding: 20px; color: #64748b; font-style: italic;">
-                    No ledger transactions recorded for the selected period.
+                    No transaction ledger history recorded for the selected period.
                   </td>
                 </tr>
               ` : rowsHtml}
@@ -356,9 +257,9 @@ export default function CustomerStatementModal({
 
           <table class="footer-table">
             <tr>
-              <td>Official Statement of Account generated from Jayabima Hardware POS.</td>
+              <td>Please review your account statement. If you have questions regarding any transaction, please contact us.</td>
               <td style="text-align: right; font-weight: bold; color: #0f172a;">
-                Net Outstanding Balance: LKR ${netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                Current Outstanding Balance: LKR ${netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}
               </td>
             </tr>
           </table>
@@ -378,48 +279,112 @@ export default function CustomerStatementModal({
     }, 300);
   };
 
-  const handleEmailStatement = async () => {
-    if (!customer) return;
+  // Build and compute chronological ledger entries with running balance
+  const ledgerEntries = useMemo(() => {
+    if (!customer) return [];
 
-    if (!customer.email) {
-      alert.error(
-        "No Email Configured",
-        `Customer "${customer.name}" does not have an email address configured.`
-      );
-      return;
-    }
+    const entries: Omit<LedgerEntry, "runningBalance">[] = [];
 
-    try {
-      setSendingEmail(true);
-      const res = await fetch(`/api/customers/${customer.id}/email-statement`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          filteredEntries,
-          totalBilled,
-          totalPaid,
-          netOutstanding,
-          dateFilter,
-        }),
+    // 1. Map Sales (Invoices)
+    sales.forEach((sale: any) => {
+      const isCreditSale = sale.paymentType === "CREDIT" || sale.isCredit || Number(sale.creditAmount || 0) > 0;
+      const amount = isCreditSale ? Number(sale.creditAmount || sale.totalAmount || sale.total || 0) : Number(sale.totalAmount || sale.total || 0);
+
+      const itemsSummary = Array.isArray(sale.items) && sale.items.length > 0
+        ? sale.items.map((i: any) => `${i.productName || i.product?.name || "Item"} (${i.quantity}x)`).join(", ")
+        : "Sales Invoice";
+
+      entries.push({
+        id: `sale-${sale.id}`,
+        date: new Date(sale.createdAt || sale.date || Date.now()),
+        dateStr: new Date(sale.createdAt || sale.date || Date.now()).toLocaleDateString("en-LK"),
+        type: "INVOICE",
+        ref: sale.invoiceNo || sale.receiptNo || `INV-${sale.id.slice(-6).toUpperCase()}`,
+        description: `${isCreditSale ? "[Credit Invoice]" : "[Invoice]"} ${itemsSummary}`,
+        debit: amount,
+        credit: 0,
       });
+    });
 
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to send customer statement email.");
+    // 2. Map Payments
+    payments.forEach((pay: any) => {
+      const payMethodLabel = pay.method ? pay.method.replace("_", " ") : "Payment";
+      const refStr = pay.reference ? ` (${pay.reference})` : "";
+      
+      entries.push({
+        id: `pay-${pay.id}`,
+        date: new Date(pay.paidAt || pay.createdAt || Date.now()),
+        dateStr: new Date(pay.paidAt || pay.createdAt || Date.now()).toLocaleDateString("en-LK"),
+        type: "PAYMENT",
+        ref: `PAY-${pay.id.slice(-6).toUpperCase()}`,
+        description: `Payment Received [${payMethodLabel}]${refStr}${pay.note ? ` - ${pay.note}` : ""}`,
+        debit: 0,
+        credit: Number(pay.amount || 0),
+      });
+    });
+
+    // 3. Sort Chronologically (Ascending: Oldest to Newest)
+    entries.sort((a, b) => a.date.getTime() - b.date.getTime());
+
+    // 4. Calculate Running Balance line-by-line
+    let currentBal = 0;
+    const finalEntries: LedgerEntry[] = entries.map((entry) => {
+      currentBal += entry.debit - entry.credit;
+      return {
+        ...entry,
+        runningBalance: currentBal,
+      };
+    });
+
+    return finalEntries;
+  }, [customer, sales, payments]);
+
+  // Apply Date Filtering
+  const filteredEntries = useMemo(() => {
+    if (dateFilter === "all") return ledgerEntries;
+
+    const now = new Date();
+    let startDate: Date | null = null;
+    let endDate: Date | null = null;
+
+    if (dateFilter === "30days") {
+      startDate = new Date();
+      startDate.setDate(now.getDate() - 30);
+    } else if (dateFilter === "thisMonth") {
+      startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+    } else if (dateFilter === "custom") {
+      if (customStartDate) startDate = new Date(customStartDate);
+      if (customEndDate) {
+        endDate = new Date(customEndDate);
+        endDate.setHours(23, 59, 59, 999);
       }
-
-      alert.success(
-        "Statement Emailed!",
-        `Official statement successfully sent to ${customer.email}.`
-      );
-    } catch (err: any) {
-      alert.error("Email Sending Failed", err.message || "Could not send statement email.");
-    } finally {
-      setSendingEmail(false);
     }
-  };
+
+    return ledgerEntries.filter((entry) => {
+      if (startDate && entry.date < startDate) return false;
+      if (endDate && entry.date > endDate) return false;
+      return true;
+    });
+  }, [ledgerEntries, dateFilter, customStartDate, customEndDate]);
+
+  // Compute Totals
+  const totalBilled = useMemo(
+    () => filteredEntries.reduce((sum, e) => sum + e.debit, 0),
+    [filteredEntries]
+  );
+  const totalPaid = useMemo(
+    () => filteredEntries.reduce((sum, e) => sum + e.credit, 0),
+    [filteredEntries]
+  );
+  const netOutstanding = Number(customer?.creditBalance ?? (totalBilled - totalPaid));
 
   if (!customer) return null;
+
+  const statementDateStr = new Date().toLocaleDateString("en-LK", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -431,25 +396,11 @@ export default function CustomerStatementModal({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <DialogTitle className="flex items-center gap-2 text-lg">
               <FileSpreadsheet className="h-5 w-5 text-emerald-600" />
-              Customer Statement of Account &amp; Ledger
+              Customer Account Statement &amp; Ledger
             </DialogTitle>
 
-            {/* Print, Email, Download & Action Controls */}
-            <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleDownloadPdf}
-                disabled={downloadingPdf}
-                className="gap-1.5 text-xs text-emerald-700 bg-emerald-50 border-emerald-200 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800"
-              >
-                {downloadingPdf ? (
-                  <Loader2 className="h-4 w-4 animate-spin text-emerald-600" />
-                ) : (
-                  <Download className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                )}
-                Download PDF
-              </Button>
+            {/* Print, Email & Action Controls */}
+            <div className="flex items-center gap-2">
               <Button
                 variant="outline"
                 size="sm"
@@ -540,13 +491,13 @@ export default function CustomerStatementModal({
                 </Badge>
                 <p className="text-[11px] text-muted-foreground">Date Generated: {statementDateStr}</p>
                 <p className="text-[11px] font-mono text-muted-foreground">
-                  Ref: {ref}
+                  Ref: STMT-{customer.id?.slice(-6)?.toUpperCase() || "CUST"}
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Customer Metadata Box */}
+          {/* Customer Metadata & Info Box */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-muted/30 p-3 rounded-lg border">
             <div>
               <p className="text-[11px] uppercase font-bold text-muted-foreground mb-1">Statement For Customer</p>
@@ -571,7 +522,7 @@ export default function CustomerStatementModal({
                 </p>
               </div>
               <div className="p-2 bg-background rounded border">
-                <p className="text-[10px] text-muted-foreground font-medium uppercase">Net Outstanding</p>
+                <p className="text-[10px] text-muted-foreground font-medium uppercase">Net Owed</p>
                 <p
                   className={`text-xs font-bold mt-0.5 ${
                     netOutstanding > 0 ? "text-red-600 dark:text-red-400" : "text-emerald-600"
@@ -592,16 +543,16 @@ export default function CustomerStatementModal({
                   <th className="p-2.5">Ref #</th>
                   <th className="p-2.5">Type</th>
                   <th className="p-2.5 max-w-[190px]">Description</th>
-                  <th className="p-2.5 text-right">Billed (+)</th>
-                  <th className="p-2.5 text-right">Paid (-)</th>
-                  <th className="p-2.5 text-right">Balance</th>
+                  <th className="p-2.5 text-right">Debit (+ Billed)</th>
+                  <th className="p-2.5 text-right">Credit (- Paid)</th>
+                  <th className="p-2.5 text-right">Running Balance</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
                 {filteredEntries.length === 0 ? (
                   <tr>
                     <td colSpan={7} className="p-6 text-center text-muted-foreground italic">
-                      No ledger transactions recorded for the selected period.
+                      No transaction ledger history recorded for the selected period.
                     </td>
                   </tr>
                 ) : (
@@ -649,10 +600,10 @@ export default function CustomerStatementModal({
             </table>
           </div>
 
-          {/* Statement Footer */}
+          {/* Statement Footer / Terms */}
           <div className="border-t pt-3 flex flex-col sm:flex-row justify-between items-start sm:items-center text-[11px] text-muted-foreground gap-2">
             <p>
-              Official Statement of Account for customer transactions at Jayabima Hardware &amp; Stores.
+              Please review your account statement. If you have questions regarding any transaction, please contact us.
             </p>
             <div className="font-semibold text-foreground">
               Current Outstanding Balance: LKR {netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}

@@ -51,6 +51,27 @@ export const CustomerPaymentsTab = () => {
   const [receiptOpen, setReceiptOpen] = useState(false);
   const [selectedPaymentForReceipt, setSelectedPaymentForReceipt] = useState<CustomerPayment | null>(null);
 
+  // Statement modal state
+  const [statementOpen, setStatementOpen] = useState(false);
+  const [statementCustomer, setStatementCustomer] = useState<any | null>(null);
+  const [statementSales, setStatementSales] = useState<any[]>([]);
+  const [statementPayments, setStatementPayments] = useState<any[]>([]);
+
+  const handleOpenStatement = async (cust: any) => {
+    setStatementCustomer(cust);
+    try {
+      const [salesRes, payRes] = await Promise.all([
+        fetch(`/api/sales?customerId=${cust.id}`),
+        fetch(`/api/customer-payments?customerId=${cust.id}`),
+      ]);
+      if (salesRes.ok) setStatementSales(await salesRes.json());
+      if (payRes.ok) setStatementPayments(await payRes.json());
+    } catch (err) {
+      console.error("Error fetching statement data:", err);
+    }
+    setStatementOpen(true);
+  };
+
   const [customers, setCustomers] = useState<any[]>([]);
   const [selectedCustomerFilter, setSelectedCustomerFilter] = useState<string>("all");
 
@@ -391,7 +412,7 @@ export const CustomerPaymentsTab = () => {
       </div>
 
       {/* Filter Toolbar */}
-      <div className="flex items-center justify-between gap-3 bg-card p-3 rounded-lg border flex-wrap">
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-card p-3 rounded-lg border">
         <div className="flex items-center gap-3">
           <Users className="w-4 h-4 text-muted-foreground" />
           <span className="text-xs font-medium text-muted-foreground">Filter by Customer:</span>
@@ -411,20 +432,15 @@ export const CustomerPaymentsTab = () => {
 
         {selectedCustomerFilter !== "all" && (
           <Button
-            size="sm"
             variant="outline"
-            onClick={async () => {
-              try {
-                const res = await fetch(`/api/sales?customerId=${selectedCustomerFilter}`);
-                if (res.ok) setCustomerSales(await res.json());
-              } catch (e) {
-                console.error(e);
-              }
-              setStatementOpen(true);
+            size="sm"
+            onClick={() => {
+              const cust = customers.find((c) => c.id === selectedCustomerFilter);
+              if (cust) handleOpenStatement(cust);
             }}
-            className="gap-1.5 text-xs border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 font-medium"
+            className="gap-1.5 text-xs border-emerald-200 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800"
           >
-            <FileSpreadsheet className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
             View Customer Statement
           </Button>
         )}
@@ -519,16 +535,14 @@ export const CustomerPaymentsTab = () => {
         customer={customers.find((c) => c.id === selectedPaymentForReceipt?.customerId)}
       />
 
-      {/* Customer Statement Modal */}
-      {selectedCustomerFilter !== "all" && (
-        <CustomerStatementModal
-          open={statementOpen}
-          onClose={() => setStatementOpen(false)}
-          customer={customers.find((c) => c.id === selectedCustomerFilter) || null}
-          sales={customerSales}
-          payments={payments.filter((p) => (p as any).customerId === selectedCustomerFilter || (p as any).customer?.id === selectedCustomerFilter)}
-        />
-      )}
+      {/* Account Statement & Ledger Modal */}
+      <CustomerStatementModal
+        open={statementOpen}
+        onClose={() => setStatementOpen(false)}
+        customer={statementCustomer}
+        sales={statementSales}
+        payments={statementPayments}
+      />
     </div>
   );
 };

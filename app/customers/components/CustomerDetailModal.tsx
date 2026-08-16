@@ -81,6 +81,9 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
   const [receiptOpen, setReceiptOpen] = useState(false);
   const [selectedPaymentForReceipt, setSelectedPaymentForReceipt] = useState<CustomerPayment | null>(null);
 
+  // Statement modal state
+  const [statementOpen, setStatementOpen] = useState(false);
+
   const fetchCustomerSales = async (id: string) => {
     setLoadingSales(true);
     try {
@@ -270,7 +273,7 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
                     LKR {Number(customer.creditBalance || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}
                   </p>
                 </div>
-                <div className="flex items-center gap-2 ml-2 shrink-0">
+                <div className="flex items-center gap-2 shrink-0">
                   <Button
                     size="sm"
                     variant="outline"
@@ -556,7 +559,7 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
         customer={customer}
       />
 
-      {/* Customer Statement Modal */}
+      {/* Account Statement & Ledger Modal */}
       <CustomerStatementModal
         open={statementOpen}
         onClose={() => setStatementOpen(false)}

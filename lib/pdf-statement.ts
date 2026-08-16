@@ -56,7 +56,7 @@ export async function generateCustomerStatementPDF(data: GenerateStatementPDFPar
   const width = 595.28;
   const height = 841.89;
   const margin = 36;
-  const contentWidth = width - margin * 2;
+  const contentWidth = width - margin * 2; // 523.28
 
   // Header Icon + Title Details
   let titleX = margin;
@@ -134,7 +134,7 @@ export async function generateCustomerStatementPDF(data: GenerateStatementPDFPar
     color: borderColor,
   });
 
-  // Customer Information Card Box
+  // Customer Summary Card Box
   const cardY = height - 165;
   page.drawRectangle({
     x: margin,
@@ -177,20 +177,20 @@ export async function generateCustomerStatementPDF(data: GenerateStatementPDFPar
   const tileY = cardY + 10;
   const startX = margin + 240;
 
-  // Tile 1: Total Billed
+  // Billed Tile
   page.drawRectangle({ x: startX, y: tileY, width: tileW, height: tileH, color: rgb(1, 1, 1), borderColor, borderWidth: 1 });
-  page.drawText("TOTAL BILLED", { x: startX + 14, y: tileY + 34, size: 7.5, font: fontBold, color: secondaryColor });
-  page.drawText(`LKR ${data.totalBilled.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, { x: startX + 4, y: tileY + 16, size: 8.5, font: fontBold, color: primaryColor });
+  page.drawText("TOTAL BILLED", { x: startX + 12, y: tileY + 34, size: 7.5, font: fontBold, color: secondaryColor });
+  page.drawText(`LKR ${data.totalBilled.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, { x: startX + 6, y: tileY + 16, size: 8.5, font: fontBold, color: primaryColor });
 
-  // Tile 2: Total Paid
+  // Paid Tile
   page.drawRectangle({ x: startX + 93, y: tileY, width: tileW, height: tileH, color: rgb(1, 1, 1), borderColor, borderWidth: 1 });
   page.drawText("TOTAL PAID", { x: startX + 93 + 16, y: tileY + 34, size: 7.5, font: fontBold, color: secondaryColor });
-  page.drawText(`LKR ${data.totalPaid.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, { x: startX + 93 + 4, y: tileY + 16, size: 8.5, font: fontBold, color: greenColor });
+  page.drawText(`LKR ${data.totalPaid.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, { x: startX + 93 + 6, y: tileY + 16, size: 8.5, font: fontBold, color: greenColor });
 
-  // Tile 3: Net Outstanding
+  // Net Owed Tile
   page.drawRectangle({ x: startX + 186, y: tileY, width: tileW, height: tileH, color: rgb(1, 1, 1), borderColor, borderWidth: 1 });
-  page.drawText("NET OWED", { x: startX + 186 + 22, y: tileY + 34, size: 7.5, font: fontBold, color: secondaryColor });
-  page.drawText(`LKR ${data.netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, { x: startX + 186 + 4, y: tileY + 16, size: 8.5, font: fontBold, color: data.netOutstanding > 0 ? redColor : greenColor });
+  page.drawText("NET OWED", { x: startX + 186 + 20, y: tileY + 34, size: 7.5, font: fontBold, color: secondaryColor });
+  page.drawText(`LKR ${data.netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, { x: startX + 186 + 6, y: tileY + 16, size: 8.5, font: fontBold, color: data.netOutstanding > 0 ? redColor : greenColor });
 
   // Table Header
   let currentY = height - 192;
@@ -201,15 +201,15 @@ export async function generateCustomerStatementPDF(data: GenerateStatementPDFPar
     p.drawText("REF #", { x: margin + 66, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
     p.drawText("TYPE", { x: margin + 131, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
     p.drawText("DESCRIPTION", { x: margin + 176, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
-    p.drawText("BILLED (+)", { x: margin + 331, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
-    p.drawText("PAID (-)", { x: margin + 411, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
-    p.drawText("BALANCE", { x: margin + 466, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
+    p.drawText("DEBIT (+)", { x: margin + 331, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
+    p.drawText("CREDIT (-)", { x: margin + 396, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
+    p.drawText("BALANCE", { x: margin + 461, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
   };
 
   drawTableHeader(page, currentY);
   currentY -= 20;
 
-  // Render Rows
+  // Render Ledger Rows
   data.entries.forEach((entry, idx) => {
     if (currentY < 45) {
       page = pdfDoc.addPage([595.28, 841.89]);
@@ -238,22 +238,22 @@ export async function generateCustomerStatementPDF(data: GenerateStatementPDFPar
     const descText = entry.description.length > 32 ? entry.description.slice(0, 30) + "..." : entry.description;
     page.drawText(descText, { x: margin + 176, y: currentY - 8, size: 8, font: fontRegular, color: secondaryColor });
 
-    // Debit / Billed
+    // Debit
     const debitText = entry.debit > 0 ? `LKR ${entry.debit.toLocaleString("en-US", { minimumFractionDigits: 2 })}` : "-";
     page.drawText(debitText, { x: margin + 331, y: currentY - 8, size: 8, font: fontRegular, color: primaryColor });
 
-    // Credit / Paid
+    // Credit
     const creditText = entry.credit > 0 ? `LKR ${entry.credit.toLocaleString("en-US", { minimumFractionDigits: 2 })}` : "-";
-    page.drawText(creditText, { x: margin + 411, y: currentY - 8, size: 8, font: fontBold, color: greenColor });
+    page.drawText(creditText, { x: margin + 396, y: currentY - 8, size: 8, font: fontBold, color: greenColor });
 
     // Running Balance
     const balText = `LKR ${entry.runningBalance.toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
-    page.drawText(balText, { x: margin + 466, y: currentY - 8, size: 8, font: fontBold, color: primaryColor });
+    page.drawText(balText, { x: margin + 461, y: currentY - 8, size: 8, font: fontBold, color: primaryColor });
 
     currentY -= 18;
   });
 
-  // Footer Disclaimer
+  // Footer Rule & Disclaimer
   if (currentY < 40) {
     page = pdfDoc.addPage([595.28, 841.89]);
     currentY = height - 45;
@@ -266,7 +266,7 @@ export async function generateCustomerStatementPDF(data: GenerateStatementPDFPar
     color: borderColor,
   });
 
-  page.drawText("Official Customer Account Statement generated from Jayabima Hardware POS.", {
+  page.drawText("Please review your account statement. If you have questions regarding any transaction, please contact Jayabima Hardware.", {
     x: margin,
     y: currentY - 20,
     size: 7.5,
@@ -274,7 +274,7 @@ export async function generateCustomerStatementPDF(data: GenerateStatementPDFPar
     color: secondaryColor,
   });
 
-  const netText = `Net Outstanding Balance: LKR ${data.netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
+  const netText = `Net Outstanding: LKR ${data.netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
   const netWidth = fontBold.widthOfTextAtSize(netText, 8.5);
   page.drawText(netText, {
     x: width - margin - netWidth,
