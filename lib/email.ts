@@ -559,7 +559,6 @@ interface SendCustomerStatementEmailParams {
   totalBilled: number;
   totalPaid: number;
   netOutstanding: number;
-  rowsHtml: string;
   pdfBuffer?: Buffer;
 }
 
@@ -571,7 +570,6 @@ export async function sendCustomerStatementEmail({
   totalBilled,
   totalPaid,
   netOutstanding,
-  rowsHtml,
   pdfBuffer,
 }: SendCustomerStatementEmailParams) {
   try {
@@ -595,84 +593,71 @@ export async function sendCustomerStatementEmail({
         <html>
           <head>
             <style>
-              body { font-family: 'Segoe UI', Arial, sans-serif; color: #0f172a; background-color: #f8fafc; padding: 20px; margin: 0; }
-              .container { max-width: 650px; background: #ffffff; margin: 0 auto; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden; padding: 24px; }
-              .header { border-bottom: 2px solid #0f172a; padding-bottom: 16px; margin-bottom: 20px; }
-              .store-name { font-size: 18px; font-weight: bold; text-transform: uppercase; color: #0f172a; }
-              .store-sub { font-size: 11px; color: #64748b; margin-top: 2px; }
-              .doc-title { text-align: right; font-size: 12px; font-weight: bold; text-transform: uppercase; color: #2563eb; }
-              .summary-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; margin-bottom: 20px; }
-              .stat-box { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 4px; padding: 8px; text-align: center; }
-              .stat-label { font-size: 9px; font-weight: bold; text-transform: uppercase; color: #64748b; }
-              .stat-val { font-size: 12px; font-weight: bold; margin-top: 2px; }
-              table.ledger { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 11px; }
-              table.ledger th { background: #f1f5f9; color: #334155; padding: 8px; border-bottom: 2px solid #cbd5e1; text-align: left; text-transform: uppercase; font-size: 9px; }
-              table.ledger td { padding: 8px; border-bottom: 1px solid #e2e8f0; }
-              .badge-debit { display: inline-block; padding: 2px 5px; border-radius: 3px; font-size: 9px; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-weight: 600; }
-              .badge-credit { display: inline-block; padding: 2px 5px; border-radius: 3px; font-size: 9px; background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; font-weight: 600; }
-              .footer { margin-top: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 11px; color: #64748b; }
+              body { font-family: 'Segoe UI', Arial, sans-serif; color: #0f172a; background-color: #f1f5f9; padding: 20px; margin: 0; }
+              .card { max-width: 580px; background: #ffffff; margin: 0 auto; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); overflow: hidden; }
+              .header-banner { background: #0f172a; padding: 24px; text-align: center; color: #ffffff; }
+              .body-content { padding: 28px; }
+              .greeting { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+              .subtext { font-size: 13px; color: #475569; line-height: 1.6; margin-bottom: 20px; }
+              
+              .summary-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 20px; }
+              .summary-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; margin-bottom: 12px; }
+              
+              .pdf-alert-box { background: #eff6ff; border-left: 4px solid #2563eb; padding: 14px; border-radius: 6px; margin-bottom: 20px; }
+              .pdf-alert-title { font-size: 12px; font-weight: 700; color: #1e40af; margin-bottom: 2px; }
+              .pdf-alert-desc { font-size: 11px; color: #1e3a8a; line-height: 1.4; }
+
+              .footer { background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 18px; text-align: center; font-size: 11px; color: #64748b; line-height: 1.5; }
             </style>
           </head>
           <body>
-            <div class="container">
-              <table style="width: 100%;">
-                <tr>
-                  <td>
-                    <div class="store-name">JAYABIMA HARDWARE & STORES</div>
-                    <div class="store-sub">No 28/D, Rathnapura Road, Diurumpitiya, Getaheththa</div>
-                    <div class="store-sub">Tel: 0777187729 / 0362231535</div>
-                  </td>
-                  <td style="text-align: right;">
-                    <div class="doc-title">STATEMENT OF ACCOUNT</div>
-                    <div style="font-size: 11px; color: #64748b; margin-top: 4px;">Date: ${statementDateStr}</div>
-                    <div style="font-family: monospace; font-size: 10px; color: #64748b;">Ref: ${ref}</div>
-                  </td>
-                </tr>
-              </table>
+            <div class="card">
+              <div class="header-banner">
+                <div style="font-size: 18px; font-weight: bold; letter-spacing: 0.5px;">JAYABIMA HARDWARE & STORES</div>
+                <div style="font-size: 11px; color: #94a3b8; margin-top: 4px;">No 28/D, Rathnapura Road, Diurumpitiya, Getaheththa | Tel: 0777187729</div>
+              </div>
+              
+              <div class="body-content">
+                <div class="greeting">Dear ${name},</div>
+                <div class="subtext">
+                  Please find your official Account Statement for <strong>${statementDateStr}</strong> (Ref: <code style="font-family: monospace; background: #e2e8f0; padding: 2px 4px; border-radius: 4px;">${ref}</code>).
+                </div>
 
-              <div class="summary-box">
-                <div style="font-size: 13px; font-weight: bold; margin-bottom: 6px;">Dear ${name},</div>
-                <div style="font-size: 11px; color: #475569; margin-bottom: 12px;">Here is your official account statement and transaction ledger history from Jayabima Hardware & Stores.</div>
-                
-                <table style="width: 100%; border-collapse: separate; border-spacing: 6px;">
-                  <tr>
-                    <td class="stat-box">
-                      <div class="stat-label">Total Billed</div>
-                      <div class="stat-val" style="color: #0f172a;">LKR ${totalBilled.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
-                    </td>
-                    <td class="stat-box">
-                      <div class="stat-label">Total Paid</div>
-                      <div class="stat-val" style="color: #047857;">LKR ${totalPaid.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
-                    </td>
-                    <td class="stat-box">
-                      <div class="stat-label">Net Outstanding</div>
-                      <div class="stat-val" style="color: ${netOutstanding > 0 ? "#dc2626" : "#047857"};">LKR ${netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
-                    </td>
-                  </tr>
-                </table>
+                <div class="summary-card">
+                  <div class="summary-title">Account Balance Summary</div>
+                  <table style="width: 100%; border-collapse: separate; border-spacing: 6px;">
+                    <tr>
+                      <td style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px; text-align: center; width: 33%;">
+                        <div style="font-size: 9px; font-weight: bold; text-transform: uppercase; color: #64748b;">Total Billed</div>
+                        <div style="font-size: 12px; font-weight: bold; color: #0f172a; margin-top: 4px;">LKR ${totalBilled.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
+                      </td>
+                      <td style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px; text-align: center; width: 33%;">
+                        <div style="font-size: 9px; font-weight: bold; text-transform: uppercase; color: #64748b;">Total Paid</div>
+                        <div style="font-size: 12px; font-weight: bold; color: #047857; margin-top: 4px;">LKR ${totalPaid.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
+                      </td>
+                      <td style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px; text-align: center; width: 33%;">
+                        <div style="font-size: 9px; font-weight: bold; text-transform: uppercase; color: #64748b;">Net Owed</div>
+                        <div style="font-size: 12px; font-weight: bold; color: ${netOutstanding > 0 ? '#dc2626' : '#047857'}; margin-top: 4px;">LKR ${netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+
+                <div class="pdf-alert-box">
+                  <div class="pdf-alert-title">📎 Attached Statement Document</div>
+                  <div class="pdf-alert-desc">
+                    Your complete transaction ledger history is securely attached to this email as a PDF document (<strong>Statement_${ref}.pdf</strong>).
+                  </div>
+                </div>
+
+                <div style="font-size: 12px; color: #475569; line-height: 1.5;">
+                  If you have any questions regarding your statement or balance, please contact Jayabima Hardware at <strong>0777187729 / 0362231535</strong>.
+                </div>
               </div>
 
-              <div style="font-weight: bold; font-size: 11px; margin-bottom: 6px;">Transaction History Ledger:</div>
-              <table class="ledger">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Ref #</th>
-                    <th>Type</th>
-                    <th>Description</th>
-                    <th style="text-align: right;">Billed (+)</th>
-                    <th style="text-align: right;">Paid (-)</th>
-                    <th style="text-align: right;">Balance</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${rowsHtml}
-                </tbody>
-              </table>
-
               <div class="footer">
-                <p>If you have any questions regarding your account or statement, please contact Jayabima Hardware at 0777187729 / 0362231535.</p>
-                <p>&copy; ${new Date().getFullYear()} Jayabima Hardware & Stores. All rights reserved.</p>
+                <div>This is an automated notification email from Jayabima Hardware & Stores. Please do not reply directly.</div>
+                <div>&copy; ${new Date().getFullYear()} Jayabima Hardware & Stores. All rights reserved.</div>
               </div>
             </div>
           </body>

@@ -56,30 +56,7 @@ export async function POST(
       entries: filteredEntries,
     });
 
-    // 2. Renders fallback HTML rows for email clients
-    const rowsHtml = filteredEntries.map((entry: any) => `
-      <tr>
-        <td style="white-space: nowrap; font-weight: 500;">${entry.dateStr}</td>
-        <td style="font-family: monospace; font-size: 10px; color: #475569;">${entry.ref}</td>
-        <td>
-          <span class="${entry.type === "INVOICE" ? "badge-debit" : "badge-credit"}">
-            ${entry.type === "INVOICE" ? "Invoice" : "Payment"}
-          </span>
-        </td>
-        <td style="color: #334155;">${entry.description}</td>
-        <td style="text-align: right; font-weight: 500;">
-          ${entry.debit > 0 ? "LKR " + Number(entry.debit).toLocaleString("en-US", { minimumFractionDigits: 2 }) : "-"}
-        </td>
-        <td style="text-align: right; font-weight: 600; color: #047857;">
-          ${entry.credit > 0 ? "LKR " + Number(entry.credit).toLocaleString("en-US", { minimumFractionDigits: 2 }) : "-"}
-        </td>
-        <td style="text-align: right; font-weight: 700;">
-          LKR ${Number(entry.runningBalance).toLocaleString("en-US", { minimumFractionDigits: 2 })}
-        </td>
-      </tr>
-    `).join("");
-
-    // 3. Dispatch Email with PDF Attachment
+    // 2. Dispatch Official Bank-Style Notification Email with PDF Attachment
     const emailResult = await sendCustomerStatementEmail({
       email: customer.email,
       name: customer.name,
@@ -88,7 +65,6 @@ export async function POST(
       totalBilled: Number(totalBilled),
       totalPaid: Number(totalPaid),
       netOutstanding: Number(netOutstanding),
-      rowsHtml,
       pdfBuffer,
     });
 
