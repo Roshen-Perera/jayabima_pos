@@ -179,50 +179,6 @@ export default function CustomerStatementModal({
         className="sm:max-w-4xl max-h-[92vh] flex flex-col print:max-h-none print:w-full print:p-0 print:border-none print:shadow-none"
         data-theme="light"
       >
-        {/* Print Styles for Multi-page A4 Statements */}
-        <style>{`
-          @media print {
-            @page {
-              size: A4 portrait;
-              margin: 12mm 15mm 15mm 15mm;
-            }
-            body {
-              background: white !important;
-              color: black !important;
-            }
-            body > *:not([role="dialog"]),
-            [data-radix-portal] > div:first-child {
-              display: none !important;
-            }
-            [role="dialog"] {
-              position: absolute !important;
-              left: 0 !important;
-              top: 0 !important;
-              width: 100% !important;
-              height: auto !important;
-              min-height: 100% !important;
-              max-height: none !important;
-              transform: none !important;
-              overflow: visible !important;
-              box-shadow: none !important;
-              border: none !important;
-              padding: 0 !important;
-              margin: 0 !important;
-              background: white !important;
-            }
-            .print\\:hidden {
-              display: none !important;
-            }
-            tr {
-              page-break-inside: avoid !important;
-              break-inside: avoid !important;
-            }
-            thead {
-              display: table-header-group !important;
-            }
-          }
-        `}</style>
-
         <DialogHeader className="print:hidden border-b pb-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <DialogTitle className="flex items-center gap-2 text-lg">
