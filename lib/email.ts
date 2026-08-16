@@ -560,6 +560,7 @@ interface SendCustomerStatementEmailParams {
   totalPaid: number;
   netOutstanding: number;
   rowsHtml: string;
+  pdfBuffer?: Buffer;
 }
 
 export async function sendCustomerStatementEmail({
@@ -571,12 +572,24 @@ export async function sendCustomerStatementEmail({
   totalPaid,
   netOutstanding,
   rowsHtml,
+  pdfBuffer,
 }: SendCustomerStatementEmailParams) {
   try {
+    const attachments = pdfBuffer
+      ? [
+          {
+            filename: `Statement_${ref}.pdf`,
+            content: pdfBuffer,
+            contentType: "application/pdf",
+          },
+        ]
+      : [];
+
     const info = await transporter.sendMail({
       from: DEFAULT_FROM,
       to: email,
       subject: `Official Statement of Account (${statementDateStr}) - JAYABIMA HARDWARE`,
+      attachments,
       html: `
         <!DOCTYPE html>
         <html>
