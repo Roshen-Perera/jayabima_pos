@@ -315,7 +315,7 @@ export default function CustomerStatementModal({
                   <th className="p-2.5">Date</th>
                   <th className="p-2.5">Ref #</th>
                   <th className="p-2.5">Type</th>
-                  <th className="p-2.5">Description</th>
+                  <th className="p-2.5 max-w-[190px]">Description</th>
                   <th className="p-2.5 text-right">Debit (+ Billed)</th>
                   <th className="p-2.5 text-right">Credit (- Paid)</th>
                   <th className="p-2.5 text-right">Running Balance</th>
@@ -346,7 +346,7 @@ export default function CustomerStatementModal({
                           </Badge>
                         )}
                       </td>
-                      <td className="p-2.5 text-muted-foreground max-w-xs truncate" title={entry.description}>
+                      <td className="p-2.5 text-muted-foreground max-w-[190px] truncate" title={entry.description}>
                         {entry.description}
                       </td>
                       <td className="p-2.5 text-right font-medium whitespace-nowrap">
