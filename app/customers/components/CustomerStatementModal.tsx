@@ -63,7 +63,172 @@ export default function CustomerStatementModal({
   const [customEndDate, setCustomEndDate] = useState<string>("");
 
   const handlePrint = () => {
-    window.print();
+    if (!customer) return;
+
+    const iframe = document.createElement("iframe");
+    iframe.style.position = "fixed";
+    iframe.style.right = "0";
+    iframe.style.bottom = "0";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "0";
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentWindow?.document;
+    if (!doc) return;
+
+    const rowsHtml = filteredEntries.map((entry) => `
+      <tr>
+        <td style="white-space: nowrap; font-weight: 500;">${entry.dateStr}</td>
+        <td style="font-family: monospace; font-size: 10px; color: #475569;">${entry.ref}</td>
+        <td>
+          <span class="${entry.type === "INVOICE" ? "badge-debit" : "badge-credit"}">
+            ${entry.type === "INVOICE" ? "Invoice" : "Payment"}
+          </span>
+        </td>
+        <td style="color: #334155;">${entry.description}</td>
+        <td style="text-align: right; font-weight: 500;">
+          ${entry.debit > 0 ? "LKR " + entry.debit.toLocaleString("en-US", { minimumFractionDigits: 2 }) : "-"}
+        </td>
+        <td style="text-align: right; font-weight: 600; color: #047857;">
+          ${entry.credit > 0 ? "LKR " + entry.credit.toLocaleString("en-US", { minimumFractionDigits: 2 }) : "-"}
+        </td>
+        <td style="text-align: right; font-weight: 700;">
+          LKR ${entry.runningBalance.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+        </td>
+      </tr>
+    `).join("");
+
+    doc.open();
+    doc.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Account Statement - ${customer.name}</title>
+          <style>
+            @page { size: A4 portrait; margin: 12mm 15mm 15mm 15mm; }
+            * { box-sizing: border-box; }
+            body { font-family: 'Segoe UI', Arial, sans-serif; color: #0f172a; margin: 0; padding: 0; font-size: 11px; background: #ffffff; }
+            .header-table { width: 100%; border-bottom: 2px solid #0f172a; padding-bottom: 12px; margin-bottom: 15px; }
+            .header-table td { vertical-align: top; }
+            .store-name { font-size: 16px; font-weight: bold; text-transform: uppercase; color: #0f172a; margin: 0 0 4px 0; }
+            .store-sub { font-size: 10px; color: #64748b; margin: 2px 0; }
+            .doc-title { text-align: right; font-size: 11px; font-weight: bold; text-transform: uppercase; color: #2563eb; letter-spacing: 0.5px; }
+            .doc-meta { text-align: right; font-size: 10px; color: #64748b; margin-top: 4px; }
+            
+            .info-card { width: 100%; margin-bottom: 15px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; }
+            .info-card td { vertical-align: top; }
+            .cust-name { font-size: 14px; font-weight: bold; color: #0f172a; margin-bottom: 4px; }
+            .cust-detail { font-size: 10px; color: #475569; margin: 2px 0; }
+
+            .stat-box { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 4px; padding: 6px 10px; text-align: center; }
+            .stat-label { font-size: 9px; font-weight: bold; text-transform: uppercase; color: #64748b; }
+            .stat-val { font-size: 11px; font-weight: bold; margin-top: 2px; }
+
+            .ledger-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+            .ledger-table th { background: #f1f5f9; color: #334155; font-size: 9px; font-weight: bold; text-transform: uppercase; padding: 8px 10px; border-top: 1px solid #cbd5e1; border-bottom: 2px solid #cbd5e1; text-align: left; }
+            .ledger-table td { padding: 8px 10px; border-bottom: 1px solid #e2e8f0; font-size: 10px; vertical-align: top; }
+            .ledger-table tr:nth-child(even) { background-color: #fafafa; }
+            .ledger-table tr { page-break-inside: avoid; break-inside: avoid; }
+            .ledger-table thead { display: table-header-group; }
+            
+            .badge-debit { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 9px; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-weight: 600; }
+            .badge-credit { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 9px; background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; font-weight: 600; }
+
+            .footer-table { width: 100%; margin-top: 20px; border-top: 1px solid #cbd5e1; padding-top: 10px; font-size: 10px; color: #64748b; }
+          </style>
+        </head>
+        <body>
+          <table class="header-table">
+            <tr>
+              <td>
+                <img src="/dwd.png" style="height: 48px; width: auto; object-fit: contain; margin-bottom: 4px;" alt="Logo" />
+                <div class="store-sub">No 28/D, Rathnapura Road, Diurumpitiya, Getaheththa</div>
+                <div class="store-sub">Tel: 0777187729 / 0362231535</div>
+              </td>
+              <td style="text-align: right;">
+                <div class="doc-title">OFFICIAL STATEMENT OF ACCOUNT</div>
+                <div class="doc-meta">Date Generated: ${statementDateStr}</div>
+                <div class="doc-meta" style="font-family: monospace;">Ref: STMT-${customer.id?.slice(-6)?.toUpperCase() || "CUST"}</div>
+              </td>
+            </tr>
+          </table>
+
+          <table class="info-card">
+            <tr>
+              <td style="width: 55%;">
+                <div style="font-size: 9px; font-weight: bold; text-transform: uppercase; color: #64748b; margin-bottom: 4px;">Statement For Customer</div>
+                <div class="cust-name">${customer.name}</div>
+                ${customer.phone ? `<div class="cust-detail">Phone: ${customer.phone}</div>` : ""}
+                ${customer.email ? `<div class="cust-detail">Email: ${customer.email}</div>` : ""}
+                ${customer.address ? `<div class="cust-detail">Address: ${customer.address}</div>` : ""}
+              </td>
+              <td style="width: 45%;">
+                <table style="width: 100%; border-collapse: separate; border-spacing: 4px;">
+                  <tr>
+                    <td class="stat-box">
+                      <div class="stat-label">Total Billed</div>
+                      <div class="stat-val" style="color: #0f172a;">LKR ${totalBilled.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
+                    </td>
+                    <td class="stat-box">
+                      <div class="stat-label">Total Paid</div>
+                      <div class="stat-val" style="color: #047857;">LKR ${totalPaid.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
+                    </td>
+                    <td class="stat-box">
+                      <div class="stat-label">Net Owed</div>
+                      <div class="stat-val" style="color: ${netOutstanding > 0 ? "#dc2626" : "#047857"};">LKR ${netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+
+          <table class="ledger-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Ref #</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th style="text-align: right;">Debit (+ Billed)</th>
+                <th style="text-align: right;">Credit (- Paid)</th>
+                <th style="text-align: right;">Running Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${filteredEntries.length === 0 ? `
+                <tr>
+                  <td colspan="7" style="text-align: center; padding: 20px; color: #64748b; font-style: italic;">
+                    No transaction ledger history recorded for the selected period.
+                  </td>
+                </tr>
+              ` : rowsHtml}
+            </tbody>
+          </table>
+
+          <table class="footer-table">
+            <tr>
+              <td>Please review your account statement. If you have questions regarding any transaction, please contact us.</td>
+              <td style="text-align: right; font-weight: bold; color: #0f172a;">
+                Current Outstanding Balance: LKR ${netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+              </td>
+            </tr>
+          </table>
+        </body>
+      </html>
+    `);
+    doc.close();
+
+    iframe.contentWindow?.focus();
+    setTimeout(() => {
+      iframe.contentWindow?.print();
+      setTimeout(() => {
+        if (document.body.contains(iframe)) {
+          document.body.removeChild(iframe);
+        }
+      }, 1000);
+    }, 300);
   };
 
   // Build and compute chronological ledger entries with running balance
