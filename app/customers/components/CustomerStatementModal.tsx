@@ -64,6 +64,48 @@ export default function CustomerStatementModal({
   const [dateFilter, setDateFilter] = useState<string>("all");
   const [customStartDate, setCustomStartDate] = useState<string>("");
   const [customEndDate, setCustomEndDate] = useState<string>("");
+  const [sendingEmail, setSendingEmail] = useState<boolean>(false);
+
+  const handleEmailStatement = async () => {
+    if (!customer) return;
+
+    if (!customer.email) {
+      alert.error(
+        "No Email Configured",
+        `Customer "${customer.name}" does not have an email address configured.`
+      );
+      return;
+    }
+
+    try {
+      setSendingEmail(true);
+      const res = await fetch(`/api/customers/${customer.id}/email-statement`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          filteredEntries,
+          totalBilled,
+          totalPaid,
+          netOutstanding,
+          dateFilter,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to send email statement.");
+      }
+
+      alert.success(
+        "Statement Emailed!",
+        `Official account statement successfully sent to ${customer.email}.`
+      );
+    } catch (err: any) {
+      alert.error("Email Sending Failed", err.message || "Could not send statement email.");
+    } finally {
+      setSendingEmail(false);
+    }
+  };
 
   const handlePrint = () => {
     if (!customer) return;
