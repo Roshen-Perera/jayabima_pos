@@ -24,6 +24,7 @@ import {
   ArrowUpRight,
   Calendar,
   CreditCard,
+  Download,
   FileSpreadsheet,
   Loader2,
   Mail,
@@ -65,6 +66,49 @@ export default function CustomerStatementModal({
   const [customStartDate, setCustomStartDate] = useState<string>("");
   const [customEndDate, setCustomEndDate] = useState<string>("");
   const [sendingEmail, setSendingEmail] = useState<boolean>(false);
+  const [downloadingPdf, setDownloadingPdf] = useState<boolean>(false);
+
+  const handleDownloadPdf = async () => {
+    if (!customer) return;
+
+    try {
+      setDownloadingPdf(true);
+      const res = await fetch(`/api/customers/${customer.id}/pdf-statement`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          filteredEntries,
+          totalBilled,
+          totalPaid,
+          netOutstanding,
+          dateFilter,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to generate PDF download.");
+      }
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `Statement_STMT-${customer.id?.slice(-6)?.toUpperCase() || "CUST"}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.remove();
+
+      alert.success(
+        "PDF Downloaded!",
+        `Statement_STMT-${customer.id?.slice(-6)?.toUpperCase() || "CUST"}.pdf has been saved to your downloads.`
+      );
+    } catch (err: any) {
+      alert.error("Download Failed", err.message || "Could not download PDF statement.");
+    } finally {
+      setDownloadingPdf(false);
+    }
+  };
 
   const handleEmailStatement = async () => {
     if (!customer) return;
@@ -399,8 +443,22 @@ export default function CustomerStatementModal({
               Customer Account Statement &amp; Ledger
             </DialogTitle>
 
-            {/* Print, Email & Action Controls */}
-            <div className="flex items-center gap-2">
+            {/* Print, Email, Download & Action Controls */}
+            <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDownloadPdf}
+                disabled={downloadingPdf}
+                className="gap-1.5 text-xs text-emerald-700 bg-emerald-50 border-emerald-200 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 font-medium"
+              >
+                {downloadingPdf ? (
+                  <Loader2 className="h-4 w-4 animate-spin text-emerald-600" />
+                ) : (
+                  <Download className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                )}
+                Download PDF
+              </Button>
               <Button
                 variant="outline"
                 size="sm"
