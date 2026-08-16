@@ -28,35 +28,34 @@ import {
   Mail,
   Printer,
 } from "lucide-react";
-import { SupplierPayment } from "../types/supplierPayment.types";
 
-interface SupplierStatementModalProps {
+interface CustomerStatementModalProps {
   open: boolean;
   onClose: () => void;
-  supplier: any | null;
-  purchases?: any[];
-  payments?: SupplierPayment[] | any[];
+  customer: any | null;
+  sales?: any[];
+  payments?: any[];
 }
 
-export type SupplierLedgerEntry = {
+export type CustomerLedgerEntry = {
   id: string;
   date: Date;
   dateStr: string;
-  type: "PURCHASE" | "PAYMENT";
+  type: "INVOICE" | "PAYMENT";
   ref: string;
   description: string;
-  debit: number;   // Purchase (+)
+  debit: number;   // Invoiced / Billed (+)
   credit: number;  // Paid (-)
   runningBalance: number;
 };
 
-export default function SupplierStatementModal({
+export default function CustomerStatementModal({
   open,
   onClose,
-  supplier,
-  purchases = [],
+  customer,
+  sales = [],
   payments = [],
-}: SupplierStatementModalProps) {
+}: CustomerStatementModalProps) {
   const [dateFilter, setDateFilter] = useState<string>("all");
   const [customStartDate, setCustomStartDate] = useState<string>("");
   const [customEndDate, setCustomEndDate] = useState<string>("");
@@ -65,30 +64,30 @@ export default function SupplierStatementModal({
 
   // Compute Chronological Ledger Entries
   const ledgerEntries = useMemo(() => {
-    if (!supplier) return [];
+    if (!customer) return [];
 
-    const entries: Omit<SupplierLedgerEntry, "runningBalance">[] = [];
+    const entries: Omit<CustomerLedgerEntry, "runningBalance">[] = [];
 
-    // 1. Map Purchase Orders (Debits)
-    purchases.forEach((po: any) => {
-      const amount = Number(po.totalAmount || po.total || 0);
-      const itemsSummary = Array.isArray(po.items) && po.items.length > 0
-        ? po.items.map((i: any) => `${i.productName || i.product?.name || "Item"} (${i.quantity}x)`).join(", ")
-        : "Purchase Order";
+    // 1. Map Sales Invoices (Debits)
+    sales.forEach((sale: any) => {
+      const amount = Number(sale.total || sale.originalTotal || 0);
+      const itemsSummary = Array.isArray(sale.items) && sale.items.length > 0
+        ? sale.items.map((i: any) => `${i.productName || i.product?.name || "Item"} (${i.quantity}x)`).join(", ")
+        : "POS Invoice Sale";
 
       entries.push({
-        id: `po-${po.id}`,
-        date: new Date(po.createdAt || po.date || Date.now()),
-        dateStr: new Date(po.createdAt || po.date || Date.now()).toLocaleDateString("en-LK"),
-        type: "PURCHASE",
-        ref: po.orderNumber || po.poNumber || `PO-${po.id.slice(-6).toUpperCase()}`,
-        description: `[Purchase Order] ${itemsSummary}`,
+        id: `sale-${sale.id}`,
+        date: new Date(sale.createdAt || Date.now()),
+        dateStr: new Date(sale.createdAt || Date.now()).toLocaleDateString("en-LK"),
+        type: "INVOICE",
+        ref: sale.reference || `INV-${sale.id.slice(-6).toUpperCase()}`,
+        description: `[Sales Invoice] ${itemsSummary}`,
         debit: amount,
         credit: 0,
       });
     });
 
-    // 2. Map Supplier Payments (Credits)
+    // 2. Map Customer Payments (Credits)
     payments.forEach((pay: any) => {
       const payMethodLabel = pay.method ? pay.method.replace("_", " ") : "Payment";
       const refStr = pay.reference ? ` (${pay.reference})` : "";
@@ -98,8 +97,8 @@ export default function SupplierStatementModal({
         date: new Date(pay.paidAt || pay.createdAt || Date.now()),
         dateStr: new Date(pay.paidAt || pay.createdAt || Date.now()).toLocaleDateString("en-LK"),
         type: "PAYMENT",
-        ref: `SUP-PAY-${pay.id.slice(-6).toUpperCase()}`,
-        description: `Payment Made [${payMethodLabel}]${refStr}${pay.note ? ` - ${pay.note}` : ""}`,
+        ref: `PAY-${pay.id.slice(-6).toUpperCase()}`,
+        description: `Payment Received [${payMethodLabel}]${refStr}${pay.note ? ` - ${pay.note}` : ""}`,
         debit: 0,
         credit: Number(pay.amount || 0),
       });
@@ -108,9 +107,9 @@ export default function SupplierStatementModal({
     // 3. Sort Chronologically (Ascending)
     entries.sort((a, b) => a.date.getTime() - b.date.getTime());
 
-    // 4. Calculate Line-by-Line Running Payable Balance
+    // 4. Calculate Line-by-Line Running Outstanding Balance
     let currentBal = 0;
-    const finalEntries: SupplierLedgerEntry[] = entries.map((entry) => {
+    const finalEntries: CustomerLedgerEntry[] = entries.map((entry) => {
       currentBal += entry.debit - entry.credit;
       return {
         ...entry,
@@ -119,7 +118,7 @@ export default function SupplierStatementModal({
     });
 
     return finalEntries;
-  }, [supplier, purchases, payments]);
+  }, [customer, sales, payments]);
 
   // Date Filter
   const filteredEntries = useMemo(() => {
@@ -158,7 +157,7 @@ export default function SupplierStatementModal({
     () => filteredEntries.reduce((sum, e) => sum + e.credit, 0),
     [filteredEntries]
   );
-  const netOutstanding = Number(supplier?.payableBalance ?? (totalBilled - totalPaid));
+  const netOutstanding = Number(customer?.creditBalance ?? (totalBilled - totalPaid));
 
   const statementDateStr = new Date().toLocaleDateString("en-LK", {
     year: "numeric",
@@ -166,14 +165,15 @@ export default function SupplierStatementModal({
     day: "numeric",
   });
 
-  const ref = `SUP-STMT-${supplier?.id?.slice(-6)?.toUpperCase() || "SUP"}`;
+  const ref = `STMT-${customer?.id?.slice(-6)?.toUpperCase() || "CUST"}`;
 
+  // Download Vector PDF Handler
   const handleDownloadPdf = async () => {
-    if (!supplier) return;
+    if (!customer) return;
 
     try {
       setDownloadingPdf(true);
-      const res = await fetch(`/api/suppliers/${supplier.id}/pdf-statement`, {
+      const res = await fetch(`/api/customers/${customer.id}/pdf-statement`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -193,13 +193,13 @@ export default function SupplierStatementModal({
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `SupplierStatement_${ref}.pdf`;
+      a.download = `Statement_${ref}.pdf`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
       a.remove();
 
-      alert.success("PDF Downloaded!", `SupplierStatement_${ref}.pdf has been saved to your downloads.`);
+      alert.success("PDF Downloaded!", `Statement_${ref}.pdf has been saved to your downloads.`);
     } catch (err: any) {
       alert.error("Download Failed", err.message || "Could not download PDF statement.");
     } finally {
@@ -208,7 +208,7 @@ export default function SupplierStatementModal({
   };
 
   const handlePrint = () => {
-    if (!supplier) return;
+    if (!customer) return;
 
     const iframe = document.createElement("iframe");
     iframe.style.position = "fixed";
@@ -227,8 +227,8 @@ export default function SupplierStatementModal({
         <td style="white-space: nowrap; font-weight: 500;">${entry.dateStr}</td>
         <td style="font-family: monospace; font-size: 10px; color: #475569;">${entry.ref}</td>
         <td>
-          <span class="${entry.type === "PURCHASE" ? "badge-debit" : "badge-credit"}">
-            ${entry.type === "PURCHASE" ? "Purchase" : "Payment"}
+          <span class="${entry.type === "INVOICE" ? "badge-debit" : "badge-credit"}">
+            ${entry.type === "INVOICE" ? "Invoice" : "Payment"}
           </span>
         </td>
         <td style="color: #334155;">${entry.description}</td>
@@ -249,7 +249,7 @@ export default function SupplierStatementModal({
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Supplier Statement - ${supplier.name}</title>
+          <title>Customer Statement - ${customer.name}</title>
           <style>
             @page { size: A4 portrait; margin: 12mm 15mm 15mm 15mm; }
             * { box-sizing: border-box; }
@@ -294,9 +294,9 @@ export default function SupplierStatementModal({
                 <div class="store-sub">Tel: 0777187729 / 0362231535</div>
               </td>
               <td style="text-align: right;">
-                <div class="doc-title">SUPPLIER ACCOUNTS PAYABLE STATEMENT</div>
+                <div class="doc-title">OFFICIAL STATEMENT OF ACCOUNT</div>
                 <div class="doc-meta">Date Generated: ${statementDateStr}</div>
-                <div class="doc-meta" style="font-family: monospace;">Ref: SUP-STMT-${supplier.id?.slice(-6)?.toUpperCase() || "SUP"}</div>
+                <div class="doc-meta" style="font-family: monospace;">Ref: ${ref}</div>
               </td>
             </tr>
           </table>
@@ -304,17 +304,17 @@ export default function SupplierStatementModal({
           <table class="info-card">
             <tr>
               <td style="width: 55%;">
-                <div style="font-size: 9px; font-weight: bold; text-transform: uppercase; color: #64748b; margin-bottom: 4px;">Statement For Supplier</div>
-                <div class="cust-name">${supplier.name}</div>
-                ${supplier.contactPerson ? `<div class="cust-detail">Contact Person: ${supplier.contactPerson}</div>` : ""}
-                ${supplier.phone ? `<div class="cust-detail">Phone: ${supplier.phone}</div>` : ""}
-                ${supplier.email ? `<div class="cust-detail">Email: ${supplier.email}</div>` : ""}
+                <div style="font-size: 9px; font-weight: bold; text-transform: uppercase; color: #64748b; margin-bottom: 4px;">Statement For Customer</div>
+                <div class="cust-name">${customer.name}</div>
+                ${customer.phone ? `<div class="cust-detail">Phone: ${customer.phone}</div>` : ""}
+                ${customer.email ? `<div class="cust-detail">Email: ${customer.email}</div>` : ""}
+                ${customer.address ? `<div class="cust-detail">Address: ${customer.address}</div>` : ""}
               </td>
               <td style="width: 45%;">
                 <table style="width: 100%; border-collapse: separate; border-spacing: 4px;">
                   <tr>
                     <td class="stat-box">
-                      <div class="stat-label">Purchases</div>
+                      <div class="stat-label">Total Billed</div>
                       <div class="stat-val" style="color: #0f172a;">LKR ${totalBilled.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
                     </td>
                     <td class="stat-box">
@@ -322,7 +322,7 @@ export default function SupplierStatementModal({
                       <div class="stat-val" style="color: #047857;">LKR ${totalPaid.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
                     </td>
                     <td class="stat-box">
-                      <div class="stat-label">Net Payable</div>
+                      <div class="stat-label">Net Outstanding</div>
                       <div class="stat-val" style="color: ${netOutstanding > 0 ? "#dc2626" : "#047857"};">LKR ${netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}</div>
                     </td>
                   </tr>
@@ -338,16 +338,16 @@ export default function SupplierStatementModal({
                 <th>Ref #</th>
                 <th>Type</th>
                 <th>Description</th>
-                <th style="text-align: right;">Purchase (+)</th>
-                <th style="text-align: right;">Payment (-)</th>
-                <th style="text-align: right;">Payable Balance</th>
+                <th style="text-align: right;">Billed (+)</th>
+                <th style="text-align: right;">Paid (-)</th>
+                <th style="text-align: right;">Balance</th>
               </tr>
             </thead>
             <tbody>
               ${filteredEntries.length === 0 ? `
                 <tr>
                   <td colspan="7" style="text-align: center; padding: 20px; color: #64748b; font-style: italic;">
-                    No purchase ledger history recorded for the selected period.
+                    No ledger transactions recorded for the selected period.
                   </td>
                 </tr>
               ` : rowsHtml}
@@ -356,9 +356,9 @@ export default function SupplierStatementModal({
 
           <table class="footer-table">
             <tr>
-              <td>Official Supplier Accounts Payable Statement generated from Jayabima Hardware POS.</td>
+              <td>Official Statement of Account generated from Jayabima Hardware POS.</td>
               <td style="text-align: right; font-weight: bold; color: #0f172a;">
-                Net Payable Balance: LKR ${netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                Net Outstanding Balance: LKR ${netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}
               </td>
             </tr>
           </table>
@@ -379,19 +379,19 @@ export default function SupplierStatementModal({
   };
 
   const handleEmailStatement = async () => {
-    if (!supplier) return;
+    if (!customer) return;
 
-    if (!supplier.email) {
+    if (!customer.email) {
       alert.error(
         "No Email Configured",
-        `Supplier "${supplier.name}" does not have an email address configured.`
+        `Customer "${customer.name}" does not have an email address configured.`
       );
       return;
     }
 
     try {
       setSendingEmail(true);
-      const res = await fetch(`/api/suppliers/${supplier.id}/email-statement`, {
+      const res = await fetch(`/api/customers/${customer.id}/email-statement`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -405,12 +405,12 @@ export default function SupplierStatementModal({
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Failed to send supplier statement email.");
+        throw new Error(data.error || "Failed to send customer statement email.");
       }
 
       alert.success(
         "Statement Emailed!",
-        `Accounts Payable statement successfully sent to ${supplier.email}.`
+        `Official statement successfully sent to ${customer.email}.`
       );
     } catch (err: any) {
       alert.error("Email Sending Failed", err.message || "Could not send statement email.");
@@ -419,7 +419,7 @@ export default function SupplierStatementModal({
     }
   };
 
-  if (!supplier) return null;
+  if (!customer) return null;
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -431,7 +431,7 @@ export default function SupplierStatementModal({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <DialogTitle className="flex items-center gap-2 text-lg">
               <FileSpreadsheet className="h-5 w-5 text-emerald-600" />
-              Supplier Accounts Payable Statement &amp; Ledger
+              Customer Statement of Account &amp; Ledger
             </DialogTitle>
 
             {/* Print, Email, Download & Action Controls */}
@@ -514,7 +514,7 @@ export default function SupplierStatementModal({
         {/* Statement Printable Body */}
         <div
           className="space-y-4 text-xs overflow-y-auto flex-1 p-2 print:overflow-visible print:p-4"
-          id="supplier-statement-printable"
+          id="customer-statement-printable"
         >
           {/* Company Branding & Header */}
           <div className="border-b pb-4">
@@ -536,30 +536,30 @@ export default function SupplierStatementModal({
 
               <div className="text-right sm:text-right w-full sm:w-auto">
                 <Badge variant="outline" className="text-xs font-bold bg-primary/10 text-primary border-primary/20 mb-1">
-                  SUPPLIER ACCOUNTS PAYABLE STATEMENT
+                  OFFICIAL STATEMENT OF ACCOUNT
                 </Badge>
                 <p className="text-[11px] text-muted-foreground">Date Generated: {statementDateStr}</p>
                 <p className="text-[11px] font-mono text-muted-foreground">
-                  Ref: SUP-STMT-{supplier.id?.slice(-6)?.toUpperCase() || "SUP"}
+                  Ref: {ref}
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Supplier Metadata Box */}
+          {/* Customer Metadata Box */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-muted/30 p-3 rounded-lg border">
             <div>
-              <p className="text-[11px] uppercase font-bold text-muted-foreground mb-1">Statement For Supplier</p>
-              <h2 className="text-sm font-bold text-foreground">{supplier.name}</h2>
-              {supplier.contactPerson && <p className="text-xs text-muted-foreground">Contact Person: {supplier.contactPerson}</p>}
-              {supplier.phone && <p className="text-xs text-muted-foreground">Phone: {supplier.phone}</p>}
-              {supplier.email && <p className="text-xs text-muted-foreground">Email: {supplier.email}</p>}
+              <p className="text-[11px] uppercase font-bold text-muted-foreground mb-1">Statement For Customer</p>
+              <h2 className="text-sm font-bold text-foreground">{customer.name}</h2>
+              {customer.phone && <p className="text-xs text-muted-foreground">Phone: {customer.phone}</p>}
+              {customer.email && <p className="text-xs text-muted-foreground">Email: {customer.email}</p>}
+              {customer.address && <p className="text-xs text-muted-foreground">Address: {customer.address}</p>}
             </div>
 
             {/* Financial Summary Cards */}
             <div className="grid grid-cols-3 gap-2 text-center sm:text-right">
               <div className="p-2 bg-background rounded border">
-                <p className="text-[10px] text-muted-foreground font-medium uppercase">Purchases</p>
+                <p className="text-[10px] text-muted-foreground font-medium uppercase">Total Billed</p>
                 <p className="text-xs font-bold text-foreground mt-0.5">
                   LKR {totalBilled.toLocaleString("en-US", { minimumFractionDigits: 2 })}
                 </p>
@@ -571,7 +571,7 @@ export default function SupplierStatementModal({
                 </p>
               </div>
               <div className="p-2 bg-background rounded border">
-                <p className="text-[10px] text-muted-foreground font-medium uppercase">Net Payable</p>
+                <p className="text-[10px] text-muted-foreground font-medium uppercase">Net Outstanding</p>
                 <p
                   className={`text-xs font-bold mt-0.5 ${
                     netOutstanding > 0 ? "text-red-600 dark:text-red-400" : "text-emerald-600"
@@ -592,16 +592,16 @@ export default function SupplierStatementModal({
                   <th className="p-2.5">Ref #</th>
                   <th className="p-2.5">Type</th>
                   <th className="p-2.5 max-w-[190px]">Description</th>
-                  <th className="p-2.5 text-right">Purchase (+)</th>
-                  <th className="p-2.5 text-right">Payment (-)</th>
-                  <th className="p-2.5 text-right">Payable Balance</th>
+                  <th className="p-2.5 text-right">Billed (+)</th>
+                  <th className="p-2.5 text-right">Paid (-)</th>
+                  <th className="p-2.5 text-right">Balance</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
                 {filteredEntries.length === 0 ? (
                   <tr>
                     <td colSpan={7} className="p-6 text-center text-muted-foreground italic">
-                      No purchase ledger history recorded for the selected period.
+                      No ledger transactions recorded for the selected period.
                     </td>
                   </tr>
                 ) : (
@@ -612,9 +612,9 @@ export default function SupplierStatementModal({
                         {entry.ref}
                       </td>
                       <td className="p-2.5 whitespace-nowrap">
-                        {entry.type === "PURCHASE" ? (
+                        {entry.type === "INVOICE" ? (
                           <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 text-[10px] gap-0.5">
-                            <ArrowUpRight className="w-3 h-3 text-blue-600" /> Purchase
+                            <ArrowUpRight className="w-3 h-3 text-blue-600" /> Invoice
                           </Badge>
                         ) : (
                           <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 text-[10px] gap-0.5">
@@ -652,10 +652,10 @@ export default function SupplierStatementModal({
           {/* Statement Footer */}
           <div className="border-t pt-3 flex flex-col sm:flex-row justify-between items-start sm:items-center text-[11px] text-muted-foreground gap-2">
             <p>
-              Official Accounts Payable Statement for supplier transactions at Jayabima Hardware &amp; Stores.
+              Official Statement of Account for customer transactions at Jayabima Hardware &amp; Stores.
             </p>
             <div className="font-semibold text-foreground">
-              Current Outstanding Payable: LKR {netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+              Current Outstanding Balance: LKR {netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}
             </div>
           </div>
         </div>
