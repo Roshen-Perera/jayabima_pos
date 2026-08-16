@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/rbac/api-guard";
 import { sendCustomerStatementEmail } from "@/lib/email";
+import { generateCustomerStatementPDF } from "@/lib/pdf-statement";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(
@@ -37,6 +38,25 @@ export async function POST(
       day: "numeric",
     });
 
+    const ref = `STMT-${customer.id.slice(-6).toUpperCase()}`;
+
+    // 1. Generate Official Vector A4 PDF Attachment Buffer
+    const pdfBuffer = await generateCustomerStatementPDF({
+      customer: {
+        name: customer.name,
+        phone: customer.phone,
+        email: customer.email,
+        address: customer.address,
+      },
+      statementDateStr,
+      ref,
+      totalBilled: Number(totalBilled),
+      totalPaid: Number(totalPaid),
+      netOutstanding: Number(netOutstanding),
+      entries: filteredEntries,
+    });
+
+    // 2. Renders fallback HTML rows for email clients
     const rowsHtml = filteredEntries.map((entry: any) => `
       <tr>
         <td style="white-space: nowrap; font-weight: 500;">${entry.dateStr}</td>
@@ -59,15 +79,17 @@ export async function POST(
       </tr>
     `).join("");
 
+    // 3. Dispatch Email with PDF Attachment
     const emailResult = await sendCustomerStatementEmail({
       email: customer.email,
       name: customer.name,
       statementDateStr,
-      ref: `STMT-${customer.id.slice(-6).toUpperCase()}`,
+      ref,
       totalBilled: Number(totalBilled),
       totalPaid: Number(totalPaid),
       netOutstanding: Number(netOutstanding),
       rowsHtml,
+      pdfBuffer,
     });
 
     if (!emailResult.success) {
