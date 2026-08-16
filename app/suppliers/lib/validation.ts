@@ -30,14 +30,27 @@ export const purchaseOrderSchema = z.object({
 
 export type PurchaseOrderFormData = z.infer<typeof purchaseOrderSchema>;
 
-export const supplierPaymentSchema = z.object({
-    supplierId: z.string().min(1, "Supplier is required"),
-    amount: z.number().positive("Amount must be greater than 0"),
-    method: z.enum(["CASH", "BANK_TRANSFER", "CHEQUE"]),
-    reference: z.string().optional(),
-    chequeDate: z.string().optional(),  // ISO date string
-    note: z.string().optional(),
-    paidAt: z.string().optional(),      // ISO datetime string (defaults to now)
-});
+export const supplierPaymentSchema = z
+    .object({
+        supplierId: z.string().min(1, "Supplier is required"),
+        amount: z.coerce.number().positive("Payment amount must be greater than 0"),
+        method: z.enum(["CASH", "BANK_TRANSFER", "CHEQUE"]),
+        reference: z.string().optional().nullable(),
+        chequeDate: z.string().optional().nullable(),  // ISO date string
+        note: z.string().optional().nullable(),
+        paidAt: z.string().optional().nullable(),      // ISO datetime string (defaults to now)
+    })
+    .refine(
+        (data) => {
+            if (data.method === "CHEQUE") {
+                return !!data.reference && data.reference.trim().length > 0;
+            }
+            return true;
+        },
+        {
+            message: "Cheque number is required for Cheque payments",
+            path: ["reference"],
+        }
+    );
 
 export type SupplierPaymentFormData = z.infer<typeof supplierPaymentSchema>;

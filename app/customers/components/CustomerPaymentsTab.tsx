@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { alert } from "@/lib/alert";
-import { useSupplierStore } from "@/store/supplierStore";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -34,56 +33,74 @@ import {
   FileCheck2,
   Loader2,
   Plus,
+  Printer,
   Receipt,
+  UserCheck,
+  Users,
 } from "lucide-react";
-import { SupplierPayment, SupplierPaymentMethod } from "../types/supplierPayment.types";
+import { CustomerPayment, CustomerPaymentMethod } from "../types/customerPayment.types";
+import CustomerPaymentReceiptModal from "./CustomerPaymentReceiptModal";
 
-export const SupplierPaymentsTab = () => {
-  const [payments, setPayments] = useState<SupplierPayment[]>([]);
+export const CustomerPaymentsTab = () => {
+  const [payments, setPayments] = useState<CustomerPayment[]>([]);
   const [loading, setLoading] = useState(true);
   const [createOpen, setCreateOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [selectedSupplierFilter, setSelectedSupplierFilter] = useState<string>("all");
+  const [receiptOpen, setReceiptOpen] = useState(false);
+  const [selectedPaymentForReceipt, setSelectedPaymentForReceipt] = useState<CustomerPayment | null>(null);
 
-  const suppliers = useSupplierStore((s) => s.suppliers);
-  const fetchSuppliers = useSupplierStore((s) => s.fetchSuppliers);
+  const [customers, setCustomers] = useState<any[]>([]);
+  const [selectedCustomerFilter, setSelectedCustomerFilter] = useState<string>("all");
 
   // Form State
-  const [supplierId, setSupplierId] = useState("");
+  const [customerId, setCustomerId] = useState("");
   const [amount, setAmount] = useState("");
-  const [method, setMethod] = useState<SupplierPaymentMethod>("CASH");
+  const [method, setMethod] = useState<CustomerPaymentMethod>("CASH");
   const [reference, setReference] = useState("");
   const [chequeDate, setChequeDate] = useState("");
   const [note, setNote] = useState("");
   const [paidAt, setPaidAt] = useState(new Date().toISOString().split("T")[0]);
 
-  const fetchPayments = async (suppId?: string) => {
+  const fetchCustomers = async () => {
+    try {
+      const res = await fetch("/api/customers");
+      if (res.ok) {
+        const data = await res.json();
+        setCustomers(Array.isArray(data) ? data : data.customers || []);
+      }
+    } catch (err) {
+      console.error("Error fetching customers:", err);
+    }
+  };
+
+  const fetchPayments = async (custId?: string) => {
     setLoading(true);
     try {
       const url =
-        suppId && suppId !== "all"
-          ? `/api/supplier-payments?supplierId=${suppId}`
-          : "/api/supplier-payments";
+        custId && custId !== "all"
+          ? `/api/customer-payments?customerId=${custId}`
+          : "/api/customer-payments";
       const res = await fetch(url);
       if (res.ok) {
         const data = await res.json();
         setPayments(data);
       }
     } catch (err) {
-      console.error("Error fetching supplier payments:", err);
+      console.error("Error fetching customer payments:", err);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchPayments(selectedSupplierFilter);
-  }, [selectedSupplierFilter]);
+    fetchCustomers();
+    fetchPayments(selectedCustomerFilter);
+  }, [selectedCustomerFilter]);
 
   const handleCreatePayment = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!supplierId) {
-      alert.error("Supplier required", "Please select a supplier.");
+    if (!customerId) {
+      alert.error("Customer required", "Please select a customer.");
       return;
     }
     const numAmount = parseFloat(amount);
@@ -92,13 +109,13 @@ export const SupplierPaymentsTab = () => {
       return;
     }
 
-    const selectedSupp = suppliers.find((s) => s.id === supplierId);
-    const currentBalance = Number(selectedSupp?.payableBalance || 0);
+    const selectedCust = customers.find((c) => c.id === customerId);
+    const currentBalance = Number(selectedCust?.creditBalance || 0);
 
     if (currentBalance <= 0) {
       alert.error(
-        "No Payable Balance",
-        `Supplier "${selectedSupp?.name}" has no outstanding payable balance to settle.`
+        "No Credit Owed",
+        `Customer "${selectedCust?.name}" has no outstanding credit balance to settle.`
       );
       return;
     }
@@ -106,7 +123,7 @@ export const SupplierPaymentsTab = () => {
     if (numAmount > currentBalance) {
       alert.error(
         "Overpayment Exceeded",
-        `Payment amount (LKR ${numAmount.toLocaleString()}) cannot exceed the supplier's payable balance of LKR ${currentBalance.toLocaleString("en-US", { minimumFractionDigits: 2 })}.`
+        `Payment amount (LKR ${numAmount.toLocaleString()}) cannot exceed the customer's current balance of LKR ${currentBalance.toLocaleString("en-US", { minimumFractionDigits: 2 })}.`
       );
       return;
     }
@@ -129,11 +146,11 @@ export const SupplierPaymentsTab = () => {
 
     setSubmitting(true);
     try {
-      const res = await fetch("/api/supplier-payments", {
+      const res = await fetch("/api/customer-payments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          supplierId,
+          customerId,
           amount: numAmount,
           method,
           reference: reference.trim() || undefined,
@@ -149,15 +166,17 @@ export const SupplierPaymentsTab = () => {
         throw new Error(detailsMsg);
       }
 
+      const createdPayment = await res.json();
+
       alert.success(
         "Payment Recorded!",
-        `Successfully recorded payment of LKR ${numAmount.toLocaleString("en-US", {
+        `Successfully received payment of LKR ${numAmount.toLocaleString("en-US", {
           minimumFractionDigits: 2,
         })}`
       );
 
       // Reset form
-      setSupplierId("");
+      setCustomerId("");
       setAmount("");
       setMethod("CASH");
       setReference("");
@@ -166,9 +185,13 @@ export const SupplierPaymentsTab = () => {
       setPaidAt(new Date().toISOString().split("T")[0]);
       setCreateOpen(false);
 
-      // Refresh payments & updated supplier balances
-      fetchPayments(selectedSupplierFilter);
-      fetchSuppliers();
+      // Show receipt modal
+      setSelectedPaymentForReceipt(createdPayment);
+      setReceiptOpen(true);
+
+      // Refresh data
+      fetchPayments(selectedCustomerFilter);
+      fetchCustomers();
     } catch (err: any) {
       console.error(err);
       alert.error("Error recording payment", err.message);
@@ -177,7 +200,7 @@ export const SupplierPaymentsTab = () => {
     }
   };
 
-  const getMethodBadge = (m: SupplierPaymentMethod) => {
+  const getMethodBadge = (m: CustomerPaymentMethod) => {
     switch (m) {
       case "CASH":
         return (
@@ -202,17 +225,16 @@ export const SupplierPaymentsTab = () => {
     }
   };
 
-  const activeSuppliers = suppliers.filter((s) => s.active);
-  const selectedSupplierObj = suppliers.find((s) => s.id === supplierId);
+  const selectedCustObj = customers.find((c) => c.id === customerId);
 
   return (
     <div className="space-y-4">
       {/* Header & Action */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold">Supplier Payments &amp; Accounts Payable</h2>
+          <h2 className="text-lg font-semibold">Customer Payments &amp; Accounts Receivable</h2>
           <p className="text-sm text-muted-foreground">
-            Record payments (cash, bank transfers, post-dated cheques) and track supplier balances.
+            Record payments received from customers (cash, bank transfers, cheques) to reduce credit balances.
           </p>
         </div>
 
@@ -220,30 +242,30 @@ export const SupplierPaymentsTab = () => {
           <DialogTrigger asChild>
             <Button className="gap-2">
               <Plus className="w-4 h-4" />
-              Record Payment
+              Record Customer Payment
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
             <form onSubmit={handleCreatePayment}>
               <DialogHeader>
-                <DialogTitle>Record Supplier Payment</DialogTitle>
+                <DialogTitle>Record Customer Payment</DialogTitle>
                 <DialogDescription>
-                  Enter payment details to reduce the outstanding payable balance for a supplier.
+                  Enter payment details to reduce the credit balance (receivable) for a customer.
                 </DialogDescription>
               </DialogHeader>
 
               <div className="space-y-4 py-3">
-                {/* Supplier select */}
+                {/* Customer select */}
                 <div className="grid gap-2">
-                  <Label htmlFor="paySupplier">Supplier *</Label>
-                  <Select value={supplierId} onValueChange={setSupplierId}>
-                    <SelectTrigger id="paySupplier">
-                      <SelectValue placeholder="Select supplier" />
+                  <Label htmlFor="payCust">Customer *</Label>
+                  <Select value={customerId} onValueChange={setCustomerId}>
+                    <SelectTrigger id="payCust">
+                      <SelectValue placeholder="Select customer" />
                     </SelectTrigger>
                     <SelectContent>
-                      {activeSuppliers.map((s) => (
-                        <SelectItem key={s.id} value={s.id}>
-                          {s.name} (Balance: LKR {Number(s.payableBalance).toLocaleString()})
+                      {customers.map((c) => (
+                        <SelectItem key={c.id} value={c.id}>
+                          {c.name} (Credit Owed: LKR {Number(c.creditBalance || 0).toLocaleString()})
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -251,30 +273,30 @@ export const SupplierPaymentsTab = () => {
                 </div>
 
                 {/* Show active balance indicator */}
-                {selectedSupplierObj && (
+                {selectedCustObj && (
                   <div className="p-3 bg-muted/60 rounded-md flex justify-between items-center text-xs">
-                    <span className="text-muted-foreground font-medium">Current Payable Balance:</span>
+                    <span className="text-muted-foreground font-medium">Current Credit Balance Owed:</span>
                     <span
                       className={`font-bold text-sm ${
-                        Number(selectedSupplierObj.payableBalance) > 0
+                        Number(selectedCustObj.creditBalance) > 0
                           ? "text-red-600 dark:text-red-400"
                           : "text-green-600 dark:text-green-400"
                       }`}
                     >
-                      LKR {Number(selectedSupplierObj.payableBalance).toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                      LKR {Number(selectedCustObj.creditBalance || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}
                     </span>
                   </div>
                 )}
 
                 {/* Amount */}
                 <div className="grid gap-2">
-                  <Label htmlFor="payAmount">Payment Amount (LKR) *</Label>
+                  <Label htmlFor="payCustAmount">Payment Amount (LKR) *</Label>
                   <Input
-                    id="payAmount"
+                    id="payCustAmount"
                     type="number"
                     step="0.01"
                     min="0"
-                    placeholder="e.g. 50000"
+                    placeholder="e.g. 25000"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                   />
@@ -282,12 +304,12 @@ export const SupplierPaymentsTab = () => {
 
                 {/* Payment Method */}
                 <div className="grid gap-2">
-                  <Label htmlFor="payMethod">Payment Method *</Label>
+                  <Label htmlFor="payCustMethod">Payment Method *</Label>
                   <Select
                     value={method}
-                    onValueChange={(val) => setMethod(val as SupplierPaymentMethod)}
+                    onValueChange={(val) => setMethod(val as CustomerPaymentMethod)}
                   >
-                    <SelectTrigger id="payMethod">
+                    <SelectTrigger id="payCustMethod">
                       <SelectValue placeholder="Select payment method" />
                     </SelectTrigger>
                     <SelectContent>
@@ -301,12 +323,12 @@ export const SupplierPaymentsTab = () => {
                 {/* Reference # */}
                 {(method === "BANK_TRANSFER" || method === "CHEQUE") && (
                   <div className="grid gap-2">
-                    <Label htmlFor="payRef">
+                    <Label htmlFor="payCustRef">
                       {method === "CHEQUE" ? "Cheque Number *" : "Bank Transfer Ref / Txn ID"}
                     </Label>
                     <Input
-                      id="payRef"
-                      placeholder={method === "CHEQUE" ? "e.g. CHQ-998812" : "e.g. TRX-771239"}
+                      id="payCustRef"
+                      placeholder={method === "CHEQUE" ? "e.g. CHQ-554411" : "e.g. TRX-100299"}
                       value={reference}
                       onChange={(e) => setReference(e.target.value)}
                     />
@@ -316,9 +338,9 @@ export const SupplierPaymentsTab = () => {
                 {/* Cheque Date if Cheque */}
                 {method === "CHEQUE" && (
                   <div className="grid gap-2">
-                    <Label htmlFor="payChequeDate">Cheque Date / Realization Date</Label>
+                    <Label htmlFor="payCustChequeDate">Cheque Realization Date</Label>
                     <Input
-                      id="payChequeDate"
+                      id="payCustChequeDate"
                       type="date"
                       value={chequeDate}
                       onChange={(e) => setChequeDate(e.target.value)}
@@ -328,9 +350,9 @@ export const SupplierPaymentsTab = () => {
 
                 {/* Payment Date */}
                 <div className="grid gap-2">
-                  <Label htmlFor="payDate">Date Paid *</Label>
+                  <Label htmlFor="payCustDate">Date Received *</Label>
                   <Input
-                    id="payDate"
+                    id="payCustDate"
                     type="date"
                     value={paidAt}
                     onChange={(e) => setPaidAt(e.target.value)}
@@ -339,10 +361,10 @@ export const SupplierPaymentsTab = () => {
 
                 {/* Note */}
                 <div className="grid gap-2">
-                  <Label htmlFor="payNote">Notes / Remarks (Optional)</Label>
+                  <Label htmlFor="payCustNote">Notes / Remarks (Optional)</Label>
                   <Textarea
-                    id="payNote"
-                    placeholder="e.g. Part payment for PO-20260813-1029..."
+                    id="payCustNote"
+                    placeholder="e.g. Settlement for cement credit invoice #1002..."
                     rows={2}
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
@@ -365,17 +387,17 @@ export const SupplierPaymentsTab = () => {
 
       {/* Filter Toolbar */}
       <div className="flex items-center gap-3 bg-card p-3 rounded-lg border">
-        <Building2 className="w-4 h-4 text-muted-foreground" />
-        <span className="text-xs font-medium text-muted-foreground">Filter by Supplier:</span>
+        <Users className="w-4 h-4 text-muted-foreground" />
+        <span className="text-xs font-medium text-muted-foreground">Filter by Customer:</span>
         <select
           className="border rounded-md px-3 py-1 text-sm bg-background text-foreground"
-          value={selectedSupplierFilter}
-          onChange={(e) => setSelectedSupplierFilter(e.target.value)}
+          value={selectedCustomerFilter}
+          onChange={(e) => setSelectedCustomerFilter(e.target.value)}
         >
-          <option value="all">All Suppliers</option>
-          {suppliers.map((s) => (
-            <option key={s.id} value={s.id}>
-              {s.name} (Balance: LKR {Number(s.payableBalance).toLocaleString()})
+          <option value="all">All Customers</option>
+          {customers.map((c) => (
+            <option key={c.id} value={c.id}>
+              {c.name} (Owed: LKR {Number(c.creditBalance || 0).toLocaleString()})
             </option>
           ))}
         </select>
@@ -390,9 +412,9 @@ export const SupplierPaymentsTab = () => {
       ) : payments.length === 0 ? (
         <div className="text-center py-12 border rounded-lg bg-card">
           <Receipt className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-lg font-semibold mb-2">No payment records found</h3>
+          <h3 className="text-lg font-semibold mb-2">No customer payment records</h3>
           <p className="text-muted-foreground text-sm">
-            Record supplier payments to keep track of settled debts, cash upfronts, and post-dated cheques.
+            Record payments received from customers to track settled accounts receivable, cash payments, and cheques.
           </p>
         </div>
       ) : (
@@ -402,12 +424,13 @@ export const SupplierPaymentsTab = () => {
               <table className="w-full text-sm text-left">
                 <thead className="bg-muted text-xs uppercase text-muted-foreground border-b font-medium">
                   <tr>
-                    <th className="p-3">Date</th>
-                    <th className="p-3">Supplier</th>
+                    <th className="p-3">Date Received</th>
+                    <th className="p-3">Customer</th>
                     <th className="p-3">Method</th>
                     <th className="p-3">Reference / Cheque</th>
-                    <th className="p-3 text-right">Amount</th>
+                    <th className="p-3 text-right">Amount Received</th>
                     <th className="p-3">Notes</th>
+                    <th className="p-3 text-center">Receipt</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y text-xs">
@@ -417,7 +440,7 @@ export const SupplierPaymentsTab = () => {
                         {new Date(pay.paidAt).toLocaleDateString()}
                       </td>
                       <td className="p-3 font-semibold text-foreground">
-                        {pay.supplierName || (pay as any).supplier?.name || "Unknown"}
+                        {pay.customerName || (pay as any).customer?.name || "Unknown"}
                       </td>
                       <td className="p-3">{getMethodBadge(pay.method)}</td>
                       <td className="p-3">
@@ -438,6 +461,20 @@ export const SupplierPaymentsTab = () => {
                       <td className="p-3 text-muted-foreground max-w-xs truncate">
                         {pay.note || "-"}
                       </td>
+                      <td className="p-3 text-center">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
+                          onClick={() => {
+                            setSelectedPaymentForReceipt(pay);
+                            setReceiptOpen(true);
+                          }}
+                          title="Print Receipt"
+                        >
+                          <Printer className="w-3.5 h-3.5" />
+                        </Button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -446,6 +483,14 @@ export const SupplierPaymentsTab = () => {
           </CardContent>
         </Card>
       )}
+
+      {/* Customer Payment Receipt Modal */}
+      <CustomerPaymentReceiptModal
+        open={receiptOpen}
+        onClose={() => setReceiptOpen(false)}
+        payment={selectedPaymentForReceipt}
+        customer={customers.find((c) => c.id === selectedPaymentForReceipt?.customerId)}
+      />
     </div>
   );
 };

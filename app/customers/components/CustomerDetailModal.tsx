@@ -1,11 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Supplier } from "../types/supplier.types";
-import { PurchaseOrder } from "../types/purchaseOrder.types";
-import { SupplierPayment, SupplierPaymentMethod } from "../types/supplierPayment.types";
+import { CustomerPayment, CustomerPaymentMethod } from "../types/customerPayment.types";
 import { alert } from "@/lib/alert";
-import { useSupplierStore } from "@/store/supplierStore";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,71 +25,76 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  Award,
   Banknote,
-  Building2,
   Calendar,
-  CheckCircle2,
   CreditCard,
-  FileCheck2,
+  DollarSign,
   FileText,
-  Landmark,
   Loader2,
   Mail,
   MapPin,
-  Package,
   Phone,
   Plus,
+  Printer,
   Receipt,
-  Truck,
+  ShoppingBag,
+  UserCheck,
 } from "lucide-react";
+import CustomerPaymentReceiptModal from "./CustomerPaymentReceiptModal";
 
-interface SupplierDetailModalProps {
-  supplier: Supplier | null;
+interface CustomerDetailModalProps {
+  customer: any | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onRefreshCustomers?: () => void;
 }
 
-export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
-  supplier,
+export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
+  customer,
   open,
   onOpenChange,
+  onRefreshCustomers,
 }) => {
-  const [activeTab, setActiveTab] = useState("orders");
-  const [loadingOrders, setLoadingOrders] = useState(false);
+  const [activeTab, setActiveTab] = useState("sales");
+  const [loadingSales, setLoadingSales] = useState(false);
   const [loadingPayments, setLoadingPayments] = useState(false);
-  const [loadingProducts, setLoadingProducts] = useState(false);
 
-  const [orders, setOrders] = useState<PurchaseOrder[]>([]);
-  const [payments, setPayments] = useState<SupplierPayment[]>([]);
-  const [products, setProducts] = useState<any[]>([]);
+  const [sales, setSales] = useState<any[]>([]);
+  const [payments, setPayments] = useState<CustomerPayment[]>([]);
 
-  // Payment dialog inside supplier detail
+  // Payment dialog inside customer detail
   const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
   const [payAmount, setPayAmount] = useState("");
-  const [payMethod, setPayMethod] = useState<SupplierPaymentMethod>("CASH");
+  const [payMethod, setPayMethod] = useState<CustomerPaymentMethod>("CASH");
   const [payRef, setPayRef] = useState("");
   const [payChequeDate, setPayChequeDate] = useState("");
   const [payNote, setPayNote] = useState("");
   const [submittingPayment, setSubmittingPayment] = useState(false);
 
-  const fetchSuppliers = useSupplierStore((s) => s.fetchSuppliers);
+  // Receipt modal state
+  const [receiptOpen, setReceiptOpen] = useState(false);
+  const [selectedPaymentForReceipt, setSelectedPaymentForReceipt] = useState<CustomerPayment | null>(null);
 
-  const fetchSupplierOrders = async (id: string) => {
-    setLoadingOrders(true);
+  const fetchCustomerSales = async (id: string) => {
+    setLoadingSales(true);
     try {
-      const res = await fetch(`/api/purchase-orders?supplierId=${id}`);
-      if (res.ok) setOrders(await res.json());
+      const res = await fetch(`/api/sales?customerId=${id}`);
+      if (res.ok) {
+        const data = await res.json();
+        setSales(Array.isArray(data) ? data : []);
+      }
     } catch (err) {
       console.error(err);
     } finally {
-      setLoadingOrders(false);
+      setLoadingSales(false);
     }
   };
 
-  const fetchSupplierPayments = async (id: string) => {
+  const fetchCustomerPayments = async (id: string) => {
     setLoadingPayments(true);
     try {
-      const res = await fetch(`/api/supplier-payments?supplierId=${id}`);
+      const res = await fetch(`/api/customer-payments?customerId=${id}`);
       if (res.ok) setPayments(await res.json());
     } catch (err) {
       console.error(err);
@@ -101,31 +103,14 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
     }
   };
 
-  const fetchSupplierProducts = async (id: string) => {
-    setLoadingProducts(true);
-    try {
-      const res = await fetch(`/api/inventory`);
-      if (res.ok) {
-        const data = await res.json();
-        const allProds = Array.isArray(data) ? data : data.products || [];
-        setProducts(allProds.filter((p: any) => p.supplierId === id));
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoadingProducts(false);
-    }
-  };
-
   useEffect(() => {
-    if (open && supplier) {
-      fetchSupplierOrders(supplier.id);
-      fetchSupplierPayments(supplier.id);
-      fetchSupplierProducts(supplier.id);
+    if (open && customer) {
+      fetchCustomerSales(customer.id);
+      fetchCustomerPayments(customer.id);
     }
-  }, [open, supplier]);
+  }, [open, customer]);
 
-  if (!supplier) return null;
+  if (!customer) return null;
 
   const handleRecordPayment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -135,12 +120,12 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
       return;
     }
 
-    const currentBalance = Number(supplier.payableBalance || 0);
+    const currentBalance = Number(customer.creditBalance || 0);
 
     if (currentBalance <= 0) {
       alert.error(
-        "No Payable Balance",
-        `Supplier "${supplier.name}" has no outstanding payable balance to settle.`
+        "No Credit Owed",
+        `Customer "${customer.name}" has no outstanding credit balance to settle.`
       );
       return;
     }
@@ -148,7 +133,7 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
     if (numAmt > currentBalance) {
       alert.error(
         "Overpayment Exceeded",
-        `Payment amount (LKR ${numAmt.toLocaleString()}) cannot exceed the supplier's payable balance of LKR ${currentBalance.toLocaleString("en-US", { minimumFractionDigits: 2 })}.`
+        `Payment amount (LKR ${numAmt.toLocaleString()}) cannot exceed the customer's current balance of LKR ${currentBalance.toLocaleString("en-US", { minimumFractionDigits: 2 })}.`
       );
       return;
     }
@@ -171,11 +156,11 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
 
     setSubmittingPayment(true);
     try {
-      const res = await fetch("/api/supplier-payments", {
+      const res = await fetch("/api/customer-payments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          supplierId: supplier.id,
+          customerId: customer.id,
           amount: numAmt,
           method: payMethod,
           reference: payRef.trim() || undefined,
@@ -190,9 +175,11 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
         throw new Error(detailsMsg);
       }
 
+      const createdPayment = await res.json();
+
       alert.success(
         "Payment Recorded!",
-        `Recorded LKR ${numAmt.toLocaleString("en-US", { minimumFractionDigits: 2 })} for ${supplier.name}`
+        `Received LKR ${numAmt.toLocaleString("en-US", { minimumFractionDigits: 2 })} from ${customer.name}`
       );
 
       setPayAmount("");
@@ -202,9 +189,13 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
       setPayNote("");
       setPaymentDialogOpen(false);
 
-      // Refresh payments & main store
-      fetchSupplierPayments(supplier.id);
-      fetchSuppliers();
+      // Open receipt modal
+      setSelectedPaymentForReceipt(createdPayment);
+      setReceiptOpen(true);
+
+      // Refresh payments & parent
+      fetchCustomerPayments(customer.id);
+      if (onRefreshCustomers) onRefreshCustomers();
     } catch (err: any) {
       console.error(err);
       alert.error("Payment error", err.message);
@@ -213,7 +204,7 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
     }
   };
 
-  const getMethodBadge = (m: SupplierPaymentMethod) => {
+  const getMethodBadge = (m: CustomerPaymentMethod) => {
     switch (m) {
       case "CASH":
         return (
@@ -241,37 +232,37 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="w-[95vw] sm:max-w-4xl max-h-[92vh] overflow-y-auto p-4 sm:p-6">
-          {/* Supplier Header */}
+        <DialogContent className="sm:max-w-220 max-h-[92vh] overflow-y-auto p-6">
+          {/* Customer Header */}
           <DialogHeader className="border-b pb-4 space-y-1">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <DialogTitle className="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2 flex-wrap">
-                  {supplier.name}
+                <DialogTitle className="text-lg sm:text-xl font-bold text-foreground flex items-center gap-2">
+                  {customer.name}
                   <Badge
-                    variant={supplier.active ? "default" : "secondary"}
-                    className={supplier.active ? "bg-emerald-600 hover:bg-emerald-700" : ""}
+                    variant={customer.isActive ? "default" : "secondary"}
+                    className={customer.isActive ? "bg-emerald-600 hover:bg-emerald-700" : ""}
                   >
-                    {supplier.active ? "Active" : "Inactive"}
+                    {customer.isActive ? "Active Customer" : "Inactive"}
                   </Badge>
                 </DialogTitle>
                 <DialogDescription className="text-xs sm:text-sm text-muted-foreground font-medium mt-1">
-                  {supplier.contactPerson ? `Contact: ${supplier.contactPerson}` : "Supplier 360 Ledger & Details"}
+                  Customer 360 History &amp; Receivables Ledger
                 </DialogDescription>
               </div>
 
-              {/* Payable balance card & quick pay */}
+              {/* Credit Balance Card & Quick Record */}
               <div className="flex items-center justify-between sm:justify-end gap-3 bg-muted/60 p-3 rounded-lg border w-full sm:w-auto">
                 <div>
-                  <p className="text-xs text-muted-foreground font-medium">Outstanding Balance</p>
+                  <p className="text-xs text-muted-foreground font-medium">Credit Balance (Owed)</p>
                   <p
                     className={`text-base sm:text-lg font-bold ${
-                      Number(supplier.payableBalance) > 0
+                      Number(customer.creditBalance || 0) > 0
                         ? "text-red-600 dark:text-red-400"
                         : "text-emerald-600 dark:text-emerald-400"
                     }`}
                   >
-                    LKR {Number(supplier.payableBalance).toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                    LKR {Number(customer.creditBalance || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}
                   </p>
                 </div>
                 <Button
@@ -285,97 +276,82 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
             </div>
           </DialogHeader>
 
-          {/* Supplier Metadata Contact Grid */}
+          {/* Customer Metadata Contact Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 py-3 text-xs bg-muted/30 p-3 rounded-lg border">
-            {supplier.phone && (
+            {customer.phone && (
               <div className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-primary shrink-0" />
-                <span className="truncate">{supplier.phone}</span>
+                <span className="truncate">{customer.phone}</span>
               </div>
             )}
-            {supplier.email && (
+            {customer.email && (
               <div className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-primary shrink-0" />
-                <span className="truncate">{supplier.email}</span>
+                <span className="truncate">{customer.email}</span>
               </div>
             )}
-            {supplier.address && (
+            {customer.address && (
               <div className="flex items-center gap-2 sm:col-span-2">
                 <MapPin className="w-3.5 h-3.5 text-primary shrink-0" />
-                <span className="truncate">{supplier.address}</span>
+                <span className="truncate">{customer.address}</span>
               </div>
             )}
-            {supplier.bankName && (
-              <div className="flex items-center gap-2 sm:col-span-2">
-                <Landmark className="w-3.5 h-3.5 text-primary shrink-0" />
-                <span className="truncate">
-                  {supplier.bankName} {supplier.accountNumber ? `(${supplier.accountNumber})` : ""}
-                </span>
-              </div>
-            )}
-            {supplier.taxId && (
-              <div className="flex items-center gap-2 sm:col-span-2">
-                <FileText className="w-3.5 h-3.5 text-primary shrink-0" />
-                <span>Tax ID: {supplier.taxId}</span>
-              </div>
-            )}
+            <div className="flex items-center gap-2">
+              <Award className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+              <span>Loyalty Points: <strong>{customer.loyaltyPoints || 0}</strong></span>
+            </div>
+            <div className="flex items-center gap-2 sm:col-span-2">
+              <ShoppingBag className="w-3.5 h-3.5 text-primary shrink-0" />
+              <span>Total Purchases: <strong>LKR {Number(customer.totalPurchases || 0).toLocaleString()}</strong></span>
+            </div>
           </div>
 
-          {/* Tabs Section: Orders | Payments | Products */}
+          {/* Tabs Section: Sales History | Payments */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-2 w-full">
-            <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 h-auto sm:h-10 gap-1 sm:gap-0">
-              <TabsTrigger value="orders" className="gap-2 text-xs sm:text-sm py-2 sm:py-1">
-                <Truck className="w-4 h-4" />
-                Orders ({orders.length})
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="sales" className="gap-2">
+                <ShoppingBag className="w-4 h-4" />
+                Sales History ({sales.length})
               </TabsTrigger>
-              <TabsTrigger value="payments" className="gap-2 text-xs sm:text-sm py-2 sm:py-1">
+              <TabsTrigger value="payments" className="gap-2">
                 <Receipt className="w-4 h-4" />
-                Payments ({payments.length})
-              </TabsTrigger>
-              <TabsTrigger value="products" className="gap-2 text-xs sm:text-sm py-2 sm:py-1">
-                <Package className="w-4 h-4" />
-                Products ({products.length})
+                Payment Ledger ({payments.length})
               </TabsTrigger>
             </TabsList>
 
-            {/* ── Purchase Orders Tab Content ────────────────────── */}
-            <TabsContent value="orders" className="pt-3">
-              {loadingOrders ? (
+            {/* ── Sales History Tab Content ────────────────────── */}
+            <TabsContent value="sales" className="pt-3">
+              {loadingSales ? (
                 <div className="flex justify-center py-8">
                   <Loader2 className="w-6 h-6 animate-spin text-primary" />
                 </div>
-              ) : orders.length === 0 ? (
+              ) : sales.length === 0 ? (
                 <div className="text-center py-8 border rounded-lg text-muted-foreground text-sm">
-                  No purchase orders found for this supplier.
+                  No purchase history found for this customer.
                 </div>
               ) : (
                 <div className="space-y-3 max-h-96 overflow-y-auto pr-1">
-                  {orders.map((po) => (
-                    <div key={po.id} className="border rounded-lg p-3 text-xs bg-card space-y-2">
+                  {sales.map((sale) => (
+                    <div key={sale.id} className="border rounded-lg p-3 text-xs bg-card space-y-2">
                       <div className="flex justify-between items-center border-b pb-2">
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-sm">{po.orderNumber}</span>
-                          <Badge
-                            variant={po.status === "RECEIVED" ? "default" : "secondary"}
-                            className={po.status === "RECEIVED" ? "bg-emerald-600 hover:bg-emerald-700" : ""}
-                          >
-                            {po.status}
-                          </Badge>
+                          <span className="font-bold text-sm">Receipt #{sale.invoiceNumber || sale.id.substring(0, 8)}</span>
+                          <Badge variant="outline">{sale.paymentMethod || "POS"}</Badge>
                           <span className="text-muted-foreground">
-                            Date: {new Date(po.createdAt).toLocaleDateString()}
+                            Date: {new Date(sale.createdAt).toLocaleDateString()}
                           </span>
                         </div>
                         <span className="font-bold text-sm text-primary">
-                          LKR {Number(po.totalAmount).toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                          LKR {Number(sale.totalAmount).toLocaleString("en-US", { minimumFractionDigits: 2 })}
                         </span>
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 pt-1">
-                        {po.items?.map((item) => (
+                        {sale.items?.map((item: any) => (
                           <div key={item.id} className="border p-1.5 rounded bg-muted/30 flex justify-between">
-                            <span className="truncate">{item.productName || (item as any).product?.name}</span>
+                            <span className="truncate">{item.productName || item.product?.name}</span>
                             <span className="font-semibold shrink-0">
-                              {item.quantity} x LKR {Number(item.cost).toFixed(2)}
+                              {item.quantity} x LKR {Number(item.price).toFixed(2)}
                             </span>
                           </div>
                         ))}
@@ -394,18 +370,19 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
                 </div>
               ) : payments.length === 0 ? (
                 <div className="text-center py-8 border rounded-lg text-muted-foreground text-sm">
-                  No payment records found for this supplier.
+                  No payment records found for this customer.
                 </div>
               ) : (
                 <div className="border rounded-lg overflow-hidden bg-card max-h-96 overflow-y-auto">
                   <table className="w-full text-xs text-left">
                     <thead className="bg-muted uppercase text-muted-foreground border-b">
                       <tr>
-                        <th className="p-2.5">Date</th>
+                        <th className="p-2.5">Date Received</th>
                         <th className="p-2.5">Method</th>
                         <th className="p-2.5">Reference / Cheque</th>
-                        <th className="p-2.5 text-right">Amount</th>
+                        <th className="p-2.5 text-right">Amount Received</th>
                         <th className="p-2.5">Note</th>
+                        <th className="p-2.5 text-center">Receipt</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y">
@@ -429,45 +406,24 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
                           <td className="p-2.5 text-muted-foreground truncate max-w-xs">
                             {pay.note || "-"}
                           </td>
+                          <td className="p-2.5 text-center">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+                              onClick={() => {
+                                setSelectedPaymentForReceipt(pay);
+                                setReceiptOpen(true);
+                              }}
+                              title="Print Receipt"
+                            >
+                              <Printer className="w-3.5 h-3.5" />
+                            </Button>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
-                </div>
-              )}
-            </TabsContent>
-
-            {/* ── Supplied Products Tab Content ─────────────────── */}
-            <TabsContent value="products" className="pt-3">
-              {loadingProducts ? (
-                <div className="flex justify-center py-8">
-                  <Loader2 className="w-6 h-6 animate-spin text-primary" />
-                </div>
-              ) : products.length === 0 ? (
-                <div className="text-center py-8 border rounded-lg text-muted-foreground text-sm">
-                  No products linked to this supplier catalog.
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-h-96 overflow-y-auto pr-1">
-                  {products.map((p) => (
-                    <div key={p.id} className="border rounded-lg p-3 text-xs bg-card space-y-1">
-                      <p className="font-bold text-sm text-foreground truncate">{p.name}</p>
-                      <p className="text-muted-foreground font-mono">SKU: {p.sku}</p>
-                      <div className="flex justify-between items-center pt-2 border-t mt-1">
-                        <span className="text-muted-foreground">Category: {p.category}</span>
-                        <Badge
-                          variant="outline"
-                          className={p.stock <= (p.minStock || 0) ? "text-red-600 border-red-200" : ""}
-                        >
-                          Stock: {p.stock}
-                        </Badge>
-                      </div>
-                      <div className="flex justify-between items-center text-xs font-semibold pt-1">
-                        <span className="text-muted-foreground">Cost: LKR {Number(p.cost).toLocaleString()}</span>
-                        <span className="text-primary">Selling: LKR {Number(p.price).toLocaleString()}</span>
-                      </div>
-                    </div>
-                  ))}
                 </div>
               )}
             </TabsContent>
@@ -486,36 +442,36 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
         <DialogContent className="sm:max-w-md">
           <form onSubmit={handleRecordPayment}>
             <DialogHeader>
-              <DialogTitle>Record Payment for {supplier.name}</DialogTitle>
+              <DialogTitle>Record Payment from {customer.name}</DialogTitle>
               <DialogDescription>
-                Current Outstanding Balance:{" "}
+                Current Credit Balance Owed:{" "}
                 <span className="font-bold text-red-600 dark:text-red-400">
-                  LKR {Number(supplier.payableBalance).toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                  LKR {Number(customer.creditBalance || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}
                 </span>
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-4 py-3">
               <div className="grid gap-2">
-                <Label htmlFor="detPayAmount">Payment Amount (LKR) *</Label>
+                <Label htmlFor="custPayAmount">Payment Amount (LKR) *</Label>
                 <Input
-                  id="detPayAmount"
+                  id="custPayAmount"
                   type="number"
                   step="0.01"
                   min="0"
-                  placeholder="e.g. 50000"
+                  placeholder="e.g. 25000"
                   value={payAmount}
                   onChange={(e) => setPayAmount(e.target.value)}
                 />
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="detPayMethod">Payment Method *</Label>
+                <Label htmlFor="custPayMethod">Payment Method *</Label>
                 <Select
                   value={payMethod}
-                  onValueChange={(val) => setPayMethod(val as SupplierPaymentMethod)}
+                  onValueChange={(val) => setPayMethod(val as CustomerPaymentMethod)}
                 >
-                  <SelectTrigger id="detPayMethod">
+                  <SelectTrigger id="custPayMethod">
                     <SelectValue placeholder="Select method" />
                   </SelectTrigger>
                   <SelectContent>
@@ -528,12 +484,12 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
 
               {(payMethod === "BANK_TRANSFER" || payMethod === "CHEQUE") && (
                 <div className="grid gap-2">
-                  <Label htmlFor="detPayRef">
+                  <Label htmlFor="custPayRef">
                     {payMethod === "CHEQUE" ? "Cheque Number *" : "Bank Transfer Ref / Txn ID"}
                   </Label>
                   <Input
-                    id="detPayRef"
-                    placeholder={payMethod === "CHEQUE" ? "e.g. CHQ-991200" : "e.g. TRX-771200"}
+                    id="custPayRef"
+                    placeholder={payMethod === "CHEQUE" ? "e.g. CHQ-554411" : "e.g. TRX-100299"}
                     value={payRef}
                     onChange={(e) => setPayRef(e.target.value)}
                   />
@@ -542,9 +498,9 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
 
               {payMethod === "CHEQUE" && (
                 <div className="grid gap-2">
-                  <Label htmlFor="detPayChequeDate">Cheque Date / Realization Date</Label>
+                  <Label htmlFor="custPayChequeDate">Cheque Realization Date</Label>
                   <Input
-                    id="detPayChequeDate"
+                    id="custPayChequeDate"
                     type="date"
                     value={payChequeDate}
                     onChange={(e) => setPayChequeDate(e.target.value)}
@@ -553,10 +509,10 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
               )}
 
               <div className="grid gap-2">
-                <Label htmlFor="detPayNote">Notes / Remarks</Label>
+                <Label htmlFor="custPayNote">Notes / Remarks</Label>
                 <Textarea
-                  id="detPayNote"
-                  placeholder="Payment notes..."
+                  id="custPayNote"
+                  placeholder="Payment remarks..."
                   rows={2}
                   value={payNote}
                   onChange={(e) => setPayNote(e.target.value)}
@@ -575,6 +531,14 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Payment Receipt Modal */}
+      <CustomerPaymentReceiptModal
+        open={receiptOpen}
+        onClose={() => setReceiptOpen(false)}
+        payment={selectedPaymentForReceipt}
+        customer={customer}
+      />
     </>
   );
 };

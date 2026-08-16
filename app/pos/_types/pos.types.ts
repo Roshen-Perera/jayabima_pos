@@ -17,7 +17,7 @@ export interface Cart {
     total: number;      // subtotal − cart discount
 }
 
-export type PaymentMethod = 'CASH' | 'CARD' | 'MOBILE' | 'OTHER';
+export type PaymentMethod = 'CASH' | 'CARD' | 'BANK_TRANSFER' | 'CHEQUE' | 'CREDIT' | 'SPLIT' | 'PARTIAL';
 export type SaleStatus = 'COMPLETED' | 'PENDING' | 'CANCELLED' | 'REFUNDED';
 
 export interface Sale {
@@ -35,6 +35,8 @@ export interface Sale {
     paymentMethod: PaymentMethod;
     cashPaid?: number;       // amount of cash handed by customer (CASH only)
     cashBalance?: number;    // change returned to customer (CASH only)
+    reference?: string;      // Cheque no. or Bank Txn ID
+    chequeDate?: string;     // Post-dated cheque realization date
     status: SaleStatus;
     createdAt: Date;
 }

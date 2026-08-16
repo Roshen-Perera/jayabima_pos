@@ -6,6 +6,7 @@ import { productCategories } from "@/data/data";
 
 import { Button } from "@/components/ui/button";
 import { useProductStore } from "@/store/productStore";
+import { useCustomerStore } from "@/store/customerStore";
 import CheckoutPanel from "./_components/CheckoutPanel";
 import ProductGrid from "./_components/ProductGrid";
 import ProductSearch from "./_components/ProductSearch";
@@ -25,6 +26,7 @@ export default function POSPage() {
   const { products } = useProductStore();
   const loadProducts = useProductStore((s) => s.loadProducts);
   const loadInactiveProducts = useProductStore((s) => s.loadInactiveProducts);
+  const loadCustomers = useCustomerStore((s) => s.loadCustomers);
   const { cart, addToCart } = usePOSStore();
 
   // UI State
@@ -49,7 +51,8 @@ export default function POSPage() {
   useEffect(() => {
     loadProducts();
     loadInactiveProducts();
-  }, [loadProducts, loadInactiveProducts]);
+    loadCustomers();
+  }, [loadProducts, loadInactiveProducts, loadCustomers]);
 
   return (
     <div className="flex h-[calc(100vh-7rem)] xl:h-[calc(100vh-7rem)] gap-4 overflow-hidden">

@@ -87,18 +87,24 @@ export function CustomerForm({
   }, [open, customer, reset]);
 
   const onSubmit = async (data: CustomerFormData) => {
+    const payload = {
+      name: data.name,
+      email: data.email ?? "",
+      phone: data.phone ?? "",
+      address: data.address ?? "",
+    };
     try {
       if (mode === "edit" && customer) {
         // Update existing customer
-        updateCustomer(customer.id, data);
+        await updateCustomer(customer.id, payload);
         alert.success(
           "Customer updated!",
           `${data.name} has been updated successfully.`,
         );
       } else {
         // Add new customer
-        addCustomer({
-          ...data,
+        await addCustomer({
+          ...payload,
           isActive: true,
         });
         alert.success(

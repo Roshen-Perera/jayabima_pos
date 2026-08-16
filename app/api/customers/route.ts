@@ -30,9 +30,9 @@ export async function POST(request: NextRequest) {
         const customer = await prisma.customer.create({
             data: {
                 name: validatedData.name,
-                email: validatedData.email,
-                phone: validatedData.phone,
-                address: validatedData.address,
+                email: validatedData.email || null,
+                phone: validatedData.phone || null,
+                address: validatedData.address || null,
                 creditBalance: 0,
                 loyaltyPoints: 0,
                 totalPurchases: 0,

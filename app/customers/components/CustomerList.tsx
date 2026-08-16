@@ -1,12 +1,16 @@
-import { Users, Mail, MapPin } from "lucide-react";
+import { Users, Mail, MapPin, ExternalLink } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCustomerStore } from "@/store/customerStore";
 import CustomerActions from "./CustomerActions";
+import { CustomerDetailModal } from "./CustomerDetailModal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const CustomerList = () => {
   const [tab, setTab] = useState("active");
+  const [selectedCustomer, setSelectedCustomer] = useState<any | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
+
   const customers = useCustomerStore((s) => s.customers);
   const inactiveCustomers = useCustomerStore((s) => s.inactiveCustomers);
   const search = useCustomerStore((s) => s.search);
@@ -19,6 +23,11 @@ const CustomerList = () => {
     loadCustomers();
     loadInactiveCustomers();
   }, [loadCustomers, loadInactiveCustomers]);
+
+  const handleOpenDetail = (customer: any) => {
+    setSelectedCustomer(customer);
+    setDetailOpen(true);
+  };
 
   const filteredCustomers = React.useMemo(() => {
     const list = tab === "active" ? customers : inactiveCustomers;
@@ -49,7 +58,11 @@ const CustomerList = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredCustomers.map((customer) => (
-                <Card key={customer.id}>
+                <Card
+                  key={customer.id}
+                  className="hover:shadow-md transition-all cursor-pointer group border hover:border-primary/50"
+                  onClick={() => handleOpenDetail(customer)}
+                >
                   <CardContent>
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center gap-3">
@@ -57,13 +70,18 @@ const CustomerList = () => {
                           <Users className="w-6 h-6 text-primary" />
                         </div>
                         <div>
-                          <p className="font-semibold">{customer.name}</p>
+                          <p className="font-semibold group-hover:text-primary transition-colors flex items-center gap-1.5">
+                            {customer.name}
+                            <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-primary" />
+                          </p>
                           <p className="text-sm text-muted-foreground">
                             {customer.phone || "No phone"}
                           </p>
                         </div>
                       </div>
-                      <CustomerActions customer={customer} type="active" />
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <CustomerActions customer={customer} type="active" />
+                      </div>
                     </div>
 
                     <div className="space-y-3">
@@ -84,11 +102,11 @@ const CustomerList = () => {
                           <p
                             className={`font-semibold ${
                               customer.creditBalance > 0
-                                ? "text-destructive"
+                                ? "text-destructive font-bold"
                                 : "text-success"
                             }`}
                           >
-                            Rs. {customer.creditBalance.toLocaleString()}
+                            Rs. {Number(customer.creditBalance || 0).toLocaleString()}
                           </p>
                         </div>
                         <div>
@@ -96,7 +114,7 @@ const CustomerList = () => {
                             Loyalty Points
                           </p>
                           <p className="font-semibold text-primary">
-                            {customer.loyaltyPoints.toLocaleString()}
+                            {Number(customer.loyaltyPoints || 0).toLocaleString()}
                           </p>
                         </div>
                       </div>
@@ -106,7 +124,7 @@ const CustomerList = () => {
                           Total Purchases
                         </p>
                         <p className="font-semibold">
-                          Rs. {customer.totalPurchases.toLocaleString()}
+                          Rs. {Number(customer.totalPurchases || 0).toLocaleString()}
                         </p>
                       </div>
                     </div>
@@ -125,7 +143,11 @@ const CustomerList = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredCustomers.map((customer) => (
-                <Card key={customer.id} className="opacity-60">
+                <Card
+                  key={customer.id}
+                  className="opacity-70 hover:opacity-90 hover:shadow-md transition-all cursor-pointer group border hover:border-primary/50"
+                  onClick={() => handleOpenDetail(customer)}
+                >
                   <CardContent>
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center gap-3">
@@ -133,13 +155,18 @@ const CustomerList = () => {
                           <Users className="w-6 h-6 text-muted-foreground" />
                         </div>
                         <div>
-                          <p className="font-semibold">{customer.name}</p>
+                          <p className="font-semibold group-hover:text-primary transition-colors flex items-center gap-1.5">
+                            {customer.name}
+                            <ExternalLink className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-primary" />
+                          </p>
                           <p className="text-sm text-muted-foreground">
                             {customer.phone || "No phone"}
                           </p>
                         </div>
                       </div>
-                      <CustomerActions customer={customer} type="inactive" />
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <CustomerActions customer={customer} type="inactive" />
+                      </div>
                     </div>
 
                     <div className="space-y-3">
@@ -164,7 +191,7 @@ const CustomerList = () => {
                                 : "text-success"
                             }`}
                           >
-                            Rs. {customer.creditBalance.toLocaleString()}
+                            Rs. {Number(customer.creditBalance || 0).toLocaleString()}
                           </p>
                         </div>
                         <div>
@@ -172,7 +199,7 @@ const CustomerList = () => {
                             Loyalty Points
                           </p>
                           <p className="font-semibold text-primary">
-                            {customer.loyaltyPoints.toLocaleString()}
+                            {Number(customer.loyaltyPoints || 0).toLocaleString()}
                           </p>
                         </div>
                       </div>
@@ -182,7 +209,7 @@ const CustomerList = () => {
                           Total Purchases
                         </p>
                         <p className="font-semibold">
-                          Rs. {customer.totalPurchases.toLocaleString()}
+                          Rs. {Number(customer.totalPurchases || 0).toLocaleString()}
                         </p>
                       </div>
                     </div>
@@ -193,6 +220,16 @@ const CustomerList = () => {
           )}
         </TabsContent>
       </Tabs>
+
+      <CustomerDetailModal
+        customer={selectedCustomer}
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
+        onRefreshCustomers={() => {
+          loadCustomers();
+          loadInactiveCustomers();
+        }}
+      />
     </div>
   );
 };

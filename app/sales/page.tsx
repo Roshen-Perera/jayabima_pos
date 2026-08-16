@@ -103,8 +103,11 @@ const Page = () => {
             <SelectItem value="all">All Payments</SelectItem>
             <SelectItem value="CASH">Cash</SelectItem>
             <SelectItem value="CARD">Card</SelectItem>
-            <SelectItem value="MOBILE">Mobile</SelectItem>
-            <SelectItem value="OTHER">Other</SelectItem>
+            <SelectItem value="BANK_TRANSFER">Bank Transfer</SelectItem>
+            <SelectItem value="CHEQUE">Cheque</SelectItem>
+            <SelectItem value="CREDIT">Credit</SelectItem>
+            <SelectItem value="PARTIAL">Partial</SelectItem>
+            <SelectItem value="SPLIT">Split</SelectItem>
           </SelectContent>
         </Select>
       </div>

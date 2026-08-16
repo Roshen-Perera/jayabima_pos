@@ -8,9 +8,9 @@ const CustomerStats = () => {
 
   // Your existing calculations - no changes needed!
   const newCustomers = customers.slice(-5); // Last 5 are new customers
-  const totalCredit = customers.reduce((sum, c) => sum + c.creditBalance, 0);
+  const totalCredit = customers.reduce((sum, c) => sum + Number(c.creditBalance || 0), 0);
   const outstandingCustomers = customers.filter(
-    (c) => c.creditBalance > 0
+    (c) => Number(c.creditBalance || 0) > 0
   ).length;
   return (
     <div>

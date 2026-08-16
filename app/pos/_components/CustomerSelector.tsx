@@ -9,12 +9,16 @@ import { Badge } from "@/components/ui/badge";
 import { User, Search, ChevronDown, X, PersonStanding } from "lucide-react";
 
 export default function CustomerSelector() {
-  const { customers } = useCustomerStore();
+  const { customers, loadCustomers } = useCustomerStore();
   const { customerId, customerName, setCustomer } = usePOSStore();
 
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    loadCustomers();
+  }, [loadCustomers]);
 
   const isWalkIn = !customerId && customerName === "Walking Customer";
   const hasCustomer = !!customerId;
@@ -79,11 +83,22 @@ export default function CustomerSelector() {
             {hasCustomer &&
               (() => {
                 const c = customers.find((x) => x.id === customerId);
-                return c ? (
-                  <p className="text-[11px] text-muted-foreground truncate">
-                    {c.phone}
-                  </p>
-                ) : null;
+                if (!c) return null;
+                const credit = Number(c.creditBalance || 0);
+                return (
+                  <div className="flex items-center gap-1.5 text-[11px] truncate">
+                    {c.phone && <span className="text-muted-foreground">{c.phone}</span>}
+                    {credit > 0 ? (
+                      <span className="font-semibold text-destructive">
+                        · Owed: Rs. {credit.toLocaleString()}
+                      </span>
+                    ) : (
+                      <span className="text-green-600 font-medium">
+                        · No Debt
+                      </span>
+                    )}
+                  </div>
+                );
               })()}
           </div>
           {isWalkIn ? (
@@ -168,32 +183,48 @@ export default function CustomerSelector() {
             )}
 
             {/* Customer list */}
-            {filtered.map((c) => (
-              <button
-                key={c.id}
-                className="w-full flex items-center gap-3 px-3 py-2.5 text-sm hover:bg-muted transition-colors text-left"
-                onClick={() => selectCustomer(c.id, c.name)}
-              >
-                <div className="flex items-center justify-center w-7 h-7 rounded-full bg-primary/10 flex-shrink-0">
-                  <User className="w-3.5 h-3.5 text-primary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium truncate">{c.name}</p>
-                  <p className="text-[11px] text-muted-foreground truncate">
-                    {c.phone}
-                    {c.email ? ` · ${c.email}` : ""}
-                  </p>
-                </div>
-                {c.loyaltyPoints > 0 && (
-                  <Badge
-                    variant="secondary"
-                    className="text-[10px] px-1.5 flex-shrink-0"
-                  >
-                    {c.loyaltyPoints} pts
-                  </Badge>
-                )}
-              </button>
-            ))}
+            {filtered.map((c) => {
+              const credit = Number(c.creditBalance || 0);
+              return (
+                <button
+                  key={c.id}
+                  className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-muted transition-colors text-left gap-2"
+                  onClick={() => selectCustomer(c.id, c.name)}
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="flex items-center justify-center w-7 h-7 rounded-full bg-primary/10 flex-shrink-0">
+                      <User className="w-3.5 h-3.5 text-primary" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-medium truncate">{c.name}</p>
+                      <p className="text-[11px] text-muted-foreground truncate">
+                        {c.phone ? c.phone : "No phone"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="text-right flex-shrink-0 space-y-0.5">
+                    {credit > 0 ? (
+                      <span className="text-[11px] font-bold text-destructive block">
+                        Owed: Rs. {credit.toLocaleString()}
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-medium text-emerald-600 block">
+                        No Debt
+                      </span>
+                    )}
+                    {c.loyaltyPoints > 0 && (
+                      <Badge
+                        variant="secondary"
+                        className="text-[9px] px-1 py-0"
+                      >
+                        {c.loyaltyPoints} pts
+                      </Badge>
+                    )}
+                  </div>
+                </button>
+              );
+            })}
 
             {filtered.length === 0 && query && (
               <div className="px-3 py-4 text-sm text-center text-muted-foreground">

@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Download, Printer, ShoppingBag } from "lucide-react";
 import { Sale } from "../_types/pos.types";
+import { useCustomerStore } from "@/store/customerStore";
 
 interface ReceiptModalProps {
   open: boolean;
@@ -17,9 +18,11 @@ interface ReceiptModalProps {
 }
 
 const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
+  const { customers } = useCustomerStore();
   if (!sale) return null;
 
   const handlePrint = () => window.print();
+  const customerObj = sale.customerId ? customers.find((c) => c.id === sale.customerId) : null;
 
   // Derived totals from sale
   const originalTotal =
@@ -221,12 +224,52 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
                 </div>
               )}
 
+            {/* Customer Account Credit Balance Statement on Receipt */}
+            {sale.customerName && sale.customerName !== "Walking Customer" && customerObj && (() => {
+              const newTotalOutstanding = Number(customerObj.creditBalance || 0);
+              const thisSaleCredit = sale.paymentMethod === "CREDIT"
+                ? sale.total
+                : sale.paymentMethod === "PARTIAL" || sale.paymentMethod === "SPLIT"
+                ? Math.max(0, sale.total - (sale.cashPaid || 0))
+                : 0;
+              const previousOutstanding = Math.max(0, newTotalOutstanding - thisSaleCredit);
+
+              return (
+                <div className="border-t border-dashed pt-2 mt-2 space-y-1 text-xs text-left bg-muted/30 p-2 rounded">
+                  <p className="font-bold text-center text-foreground text-[11px] uppercase tracking-wide mb-1">
+                    Account Credit Statement
+                  </p>
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>Previous Outstanding:</span>
+                    <span>
+                      Rs. {previousOutstanding.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
+                  </div>
+                  {thisSaleCredit > 0 && (
+                    <div className="flex justify-between text-amber-700 dark:text-amber-400 font-medium">
+                      <span>+ This Bill Credit:</span>
+                      <span>
+                        Rs. {thisSaleCredit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex justify-between font-bold text-destructive border-t border-dashed pt-1 mt-1">
+                    <span>Total Outstanding Balance:</span>
+                    <span>
+                      Rs. {newTotalOutstanding.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
+                  </div>
+                </div>
+              );
+            })()}
+
             {sale.userName && (
               <p>
                 <span className="text-muted-foreground">Served by: </span>
                 <span className="font-medium">{sale.userName}</span>
               </p>
             )}
+
             <p className="text-muted-foreground mt-2">
               Thank you for your purchase!
             </p>
