@@ -30,6 +30,7 @@ import {
   Calendar,
   CreditCard,
   DollarSign,
+  FileSpreadsheet,
   FileText,
   Loader2,
   Mail,
@@ -42,6 +43,7 @@ import {
   UserCheck,
 } from "lucide-react";
 import CustomerPaymentReceiptModal from "./CustomerPaymentReceiptModal";
+import CustomerStatementModal from "./CustomerStatementModal";
 
 interface CustomerDetailModalProps {
   customer: any | null;
