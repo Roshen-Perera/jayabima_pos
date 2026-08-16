@@ -64,7 +64,7 @@ export async function generateCustomerStatementPDF(data: GenerateStatementPDFPar
     const iconSize = 36;
     page.drawImage(iconEmbed, {
       x: margin,
-      y: height - 76,
+      y: height - 70,
       width: iconSize,
       height: iconSize,
     });
