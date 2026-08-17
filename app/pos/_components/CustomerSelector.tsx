@@ -92,8 +92,12 @@ export default function CustomerSelector() {
                       <span className="font-semibold text-destructive">
                         · Owed: Rs. {credit.toLocaleString()}
                       </span>
+                    ) : credit < 0 ? (
+                      <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                        · Deposit: Rs. {Math.abs(credit).toLocaleString()}
+                      </span>
                     ) : (
-                      <span className="text-green-600 font-medium">
+                      <span className="text-muted-foreground font-medium">
                         · No Debt
                       </span>
                     )}
@@ -208,8 +212,12 @@ export default function CustomerSelector() {
                       <span className="text-[11px] font-bold text-destructive block">
                         Owed: Rs. {credit.toLocaleString()}
                       </span>
+                    ) : credit < 0 ? (
+                      <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 block">
+                        Deposit: Rs. {Math.abs(credit).toLocaleString()}
+                      </span>
                     ) : (
-                      <span className="text-[10px] font-medium text-emerald-600 block">
+                      <span className="text-[10px] font-medium text-muted-foreground block">
                         No Debt
                       </span>
                     )}

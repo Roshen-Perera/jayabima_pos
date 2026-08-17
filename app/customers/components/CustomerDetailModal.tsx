@@ -125,23 +125,7 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
       return;
     }
 
-    const currentBalance = Number(customer.creditBalance || 0);
-
-    if (currentBalance <= 0) {
-      alert.error(
-        "No Credit Owed",
-        `Customer "${customer.name}" has no outstanding credit balance to settle.`
-      );
-      return;
-    }
-
-    if (numAmt > currentBalance) {
-      alert.error(
-        "Overpayment Exceeded",
-        `Payment amount (LKR ${numAmt.toLocaleString()}) cannot exceed the customer's current balance of LKR ${currentBalance.toLocaleString("en-US", { minimumFractionDigits: 2 })}.`
-      );
-      return;
-    }
+    // Payment amounts of any positive value are allowed. Overpayments automatically become advance deposits.
 
     if (payMethod === "CHEQUE") {
       if (!payRef.trim()) {
@@ -258,18 +242,28 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
 
               {/* Credit Balance Card & Quick Record */}
               <div className="flex items-center justify-between sm:justify-end gap-3 bg-muted/60 p-3 rounded-lg border w-full sm:w-auto">
-                <div>
-                  <p className="text-xs text-muted-foreground font-medium">Credit Balance (Owed)</p>
-                  <p
-                    className={`text-base sm:text-lg font-bold ${
-                      Number(customer.creditBalance || 0) > 0
-                        ? "text-red-600 dark:text-red-400"
-                        : "text-emerald-600 dark:text-emerald-400"
-                    }`}
-                  >
-                    LKR {Number(customer.creditBalance || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}
-                  </p>
-                </div>
+                {(() => {
+                  const bal = Number(customer.creditBalance || 0);
+                  return (
+                    <div>
+                      <p className="text-xs text-muted-foreground font-medium">
+                        {bal > 0 ? "Credit Balance (Owed)" : bal < 0 ? "Advance Deposit / Credit" : "Credit Balance"}
+                      </p>
+                      <p
+                        className={`text-base sm:text-lg font-bold ${
+                          bal > 0
+                            ? "text-red-600 dark:text-red-400"
+                            : bal < 0
+                            ? "text-emerald-600 dark:text-emerald-400"
+                            : "text-muted-foreground"
+                        }`}
+                      >
+                        LKR {Math.abs(bal).toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                        {bal < 0 && <span className="text-xs font-normal ml-1 text-emerald-600">(Store Deposit)</span>}
+                      </p>
+                    </div>
+                  );
+                })()}
                 <div className="flex items-center gap-2 shrink-0">
                   <Button
                     size="sm"
@@ -460,10 +454,16 @@ export const CustomerDetailModal: React.FC<CustomerDetailModalProps> = ({
             <DialogHeader>
               <DialogTitle>Record Payment from {customer.name}</DialogTitle>
               <DialogDescription>
-                Current Credit Balance Owed:{" "}
-                <span className="font-bold text-red-600 dark:text-red-400">
-                  LKR {Number(customer.creditBalance || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}
-                </span>
+                Current Account Balance:{" "}
+                {(() => {
+                  const bal = Number(customer.creditBalance || 0);
+                  return (
+                    <span className={`font-bold ${bal > 0 ? "text-red-600 dark:text-red-400" : bal < 0 ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground"}`}>
+                      LKR {Math.abs(bal).toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                      {bal > 0 ? " (Debt Owed)" : bal < 0 ? " (Advance Deposit)" : " (Settled)"}
+                    </span>
+                  );
+                })()}
               </DialogDescription>
             </DialogHeader>
 

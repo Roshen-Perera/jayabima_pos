@@ -97,16 +97,22 @@ const CustomerList = () => {
                       <div className="grid grid-cols-2 gap-3 pt-3 border-t border-border">
                         <div>
                           <p className="text-xs text-muted-foreground">
-                            Credit Balance
+                            {Number(customer.creditBalance || 0) < 0 ? "Advance Deposit" : "Credit Balance"}
                           </p>
                           <p
                             className={`font-semibold ${
-                              customer.creditBalance > 0
+                              Number(customer.creditBalance || 0) > 0
                                 ? "text-destructive font-bold"
-                                : "text-success"
+                                : Number(customer.creditBalance || 0) < 0
+                                ? "text-emerald-600 dark:text-emerald-400 font-bold"
+                                : "text-muted-foreground"
                             }`}
                           >
-                            Rs. {Number(customer.creditBalance || 0).toLocaleString()}
+                            {Number(customer.creditBalance || 0) > 0
+                              ? `Rs. ${Number(customer.creditBalance || 0).toLocaleString()}`
+                              : Number(customer.creditBalance || 0) < 0
+                              ? `Rs. ${Math.abs(Number(customer.creditBalance || 0)).toLocaleString()}`
+                              : "Rs. 0"}
                           </p>
                         </div>
                         <div>
@@ -182,16 +188,22 @@ const CustomerList = () => {
                       <div className="grid grid-cols-2 gap-3 pt-3 border-t border-border">
                         <div>
                           <p className="text-xs text-muted-foreground">
-                            Credit Balance
+                            {Number(customer.creditBalance || 0) < 0 ? "Advance Deposit" : "Credit Balance"}
                           </p>
                           <p
                             className={`font-semibold ${
-                              customer.creditBalance > 0
+                              Number(customer.creditBalance || 0) > 0
                                 ? "text-destructive"
-                                : "text-success"
+                                : Number(customer.creditBalance || 0) < 0
+                                ? "text-emerald-600 dark:text-emerald-400 font-semibold"
+                                : "text-muted-foreground"
                             }`}
                           >
-                            Rs. {Number(customer.creditBalance || 0).toLocaleString()}
+                            {Number(customer.creditBalance || 0) > 0
+                              ? `Rs. ${Number(customer.creditBalance || 0).toLocaleString()}`
+                              : Number(customer.creditBalance || 0) < 0
+                              ? `Rs. ${Math.abs(Number(customer.creditBalance || 0)).toLocaleString()}`
+                              : "Rs. 0"}
                           </p>
                         </div>
                         <div>

@@ -197,7 +197,26 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
           <div className="text-xs text-center space-y-1">
             <p>
               <span className="text-muted-foreground">Payment: </span>
-              <span className="font-medium">{sale.paymentMethod}</span>
+              {(() => {
+                let methodDisplay = sale.paymentMethod as string;
+                if (sale.paymentMethod === "CREDIT") {
+                  if (customerObj) {
+                    const newBal = Number(customerObj.creditBalance || 0);
+                    const excessCredited = sale.excessHandling === "CREDIT_BALANCE" ? (sale.excessAmount ?? 0) : 0;
+                    const previousBal = newBal - sale.total + excessCredited;
+                    if (previousBal < 0) {
+                      methodDisplay = "STORE DEPOSIT / CREDIT";
+                    } else {
+                      methodDisplay = "CREDIT (PAY LATER)";
+                    }
+                  } else {
+                    methodDisplay = "CREDIT (PAY LATER)";
+                  }
+                } else if (sale.paymentMethod === "BANK_TRANSFER") {
+                  methodDisplay = "BANK TRANSFER";
+                }
+                return <span className="font-bold text-foreground">{methodDisplay}</span>;
+              })()}
             </p>
 
             {/* Cash paid & change – only for CASH payments */}
@@ -245,29 +264,29 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
 
             {/* Customer Account Credit Balance Statement on Receipt */}
             {sale.customerName && sale.customerName !== "Walking Customer" && customerObj && (() => {
-              const newTotalOutstanding = Number(customerObj.creditBalance || 0);
+              const newBal = Number(customerObj.creditBalance || 0);
               const thisSaleCredit = sale.paymentMethod === "CREDIT"
                 ? sale.total
                 : sale.paymentMethod === "PARTIAL" || sale.paymentMethod === "SPLIT"
                 ? Math.max(0, sale.total - (sale.cashPaid || 0))
                 : 0;
               const excessCredited = sale.excessHandling === "CREDIT_BALANCE" ? (sale.excessAmount ?? 0) : 0;
-              const previousOutstanding = newTotalOutstanding - thisSaleCredit + excessCredited;
+              const previousBal = newBal - thisSaleCredit + excessCredited;
 
               return (
                 <div className="border-t border-dashed pt-2 mt-2 space-y-1 text-xs text-left bg-muted/30 p-2 rounded">
                   <p className="font-bold text-center text-foreground text-[11px] uppercase tracking-wide mb-1">
-                    Account Credit Statement
+                    Account Statement
                   </p>
                   <div className="flex justify-between text-muted-foreground">
-                    <span>Previous Balance:</span>
+                    <span>{previousBal > 0 ? "Previous Debt Owed:" : previousBal < 0 ? "Previous Store Deposit:" : "Previous Balance:"}</span>
                     <span>
-                      Rs. {previousOutstanding.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      Rs. {Math.abs(previousBal).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
                   {thisSaleCredit > 0 && (
                     <div className="flex justify-between text-amber-700 dark:text-amber-400 font-medium">
-                      <span>+ This Bill Credit:</span>
+                      <span>+ This Bill Usage / Credit:</span>
                       <span>
                         Rs. {thisSaleCredit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </span>
@@ -282,9 +301,9 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
                     </div>
                   )}
                   <div className="flex justify-between font-bold text-foreground border-t border-dashed pt-1 mt-1">
-                    <span>Updated Outstanding Balance:</span>
+                    <span>{newBal > 0 ? "Total Outstanding Debt:" : newBal < 0 ? "Remaining Store Deposit:" : "Account Settled:"}</span>
                     <span>
-                      Rs. {newTotalOutstanding.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      Rs. {Math.abs(newBal).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
                 </div>

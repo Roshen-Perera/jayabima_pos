@@ -132,24 +132,7 @@ export const CustomerPaymentsTab = () => {
       return;
     }
 
-    const selectedCust = customers.find((c) => c.id === customerId);
-    const currentBalance = Number(selectedCust?.creditBalance || 0);
-
-    if (currentBalance <= 0) {
-      alert.error(
-        "No Credit Owed",
-        `Customer "${selectedCust?.name}" has no outstanding credit balance to settle.`
-      );
-      return;
-    }
-
-    if (numAmount > currentBalance) {
-      alert.error(
-        "Overpayment Exceeded",
-        `Payment amount (LKR ${numAmount.toLocaleString()}) cannot exceed the customer's current balance of LKR ${currentBalance.toLocaleString("en-US", { minimumFractionDigits: 2 })}.`
-      );
-      return;
-    }
+    // Payment amounts of any positive value are allowed. Overpayments automatically become advance deposits.
 
     if (method === "CHEQUE") {
       if (!reference.trim()) {
@@ -286,30 +269,43 @@ export const CustomerPaymentsTab = () => {
                       <SelectValue placeholder="Select customer" />
                     </SelectTrigger>
                     <SelectContent>
-                      {customers.map((c) => (
-                        <SelectItem key={c.id} value={c.id}>
-                          {c.name} (Credit Owed: LKR {Number(c.creditBalance || 0).toLocaleString()})
-                        </SelectItem>
-                      ))}
+                      {customers.map((c) => {
+                        const bal = Number(c.creditBalance || 0);
+                        const label = bal > 0 ? `Debt Owed: LKR ${bal.toLocaleString()}` : bal < 0 ? `Advance Deposit: LKR ${Math.abs(bal).toLocaleString()}` : `Settled: LKR 0`;
+                        return (
+                          <SelectItem key={c.id} value={c.id}>
+                            {c.name} ({label})
+                          </SelectItem>
+                        );
+                      })}
                     </SelectContent>
                   </Select>
                 </div>
 
                 {/* Show active balance indicator */}
-                {selectedCustObj && (
-                  <div className="p-3 bg-muted/60 rounded-md flex justify-between items-center text-xs">
-                    <span className="text-muted-foreground font-medium">Current Credit Balance Owed:</span>
-                    <span
-                      className={`font-bold text-sm ${
-                        Number(selectedCustObj.creditBalance) > 0
-                          ? "text-red-600 dark:text-red-400"
-                          : "text-green-600 dark:text-green-400"
-                      }`}
-                    >
-                      LKR {Number(selectedCustObj.creditBalance || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}
-                    </span>
-                  </div>
-                )}
+                {selectedCustObj && (() => {
+                  const bal = Number(selectedCustObj.creditBalance || 0);
+                  return (
+                    <div className="p-3 bg-muted/60 rounded-md flex justify-between items-center text-xs">
+                      <span className="text-muted-foreground font-medium">Current Account Balance:</span>
+                      <span
+                        className={`font-bold text-sm ${
+                          bal > 0
+                            ? "text-red-600 dark:text-red-400"
+                            : bal < 0
+                            ? "text-green-600 dark:text-green-400"
+                            : "text-muted-foreground"
+                        }`}
+                      >
+                        {bal > 0
+                          ? `LKR ${bal.toLocaleString("en-US", { minimumFractionDigits: 2 })} (Debt Owed)`
+                          : bal < 0
+                          ? `LKR ${Math.abs(bal).toLocaleString("en-US", { minimumFractionDigits: 2 })} (Advance Deposit)`
+                          : "LKR 0.00 (Settled)"}
+                      </span>
+                    </div>
+                  );
+                })()}
 
                 {/* Amount */}
                 <div className="grid gap-2">
@@ -419,11 +415,15 @@ export const CustomerPaymentsTab = () => {
             onChange={(e) => setSelectedCustomerFilter(e.target.value)}
           >
             <option value="all">All Customers</option>
-            {customers.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name} (Owed: LKR {Number(c.creditBalance || 0).toLocaleString()})
-              </option>
-            ))}
+            {customers.map((c) => {
+              const bal = Number(c.creditBalance || 0);
+              const label = bal > 0 ? `Owed: LKR ${bal.toLocaleString()}` : bal < 0 ? `Deposit: LKR ${Math.abs(bal).toLocaleString()}` : `Settled`;
+              return (
+                <option key={c.id} value={c.id}>
+                  {c.name} ({label})
+                </option>
+              );
+            })}
           </select>
         </div>
 
