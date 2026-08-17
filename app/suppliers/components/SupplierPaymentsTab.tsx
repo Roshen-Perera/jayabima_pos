@@ -32,11 +32,16 @@ import {
   CreditCard,
   DollarSign,
   FileCheck2,
+  FileSpreadsheet,
   Loader2,
   Plus,
+  Printer,
   Receipt,
 } from "lucide-react";
 import { SupplierPayment, SupplierPaymentMethod } from "../types/supplierPayment.types";
+import SupplierPaymentReceiptModal from "./SupplierPaymentReceiptModal";
+import SupplierStatementModal from "./SupplierStatementModal";
+import { Supplier } from "../types/supplier.types";
 
 export const SupplierPaymentsTab = () => {
   const [payments, setPayments] = useState<SupplierPayment[]>([]);
@@ -44,6 +49,17 @@ export const SupplierPaymentsTab = () => {
   const [createOpen, setCreateOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [selectedSupplierFilter, setSelectedSupplierFilter] = useState<string>("all");
+
+  // Receipt Modal State
+  const [receiptOpen, setReceiptOpen] = useState(false);
+  const [selectedPaymentForReceipt, setSelectedPaymentForReceipt] = useState<SupplierPayment | null>(null);
+
+  // Statement Modal State
+  const [statementOpen, setStatementOpen] = useState(false);
+  const [statementSupplier, setStatementSupplier] = useState<Supplier | null>(null);
+  const [statementOrders, setStatementOrders] = useState<any[]>([]);
+  const [statementPayments, setStatementPayments] = useState<any[]>([]);
+  const [loadingStatementData, setLoadingStatementData] = useState(false);
 
   const suppliers = useSupplierStore((s) => s.suppliers);
   const fetchSuppliers = useSupplierStore((s) => s.fetchSuppliers);
@@ -79,6 +95,26 @@ export const SupplierPaymentsTab = () => {
   useEffect(() => {
     fetchPayments(selectedSupplierFilter);
   }, [selectedSupplierFilter]);
+
+  const openSupplierStatement = async (supp: Supplier) => {
+    setStatementSupplier(supp);
+    setStatementOpen(true);
+    setLoadingStatementData(true);
+    try {
+      const [poRes, payRes] = await Promise.all([
+        fetch(`/api/purchase-orders?supplierId=${supp.id}`),
+        fetch(`/api/supplier-payments?supplierId=${supp.id}`),
+      ]);
+      const ordersData = poRes.ok ? await poRes.json() : [];
+      const paymentsData = payRes.ok ? await payRes.json() : [];
+      setStatementOrders(ordersData);
+      setStatementPayments(paymentsData);
+    } catch (err) {
+      console.error("Error fetching supplier statement data:", err);
+    } finally {
+      setLoadingStatementData(false);
+    }
+  };
 
   const handleCreatePayment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -149,12 +185,18 @@ export const SupplierPaymentsTab = () => {
         throw new Error(detailsMsg);
       }
 
+      const recordedPayment = await res.json();
+
       alert.success(
         "Payment Recorded!",
         `Successfully recorded payment of LKR ${numAmount.toLocaleString("en-US", {
           minimumFractionDigits: 2,
         })}`
       );
+
+      // Open receipt modal
+      setSelectedPaymentForReceipt(recordedPayment);
+      setReceiptOpen(true);
 
       // Reset form
       setSupplierId("");
@@ -204,6 +246,7 @@ export const SupplierPaymentsTab = () => {
 
   const activeSuppliers = suppliers.filter((s) => s.active);
   const selectedSupplierObj = suppliers.find((s) => s.id === supplierId);
+  const filterSupplierObj = suppliers.find((s) => s.id === selectedSupplierFilter);
 
   return (
     <div className="space-y-4">
@@ -216,151 +259,164 @@ export const SupplierPaymentsTab = () => {
           </p>
         </div>
 
-        <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-          <DialogTrigger asChild>
-            <Button className="gap-2">
-              <Plus className="w-4 h-4" />
-              Record Payment
+        <div className="flex items-center gap-2">
+          {filterSupplierObj && (
+            <Button
+              variant="outline"
+              onClick={() => openSupplierStatement(filterSupplierObj)}
+              className="gap-2 font-semibold border-blue-200 text-blue-700 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950/40"
+            >
+              <FileSpreadsheet className="w-4 h-4 text-blue-600" />
+              Statement ({filterSupplierObj.name.split(" ")[0]})
             </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
-            <form onSubmit={handleCreatePayment}>
-              <DialogHeader>
-                <DialogTitle>Record Supplier Payment</DialogTitle>
-                <DialogDescription>
-                  Enter payment details to reduce the outstanding payable balance for a supplier.
-                </DialogDescription>
-              </DialogHeader>
+          )}
 
-              <div className="space-y-4 py-3">
-                {/* Supplier select */}
-                <div className="grid gap-2">
-                  <Label htmlFor="paySupplier">Supplier *</Label>
-                  <Select value={supplierId} onValueChange={setSupplierId}>
-                    <SelectTrigger id="paySupplier">
-                      <SelectValue placeholder="Select supplier" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {activeSuppliers.map((s) => (
-                        <SelectItem key={s.id} value={s.id}>
-                          {s.name} (Balance: LKR {Number(s.payableBalance).toLocaleString()})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+          <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+            <DialogTrigger asChild>
+              <Button className="gap-2">
+                <Plus className="w-4 h-4" />
+                Record Payment
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+              <form onSubmit={handleCreatePayment}>
+                <DialogHeader>
+                  <DialogTitle>Record Supplier Payment</DialogTitle>
+                  <DialogDescription>
+                    Enter payment details to reduce the outstanding payable balance for a supplier.
+                  </DialogDescription>
+                </DialogHeader>
 
-                {/* Show active balance indicator */}
-                {selectedSupplierObj && (
-                  <div className="p-3 bg-muted/60 rounded-md flex justify-between items-center text-xs">
-                    <span className="text-muted-foreground font-medium">Current Payable Balance:</span>
-                    <span
-                      className={`font-bold text-sm ${
-                        Number(selectedSupplierObj.payableBalance) > 0
-                          ? "text-red-600 dark:text-red-400"
-                          : "text-green-600 dark:text-green-400"
-                      }`}
+                <div className="space-y-4 py-3">
+                  {/* Supplier select */}
+                  <div className="grid gap-2">
+                    <Label htmlFor="paySupplier">Supplier *</Label>
+                    <Select value={supplierId} onValueChange={setSupplierId}>
+                      <SelectTrigger id="paySupplier">
+                        <SelectValue placeholder="Select supplier" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {activeSuppliers.map((s) => (
+                          <SelectItem key={s.id} value={s.id}>
+                            {s.name} (Balance: LKR {Number(s.payableBalance).toLocaleString()})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Show active balance indicator */}
+                  {selectedSupplierObj && (
+                    <div className="p-3 bg-muted/60 rounded-md flex justify-between items-center text-xs">
+                      <span className="text-muted-foreground font-medium">Current Payable Balance:</span>
+                      <span
+                        className={`font-bold text-sm ${
+                          Number(selectedSupplierObj.payableBalance) > 0
+                            ? "text-red-600 dark:text-red-400"
+                            : "text-green-600 dark:text-green-400"
+                        }`}
+                      >
+                        LKR {Number(selectedSupplierObj.payableBalance).toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Amount */}
+                  <div className="grid gap-2">
+                    <Label htmlFor="payAmount">Payment Amount (LKR) *</Label>
+                    <Input
+                      id="payAmount"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      placeholder="e.g. 50000"
+                      value={amount}
+                      onChange={(e) => setAmount(e.target.value)}
+                    />
+                  </div>
+
+                  {/* Payment Method */}
+                  <div className="grid gap-2">
+                    <Label htmlFor="payMethod">Payment Method *</Label>
+                    <Select
+                      value={method}
+                      onValueChange={(val) => setMethod(val as SupplierPaymentMethod)}
                     >
-                      LKR {Number(selectedSupplierObj.payableBalance).toLocaleString("en-US", { minimumFractionDigits: 2 })}
-                    </span>
+                      <SelectTrigger id="payMethod">
+                        <SelectValue placeholder="Select payment method" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="CASH">Cash</SelectItem>
+                        <SelectItem value="BANK_TRANSFER">Bank Transfer</SelectItem>
+                        <SelectItem value="CHEQUE">Cheque</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
-                )}
 
-                {/* Amount */}
-                <div className="grid gap-2">
-                  <Label htmlFor="payAmount">Payment Amount (LKR) *</Label>
-                  <Input
-                    id="payAmount"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    placeholder="e.g. 50000"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                  />
-                </div>
+                  {/* Reference # */}
+                  {(method === "BANK_TRANSFER" || method === "CHEQUE") && (
+                    <div className="grid gap-2">
+                      <Label htmlFor="payRef">
+                        {method === "CHEQUE" ? "Cheque Number *" : "Bank Transfer Ref / Txn ID"}
+                      </Label>
+                      <Input
+                        id="payRef"
+                        placeholder={method === "CHEQUE" ? "e.g. CHQ-998812" : "e.g. TRX-771239"}
+                        value={reference}
+                        onChange={(e) => setReference(e.target.value)}
+                      />
+                    </div>
+                  )}
 
-                {/* Payment Method */}
-                <div className="grid gap-2">
-                  <Label htmlFor="payMethod">Payment Method *</Label>
-                  <Select
-                    value={method}
-                    onValueChange={(val) => setMethod(val as SupplierPaymentMethod)}
-                  >
-                    <SelectTrigger id="payMethod">
-                      <SelectValue placeholder="Select payment method" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="CASH">Cash</SelectItem>
-                      <SelectItem value="BANK_TRANSFER">Bank Transfer</SelectItem>
-                      <SelectItem value="CHEQUE">Cheque</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                  {/* Cheque Date if Cheque */}
+                  {method === "CHEQUE" && (
+                    <div className="grid gap-2">
+                      <Label htmlFor="payChequeDate">Cheque Date / Realization Date</Label>
+                      <Input
+                        id="payChequeDate"
+                        type="date"
+                        value={chequeDate}
+                        onChange={(e) => setChequeDate(e.target.value)}
+                      />
+                    </div>
+                  )}
 
-                {/* Reference # */}
-                {(method === "BANK_TRANSFER" || method === "CHEQUE") && (
+                  {/* Payment Date */}
                   <div className="grid gap-2">
-                    <Label htmlFor="payRef">
-                      {method === "CHEQUE" ? "Cheque Number *" : "Bank Transfer Ref / Txn ID"}
-                    </Label>
+                    <Label htmlFor="payDate">Date Paid *</Label>
                     <Input
-                      id="payRef"
-                      placeholder={method === "CHEQUE" ? "e.g. CHQ-998812" : "e.g. TRX-771239"}
-                      value={reference}
-                      onChange={(e) => setReference(e.target.value)}
-                    />
-                  </div>
-                )}
-
-                {/* Cheque Date if Cheque */}
-                {method === "CHEQUE" && (
-                  <div className="grid gap-2">
-                    <Label htmlFor="payChequeDate">Cheque Date / Realization Date</Label>
-                    <Input
-                      id="payChequeDate"
+                      id="payDate"
                       type="date"
-                      value={chequeDate}
-                      onChange={(e) => setChequeDate(e.target.value)}
+                      value={paidAt}
+                      onChange={(e) => setPaidAt(e.target.value)}
                     />
                   </div>
-                )}
 
-                {/* Payment Date */}
-                <div className="grid gap-2">
-                  <Label htmlFor="payDate">Date Paid *</Label>
-                  <Input
-                    id="payDate"
-                    type="date"
-                    value={paidAt}
-                    onChange={(e) => setPaidAt(e.target.value)}
-                  />
+                  {/* Note */}
+                  <div className="grid gap-2">
+                    <Label htmlFor="payNote">Notes / Remarks (Optional)</Label>
+                    <Textarea
+                      id="payNote"
+                      placeholder="e.g. Part payment for PO-20260813-1029..."
+                      rows={2}
+                      value={note}
+                      onChange={(e) => setNote(e.target.value)}
+                    />
+                  </div>
                 </div>
 
-                {/* Note */}
-                <div className="grid gap-2">
-                  <Label htmlFor="payNote">Notes / Remarks (Optional)</Label>
-                  <Textarea
-                    id="payNote"
-                    placeholder="e.g. Part payment for PO-20260813-1029..."
-                    rows={2}
-                    value={note}
-                    onChange={(e) => setNote(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setCreateOpen(false)}>
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={submitting}>
-                  {submitting ? "Saving..." : "Record Payment"}
-                </Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
+                <DialogFooter>
+                  <Button type="button" variant="outline" onClick={() => setCreateOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button type="submit" disabled={submitting}>
+                    {submitting ? "Saving..." : "Record Payment"}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       {/* Filter Toolbar */}
@@ -408,6 +464,7 @@ export const SupplierPaymentsTab = () => {
                     <th className="p-3">Reference / Cheque</th>
                     <th className="p-3 text-right">Amount</th>
                     <th className="p-3">Notes</th>
+                    <th className="p-3 text-center">Voucher</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y text-xs">
@@ -438,6 +495,20 @@ export const SupplierPaymentsTab = () => {
                       <td className="p-3 text-muted-foreground max-w-xs truncate">
                         {pay.note || "-"}
                       </td>
+                      <td className="p-3 text-center">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedPaymentForReceipt(pay);
+                            setReceiptOpen(true);
+                          }}
+                          className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
+                          title="View / Print Payment Voucher"
+                        >
+                          <Printer className="h-3.5 w-3.5" />
+                        </Button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -446,6 +517,23 @@ export const SupplierPaymentsTab = () => {
           </CardContent>
         </Card>
       )}
+
+      {/* Payment Receipt / Voucher Modal */}
+      <SupplierPaymentReceiptModal
+        open={receiptOpen}
+        onClose={() => setReceiptOpen(false)}
+        payment={selectedPaymentForReceipt}
+        supplier={suppliers.find((s) => s.id === selectedPaymentForReceipt?.supplierId)}
+      />
+
+      {/* Statement Modal */}
+      <SupplierStatementModal
+        open={statementOpen}
+        onClose={() => setStatementOpen(false)}
+        supplier={statementSupplier}
+        orders={statementOrders}
+        payments={statementPayments}
+      />
     </div>
   );
 };
