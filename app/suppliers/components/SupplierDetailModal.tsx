@@ -34,6 +34,7 @@ import {
   CheckCircle2,
   CreditCard,
   FileCheck2,
+  FileSpreadsheet,
   FileText,
   Landmark,
   Loader2,
@@ -42,9 +43,12 @@ import {
   Package,
   Phone,
   Plus,
+  Printer,
   Receipt,
   Truck,
 } from "lucide-react";
+import SupplierPaymentReceiptModal from "./SupplierPaymentReceiptModal";
+import SupplierStatementModal from "./SupplierStatementModal";
 
 interface SupplierDetailModalProps {
   supplier: Supplier | null;
@@ -74,6 +78,11 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
   const [payChequeDate, setPayChequeDate] = useState("");
   const [payNote, setPayNote] = useState("");
   const [submittingPayment, setSubmittingPayment] = useState(false);
+
+  // Receipt & Statement Modals State
+  const [receiptOpen, setReceiptOpen] = useState(false);
+  const [selectedPaymentForReceipt, setSelectedPaymentForReceipt] = useState<SupplierPayment | null>(null);
+  const [statementOpen, setStatementOpen] = useState(false);
 
   const fetchSuppliers = useSupplierStore((s) => s.fetchSuppliers);
 
@@ -190,10 +199,16 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
         throw new Error(detailsMsg);
       }
 
+      const recordedPay = await res.json();
+
       alert.success(
         "Payment Recorded!",
         `Recorded LKR ${numAmt.toLocaleString("en-US", { minimumFractionDigits: 2 })} for ${supplier.name}`
       );
+
+      // Open receipt modal
+      setSelectedPaymentForReceipt(recordedPay);
+      setReceiptOpen(true);
 
       setPayAmount("");
       setPayMethod("CASH");
@@ -260,7 +275,7 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
                 </DialogDescription>
               </div>
 
-              {/* Payable balance card & quick pay */}
+              {/* Payable balance card & quick actions */}
               <div className="flex items-center justify-between sm:justify-end gap-3 bg-muted/60 p-3 rounded-lg border w-full sm:w-auto">
                 <div>
                   <p className="text-xs text-muted-foreground font-medium">Outstanding Balance</p>
@@ -274,13 +289,24 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
                     LKR {Number(supplier.payableBalance).toLocaleString("en-US", { minimumFractionDigits: 2 })}
                   </p>
                 </div>
-                <Button
-                  size="sm"
-                  onClick={() => setPaymentDialogOpen(true)}
-                  className="gap-1.5 ml-2 shrink-0 text-xs sm:text-sm"
-                >
-                  <Plus className="w-4 h-4" /> Record Payment
-                </Button>
+                <div className="flex items-center gap-2 shrink-0">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => setStatementOpen(true)}
+                    className="gap-1.5 text-xs sm:text-sm border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800 font-medium"
+                  >
+                    <FileSpreadsheet className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                    View Statement
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={() => setPaymentDialogOpen(true)}
+                    className="gap-1.5 text-xs sm:text-sm"
+                  >
+                    <Plus className="w-4 h-4" /> Record Payment
+                  </Button>
+                </div>
               </div>
             </div>
           </DialogHeader>
@@ -299,46 +325,35 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
                 <span className="truncate">{supplier.email}</span>
               </div>
             )}
+            {supplier.bankName && (
+              <div className="flex items-center gap-2">
+                <Landmark className="w-3.5 h-3.5 text-primary shrink-0" />
+                <span className="truncate">{supplier.bankName} ({supplier.accountNumber || "No Acc"})</span>
+              </div>
+            )}
             {supplier.address && (
-              <div className="flex items-center gap-2 sm:col-span-2">
+              <div className="flex items-center gap-2">
                 <MapPin className="w-3.5 h-3.5 text-primary shrink-0" />
                 <span className="truncate">{supplier.address}</span>
               </div>
             )}
-            {supplier.bankName && (
-              <div className="flex items-center gap-2 sm:col-span-2">
-                <Landmark className="w-3.5 h-3.5 text-primary shrink-0" />
-                <span className="truncate">
-                  {supplier.bankName} {supplier.accountNumber ? `(${supplier.accountNumber})` : ""}
-                </span>
-              </div>
-            )}
-            {supplier.taxId && (
-              <div className="flex items-center gap-2 sm:col-span-2">
-                <FileText className="w-3.5 h-3.5 text-primary shrink-0" />
-                <span>Tax ID: {supplier.taxId}</span>
-              </div>
-            )}
           </div>
 
-          {/* Tabs Section: Orders | Payments | Products */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-2 w-full">
-            <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 h-auto sm:h-10 gap-1 sm:gap-0">
-              <TabsTrigger value="orders" className="gap-2 text-xs sm:text-sm py-2 sm:py-1">
-                <Truck className="w-4 h-4" />
-                Orders ({orders.length})
+          {/* Tabs section */}
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-2">
+            <TabsList className="grid grid-cols-3 w-full">
+              <TabsTrigger value="orders" className="gap-2 text-xs sm:text-sm">
+                <Truck className="w-4 h-4" /> Purchase Orders ({orders.length})
               </TabsTrigger>
-              <TabsTrigger value="payments" className="gap-2 text-xs sm:text-sm py-2 sm:py-1">
-                <Receipt className="w-4 h-4" />
-                Payments ({payments.length})
+              <TabsTrigger value="payments" className="gap-2 text-xs sm:text-sm">
+                <Receipt className="w-4 h-4" /> Payments ({payments.length})
               </TabsTrigger>
-              <TabsTrigger value="products" className="gap-2 text-xs sm:text-sm py-2 sm:py-1">
-                <Package className="w-4 h-4" />
-                Products ({products.length})
+              <TabsTrigger value="products" className="gap-2 text-xs sm:text-sm">
+                <Package className="w-4 h-4" /> Products ({products.length})
               </TabsTrigger>
             </TabsList>
 
-            {/* ── Purchase Orders Tab Content ────────────────────── */}
+            {/* ── Purchase Orders Tab Content ──────────────────── */}
             <TabsContent value="orders" className="pt-3">
               {loadingOrders ? (
                 <div className="flex justify-center py-8">
@@ -406,6 +421,7 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
                         <th className="p-2.5">Reference / Cheque</th>
                         <th className="p-2.5 text-right">Amount</th>
                         <th className="p-2.5">Note</th>
+                        <th className="p-2.5 text-center">Voucher</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y">
@@ -428,6 +444,20 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
                           </td>
                           <td className="p-2.5 text-muted-foreground truncate max-w-xs">
                             {pay.note || "-"}
+                          </td>
+                          <td className="p-2.5 text-center">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setSelectedPaymentForReceipt(pay);
+                                setReceiptOpen(true);
+                              }}
+                              className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
+                              title="View / Print Payment Voucher"
+                            >
+                              <Printer className="h-3.5 w-3.5" />
+                            </Button>
                           </td>
                         </tr>
                       ))}
@@ -575,6 +605,23 @@ export const SupplierDetailModal: React.FC<SupplierDetailModalProps> = ({
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* Payment Voucher Modal */}
+      <SupplierPaymentReceiptModal
+        open={receiptOpen}
+        onClose={() => setReceiptOpen(false)}
+        payment={selectedPaymentForReceipt}
+        supplier={supplier}
+      />
+
+      {/* Statement Modal */}
+      <SupplierStatementModal
+        open={statementOpen}
+        onClose={() => setStatementOpen(false)}
+        supplier={supplier}
+        orders={orders}
+        payments={payments}
+      />
     </>
   );
 };

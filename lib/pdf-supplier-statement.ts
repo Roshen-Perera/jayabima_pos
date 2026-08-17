@@ -205,9 +205,9 @@ export async function generateSupplierStatementPDF(data: GenerateSupplierStateme
   const drawTableHeader = (p: typeof page, posY: number) => {
     p.drawRectangle({ x: margin, y: posY - 14, width: contentWidth, height: 18, color: rgb(0.94, 0.96, 0.98) });
     p.drawText("DATE", { x: margin + 6, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
-    p.drawText("REF #", { x: margin + 66, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
-    p.drawText("TYPE", { x: margin + 131, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
-    p.drawText("DESCRIPTION", { x: margin + 176, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
+    p.drawText("REF #", { x: margin + 60, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
+    p.drawText("TYPE", { x: margin + 152, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
+    p.drawText("DESCRIPTION", { x: margin + 195, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
     p.drawText("BILLED (+)", { x: margin + 331, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
     p.drawText("PAID (-)", { x: margin + 396, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
     p.drawText("BALANCE", { x: margin + 461, y: posY - 10, size: 8, font: fontBold, color: secondaryColor });
@@ -230,11 +230,11 @@ export async function generateSupplierStatementPDF(data: GenerateSupplierStateme
     }
 
     page.drawText(entry.dateStr, { x: margin + 6, y: currentY - 8, size: 8, font: fontRegular, color: primaryColor });
-    page.drawText(entry.ref, { x: margin + 66, y: currentY - 8, size: 7.5, font: fontRegular, color: secondaryColor });
+    page.drawText(entry.ref, { x: margin + 60, y: currentY - 8, size: 7.5, font: fontRegular, color: secondaryColor });
 
     // Type Tag
     page.drawText(entry.type === "PURCHASE" ? "PO" : "PAY", {
-      x: margin + 131,
+      x: margin + 152,
       y: currentY - 8,
       size: 8,
       font: fontBold,
@@ -242,8 +242,8 @@ export async function generateSupplierStatementPDF(data: GenerateSupplierStateme
     });
 
     // Description
-    const descText = entry.description.length > 32 ? entry.description.slice(0, 30) + "..." : entry.description;
-    page.drawText(descText, { x: margin + 176, y: currentY - 8, size: 8, font: fontRegular, color: secondaryColor });
+    const descText = entry.description.length > 28 ? entry.description.slice(0, 26) + "..." : entry.description;
+    page.drawText(descText, { x: margin + 195, y: currentY - 8, size: 8, font: fontRegular, color: secondaryColor });
 
     // Billed (+)
     const billedText = entry.credit > 0 ? `LKR ${entry.credit.toLocaleString("en-US", { minimumFractionDigits: 2 })}` : "-";
