@@ -201,9 +201,12 @@ export default function SupplierStatementModal({
           <table class="header-table">
             <tr>
               <td>
-                <div class="store-name">JAYABIMA HARDWARE & STORES</div>
-                <div>No 28/D, Rathnapura Road, Diurumpitiya, Getaheththa</div>
-                <div>Tel: 0777187729 / 0362231535</div>
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                  <img src="/favicon.png" style="height: 36px; width: 36px; object-fit: contain;" alt="Logo" />
+                  <div class="store-name">JAYABIMA HARDWARE & STORES</div>
+                </div>
+                <div style="font-size: 10px; color: #64748b;">No 28/D, Rathnapura Road, Diurumpitiya, Getaheththa</div>
+                <div style="font-size: 10px; color: #64748b;">Tel: 0777187729 / 0362231535</div>
               </td>
               <td class="doc-title" valign="top">
                 SUPPLIER STATEMENT OF ACCOUNT
@@ -266,9 +269,9 @@ export default function SupplierStatementModal({
             <thead>
               <tr>
                 <th width="12%">Date</th>
-                <th width="16%">Ref #</th>
+                <th width="20%">Ref #</th>
                 <th width="10%">Type</th>
-                <th width="32%">Description</th>
+                <th width="28%">Description</th>
                 <th width="15%" class="text-right">Billed (+)</th>
                 <th width="15%" class="text-right">Paid (-)</th>
               </tr>
@@ -593,8 +596,8 @@ export default function SupplierStatementModal({
               <thead className="bg-muted text-[11px] uppercase font-semibold text-muted-foreground border-b">
                 <tr>
                   <th className="p-2.5">Date</th>
-                  <th className="p-2.5">Ref #</th>
-                  <th className="p-2.5">Type</th>
+                  <th className="p-2.5 min-w-[150px]">Ref #</th>
+                  <th className="p-2.5 min-w-[110px]">Type</th>
                   <th className="p-2.5 max-w-[190px]">Description</th>
                   <th className="p-2.5 text-right">Billed (+)</th>
                   <th className="p-2.5 text-right">Paid (-)</th>
@@ -612,10 +615,10 @@ export default function SupplierStatementModal({
                   filteredEntries.map((entry) => (
                     <tr key={entry.id} className="hover:bg-muted/30 transition-colors">
                       <td className="p-2.5 font-medium whitespace-nowrap">{entry.dateStr}</td>
-                      <td className="p-2.5 font-mono text-[11px] text-muted-foreground whitespace-nowrap">
+                      <td className="p-2.5 font-mono text-[11px] text-muted-foreground whitespace-nowrap min-w-[150px] pr-4">
                         {entry.ref}
                       </td>
-                      <td className="p-2.5 whitespace-nowrap">
+                      <td className="p-2.5 whitespace-nowrap min-w-[110px]">
                         {entry.type === "PURCHASE" ? (
                           <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 text-[10px] gap-0.5">
                             <ArrowUpRight className="w-3 h-3 text-blue-600" /> PURCHASE
