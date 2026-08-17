@@ -53,21 +53,8 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Customer not found' }, { status: 404 });
         }
 
-        const currentBalance = Number(customer.creditBalance || 0);
-
-        if (currentBalance <= 0) {
-            return NextResponse.json(
-                { error: `Customer "${customer.name}" has no outstanding credit balance to settle (Current Owed: LKR 0.00).` },
-                { status: 400 }
-            );
-        }
-
-        if (data.amount > currentBalance) {
-            return NextResponse.json(
-                { error: `Payment amount (LKR ${data.amount.toLocaleString()}) cannot exceed the customer's outstanding balance of LKR ${currentBalance.toLocaleString("en-US", { minimumFractionDigits: 2 })}.` },
-                { status: 400 }
-            );
-        }
+        // Allow payment of any positive amount.
+        // If customer has no debt or payment exceeds debt, the excess balance becomes an advance deposit (negative creditBalance).
 
         // Use an interactive transaction (callback form) to guarantee strict
         // sequential execution: decrement the balance first, then create the

@@ -580,13 +580,15 @@ export default function CustomerStatementModal({
                 </p>
               </div>
               <div className="p-2 bg-background rounded border">
-                <p className="text-[10px] text-muted-foreground font-medium uppercase">Net Owed</p>
+                <p className="text-[10px] text-muted-foreground font-medium uppercase">
+                  {netOutstanding > 0 ? "Net Debt Owed" : netOutstanding < 0 ? "Store Deposit" : "Net Balance"}
+                </p>
                 <p
                   className={`text-xs font-bold mt-0.5 ${
-                    netOutstanding > 0 ? "text-red-600 dark:text-red-400" : "text-emerald-600"
+                    netOutstanding > 0 ? "text-red-600 dark:text-red-400" : netOutstanding < 0 ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground"
                   }`}
                 >
-                  LKR {netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                  LKR {Math.abs(netOutstanding).toLocaleString("en-US", { minimumFractionDigits: 2 })}
                 </p>
               </div>
             </div>

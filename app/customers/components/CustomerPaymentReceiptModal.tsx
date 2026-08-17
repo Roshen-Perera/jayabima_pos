@@ -141,20 +141,20 @@ export default function CustomerPaymentReceiptModal({
           {/* Account Statement */}
           <div className="border border-dashed p-2 rounded space-y-1 text-xs bg-muted/20">
             <p className="font-bold text-center text-foreground text-[11px] uppercase tracking-wide mb-1">
-              Account Credit Statement
+              Account Statement
             </p>
             <div className="flex justify-between text-muted-foreground">
-              <span>Previous Balance:</span>
+              <span>{previousBalance > 0 ? "Previous Debt Owed:" : previousBalance < 0 ? "Previous Store Deposit:" : "Previous Balance:"}</span>
               <span>
                 Rs.{" "}
-                {previousBalance.toLocaleString(undefined, {
+                {Math.abs(previousBalance).toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
               </span>
             </div>
             <div className="flex justify-between text-emerald-700 dark:text-emerald-400 font-medium">
-              <span>- Amount Received:</span>
+              <span>- Payment Received:</span>
               <span>
                 Rs.{" "}
                 {amountPaid.toLocaleString(undefined, {
@@ -164,14 +164,14 @@ export default function CustomerPaymentReceiptModal({
               </span>
             </div>
             <div className="flex justify-between font-bold text-foreground border-t border-dashed pt-1 mt-1">
-              <span>Remaining Outstanding:</span>
+              <span>{remainingBalance > 0 ? "Remaining Debt Owed:" : remainingBalance < 0 ? "Advance Store Deposit:" : "Account Settled:"}</span>
               <span
                 className={
-                  remainingBalance > 0 ? "text-destructive" : "text-emerald-600"
+                  remainingBalance > 0 ? "text-destructive" : remainingBalance < 0 ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground"
                 }
               >
                 Rs.{" "}
-                {remainingBalance.toLocaleString(undefined, {
+                {Math.abs(remainingBalance).toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
