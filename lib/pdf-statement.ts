@@ -187,10 +187,11 @@ export async function generateCustomerStatementPDF(data: GenerateStatementPDFPar
   page.drawText("TOTAL PAID", { x: startX + 93 + 16, y: tileY + 34, size: 7.5, font: fontBold, color: secondaryColor });
   page.drawText(`LKR ${data.totalPaid.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, { x: startX + 93 + 6, y: tileY + 16, size: 8.5, font: fontBold, color: greenColor });
 
-  // Net Owed Tile
+  // Net Owed / Store Deposit Tile
+  const netLabel = data.netOutstanding > 0 ? "NET OWED" : data.netOutstanding < 0 ? "DEPOSIT" : "NET BAL";
   page.drawRectangle({ x: startX + 186, y: tileY, width: tileW, height: tileH, color: rgb(1, 1, 1), borderColor, borderWidth: 1 });
-  page.drawText("NET OWED", { x: startX + 186 + 20, y: tileY + 34, size: 7.5, font: fontBold, color: secondaryColor });
-  page.drawText(`LKR ${data.netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, { x: startX + 186 + 6, y: tileY + 16, size: 8.5, font: fontBold, color: data.netOutstanding > 0 ? redColor : greenColor });
+  page.drawText(netLabel, { x: startX + 186 + 20, y: tileY + 34, size: 7.5, font: fontBold, color: secondaryColor });
+  page.drawText(`LKR ${Math.abs(data.netOutstanding).toLocaleString("en-US", { minimumFractionDigits: 2 })}`, { x: startX + 186 + 6, y: tileY + 16, size: 8.5, font: fontBold, color: data.netOutstanding > 0 ? redColor : greenColor });
 
   // Table Header
   let currentY = height - 192;
