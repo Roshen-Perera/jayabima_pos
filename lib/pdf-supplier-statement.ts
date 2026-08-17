@@ -138,12 +138,13 @@ export async function generateSupplierStatementPDF(data: GenerateSupplierStateme
   });
 
   // Supplier Summary Card Box
-  const cardY = height - 165;
+  const cardY = height - 177;
+  const cardH = 80;
   page.drawRectangle({
     x: margin,
     y: cardY,
     width: contentWidth,
-    height: 68,
+    height: cardH,
     color: bgLight,
     borderColor: borderColor,
     borderWidth: 1,
@@ -151,7 +152,7 @@ export async function generateSupplierStatementPDF(data: GenerateSupplierStateme
 
   page.drawText("SUPPLIER INFORMATION", {
     x: margin + 10,
-    y: cardY + 52,
+    y: cardY + 64,
     size: 8,
     font: fontBold,
     color: secondaryColor,
@@ -159,29 +160,29 @@ export async function generateSupplierStatementPDF(data: GenerateSupplierStateme
 
   page.drawText(data.supplier.name, {
     x: margin + 10,
-    y: cardY + 36,
-    size: 12,
+    y: cardY + 48,
+    size: 11.5,
     font: fontBold,
     color: primaryColor,
   });
 
-  let suppInfoY = cardY + 22;
+  let suppInfoY = cardY + 34;
   if (data.supplier.contactPerson) {
-    page.drawText(`Contact: ${data.supplier.contactPerson}`, { x: margin + 10, y: suppInfoY, size: 8.5, font: fontRegular, color: secondaryColor });
+    page.drawText(`Contact: ${data.supplier.contactPerson}`, { x: margin + 10, y: suppInfoY, size: 8, font: fontRegular, color: secondaryColor });
     suppInfoY -= 11;
   }
   if (data.supplier.phone) {
-    page.drawText(`Phone: ${data.supplier.phone}`, { x: margin + 10, y: suppInfoY, size: 8.5, font: fontRegular, color: secondaryColor });
+    page.drawText(`Phone: ${data.supplier.phone}`, { x: margin + 10, y: suppInfoY, size: 8, font: fontRegular, color: secondaryColor });
     suppInfoY -= 11;
   }
   if (data.supplier.email) {
-    page.drawText(`Email: ${data.supplier.email}`, { x: margin + 10, y: suppInfoY, size: 8.5, font: fontRegular, color: secondaryColor });
+    page.drawText(`Email: ${data.supplier.email}`, { x: margin + 10, y: suppInfoY, size: 8, font: fontRegular, color: secondaryColor });
   }
 
   // Financial Metric Tiles
   const tileW = 88;
   const tileH = 48;
-  const tileY = cardY + 10;
+  const tileY = cardY + 16;
   const startX = margin + 240;
 
   // Total Billed Tile (Purchases)
@@ -200,7 +201,7 @@ export async function generateSupplierStatementPDF(data: GenerateSupplierStateme
   page.drawText(`LKR ${data.netOutstanding.toLocaleString("en-US", { minimumFractionDigits: 2 })}`, { x: startX + 186 + 6, y: tileY + 16, size: 8.5, font: fontBold, color: data.netOutstanding > 0 ? redColor : greenColor });
 
   // Table Header
-  let currentY = height - 192;
+  let currentY = height - 204;
 
   const drawTableHeader = (p: typeof page, posY: number) => {
     p.drawRectangle({ x: margin, y: posY - 14, width: contentWidth, height: 18, color: rgb(0.94, 0.96, 0.98) });

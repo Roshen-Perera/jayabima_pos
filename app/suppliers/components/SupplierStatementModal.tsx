@@ -548,7 +548,7 @@ export default function SupplierStatementModal({
           </div>
 
           {/* Supplier Metadata & Info Box */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-muted/30 p-3 rounded-lg border">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-muted/30 p-4 sm:p-4.5 rounded-lg border">
             <div>
               <p className="text-[11px] uppercase font-bold text-muted-foreground mb-1">Supplier Details</p>
               <h2 className="text-sm font-bold text-foreground">{supplier.name}</h2>
