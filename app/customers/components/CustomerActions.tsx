@@ -141,19 +141,6 @@ const CustomerActions = ({
           <DropdownMenuGroup>
             <DropdownMenuItem
               className="flex items-center"
-              onClick={handleDownloadLedger}
-              disabled={downloading}
-            >
-              {downloading ? (
-                <Loader2 className="w-3.5 h-3.5 mr-2.5 animate-spin text-primary" />
-              ) : (
-                <Download className="w-3.5 h-3.5 mr-2.5 text-primary" />
-              )}
-              Download PDF Ledger
-            </DropdownMenuItem>
-
-            <DropdownMenuItem
-              className="flex items-center"
               onClick={() => setShowEditDialog(true)}
             >
               <Pencil className="w-3.5 h-3.5 mr-2.5" />
