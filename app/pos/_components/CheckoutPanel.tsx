@@ -74,6 +74,7 @@ export default function CheckoutPanel({
   const { user } = useAuthStore();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("CASH");
   const [cashInput, setCashInput] = useState("");
+  const [excessHandling, setExcessHandling] = useState<"CHANGE" | "CREDIT_BALANCE">("CHANGE");
   const [reference, setReference] = useState("");
   const [chequeDate, setChequeDate] = useState("");
   
@@ -92,6 +93,7 @@ export default function CheckoutPanel({
     if (open) {
       setPaymentMethod("CASH");
       setCashInput("");
+      setExcessHandling("CHANGE");
       setReference("");
       setChequeDate("");
       setPartialPaid("");
@@ -230,6 +232,8 @@ export default function CheckoutPanel({
           paymentMethod,
           cashPaid: isCash ? cashPaid : null,
           cashBalance: isCash ? cashBalance : null,
+          excessHandling: isCash && cashBalance > 0 && customerId && customerName !== "Walking Customer" ? excessHandling : "CHANGE",
+          excessAmount: isCash && cashBalance > 0 && customerId && customerName !== "Walking Customer" && excessHandling === "CREDIT_BALANCE" ? cashBalance : 0,
           reference: reference.trim() || undefined,
           chequeDate: isCheque && chequeDate ? chequeDate : undefined,
           payments: paymentsPayload,
@@ -265,6 +269,8 @@ export default function CheckoutPanel({
         total,
         paymentMethod,
         ...(isCash && { cashPaid, cashBalance }),
+        excessHandling: isCash && cashBalance > 0 && customerId && customerName !== "Walking Customer" ? excessHandling : "CHANGE",
+        excessAmount: isCash && cashBalance > 0 && customerId && customerName !== "Walking Customer" && excessHandling === "CREDIT_BALANCE" ? cashBalance : 0,
         status: "COMPLETED",
         createdAt: new Date(savedSale.createdAt),
       };
@@ -500,7 +506,7 @@ export default function CheckoutPanel({
                   }`}
                 >
                   <span>
-                    {cashBalance >= 0 ? "Change / Balance" : "Shortfall"}
+                    {cashBalance >= 0 ? "Change / Excess" : "Shortfall"}
                   </span>
                   <span>
                     Rs.{" "}
@@ -509,6 +515,66 @@ export default function CheckoutPanel({
                       maximumFractionDigits: 2,
                     })}
                   </span>
+                </div>
+              )}
+
+              {/* Excess handling choice for registered customers */}
+              {cashInput !== "" && cashBalance > 0 && customerId && customerName !== "Walking Customer" && (
+                <div className="space-y-2 border border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-950/30 p-3 rounded-lg text-xs">
+                  <div className="flex items-center justify-between font-semibold text-blue-950 dark:text-blue-200">
+                    <span>Excess Cash Action:</span>
+                    <span className="text-sm font-bold text-blue-700 dark:text-blue-400">
+                      Rs. {cashBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => setExcessHandling("CHANGE")}
+                      className={`p-2 rounded-md border text-xs font-medium text-left flex flex-col gap-0.5 transition-all ${
+                        excessHandling === "CHANGE"
+                          ? "border-green-600 bg-green-100 dark:bg-green-950 text-green-900 dark:text-green-200 font-bold ring-2 ring-green-600/30"
+                          : "border-border bg-background text-muted-foreground hover:bg-muted"
+                      }`}
+                    >
+                      <span className="flex items-center gap-1">💵 Cash Change</span>
+                      <span className="text-[10px] opacity-75 font-normal">Hand Rs. {cashBalance.toLocaleString()} change</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setExcessHandling("CREDIT_BALANCE")}
+                      className={`p-2 rounded-md border text-xs font-medium text-left flex flex-col gap-0.5 transition-all ${
+                        excessHandling === "CREDIT_BALANCE"
+                          ? "border-blue-600 bg-blue-100 dark:bg-blue-950 text-blue-900 dark:text-blue-200 font-bold ring-2 ring-blue-600/30"
+                          : "border-border bg-background text-muted-foreground hover:bg-muted"
+                      }`}
+                    >
+                      <span className="flex items-center gap-1">💳 Account Credit</span>
+                      <span className="text-[10px] opacity-75 font-normal">Transfer to credit balance</span>
+                    </button>
+                  </div>
+
+                  {excessHandling === "CREDIT_BALANCE" && (
+                    <div className="mt-2 pt-2 border-t border-blue-200/60 dark:border-blue-800/60 text-[11px] space-y-1">
+                      <div className="flex justify-between text-muted-foreground">
+                        <span>Current Debt Balance:</span>
+                        <span>Rs. {Number(customers.find((c) => c.id === customerId)?.creditBalance || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                      </div>
+                      <div className="flex justify-between font-semibold text-blue-800 dark:text-blue-300">
+                        <span>New Balance After Credit:</span>
+                        <span>
+                          Rs. {Math.max(0, Number(customers.find((c) => c.id === customerId)?.creditBalance || 0) - cashBalance).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                          {Number(customers.find((c) => c.id === customerId)?.creditBalance || 0) - cashBalance < 0 && (
+                            <span className="text-[10px] text-green-600 ml-1">
+                              (Rs. {Math.abs(Number(customers.find((c) => c.id === customerId)?.creditBalance || 0) - cashBalance).toLocaleString()} Store Credit)
+                            </span>
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

@@ -211,16 +211,35 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
                       Rs. {sale.cashPaid.toLocaleString()}
                     </span>
                   </div>
-                  <div className="flex justify-between font-semibold text-green-700 dark:text-green-400">
-                    <span>Change</span>
-                    <span>
-                      Rs.{" "}
-                      {sale.cashBalance.toLocaleString(undefined, {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
-                    </span>
-                  </div>
+                  {sale.excessHandling === "CREDIT_BALANCE" && (sale.excessAmount ?? 0) > 0 ? (
+                    <>
+                      <div className="flex justify-between font-semibold text-blue-700 dark:text-blue-400">
+                        <span>Transferred to Account Credit</span>
+                        <span>
+                          Rs.{" "}
+                          {(sale.excessAmount ?? 0).toLocaleString(undefined, {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-muted-foreground text-[11px]">
+                        <span>Cash Change Returned</span>
+                        <span>Rs. 0.00</span>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex justify-between font-semibold text-green-700 dark:text-green-400">
+                      <span>Change Returned</span>
+                      <span>
+                        Rs.{" "}
+                        {sale.cashBalance.toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </span>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -232,7 +251,8 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
                 : sale.paymentMethod === "PARTIAL" || sale.paymentMethod === "SPLIT"
                 ? Math.max(0, sale.total - (sale.cashPaid || 0))
                 : 0;
-              const previousOutstanding = Math.max(0, newTotalOutstanding - thisSaleCredit);
+              const excessCredited = sale.excessHandling === "CREDIT_BALANCE" ? (sale.excessAmount ?? 0) : 0;
+              const previousOutstanding = newTotalOutstanding - thisSaleCredit + excessCredited;
 
               return (
                 <div className="border-t border-dashed pt-2 mt-2 space-y-1 text-xs text-left bg-muted/30 p-2 rounded">
@@ -240,7 +260,7 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
                     Account Credit Statement
                   </p>
                   <div className="flex justify-between text-muted-foreground">
-                    <span>Previous Outstanding:</span>
+                    <span>Previous Balance:</span>
                     <span>
                       Rs. {previousOutstanding.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
@@ -253,8 +273,16 @@ const ReceiptModal = ({ open, onClose, sale }: ReceiptModalProps) => {
                       </span>
                     </div>
                   )}
-                  <div className="flex justify-between font-bold text-destructive border-t border-dashed pt-1 mt-1">
-                    <span>Total Outstanding Balance:</span>
+                  {excessCredited > 0 && (
+                    <div className="flex justify-between text-blue-700 dark:text-blue-400 font-medium">
+                      <span>- Excess Change Credited:</span>
+                      <span>
+                        Rs. {excessCredited.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex justify-between font-bold text-foreground border-t border-dashed pt-1 mt-1">
+                    <span>Updated Outstanding Balance:</span>
                     <span>
                       Rs. {newTotalOutstanding.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>

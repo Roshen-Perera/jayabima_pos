@@ -35,6 +35,8 @@ export interface Sale {
     paymentMethod: PaymentMethod;
     cashPaid?: number;       // amount of cash handed by customer (CASH only)
     cashBalance?: number;    // change returned to customer (CASH only)
+    excessHandling?: 'CHANGE' | 'CREDIT_BALANCE';
+    excessAmount?: number;
     reference?: string;      // Cheque no. or Bank Txn ID
     chequeDate?: string;     // Post-dated cheque realization date
     status: SaleStatus;

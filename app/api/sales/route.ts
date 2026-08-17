@@ -30,6 +30,8 @@ const createSaleSchema = z.object({
     paymentMethod: z.enum(['CASH', 'CARD', 'BANK_TRANSFER', 'CHEQUE', 'CREDIT', 'SPLIT', 'PARTIAL']),
     cashPaid: z.coerce.number().nonnegative().optional().nullable(),
     cashBalance: z.coerce.number().optional().nullable(),
+    excessHandling: z.enum(['CHANGE', 'CREDIT_BALANCE']).optional().default('CHANGE'),
+    excessAmount: z.coerce.number().nonnegative().optional().default(0),
     reference: z.string().optional().nullable(),
     chequeDate: z.string().optional().nullable(),
     status: z.enum(['COMPLETED', 'PENDING', 'CANCELLED', 'REFUNDED']).default('COMPLETED'),
@@ -189,12 +191,30 @@ export async function POST(request: NextRequest) {
 
             const remainderUnpaid = Math.max(0, data.total - totalPaidUpfront);
 
+            // Handle excess payment transfer to credit balance if customer opted for it
+            const hasExcessCredit = data.excessHandling === 'CREDIT_BALANCE' && (data.excessAmount ?? 0) > 0;
+            const excessCreditAmt = hasExcessCredit ? (data.excessAmount ?? 0) : 0;
+
+            if (excessCreditAmt > 0) {
+                await prisma.customerPayment.create({
+                    data: {
+                        customerId: data.customerId,
+                        amount: excessCreditAmt,
+                        method: 'CASH',
+                        note: `POS Sale #${sale.id.substring(0, 8)} excess change credited to account balance`,
+                    },
+                });
+            }
+
             await prisma.customer.update({
                 where: { id: data.customerId },
                 data: {
                     totalPurchases: { increment: data.total },
                     ...(remainderUnpaid > 0 && {
                         creditBalance: { increment: remainderUnpaid },
+                    }),
+                    ...(excessCreditAmt > 0 && {
+                        creditBalance: { decrement: excessCreditAmt },
                     }),
                 },
             });
