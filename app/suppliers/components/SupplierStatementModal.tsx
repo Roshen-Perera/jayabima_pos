@@ -596,8 +596,8 @@ export default function SupplierStatementModal({
               <thead className="bg-muted text-[11px] uppercase font-semibold text-muted-foreground border-b">
                 <tr>
                   <th className="p-2.5">Date</th>
-                  <th className="p-2.5 min-w-[150px]">Ref #</th>
-                  <th className="p-2.5 min-w-[110px]">Type</th>
+                  <th className="p-2.5">Ref #</th>
+                  <th className="p-2.5">Type</th>
                   <th className="p-2.5 max-w-[190px]">Description</th>
                   <th className="p-2.5 text-right">Billed (+)</th>
                   <th className="p-2.5 text-right">Paid (-)</th>
@@ -615,10 +615,10 @@ export default function SupplierStatementModal({
                   filteredEntries.map((entry) => (
                     <tr key={entry.id} className="hover:bg-muted/30 transition-colors">
                       <td className="p-2.5 font-medium whitespace-nowrap">{entry.dateStr}</td>
-                      <td className="p-2.5 font-mono text-[11px] text-muted-foreground whitespace-nowrap min-w-[150px] pr-4">
+                      <td className="p-2.5 font-mono text-[11px] text-muted-foreground whitespace-nowrap">
                         {entry.ref}
                       </td>
-                      <td className="p-2.5 whitespace-nowrap min-w-[110px]">
+                      <td className="p-2.5 whitespace-nowrap">
                         {entry.type === "PURCHASE" ? (
                           <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 text-[10px] gap-0.5">
                             <ArrowUpRight className="w-3 h-3 text-blue-600" /> PURCHASE
