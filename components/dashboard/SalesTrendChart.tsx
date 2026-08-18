@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { TrendingUp, Calendar } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 
 interface SalesTrendItem {
   dateStr: string;
@@ -24,7 +24,6 @@ export function SalesTrendChart({ trend, isLoading }: SalesTrendChartProps) {
       style: "currency",
       currency: "LKR",
       minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
     })
       .format(amount)
       .replace("LKR", "Rs.");
@@ -36,67 +35,50 @@ export function SalesTrendChart({ trend, isLoading }: SalesTrendChartProps) {
 
   if (isLoading) {
     return (
-      <Card className="animate-pulse shadow-sm">
-        <CardHeader className="p-5 pb-2">
-          <div className="h-5 w-40 bg-muted rounded"></div>
-          <div className="h-4 w-56 bg-muted rounded mt-1"></div>
-        </CardHeader>
-        <CardContent className="p-5 pt-4">
-          <div className="h-48 w-full bg-muted/40 rounded-lg flex items-end justify-between p-4 gap-2">
-            {Array.from({ length: 7 }).map((_, i) => (
-              <div key={i} className="w-full bg-muted rounded-t h-2/3"></div>
-            ))}
-          </div>
+      <Card className="animate-pulse">
+        <CardContent className="p-4 space-y-4">
+          <div className="h-4 w-32 bg-muted rounded"></div>
+          <div className="h-36 w-full bg-muted/40 rounded"></div>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="shadow-sm border">
-      <CardHeader className="p-5 pb-3">
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="text-base font-semibold flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-orange-500" />
-              7-Day Sales Trend
-            </CardTitle>
-            <CardDescription className="text-xs mt-0.5">
-              Daily revenue for the past week
-            </CardDescription>
-          </div>
-          <div className="text-right">
-            <div className="text-sm font-bold text-foreground">
-              {formatCurrency(total7DayRevenue)}
-            </div>
-            <div className="text-xs text-muted-foreground">
-              {total7DayCount} total sales
-            </div>
-          </div>
+    <Card>
+      <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0">
+        <div>
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <TrendingUp className="h-4 w-4 text-orange-500" />
+            7-Day Sales Trend
+          </CardTitle>
+          <CardDescription className="text-xs">
+            Daily revenue over the past week
+          </CardDescription>
+        </div>
+        <div className="text-right">
+          <p className="text-sm font-bold">{formatCurrency(total7DayRevenue)}</p>
+          <p className="text-xs text-muted-foreground">{total7DayCount} sales</p>
         </div>
       </CardHeader>
-      <CardContent className="p-5 pt-2">
-        {/* Hover detail box */}
-        <div className="h-8 mb-2 flex items-center justify-between text-xs px-2 py-1 bg-muted/30 rounded border border-border/50">
+
+      <CardContent className="p-4 pt-2">
+        {/* Info bar */}
+        <div className="h-6 mb-2 flex items-center justify-between text-xs px-2 bg-muted/40 rounded text-muted-foreground">
           {hoveredDay ? (
             <>
-              <span className="font-semibold text-foreground">
-                {hoveredDay.label}:
-              </span>
-              <span className="text-orange-600 dark:text-orange-400 font-bold">
+              <span className="font-medium text-foreground">{hoveredDay.label}</span>
+              <span className="font-semibold text-orange-500">
                 {formatCurrency(hoveredDay.revenue)} ({hoveredDay.count} sales)
               </span>
             </>
           ) : (
-            <span className="text-muted-foreground flex items-center gap-1.5">
-              <Calendar className="h-3.5 w-3.5" />
-              Hover over a column to view daily breakdown
-            </span>
+            <span>Hover bars to view daily amounts</span>
           )}
         </div>
 
-        {/* Chart SVG / Bars */}
-        <div className="h-44 flex items-end justify-between gap-2 pt-4 px-1">
+        {/* Chart columns */}
+        <div className="h-36 flex items-end justify-between gap-2 pt-2">
           {trend.map((item, index) => {
             const heightPercent = maxRevenue > 0 ? (item.revenue / maxRevenue) * 100 : 0;
             const isToday = index === trend.length - 1;
@@ -108,40 +90,27 @@ export function SalesTrendChart({ trend, isLoading }: SalesTrendChartProps) {
                 onMouseEnter={() => setHoveredDay(item)}
                 onMouseLeave={() => setHoveredDay(null)}
               >
-                {/* Bar wrapper */}
-                <div className="w-full flex-1 flex items-end justify-center relative">
+                <div className="w-full flex-1 flex items-end justify-center">
                   <div
-                    className={`w-full max-w-[36px] rounded-t-md transition-all duration-300 ${
+                    className={`w-full max-w-[28px] rounded-t transition-all ${
                       isToday
-                        ? "bg-orange-500 group-hover:bg-orange-600 shadow-sm"
+                        ? "bg-orange-500"
                         : item.revenue > 0
-                        ? "bg-orange-400/80 dark:bg-orange-500/60 group-hover:bg-orange-500"
-                        : "bg-muted hover:bg-muted/80"
+                        ? "bg-orange-400/70 dark:bg-orange-500/50 group-hover:bg-orange-500"
+                        : "bg-muted"
                     }`}
                     style={{
                       height: `${Math.max(heightPercent, 4)}%`,
                     }}
-                  >
-                    {/* Inner highlight */}
-                    <div className="w-full h-1 bg-white/20 rounded-t-md" />
-                  </div>
+                  />
                 </div>
-
-                {/* Day label */}
-                <div className="mt-2 text-center">
-                  <span
-                    className={`text-[11px] block font-medium ${
-                      isToday
-                        ? "text-orange-600 dark:text-orange-400 font-bold"
-                        : "text-muted-foreground group-hover:text-foreground"
-                    }`}
-                  >
-                    {item.label.split(" ")[0]}
-                  </span>
-                  <span className="text-[10px] text-muted-foreground block -mt-0.5">
-                    {item.label.split(" ")[1] || ""}
-                  </span>
-                </div>
+                <span
+                  className={`text-[11px] mt-1.5 ${
+                    isToday ? "font-bold text-orange-500" : "text-muted-foreground"
+                  }`}
+                >
+                  {item.label.split(" ")[0]}
+                </span>
               </div>
             );
           })}

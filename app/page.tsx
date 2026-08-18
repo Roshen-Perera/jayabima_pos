@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, LayoutDashboard, Store } from "lucide-react";
+import { RefreshCw, Download } from "lucide-react";
 import { DashboardMetricsCards } from "@/components/dashboard/DashboardMetricsCards";
 import { SalesTrendChart } from "@/components/dashboard/SalesTrendChart";
 import { RecentSalesWidget } from "@/components/dashboard/RecentSalesWidget";
@@ -71,7 +71,7 @@ export default function Home() {
       if (json.success) {
         setData(json.data);
         if (isManualRefresh) {
-          toast.success("Dashboard metrics updated");
+          toast.success("Dashboard refreshed");
         }
       } else {
         throw new Error(json.error || "Failed to load dashboard");
@@ -101,18 +101,12 @@ export default function Home() {
   };
 
   return (
-    <div className="p-4 md:p-6 space-y-6 max-w-7xl mx-auto">
-      {/* Header section */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-card p-5 rounded-xl border shadow-sm">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <Store className="h-6 w-6 text-orange-500" />
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
-              Dashboard Overview
-            </h1>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            Welcome back{user?.name ? `, ${user.name}` : ""}! Here is the real-time summary for Jayabima Hardware.
+    <div className="flex flex-col gap-4">
+      {/* Top Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <p className="text-muted-foreground">
+            Welcome back{user?.name ? `, ${user.name}` : ""} • Real-time sales & store metrics overview
           </p>
         </div>
 
@@ -122,29 +116,28 @@ export default function Home() {
             size="sm"
             onClick={() => fetchDashboardData(true)}
             disabled={isLoading || isRefreshing}
-            className="flex items-center gap-2"
+            className="gap-2"
           >
             <RefreshCw
               className={`h-4 w-4 ${isRefreshing ? "animate-spin text-orange-500" : ""}`}
             />
-            <span>Refresh Data</span>
+            Refresh
           </Button>
         </div>
       </div>
 
-      {/* KPI Metrics Cards */}
+      {/* KPI Cards */}
       <DashboardMetricsCards
         summary={data?.summary || defaultSummary}
         isLoading={isLoading}
       />
 
-      {/* Quick Actions Bar */}
+      {/* Quick Navigation Pills */}
       <QuickActionsWidget />
 
-      {/* 2-Column Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Left Column */}
-        <div className="space-y-6">
+      {/* 2-Column Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="flex flex-col gap-4">
           <SalesTrendChart
             trend={data?.salesTrend || []}
             isLoading={isLoading}
@@ -155,8 +148,7 @@ export default function Home() {
           />
         </div>
 
-        {/* Right Column */}
-        <div className="space-y-6">
+        <div className="flex flex-col gap-4">
           <LowStockWidget
             items={data?.topLowStock || []}
             isLoading={isLoading}

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, ShoppingCart, CreditCard, Banknote, Landmark, FileText } from "lucide-react";
+import { ArrowRight, ShoppingCart, FileText } from "lucide-react";
 
 interface RecentSale {
   id: string;
@@ -32,106 +32,67 @@ export function RecentSalesWidget({ sales, isLoading }: RecentSalesWidgetProps) 
       .replace("LKR", "Rs.");
   };
 
-  const getMethodBadge = (method: string) => {
-    switch (method) {
-      case "CASH":
-        return (
-          <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 font-medium">
-            <Banknote className="h-3 w-3 mr-1" /> Cash
-          </Badge>
-        );
-      case "CARD":
-        return (
-          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/40 dark:text-blue-400 font-medium">
-            <CreditCard className="h-3 w-3 mr-1" /> Card
-          </Badge>
-        );
-      case "BANK_TRANSFER":
-        return (
-          <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/40 dark:text-purple-400 font-medium">
-            <Landmark className="h-3 w-3 mr-1" /> Transfer
-          </Badge>
-        );
-      case "CREDIT":
-        return (
-          <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 font-medium">
-            Credit
-          </Badge>
-        );
-      default:
-        return (
-          <Badge variant="outline" className="bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 font-medium">
-            {method}
-          </Badge>
-        );
-    }
-  };
-
   if (isLoading) {
     return (
-      <Card className="animate-pulse shadow-sm">
-        <CardHeader className="p-5 pb-3">
-          <div className="h-5 w-36 bg-muted rounded"></div>
-        </CardHeader>
-        <CardContent className="p-5 pt-0">
-          <div className="space-y-3">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-12 w-full bg-muted/40 rounded-lg"></div>
-            ))}
-          </div>
+      <Card className="animate-pulse">
+        <CardContent className="p-4 space-y-3">
+          <div className="h-4 w-32 bg-muted rounded"></div>
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="h-8 w-full bg-muted/40 rounded"></div>
+          ))}
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="shadow-sm border">
-      <CardHeader className="p-5 pb-3 flex flex-row items-center justify-between space-y-0">
+    <Card>
+      <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0">
         <div>
           <CardTitle className="text-base font-semibold flex items-center gap-2">
             <ShoppingCart className="h-4 w-4 text-orange-500" />
             Recent Transactions
           </CardTitle>
-          <CardDescription className="text-xs mt-0.5">
+          <CardDescription className="text-xs">
             Latest completed POS sales
           </CardDescription>
         </div>
         <Link
           href="/sales"
-          className="text-xs font-medium text-orange-600 hover:text-orange-700 dark:text-orange-400 flex items-center gap-1 hover:underline"
+          className="text-xs font-medium text-orange-500 hover:underline flex items-center gap-1"
         >
           View All <ArrowRight className="h-3 w-3" />
         </Link>
       </CardHeader>
-      <CardContent className="p-5 pt-0">
+      <CardContent className="p-4 pt-2">
         {sales.length === 0 ? (
-          <div className="py-8 text-center text-muted-foreground text-sm">
-            <FileText className="h-8 w-8 mx-auto mb-2 opacity-40" />
-            No recent sales recorded yet today.
+          <div className="py-6 text-center text-muted-foreground text-sm flex flex-col items-center">
+            <FileText className="h-6 w-6 mb-1 opacity-40" />
+            No recent sales recorded today.
           </div>
         ) : (
           <div className="divide-y divide-border">
             {sales.map((sale) => (
               <div
                 key={sale.id}
-                className="py-3 flex items-center justify-between gap-3 hover:bg-muted/30 px-2 rounded-md transition-colors"
+                className="py-2 flex items-center justify-between gap-2 text-xs"
               >
                 <div className="space-y-0.5">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-foreground">
+                    <span className="font-medium text-foreground">
                       {sale.customerName}
                     </span>
-                    {getMethodBadge(sale.paymentMethod)}
+                    <Badge variant="outline" className="text-[10px] py-0 h-4">
+                      {sale.paymentMethod}
+                    </Badge>
                   </div>
-                  <div className="text-xs text-muted-foreground">
+                  <div className="text-[11px] text-muted-foreground">
                     Cashier: {sale.cashierName} •{" "}
                     {format(new Date(sale.createdAt), "hh:mm a")}
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-sm font-bold text-foreground">
-                    {formatCurrency(sale.total)}
-                  </div>
+                <div className="font-bold text-foreground">
+                  {formatCurrency(sale.total)}
                 </div>
               </div>
             ))}
