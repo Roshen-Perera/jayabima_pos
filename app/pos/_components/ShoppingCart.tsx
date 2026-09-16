@@ -234,6 +234,10 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                   item.previousPrice < originalPrice;
                 const isSoldAtPreviousPrice =
                   isOverridden && item.overridePrice === item.previousPrice;
+                const isBelowCost =
+                  item.cost !== undefined &&
+                  item.cost > 0 &&
+                  effectivePrice < item.cost;
 
                 // Derived values shown in UI
                 const itemOriginalTotal = originalPrice * item.quantity;
@@ -265,7 +269,15 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
 
                           {/* Effective / override price */}
                           {isOverridden && (
-                            <span className={`text-xs font-medium ${isSoldAtPreviousPrice ? "text-blue-600 dark:text-blue-400" : "text-amber-600"}`}>
+                            <span
+                              className={`text-xs font-medium ${
+                                isBelowCost
+                                  ? "text-red-600 dark:text-red-400 font-semibold"
+                                  : isSoldAtPreviousPrice
+                                    ? "text-blue-600 dark:text-blue-400"
+                                    : "text-amber-600"
+                              }`}
+                            >
                               Rs. {effectivePrice.toLocaleString()}
                             </span>
                           )}
@@ -273,6 +285,17 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                           {isSoldAtPreviousPrice && (
                             <Badge variant="secondary" className="text-[10px] bg-blue-100 text-blue-800 dark:bg-blue-950/70 dark:text-blue-300 border border-blue-300 dark:border-blue-800">
                               Old Price Applied
+                            </Badge>
+                          )}
+
+                          {isBelowCost && (
+                            <Badge
+                              variant="destructive"
+                              className="text-[10px] bg-red-100 text-red-800 dark:bg-red-950/70 dark:text-red-300 border border-red-300 dark:border-red-800 flex items-center gap-1 font-medium"
+                              title={`Product cost is Rs. ${item.cost?.toLocaleString()}`}
+                            >
+                              <AlertTriangle className="w-2.5 h-2.5 text-red-600 dark:text-red-400" />
+                              Below Cost (Cost: Rs. {item.cost?.toLocaleString()})
                             </Badge>
                           )}
 
@@ -369,6 +392,17 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                             onClick={() => {
                               updateItemPrice(item.productId, item.previousPrice);
                               closeEdit(item.productId);
+                              if (
+                                item.cost !== undefined &&
+                                item.cost > 0 &&
+                                item.previousPrice !== undefined &&
+                                item.previousPrice < item.cost
+                              ) {
+                                alert.warning(
+                                  "Selling Below Cost",
+                                  `Old price Rs. ${item.previousPrice.toLocaleString()} is below cost (Rs. ${item.cost.toLocaleString()})`,
+                                );
+                              }
                             }}
                             title={`Sell at old price Rs. ${item.previousPrice?.toLocaleString()}`}
                           >
@@ -438,17 +472,38 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                           </span>
                           {/* Live derived preview */}
                           {edit.input !== "" &&
-                            !isNaN(parseFloat(edit.input)) && (
-                              <span className="text-xs font-medium">
-                                {edit.mode === "price"
-                                  ? originalPrice - parseFloat(edit.input) > 0
-                                    ? `Save Rs. ${((originalPrice - parseFloat(edit.input)) * item.quantity).toLocaleString()}`
-                                    : ""
-                                  : parseFloat(edit.input) <= 100
-                                    ? `Final: Rs. ${(originalPrice * (1 - parseFloat(edit.input) / 100) * item.quantity).toLocaleString()}`
-                                    : ""}
-                              </span>
-                            )}
+                            !isNaN(parseFloat(edit.input)) &&
+                            (() => {
+                              const enteredVal = parseFloat(edit.input);
+                              const projectedPrice =
+                                edit.mode === "price"
+                                  ? enteredVal
+                                  : originalPrice * (1 - enteredVal / 100);
+                              const isProjectedBelowCost =
+                                item.cost !== undefined &&
+                                item.cost > 0 &&
+                                projectedPrice < item.cost;
+
+                              return (
+                                <div className="flex items-center gap-1.5">
+                                  {isProjectedBelowCost && (
+                                    <span className="text-[11px] font-semibold text-red-600 dark:text-red-400 flex items-center gap-0.5">
+                                      <AlertTriangle className="w-3 h-3" />
+                                      Below cost (Rs. {item.cost?.toLocaleString()})
+                                    </span>
+                                  )}
+                                  <span className="text-xs font-medium">
+                                    {edit.mode === "price"
+                                      ? originalPrice - enteredVal > 0
+                                        ? `Save Rs. ${((originalPrice - enteredVal) * item.quantity).toLocaleString()}`
+                                        : ""
+                                      : enteredVal <= 100
+                                        ? `Final: Rs. ${(projectedPrice * item.quantity).toLocaleString()}`
+                                        : ""}
+                                  </span>
+                                </div>
+                              );
+                            })()}
                         </div>
 
                         <div className="flex items-center gap-1">
@@ -476,6 +531,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                                   item.productId,
                                   originalPrice,
                                   item.quantity,
+                                  item.cost,
                                 );
                               if (e.key === "Escape") closeEdit(item.productId);
                             }}
@@ -488,6 +544,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                                 item.productId,
                                 originalPrice,
                                 item.quantity,
+                                item.cost,
                               )
                             }
                           >
