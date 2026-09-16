@@ -41,11 +41,20 @@ export async function POST(
             chequeDate: Date | null;
         }
 
+        interface PriceUpdateItem {
+            productId: string;
+            newPrice?: number;
+        }
+
         let paymentsToCreate: PaymentItemToCreate[] = [];
+        let priceUpdates: PriceUpdateItem[] = [];
 
         try {
             const body = await request.json();
             if (body) {
+                if (Array.isArray(body.priceUpdates)) {
+                    priceUpdates = body.priceUpdates;
+                }
                 if (Array.isArray(body.payments) && body.payments.length > 0) {
                     paymentsToCreate = body.payments
                         .map((p: any) => ({
@@ -113,7 +122,7 @@ export async function POST(
                 },
             });
 
-            // 2. Update stock & inventory logs for each product
+            // 2. Update stock, batches & inventory logs for each product
             for (const item of po.items) {
                 const product = await tx.product.findUnique({
                     where: { id: item.productId },
@@ -123,14 +132,38 @@ export async function POST(
                     const previousStock = product.stock;
                     const newStock = previousStock + item.quantity;
 
-                    // Update product stock and supplier link if unlinked
+                    // Create stock batch for FIFO tracking
+                    await tx.stockBatch.create({
+                        data: {
+                            productId: product.id,
+                            purchaseOrderId: po.id,
+                            batchNumber: `${po.orderNumber}-${product.sku || product.id.slice(-4)}`,
+                            cost: item.cost,
+                            quantity: item.quantity,
+                            remainingQty: item.quantity,
+                        },
+                    });
+
+                    // Check if price should be updated
+                    const priceUpdate = priceUpdates.find((p) => p.productId === product.id);
+                    const updateData: any = {
+                        stock: newStock,
+                        cost: item.cost,
+                        supplierId: product.supplierId || po.supplierId,
+                    };
+
+                    if (priceUpdate && priceUpdate.newPrice !== undefined && Number(priceUpdate.newPrice) > 0) {
+                        const newPriceVal = Number(priceUpdate.newPrice);
+                        if (newPriceVal !== Number(product.price)) {
+                            updateData.previousPrice = product.price;
+                            updateData.price = newPriceVal;
+                        }
+                    }
+
+                    // Update product
                     await tx.product.update({
                         where: { id: product.id },
-                        data: {
-                            stock: newStock,
-                            cost: item.cost,
-                            supplierId: product.supplierId || po.supplierId,
-                        },
+                        data: updateData,
                     });
 
                     // Create inventory log
@@ -142,7 +175,7 @@ export async function POST(
                             previousStock,
                             newStock,
                             reason: 'PURCHASE',
-                            note: `Received from Purchase Order ${po.orderNumber}`,
+                            note: `Received from Purchase Order ${po.orderNumber} (Cost: Rs. ${item.cost})`,
                         },
                     });
                 }
