@@ -19,6 +19,7 @@ import {
   Tag,
   History,
   PauseCircle,
+  AlertTriangle,
 } from "lucide-react";
 import { usePOSStore } from "@/store/posStore";
 import { useState, useEffect } from "react";
@@ -78,10 +79,20 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
 
   const handleRemoveItem = (productId: string) => removeFromCart(productId);
 
-  const handleUpdateQuantity = (productId: string, quantity: number) => {
+  const handleUpdateQuantity = (
+    productId: string,
+    quantity: number,
+    stock?: number,
+  ) => {
     if (quantity < 1) {
       handleRemoveItem(productId);
       return;
+    }
+    if (stock !== undefined && quantity > stock) {
+      alert.warning(
+        "Low Stock Warning",
+        `Quantity (${quantity}) exceeds available stock (${stock})`,
+      );
     }
     updateQuantity(productId, quantity);
   };
@@ -115,6 +126,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
     productId: string,
     originalPrice: number,
     quantity: number,
+    cost?: number,
   ) => {
     const edit = getEdit(productId);
     const value = parseFloat(edit.input);
@@ -133,10 +145,17 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
         return;
       }
       updateItemPrice(productId, value);
-      alert.success(
-        "Price overridden",
-        `Unit price set to Rs. ${value.toLocaleString()}`,
-      );
+      if (cost !== undefined && cost > 0 && value < cost) {
+        alert.warning(
+          "Selling Below Cost",
+          `Unit price Rs. ${value.toLocaleString()} is below cost (Rs. ${cost.toLocaleString()})`,
+        );
+      } else {
+        alert.success(
+          "Price overridden",
+          `Unit price set to Rs. ${value.toLocaleString()}`,
+        );
+      }
     } else if (edit.mode === "discount") {
       if (value > 100 || value < 0) {
         alert.error("Invalid discount", "Discount must be between 0% and 100%");
@@ -145,7 +164,14 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
       // Convert percentage to new unit price
       const newUnitPrice = originalPrice * (1 - value / 100);
       updateItemPrice(productId, newUnitPrice);
-      alert.success("Discount applied", `${value}% discount applied to item`);
+      if (cost !== undefined && cost > 0 && newUnitPrice < cost) {
+        alert.warning(
+          "Selling Below Cost",
+          `Discounted price Rs. ${newUnitPrice.toFixed(2)} is below cost (Rs. ${cost.toLocaleString()})`,
+        );
+      } else {
+        alert.success("Discount applied", `${value}% discount applied to item`);
+      }
     }
 
     closeEdit(productId);
@@ -218,6 +244,12 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                   item.previousPrice < originalPrice;
                 const isSoldAtPreviousPrice =
                   isOverridden && item.overridePrice === item.previousPrice;
+                const isBelowCost =
+                  item.cost !== undefined &&
+                  item.cost > 0 &&
+                  effectivePrice < item.cost;
+                const isExceedingStock =
+                  item.stock !== undefined && item.quantity > item.stock;
 
                 // Derived values shown in UI
                 const itemOriginalTotal = originalPrice * item.quantity;
@@ -249,7 +281,15 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
 
                           {/* Effective / override price */}
                           {isOverridden && (
-                            <span className={`text-xs font-medium ${isSoldAtPreviousPrice ? "text-blue-600 dark:text-blue-400" : "text-amber-600"}`}>
+                            <span
+                              className={`text-xs font-medium ${
+                                isBelowCost
+                                  ? "text-red-600 dark:text-red-400 font-semibold"
+                                  : isSoldAtPreviousPrice
+                                    ? "text-blue-600 dark:text-blue-400"
+                                    : "text-amber-600"
+                              }`}
+                            >
                               Rs. {effectivePrice.toLocaleString()}
                             </span>
                           )}
@@ -257,6 +297,28 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                           {isSoldAtPreviousPrice && (
                             <Badge variant="secondary" className="text-[10px] bg-blue-100 text-blue-800 dark:bg-blue-950/70 dark:text-blue-300 border border-blue-300 dark:border-blue-800">
                               Old Price Applied
+                            </Badge>
+                          )}
+
+                          {isBelowCost && (
+                            <Badge
+                              variant="destructive"
+                              className="text-[10px] bg-red-100 text-red-800 dark:bg-red-950/70 dark:text-red-300 border border-red-300 dark:border-red-800 flex items-center gap-1 font-medium"
+                              title={`Product cost is Rs. ${item.cost?.toLocaleString()}`}
+                            >
+                              <AlertTriangle className="w-2.5 h-2.5 text-red-600 dark:text-red-400" />
+                              Below Cost (Cost: Rs. {item.cost?.toLocaleString()})
+                            </Badge>
+                          )}
+
+                          {isExceedingStock && (
+                            <Badge
+                              variant="outline"
+                              className="text-[10px] bg-amber-50 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-800 flex items-center gap-1 font-medium"
+                              title={`In stock: ${item.stock}`}
+                            >
+                              <AlertTriangle className="w-2.5 h-2.5 text-amber-600 dark:text-amber-400" />
+                              Exceeds Stock ({item.quantity}/{item.stock})
                             </Badge>
                           )}
 
@@ -289,6 +351,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                             handleUpdateQuantity(
                               item.productId,
                               item.quantity - 1,
+                              item.stock,
                             )
                           }
                         >
@@ -301,9 +364,14 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                             handleUpdateQuantity(
                               item.productId,
                               parseInt(e.target.value) || 1,
+                              item.stock,
                             )
                           }
-                          className="w-12 h-7 text-center text-sm px-1"
+                          className={`w-12 h-7 text-center text-sm px-1 ${
+                            isExceedingStock
+                              ? "border-amber-500 text-amber-700 dark:text-amber-400 font-semibold"
+                              : ""
+                          }`}
                           min="1"
                         />
                         <Button
@@ -314,11 +382,24 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                             handleUpdateQuantity(
                               item.productId,
                               item.quantity + 1,
+                              item.stock,
                             )
                           }
                         >
                           <Plus className="w-3 h-3" />
                         </Button>
+                        {item.stock !== undefined && (
+                          <span
+                            className={`text-[11px] ml-1 select-none ${
+                              isExceedingStock
+                                ? "text-amber-600 dark:text-amber-400 font-semibold"
+                                : "text-muted-foreground"
+                            }`}
+                            title={`Available shelf stock: ${item.stock}`}
+                          >
+                            / {item.stock}
+                          </span>
+                        )}
                       </div>
 
                       {/* Totals */}
@@ -353,6 +434,17 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                             onClick={() => {
                               updateItemPrice(item.productId, item.previousPrice);
                               closeEdit(item.productId);
+                              if (
+                                item.cost !== undefined &&
+                                item.cost > 0 &&
+                                item.previousPrice !== undefined &&
+                                item.previousPrice < item.cost
+                              ) {
+                                alert.warning(
+                                  "Selling Below Cost",
+                                  `Old price Rs. ${item.previousPrice.toLocaleString()} is below cost (Rs. ${item.cost.toLocaleString()})`,
+                                );
+                              }
                             }}
                             title={`Sell at old price Rs. ${item.previousPrice?.toLocaleString()}`}
                           >
@@ -422,17 +514,38 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                           </span>
                           {/* Live derived preview */}
                           {edit.input !== "" &&
-                            !isNaN(parseFloat(edit.input)) && (
-                              <span className="text-xs font-medium">
-                                {edit.mode === "price"
-                                  ? originalPrice - parseFloat(edit.input) > 0
-                                    ? `Save Rs. ${((originalPrice - parseFloat(edit.input)) * item.quantity).toLocaleString()}`
-                                    : ""
-                                  : parseFloat(edit.input) <= 100
-                                    ? `Final: Rs. ${(originalPrice * (1 - parseFloat(edit.input) / 100) * item.quantity).toLocaleString()}`
-                                    : ""}
-                              </span>
-                            )}
+                            !isNaN(parseFloat(edit.input)) &&
+                            (() => {
+                              const enteredVal = parseFloat(edit.input);
+                              const projectedPrice =
+                                edit.mode === "price"
+                                  ? enteredVal
+                                  : originalPrice * (1 - enteredVal / 100);
+                              const isProjectedBelowCost =
+                                item.cost !== undefined &&
+                                item.cost > 0 &&
+                                projectedPrice < item.cost;
+
+                              return (
+                                <div className="flex items-center gap-1.5">
+                                  {isProjectedBelowCost && (
+                                    <span className="text-[11px] font-semibold text-red-600 dark:text-red-400 flex items-center gap-0.5">
+                                      <AlertTriangle className="w-3 h-3" />
+                                      Below cost (Rs. {item.cost?.toLocaleString()})
+                                    </span>
+                                  )}
+                                  <span className="text-xs font-medium">
+                                    {edit.mode === "price"
+                                      ? originalPrice - enteredVal > 0
+                                        ? `Save Rs. ${((originalPrice - enteredVal) * item.quantity).toLocaleString()}`
+                                        : ""
+                                      : enteredVal <= 100
+                                        ? `Final: Rs. ${(projectedPrice * item.quantity).toLocaleString()}`
+                                        : ""}
+                                  </span>
+                                </div>
+                              );
+                            })()}
                         </div>
 
                         <div className="flex items-center gap-1">
@@ -460,6 +573,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                                   item.productId,
                                   originalPrice,
                                   item.quantity,
+                                  item.cost,
                                 );
                               if (e.key === "Escape") closeEdit(item.productId);
                             }}
@@ -472,6 +586,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                                 item.productId,
                                 originalPrice,
                                 item.quantity,
+                                item.cost,
                               )
                             }
                           >
@@ -635,6 +750,52 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                     </span>
                   </div>
                 ) : null;
+              })()}
+
+              {/* Below cost warning summary banner */}
+              {(() => {
+                const belowCostItems = cart.items.filter(
+                  (item) =>
+                    item.cost !== undefined &&
+                    item.cost > 0 &&
+                    (item.overridePrice ?? item.price) < item.cost,
+                );
+                if (belowCostItems.length === 0) return null;
+                return (
+                  <div className="flex items-center gap-1.5 text-xs text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 px-2.5 py-1.5 rounded-md">
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+                    <span>
+                      <strong>
+                        {belowCostItems.length}{" "}
+                        {belowCostItems.length === 1 ? "item is" : "items are"}
+                      </strong>{" "}
+                      priced below product cost
+                    </span>
+                  </div>
+                );
+              })()}
+
+              {/* Stock exceeded warning summary banner */}
+              {(() => {
+                const stockExceededItems = cart.items.filter(
+                  (item) =>
+                    item.stock !== undefined && item.quantity > item.stock,
+                );
+                if (stockExceededItems.length === 0) return null;
+                return (
+                  <div className="flex items-center gap-1.5 text-xs text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 px-2.5 py-1.5 rounded-md">
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+                    <span>
+                      <strong>
+                        {stockExceededItems.length}{" "}
+                        {stockExceededItems.length === 1
+                          ? "item exceeds"
+                          : "items exceed"}
+                      </strong>{" "}
+                      available stock
+                    </span>
+                  </div>
+                );
               })()}
 
               {/* Grand Total */}

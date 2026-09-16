@@ -5,6 +5,7 @@ export interface CartItem {
     price: number;
     previousPrice?: number;
     cost?: number;
+    stock?: number;
     discount?: number;
     overridePrice?: number;
     quantity: number;

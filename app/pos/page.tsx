@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { alert } from "@/lib/alert";
 
 export default function POSPage() {
   const { products } = useProductStore();
@@ -35,6 +36,53 @@ export default function POSPage() {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const [completedSale, setCompletedSale] = useState<Sale | null>(null);
+
+  // Quick-Add by SKU or Barcode (Enter key in search)
+  const handleQuickAdd = (code: string): boolean => {
+    const trimmed = code.trim().toLowerCase();
+    if (!trimmed) return false;
+
+    // 1. Exact SKU match
+    let matched = products.find(
+      (p) => p.active && p.sku.toLowerCase() === trimmed,
+    );
+
+    // 2. Exact Barcode match
+    if (!matched) {
+      matched = products.find(
+        (p) => p.active && p.barcode && p.barcode.toLowerCase() === trimmed,
+      );
+    }
+
+    // 3. Single candidate fallback
+    if (!matched) {
+      const candidates = products.filter(
+        (p) =>
+          p.active &&
+          (p.name.toLowerCase().includes(trimmed) ||
+            p.sku.toLowerCase().includes(trimmed) ||
+            (p.barcode && p.barcode.toLowerCase().includes(trimmed))),
+      );
+      if (candidates.length === 1) {
+        matched = candidates[0];
+      }
+    }
+
+    if (matched) {
+      addToCart(matched);
+      alert.success(
+        "Added to Cart",
+        `${matched.name} (SKU: ${matched.sku})`,
+      );
+      return true;
+    } else {
+      alert.error(
+        "Product Not Found",
+        `No product found matching SKU or barcode "${code}"`,
+      );
+      return false;
+    }
+  };
 
   // Get unique categories from products
   const categories = useMemo(() => {
@@ -58,8 +106,13 @@ export default function POSPage() {
     <div className="flex h-[calc(100vh-7rem)] xl:h-[calc(100vh-7rem)] gap-4 overflow-hidden">
       {/* LEFT SIDE - Products */}
       <div className="flex-1 min-w-0 flex flex-col gap-3 overflow-hidden">
-        {/* Search */}
-        <ProductSearch placeholder={searchQuery} onSearch={setSearchQuery} />
+        {/* Search & Quick-Add */}
+        <ProductSearch
+          placeholder="Search name/category, or scan/enter SKU and press Enter..."
+          onSearch={setSearchQuery}
+          onQuickAdd={handleQuickAdd}
+          autoFocus
+        />
 
         {/* Category Filter */}
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
