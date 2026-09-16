@@ -710,6 +710,29 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                 ) : null;
               })()}
 
+              {/* Below cost warning summary banner */}
+              {(() => {
+                const belowCostItems = cart.items.filter(
+                  (item) =>
+                    item.cost !== undefined &&
+                    item.cost > 0 &&
+                    (item.overridePrice ?? item.price) < item.cost,
+                );
+                if (belowCostItems.length === 0) return null;
+                return (
+                  <div className="flex items-center gap-1.5 text-xs text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 px-2.5 py-1.5 rounded-md">
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+                    <span>
+                      <strong>
+                        {belowCostItems.length}{" "}
+                        {belowCostItems.length === 1 ? "item is" : "items are"}
+                      </strong>{" "}
+                      priced below product cost
+                    </span>
+                  </div>
+                );
+              })()}
+
               {/* Grand Total */}
               <div className="flex justify-between text-lg font-bold">
                 <span>Total</span>
