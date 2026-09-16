@@ -5,9 +5,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
-} from "@/components/ui/card";
-import { Dialog as BaseDialog, DialogContent as BaseDialogContent, DialogHeader as BaseDialogHeader, DialogTitle as BaseDialogTitle } from "@/components/ui/dialog";
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -76,21 +74,21 @@ export default function HeldTransactionsModal({
   };
 
   return (
-    <BaseDialog open={open} onOpenChange={onClose}>
-      <BaseDialogContent className="max-w-2xl max-h-[85vh] flex flex-col p-6">
-        <BaseDialogHeader className="pb-2 border-b">
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col p-6">
+        <DialogHeader className="pb-2 border-b">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="p-2 rounded-lg bg-amber-100 dark:bg-amber-950/50 text-amber-600">
                 <PauseCircle className="w-5 h-5" />
               </div>
               <div>
-                <BaseDialogTitle className="text-xl font-bold flex items-center gap-2">
+                <DialogTitle className="text-xl font-bold flex items-center gap-2">
                   Held Transactions
                   <Badge variant="secondary" className="bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
                     {heldTransactions.length} Parked
                   </Badge>
-                </BaseDialogTitle>
+                </DialogTitle>
                 <p className="text-xs text-muted-foreground mt-0.5">
                   Resume parked customer carts or discard old holds
                 </p>
