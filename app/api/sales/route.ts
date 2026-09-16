@@ -168,10 +168,23 @@ export async function POST(request: NextRequest) {
                     total: item.total,
                 });
 
-                // Decrement product stock
-                await tx.product.update({
+                // Decrement product stock and record inventory audit log
+                const updatedProduct = await tx.product.update({
                     where: { id: item.productId },
                     data: { stock: { decrement: item.quantity } },
+                    select: { stock: true },
+                });
+
+                await tx.inventoryLog.create({
+                    data: {
+                        productId: item.productId,
+                        userId: data.userId || null,
+                        quantityChange: -item.quantity,
+                        previousStock: updatedProduct.stock + item.quantity,
+                        newStock: updatedProduct.stock,
+                        reason: 'SALE',
+                        note: `POS Sale: ${item.quantity}x ${item.productName}`,
+                    },
                 });
             }
 

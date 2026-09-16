@@ -44,6 +44,20 @@ export async function POST(request: NextRequest) {
                 active: true,
             },
         });
+
+        // If product was created with initial stock, create an initial stock batch for FIFO tracking
+        if (product.stock > 0) {
+            await prisma.stockBatch.create({
+                data: {
+                    productId: product.id,
+                    batchNumber: `INIT-${product.sku}`,
+                    cost: product.cost,
+                    quantity: product.stock,
+                    remainingQty: product.stock,
+                },
+            });
+        }
+
         return NextResponse.json(product, { status: 201 });
     } catch (error) {
         if (error instanceof z.ZodError) {

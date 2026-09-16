@@ -311,9 +311,10 @@ export const PurchaseOrdersTab = () => {
     > = {};
 
     po.items?.forEach((item) => {
-      const currentCost = item.product?.cost ? Number(item.product.cost) : Number(item.cost);
+      const prod = item.product || products.find((p: any) => p.id === item.productId);
+      const currentCost = prod?.cost ? Number(prod.cost) : Number(item.cost);
       const newCost = Number(item.cost);
-      const currentPrice = item.product?.price ? Number(item.product.price) : 0;
+      const currentPrice = prod?.price ? Number(prod.price) : 0;
 
       // Suggest new price preserving markup margin ratio
       let suggested = currentPrice;
@@ -326,8 +327,8 @@ export const PurchaseOrdersTab = () => {
 
       initialReview[item.productId] = {
         productId: item.productId,
-        name: item.product?.name || item.productName || "Product",
-        sku: item.product?.sku || "",
+        name: prod?.name || item.productName || "Product",
+        sku: prod?.sku || "",
         currentCost,
         newCost,
         currentPrice,

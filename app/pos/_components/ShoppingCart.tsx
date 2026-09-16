@@ -190,7 +190,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                 const hasPreviousPrice =
                   item.previousPrice !== undefined &&
                   item.previousPrice > 0 &&
-                  item.previousPrice !== originalPrice;
+                  item.previousPrice < originalPrice;
                 const isSoldAtPreviousPrice =
                   isOverridden && item.overridePrice === item.previousPrice;
 
