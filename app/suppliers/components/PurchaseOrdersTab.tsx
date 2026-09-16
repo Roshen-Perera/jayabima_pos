@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CheckCircle2, Loader2, PackagePlus, Plus, Trash2, Truck } from "lucide-react";
+import { CheckCircle2, Loader2, PackagePlus, Plus, Tag, Trash2, Truck } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { PurchaseOrder } from "../types/purchaseOrder.types";
 import { productCategories } from "@/data/data";
