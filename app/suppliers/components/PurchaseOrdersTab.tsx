@@ -247,6 +247,23 @@ export const PurchaseOrdersTab = () => {
   const [reference, setReference] = useState("");
   const [chequeDate, setChequeDate] = useState("");
 
+  // Price & Margin Review state for received items
+  const [priceReview, setPriceReview] = useState<
+    Record<
+      string,
+      {
+        productId: string;
+        name: string;
+        sku: string;
+        currentCost: number;
+        newCost: number;
+        currentPrice: number;
+        newPrice: string;
+        updatePrice: boolean;
+      }
+    >
+  >({});
+
   // Split payment rows state (e.g. Cash + Cheque 1 + Cheque 2)
   const [splitRows, setSplitRows] = useState<
     { method: "CASH" | "BANK_TRANSFER" | "CHEQUE"; amount: number | ""; reference: string; chequeDate: string }[]
@@ -277,6 +294,49 @@ export const PurchaseOrdersTab = () => {
       { method: "CASH", amount: "", reference: "", chequeDate: "" },
       { method: "CHEQUE", amount: "", reference: "", chequeDate: "" },
     ]);
+
+    // Build price review dictionary for each item in the PO
+    const initialReview: Record<
+      string,
+      {
+        productId: string;
+        name: string;
+        sku: string;
+        currentCost: number;
+        newCost: number;
+        currentPrice: number;
+        newPrice: string;
+        updatePrice: boolean;
+      }
+    > = {};
+
+    po.items?.forEach((item) => {
+      const currentCost = item.product?.cost ? Number(item.product.cost) : Number(item.cost);
+      const newCost = Number(item.cost);
+      const currentPrice = item.product?.price ? Number(item.product.price) : 0;
+
+      // Suggest new price preserving markup margin ratio
+      let suggested = currentPrice;
+      if (currentCost > 0 && currentPrice > currentCost && newCost !== currentCost) {
+        const marginRatio = currentPrice / currentCost;
+        suggested = Math.round(newCost * marginRatio);
+      } else if (newCost > currentPrice) {
+        suggested = Math.round(newCost * 1.1);
+      }
+
+      initialReview[item.productId] = {
+        productId: item.productId,
+        name: item.product?.name || item.productName || "Product",
+        sku: item.product?.sku || "",
+        currentCost,
+        newCost,
+        currentPrice,
+        newPrice: suggested.toString(),
+        updatePrice: newCost !== currentCost, // auto-select if cost changed
+      };
+    });
+
+    setPriceReview(initialReview);
     setReceiveModalOpen(true);
   };
 
@@ -284,7 +344,17 @@ export const PurchaseOrdersTab = () => {
     if (!targetPo) return;
     setReceivingId(targetPo.id);
     try {
-      let bodyData: any = {};
+      // Collect price updates where user enabled updatePrice
+      const priceUpdates = Object.values(priceReview)
+        .filter((item) => item.updatePrice && parseFloat(item.newPrice) > 0)
+        .map((item) => ({
+          productId: item.productId,
+          newPrice: parseFloat(item.newPrice),
+        }));
+
+      let bodyData: any = {
+        priceUpdates,
+      };
       if (paymentTerm === "SPLIT") {
         const formattedPayments = splitRows
           .filter((r) => Number(r.amount) > 0)
@@ -302,11 +372,13 @@ export const PurchaseOrdersTab = () => {
         }
 
         bodyData = {
+          ...bodyData,
           paymentTerm: "SPLIT",
           payments: formattedPayments,
         };
       } else {
         bodyData = {
+          ...bodyData,
           paymentTerm,
           paidAmount: paymentTerm === "PARTIAL" ? parseFloat(paidAmount) || 0 : undefined,
           paymentMethod,
