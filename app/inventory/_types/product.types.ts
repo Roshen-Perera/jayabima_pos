@@ -7,6 +7,7 @@ export interface Product {
     barcode?: string;
     supplierId?: string;
     price: number;
+    previousPrice?: number;
     cost: number;
     stock: number;
     minStock: number;
