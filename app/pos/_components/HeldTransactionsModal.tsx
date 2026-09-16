@@ -203,7 +203,7 @@ export default function HeldTransactionsModal({
             </div>
           </ScrollArea>
         )}
-      </BaseDialogContent>
-    </BaseDialog>
+      </DialogContent>
+    </Dialog>
   );
 }
