@@ -95,7 +95,7 @@ export default function HeldTransactionsModal({
               </div>
             </div>
           </div>
-        </BaseDialogHeader>
+        </DialogHeader>
 
         {heldTransactions.length === 0 ? (
           <div className="py-16 text-center space-y-3">
