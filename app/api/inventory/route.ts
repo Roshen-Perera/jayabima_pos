@@ -10,8 +10,12 @@ export async function GET(request: NextRequest) {
     try {
         const searchParams = request.nextUrl.searchParams;
         const showInactive = searchParams.get('showInactive') === 'true';
+        const supplierId = searchParams.get('supplierId');
         const products = await prisma.product.findMany({
-            where: { active: !showInactive },
+            where: {
+                active: !showInactive,
+                ...(supplierId ? { supplierId } : {}),
+            },
             orderBy: { createdAt: 'desc' },
         });
         return new Response(JSON.stringify(products), { status: 200 });
