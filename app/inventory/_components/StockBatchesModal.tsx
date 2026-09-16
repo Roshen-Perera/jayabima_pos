@@ -101,9 +101,9 @@ export const StockBatchesModal: React.FC<StockBatchesModalProps> = ({
             <div className="space-y-2 max-h-[50vh] overflow-y-auto pr-1">
               {batches.map((batch, index) => {
                 const isDepleted = batch.remainingQty <= 0;
-                // Oldest active batch is currently selling
+                // First active batch in chronological order is currently selling under FIFO
                 const activeBatches = batches.filter((b) => b.remainingQty > 0);
-                const isCurrentlySelling = activeBatches.length > 0 && activeBatches[activeBatches.length - 1]?.id === batch.id;
+                const isCurrentlySelling = activeBatches.length > 0 && activeBatches[0]?.id === batch.id;
 
                 return (
                   <div
