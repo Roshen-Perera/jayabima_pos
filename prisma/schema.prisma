@@ -288,6 +288,8 @@ enum PaymentMethod {
   CREDIT
   SPLIT
   PARTIAL
+  MOBILE
+  OTHER
 }
 
 enum SaleStatus {
