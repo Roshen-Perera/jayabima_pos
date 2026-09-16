@@ -55,3 +55,13 @@ export interface SaleItem {
     cost?: number;
     total: number;
 }
+
+export interface HeldTransaction {
+    id: string;
+    holdNumber: string;
+    cart: Cart;
+    customerId?: string;
+    customerName?: string;
+    note?: string;
+    createdAt: string;
+}
