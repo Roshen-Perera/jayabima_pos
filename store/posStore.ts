@@ -1,5 +1,5 @@
 import { Product } from "@/app/inventory/_types/product.types";
-import { Cart, CartItem, Sale } from "@/app/pos/_types/pos.types";
+import { Cart, CartItem, HeldTransaction, Sale } from "@/app/pos/_types/pos.types";
 import { create } from "zustand";
 
 interface POSState {
@@ -7,6 +7,7 @@ interface POSState {
     customerId?: string;
     customerName?: string;
     sales: Sale[];
+    heldTransactions: HeldTransaction[];
 
     addToCart: (product: Product) => void;
     removeFromCart: (productId: string) => void;
@@ -16,6 +17,12 @@ interface POSState {
     updateItemPrice: (productId: string, price: number | undefined) => void;
     setCustomer: (id?: string, name?: string) => void;
     calculateTotals: () => void;
+
+    // Hold feature actions
+    loadHeldTransactions: () => void;
+    holdCart: (note?: string) => string | null;
+    resumeHeldTransaction: (id: string) => boolean;
+    deleteHeldTransaction: (id: string) => void;
 }
 
 export const usePOSStore = create<POSState>((set, get) => ({
@@ -30,6 +37,7 @@ export const usePOSStore = create<POSState>((set, get) => ({
     customerId: undefined,
     customerName: undefined,
     sales: [],
+    heldTransactions: [],
 
     addToCart: (product) => {
         const { cart } = get();
@@ -130,5 +138,90 @@ export const usePOSStore = create<POSState>((set, get) => ({
         const total = Math.max(0, subtotal - (cart.discount ?? 0));
 
         set({ cart: { ...cart, subtotal, total } });
+    },
+
+    loadHeldTransactions: () => {
+        if (typeof window === "undefined") return;
+        try {
+            const stored = localStorage.getItem("pos_held_transactions");
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                set({ heldTransactions: Array.isArray(parsed) ? parsed : [] });
+            }
+        } catch (e) {
+            console.error("Failed to load held transactions", e);
+        }
+    },
+
+    holdCart: (note?: string) => {
+        const { cart, customerId, customerName, heldTransactions } = get();
+        if (!cart.items || cart.items.length === 0) return null;
+
+        const nextNum = heldTransactions.length + 1;
+        const holdNumber = `HOLD-${String(nextNum).padStart(3, "0")}`;
+
+        const newHold: HeldTransaction = {
+            id: `hold-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+            holdNumber,
+            cart: JSON.parse(JSON.stringify(cart)),
+            customerId,
+            customerName,
+            note: note?.trim() || undefined,
+            createdAt: new Date().toISOString(),
+        };
+
+        const updatedHolds = [newHold, ...heldTransactions];
+        set({ heldTransactions: updatedHolds });
+
+        if (typeof window !== "undefined") {
+            try {
+                localStorage.setItem("pos_held_transactions", JSON.stringify(updatedHolds));
+            } catch (e) {
+                console.error("Failed to save held transactions", e);
+            }
+        }
+
+        get().clearCart();
+        return holdNumber;
+    },
+
+    resumeHeldTransaction: (id: string) => {
+        const { heldTransactions } = get();
+        const target = heldTransactions.find((h) => h.id === id);
+        if (!target) return false;
+
+        set({
+            cart: JSON.parse(JSON.stringify(target.cart)),
+            customerId: target.customerId,
+            customerName: target.customerName,
+        });
+
+        const updatedHolds = heldTransactions.filter((h) => h.id !== id);
+        set({ heldTransactions: updatedHolds });
+
+        if (typeof window !== "undefined") {
+            try {
+                localStorage.setItem("pos_held_transactions", JSON.stringify(updatedHolds));
+            } catch (e) {
+                console.error("Failed to save held transactions", e);
+            }
+        }
+
+        get().calculateTotals();
+        return true;
+    },
+
+    deleteHeldTransaction: (id: string) => {
+        const { heldTransactions } = get();
+        const updatedHolds = heldTransactions.filter((h) => h.id !== id);
+        set({ heldTransactions: updatedHolds });
+
+        if (typeof window !== "undefined") {
+            try {
+                localStorage.setItem("pos_held_transactions", JSON.stringify(updatedHolds));
+            } catch (e) {
+                console.error("Failed to save held transactions", e);
+            }
+        }
     },
 }));
