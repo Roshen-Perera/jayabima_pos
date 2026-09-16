@@ -114,180 +114,208 @@ export async function POST(request: NextRequest) {
         }
 
         // Execute sale and stock deduction in a database transaction
-        const sale = await prisma.$transaction(async (tx) => {
-            // 1. Calculate FIFO cost for each item and consume batches
-            const itemsWithCost: Array<{
-                productId: string;
-                productName: string;
-                quantity: number;
-                price: number;
-                cost: number;
-                total: number;
-            }> = [];
+        const sale = await prisma.$transaction(
+            async (tx) => {
+                const productIds = data.items.map((i) => i.productId);
 
-            for (const item of data.items) {
-                // Find all available batches for this product ordered by oldest first
-                const batches = await tx.stockBatch.findMany({
-                    where: { productId: item.productId, remainingQty: { gt: 0 } },
-                    orderBy: { createdAt: 'asc' },
-                });
+                // Batch fetch all active stock batches and fallback product costs upfront to minimize DB round-trips
+                const [allBatches, catalogProducts] = await Promise.all([
+                    tx.stockBatch.findMany({
+                        where: { productId: { in: productIds }, remainingQty: { gt: 0 } },
+                        orderBy: { createdAt: 'asc' },
+                    }),
+                    tx.product.findMany({
+                        where: { id: { in: productIds } },
+                        select: { id: true, cost: true },
+                    }),
+                ]);
 
-                let qtyNeeded = item.quantity;
-                let totalCost = 0;
+                // Map catalog costs for quick lookup
+                const catalogCostMap = new Map<string, number>(
+                    catalogProducts.map((p) => [p.id, Number(p.cost)])
+                );
 
-                for (const batch of batches) {
-                    if (qtyNeeded <= 0) break;
-                    const take = Math.min(qtyNeeded, batch.remainingQty);
-                    totalCost += take * Number(batch.cost);
-                    qtyNeeded -= take;
-
-                    await tx.stockBatch.update({
-                        where: { id: batch.id },
-                        data: { remainingQty: { decrement: take } },
-                    });
+                // Group batches by productId
+                const batchesByProduct = new Map<string, typeof allBatches>();
+                for (const batch of allBatches) {
+                    const list = batchesByProduct.get(batch.productId) || [];
+                    list.push(batch);
+                    batchesByProduct.set(batch.productId, list);
                 }
 
-                // If some units are not covered by batches (legacy inventory), use catalog cost
-                if (qtyNeeded > 0) {
-                    const product = await tx.product.findUnique({
-                        where: { id: item.productId },
-                        select: { cost: true },
-                    });
-                    const fallbackCost = product ? Number(product.cost) : 0;
-                    totalCost += qtyNeeded * fallbackCost;
-                }
+                // 1. Calculate FIFO cost for each item and consume batches
+                const itemsWithCost: Array<{
+                    productId: string;
+                    productName: string;
+                    quantity: number;
+                    price: number;
+                    cost: number;
+                    total: number;
+                }> = [];
 
-                const unitCost = item.quantity > 0 ? totalCost / item.quantity : 0;
+                for (const item of data.items) {
+                    const batches = batchesByProduct.get(item.productId) || [];
+                    let qtyNeeded = item.quantity;
+                    let totalCost = 0;
 
-                itemsWithCost.push({
-                    productId: item.productId,
-                    productName: item.productName,
-                    quantity: item.quantity,
-                    price: item.price,
-                    cost: unitCost,
-                    total: item.total,
-                });
+                    for (const batch of batches) {
+                        if (qtyNeeded <= 0) break;
+                        const available = batch.remainingQty;
+                        if (available <= 0) continue;
 
-                // Decrement product stock and record inventory audit log
-                const updatedProduct = await tx.product.update({
-                    where: { id: item.productId },
-                    data: { stock: { decrement: item.quantity } },
-                    select: { stock: true },
-                });
+                        const take = Math.min(qtyNeeded, available);
+                        totalCost += take * Number(batch.cost);
+                        qtyNeeded -= take;
+                        batch.remainingQty -= take; // update in-memory state for subsequent items
 
-                await tx.inventoryLog.create({
-                    data: {
-                        productId: item.productId,
-                        userId: data.userId || null,
-                        quantityChange: -item.quantity,
-                        previousStock: updatedProduct.stock + item.quantity,
-                        newStock: updatedProduct.stock,
-                        reason: 'SALE',
-                        note: `POS Sale: ${item.quantity}x ${item.productName}`,
-                    },
-                });
-            }
-
-            // 2. Create the sale & items with recorded costs
-            const createdSale = await tx.sale.create({
-                data: {
-                    customerId: data.customerId || null,
-                    userId: data.userId,
-                    originalTotal: data.originalTotal,
-                    itemDiscount: data.itemDiscount,
-                    discount: data.discount,
-                    totalSavings: data.totalSavings,
-                    total: data.total,
-                    paymentMethod: dbPaymentMethod,
-                    cashPaid: data.cashPaid ?? null,
-                    cashBalance: data.cashBalance ?? null,
-                    reference: data.reference || null,
-                    chequeDate: data.chequeDate ? new Date(data.chequeDate) : null,
-                    status: data.status,
-                    items: {
-                        create: itemsWithCost.map((item) => ({
-                            productId: item.productId,
-                            productName: item.productName,
-                            quantity: item.quantity,
-                            price: item.price,
-                            cost: item.cost,
-                            total: item.total,
-                        })),
-                    },
-                },
-                include: {
-                    items: true,
-                    customer: { select: { id: true, name: true } },
-                },
-            });
-
-            // 3. Sync customer ledger: record payments and credit balance
-            if (data.customerId) {
-                let totalPaidUpfront = 0;
-
-                if (data.payments && data.payments.length > 0) {
-                    for (const p of data.payments) {
-                        totalPaidUpfront += p.amount;
-                        if (p.method === 'CASH' || p.method === 'CHEQUE' || p.method === 'BANK_TRANSFER') {
-                            await tx.customerPayment.create({
-                                data: {
-                                    customerId: data.customerId,
-                                    amount: p.amount,
-                                    method: p.method === 'CHEQUE' ? 'CHEQUE' : p.method === 'BANK_TRANSFER' ? 'BANK_TRANSFER' : 'CASH',
-                                    reference: p.reference || null,
-                                    chequeDate: p.chequeDate ? new Date(p.chequeDate) : null,
-                                    note: `POS Sale #${createdSale.id.substring(0, 8)} payment line (${p.method})`,
-                                },
-                            });
-                        }
+                        await tx.stockBatch.update({
+                            where: { id: batch.id },
+                            data: { remainingQty: { decrement: take } },
+                        });
                     }
-                } else if (data.paymentMethod === 'CASH' || data.paymentMethod === 'CHEQUE' || data.paymentMethod === 'BANK_TRANSFER') {
-                    totalPaidUpfront = data.total;
-                    await tx.customerPayment.create({
+
+                    // If some units are not covered by batches (legacy inventory), use catalog cost
+                    if (qtyNeeded > 0) {
+                        const fallbackCost = catalogCostMap.get(item.productId) || 0;
+                        totalCost += qtyNeeded * fallbackCost;
+                    }
+
+                    const unitCost = item.quantity > 0 ? totalCost / item.quantity : 0;
+
+                    itemsWithCost.push({
+                        productId: item.productId,
+                        productName: item.productName,
+                        quantity: item.quantity,
+                        price: item.price,
+                        cost: unitCost,
+                        total: item.total,
+                    });
+
+                    // Decrement product stock and record inventory audit log
+                    const updatedProduct = await tx.product.update({
+                        where: { id: item.productId },
+                        data: { stock: { decrement: item.quantity } },
+                        select: { stock: true },
+                    });
+
+                    await tx.inventoryLog.create({
                         data: {
-                            customerId: data.customerId,
-                            amount: data.total,
-                            method: data.paymentMethod === 'CHEQUE' ? 'CHEQUE' : data.paymentMethod === 'BANK_TRANSFER' ? 'BANK_TRANSFER' : 'CASH',
-                            reference: data.reference || null,
-                            chequeDate: data.chequeDate ? new Date(data.chequeDate) : null,
-                            note: `POS Sale #${createdSale.id.substring(0, 8)} full payment (${data.paymentMethod})`,
+                            productId: item.productId,
+                            userId: data.userId || null,
+                            quantityChange: -item.quantity,
+                            previousStock: updatedProduct.stock + item.quantity,
+                            newStock: updatedProduct.stock,
+                            reason: 'SALE',
+                            note: `POS Sale: ${item.quantity}x ${item.productName}`,
                         },
                     });
                 }
 
-                const remainderUnpaid = Math.max(0, data.total - totalPaidUpfront);
-
-                // Handle excess payment transfer to credit balance if customer opted for it
-                const hasExcessCredit = data.excessHandling === 'CREDIT_BALANCE' && (data.excessAmount ?? 0) > 0;
-                const excessCreditAmt = hasExcessCredit ? (data.excessAmount ?? 0) : 0;
-
-                if (excessCreditAmt > 0) {
-                    await tx.customerPayment.create({
-                        data: {
-                            customerId: data.customerId,
-                            amount: excessCreditAmt,
-                            method: 'CASH',
-                            note: `POS Sale #${createdSale.id.substring(0, 8)} excess change credited to account balance`,
-                        },
-                    });
-                }
-
-                await tx.customer.update({
-                    where: { id: data.customerId },
+                // 2. Create the sale & items with recorded costs
+                const createdSale = await tx.sale.create({
                     data: {
-                        totalPurchases: { increment: data.total },
-                        ...(remainderUnpaid > 0 && {
-                            creditBalance: { increment: remainderUnpaid },
-                        }),
-                        ...(excessCreditAmt > 0 && {
-                            creditBalance: { decrement: excessCreditAmt },
-                        }),
+                        customerId: data.customerId || null,
+                        userId: data.userId,
+                        originalTotal: data.originalTotal,
+                        itemDiscount: data.itemDiscount,
+                        discount: data.discount,
+                        totalSavings: data.totalSavings,
+                        total: data.total,
+                        paymentMethod: dbPaymentMethod,
+                        cashPaid: data.cashPaid ?? null,
+                        cashBalance: data.cashBalance ?? null,
+                        reference: data.reference || null,
+                        chequeDate: data.chequeDate ? new Date(data.chequeDate) : null,
+                        status: data.status,
+                        items: {
+                            create: itemsWithCost.map((item) => ({
+                                productId: item.productId,
+                                productName: item.productName,
+                                quantity: item.quantity,
+                                price: item.price,
+                                cost: item.cost,
+                                total: item.total,
+                            })),
+                        },
+                    },
+                    include: {
+                        items: true,
+                        customer: { select: { id: true, name: true } },
                     },
                 });
-            }
 
-            return createdSale;
-        });
+                // 3. Sync customer ledger: record payments and credit balance
+                if (data.customerId) {
+                    let totalPaidUpfront = 0;
+
+                    if (data.payments && data.payments.length > 0) {
+                        for (const p of data.payments) {
+                            totalPaidUpfront += p.amount;
+                            if (p.method === 'CASH' || p.method === 'CHEQUE' || p.method === 'BANK_TRANSFER') {
+                                await tx.customerPayment.create({
+                                    data: {
+                                        customerId: data.customerId,
+                                        amount: p.amount,
+                                        method: p.method === 'CHEQUE' ? 'CHEQUE' : p.method === 'BANK_TRANSFER' ? 'BANK_TRANSFER' : 'CASH',
+                                        reference: p.reference || null,
+                                        chequeDate: p.chequeDate ? new Date(p.chequeDate) : null,
+                                        note: `POS Sale #${createdSale.id.substring(0, 8)} payment line (${p.method})`,
+                                    },
+                                });
+                            }
+                        }
+                    } else if (data.paymentMethod === 'CASH' || data.paymentMethod === 'CHEQUE' || data.paymentMethod === 'BANK_TRANSFER') {
+                        totalPaidUpfront = data.total;
+                        await tx.customerPayment.create({
+                            data: {
+                                customerId: data.customerId,
+                                amount: data.total,
+                                method: data.paymentMethod === 'CHEQUE' ? 'CHEQUE' : data.paymentMethod === 'BANK_TRANSFER' ? 'BANK_TRANSFER' : 'CASH',
+                                reference: data.reference || null,
+                                chequeDate: data.chequeDate ? new Date(data.chequeDate) : null,
+                                note: `POS Sale #${createdSale.id.substring(0, 8)} full payment (${data.paymentMethod})`,
+                            },
+                        });
+                    }
+
+                    const remainderUnpaid = Math.max(0, data.total - totalPaidUpfront);
+
+                    // Handle excess payment transfer to credit balance if customer opted for it
+                    const hasExcessCredit = data.excessHandling === 'CREDIT_BALANCE' && (data.excessAmount ?? 0) > 0;
+                    const excessCreditAmt = hasExcessCredit ? (data.excessAmount ?? 0) : 0;
+
+                    if (excessCreditAmt > 0) {
+                        await tx.customerPayment.create({
+                            data: {
+                                customerId: data.customerId,
+                                amount: excessCreditAmt,
+                                method: 'CASH',
+                                note: `POS Sale #${createdSale.id.substring(0, 8)} excess change credited to account balance`,
+                            },
+                        });
+                    }
+
+                    await tx.customer.update({
+                        where: { id: data.customerId },
+                        data: {
+                            totalPurchases: { increment: data.total },
+                            ...(remainderUnpaid > 0 && {
+                                creditBalance: { increment: remainderUnpaid },
+                            }),
+                            ...(excessCreditAmt > 0 && {
+                                creditBalance: { decrement: excessCreditAmt },
+                            }),
+                        },
+                    });
+                }
+
+                return createdSale;
+            },
+            {
+                maxWait: 10000, // wait up to 10s for connection
+                timeout: 30000, // allow up to 30s execution time for transaction
+            }
+        );
 
         return NextResponse.json(sale, { status: 201 });
     } catch (error) {
