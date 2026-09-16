@@ -10,8 +10,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreVertical, Pencil, RotateCcw, Trash2 } from "lucide-react";
+import { Layers, MoreVertical, Pencil, RotateCcw, Trash2 } from "lucide-react";
 import ProductForm from "./ProductForm";
+import { StockBatchesModal } from "./StockBatchesModal";
 import {
   AlertDialogHeader,
   AlertDialogFooter,
@@ -33,6 +34,7 @@ const ProductActions = ({ product, type = "active" }: ProductActionsProps) => {
   const reactivateProduct = useProductStore((s) => s.reactivateProduct);
   const [showActionAlert, setShowActionAlert] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showBatchesDialog, setShowBatchesDialog] = useState(false);
 
   const handleDeactivate = async () => {
     try {
