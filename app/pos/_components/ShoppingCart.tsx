@@ -19,6 +19,7 @@ import {
   Tag,
   History,
   PauseCircle,
+  AlertTriangle,
 } from "lucide-react";
 import { usePOSStore } from "@/store/posStore";
 import { useState, useEffect } from "react";
@@ -115,6 +116,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
     productId: string,
     originalPrice: number,
     quantity: number,
+    cost?: number,
   ) => {
     const edit = getEdit(productId);
     const value = parseFloat(edit.input);
@@ -133,10 +135,17 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
         return;
       }
       updateItemPrice(productId, value);
-      alert.success(
-        "Price overridden",
-        `Unit price set to Rs. ${value.toLocaleString()}`,
-      );
+      if (cost !== undefined && cost > 0 && value < cost) {
+        alert.warning(
+          "Selling Below Cost",
+          `Unit price Rs. ${value.toLocaleString()} is below cost (Rs. ${cost.toLocaleString()})`,
+        );
+      } else {
+        alert.success(
+          "Price overridden",
+          `Unit price set to Rs. ${value.toLocaleString()}`,
+        );
+      }
     } else if (edit.mode === "discount") {
       if (value > 100 || value < 0) {
         alert.error("Invalid discount", "Discount must be between 0% and 100%");
@@ -145,7 +154,14 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
       // Convert percentage to new unit price
       const newUnitPrice = originalPrice * (1 - value / 100);
       updateItemPrice(productId, newUnitPrice);
-      alert.success("Discount applied", `${value}% discount applied to item`);
+      if (cost !== undefined && cost > 0 && newUnitPrice < cost) {
+        alert.warning(
+          "Selling Below Cost",
+          `Discounted price Rs. ${newUnitPrice.toFixed(2)} is below cost (Rs. ${cost.toLocaleString()})`,
+        );
+      } else {
+        alert.success("Discount applied", `${value}% discount applied to item`);
+      }
     }
 
     closeEdit(productId);
