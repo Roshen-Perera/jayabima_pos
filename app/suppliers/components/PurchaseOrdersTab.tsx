@@ -77,9 +77,9 @@ export const PurchaseOrdersTab = () => {
     }
   };
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (supplierId: string) => {
     try {
-      const res = await fetch("/api/inventory");
+      const res = await fetch(`/api/inventory?supplierId=${supplierId}`);
       if (res.ok) {
         const data = await res.json();
         setProducts(Array.isArray(data) ? data : data.products || []);
@@ -91,8 +91,20 @@ export const PurchaseOrdersTab = () => {
 
   useEffect(() => {
     fetchPurchaseOrders();
-    fetchProducts();
   }, []);
+
+  // Re-fetch products filtered by supplier whenever the supplier selection changes
+  useEffect(() => {
+    if (selectedSupplierId) {
+      setProducts([]);
+      setSelectedProductId("");
+      setShowNewProductForm(false);
+      fetchProducts(selectedSupplierId);
+    } else {
+      setProducts([]);
+      setSelectedProductId("");
+    }
+  }, [selectedSupplierId]);
 
   const handleProductSelect = (productId: string) => {
     if (productId === NEW_PRODUCT_SENTINEL) {
@@ -162,7 +174,7 @@ export const PurchaseOrdersTab = () => {
       }
 
       const created = await res.json();
-      await fetchProducts();
+      if (selectedSupplierId) await fetchProducts(selectedSupplierId);
 
       setPoItems((prev) => [
         ...prev,
@@ -507,12 +519,17 @@ export const PurchaseOrdersTab = () => {
                   <div className="sm:col-span-5">
                     <Label className="text-xs">Product</Label>
                     <select
-                      className="w-full border rounded-md p-2 text-sm bg-background"
+                      className="w-full border rounded-md p-2 text-sm bg-background disabled:opacity-50 disabled:cursor-not-allowed"
                       value={selectedProductId}
                       onChange={(e) => handleProductSelect(e.target.value)}
+                      disabled={!selectedSupplierId}
                     >
-                      <option value="">-- Select Product --</option>
-                      <option value={NEW_PRODUCT_SENTINEL}>✦ Create New Product...</option>
+                      <option value="">
+                        {selectedSupplierId ? (products.length === 0 ? "No products found for this supplier" : "-- Select Product --") : "-- Select a supplier first --"}
+                      </option>
+                      {selectedSupplierId && (
+                        <option value={NEW_PRODUCT_SENTINEL}>✦ Create New Product...</option>
+                      )}
                       {products.map((p) => (
                         <option key={p.id} value={p.id}>
                           {p.name} (Stock: {p.stock})
