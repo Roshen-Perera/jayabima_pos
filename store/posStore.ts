@@ -47,7 +47,9 @@ export const usePOSStore = create<POSState>((set, get) => ({
                 id: `cart-${Date.now()}`,
                 productId: product.id,
                 name: product.name,
-                price: product.price,
+                price: Number(product.price),
+                previousPrice: product.previousPrice ? Number(product.previousPrice) : undefined,
+                cost: product.cost ? Number(product.cost) : undefined,
                 quantity: 1,
                 category: product.category,
             };
