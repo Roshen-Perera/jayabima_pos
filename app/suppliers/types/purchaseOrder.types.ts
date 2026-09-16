@@ -5,6 +5,14 @@ export interface PurchaseOrderItem {
     purchaseOrderId: string;
     productId: string;
     productName?: string;
+    product?: {
+        id: string;
+        name: string;
+        sku: string;
+        cost: number;
+        price: number;
+        stock: number;
+    };
     quantity: number;
     cost: number;
     total: number;

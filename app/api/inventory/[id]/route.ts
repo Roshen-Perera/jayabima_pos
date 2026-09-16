@@ -14,9 +14,19 @@ export async function PUT(
         const { id } = await params;
         const body = await request.json();
         const validatedData = productSchema.partial().parse(body);
+        const existing = await prisma.product.findUnique({ where: { id } });
+        if (!existing) {
+            return NextResponse.json({ error: 'Product not found' }, { status: 404 });
+        }
+
+        const updatePayload: any = { ...validatedData };
+        if (validatedData.price !== undefined && Number(validatedData.price) !== Number(existing.price)) {
+            updatePayload.previousPrice = existing.price;
+        }
+
         const product = await prisma.product.update({
             where: { id },
-            data: validatedData,
+            data: updatePayload,
         });
         return NextResponse.json(product);
     } catch (error) {

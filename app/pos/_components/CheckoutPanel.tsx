@@ -188,7 +188,7 @@ export default function CheckoutPanel({
         0,
       );
       const itemDiscount = cart.items.reduce(
-        (sum, i) => sum + (i.price - (i.overridePrice ?? i.price)) * i.quantity,
+        (sum, i) => sum + Math.max(0, (i.price - (i.overridePrice ?? i.price)) * i.quantity),
         0,
       );
       const totalSavings = itemDiscount + (cart.discount ?? 0);

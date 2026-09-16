@@ -3,6 +3,8 @@ export interface CartItem {
     productId: string;
     name: string;
     price: number;
+    previousPrice?: number;
+    cost?: number;
     discount?: number;
     overridePrice?: number;
     quantity: number;
@@ -50,5 +52,6 @@ export interface SaleItem {
     productName: string;
     quantity: number;
     price: number;
+    cost?: number;
     total: number;
 }
