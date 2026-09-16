@@ -18,11 +18,14 @@ import {
   RotateCcw,
   Tag,
   History,
+  PauseCircle,
 } from "lucide-react";
 import { usePOSStore } from "@/store/posStore";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { alert } from "@/lib/alert";
 import CustomerSelector from "./CustomerSelector";
+import HoldCartModal from "./HoldCartModal";
+import HeldTransactionsModal from "./HeldTransactionsModal";
 
 interface ShoppingCartProps {
   onCheckout: () => void;
@@ -43,10 +46,18 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
     clearCart,
     applyDiscount,
     updateItemPrice,
+    heldTransactions,
+    loadHeldTransactions,
   } = usePOSStore();
 
   const [showCartDiscountInput, setShowCartDiscountInput] = useState(false);
   const [cartDiscountValue, setCartDiscountValue] = useState("");
+  const [isHoldModalOpen, setIsHoldModalOpen] = useState(false);
+  const [isHeldListModalOpen, setIsHeldListModalOpen] = useState(false);
+
+  useEffect(() => {
+    loadHeldTransactions();
+  }, [loadHeldTransactions]);
 
   // Per-item edit state keyed by productId
   const [itemEdits, setItemEdits] = useState<Record<string, ItemEditState>>({});
@@ -156,17 +167,31 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
             {cart.items.length}
           </Badge>
         </div>
-        {cart.items.length > 0 && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={clearCart}
-            className="w-8 h-8 text-muted-foreground hover:text-destructive"
-            title="Clear cart"
-          >
-            <Trash2 className="w-4 h-4" />
-          </Button>
-        )}
+        <div className="flex items-center gap-1.5">
+          {heldTransactions.length > 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsHeldListModalOpen(true)}
+              className="h-7 px-2 text-xs bg-amber-50 dark:bg-amber-950/50 border-amber-300 dark:border-amber-800 text-amber-800 dark:text-amber-300 hover:bg-amber-100"
+              title="View held transactions"
+            >
+              <PauseCircle className="w-3.5 h-3.5 mr-1 text-amber-600 dark:text-amber-400" />
+              Held ({heldTransactions.length})
+            </Button>
+          )}
+          {cart.items.length > 0 && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={clearCart}
+              className="w-8 h-8 text-muted-foreground hover:text-destructive"
+              title="Clear cart"
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          )}
+        </div>
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
@@ -620,18 +645,42 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                 </span>
               </div>
 
-              <Button
-                className="w-full mt-2"
-                size="lg"
-                onClick={onCheckout}
-                disabled={isEmpty}
-              >
-                Proceed to Checkout
-              </Button>
+              <div className="flex gap-2 mt-2">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => setIsHoldModalOpen(true)}
+                  disabled={isEmpty}
+                  className="flex-1 border-amber-300 dark:border-amber-800 text-amber-700 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/40 font-medium"
+                >
+                  <PauseCircle className="w-4.5 h-4.5 mr-1.5" />
+                  Hold Sale
+                </Button>
+                <Button
+                  className="flex-[2]"
+                  size="lg"
+                  onClick={onCheckout}
+                  disabled={isEmpty}
+                >
+                  Proceed to Checkout
+                </Button>
+              </div>
             </div>
           </div>
         )}
       </CardContent>
+
+      {/* Hold Cart Modal */}
+      <HoldCartModal
+        open={isHoldModalOpen}
+        onClose={() => setIsHoldModalOpen(false)}
+      />
+
+      {/* Held Transactions List Modal */}
+      <HeldTransactionsModal
+        open={isHeldListModalOpen}
+        onClose={() => setIsHeldListModalOpen(false)}
+      />
     </Card>
   );
 }
