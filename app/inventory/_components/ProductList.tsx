@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useProductStore } from "@/store/productStore";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Layers } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import ProductActions from "./ProductActions";
 import PermissionGuard from "@/lib/rbac/PermissionGuard";
@@ -105,6 +105,46 @@ const ProductList = () => {
                             </span>
                           </div>
                         </div>
+
+                        {/* Stock Batches Cost Breakdown */}
+                        {product.batches && product.batches.length > 0 && (
+                          <div className="p-2.5 rounded-lg bg-muted/40 border border-border/60 text-xs space-y-1.5 my-2">
+                            <div className="flex items-center justify-between text-[11px] font-semibold text-foreground">
+                              <span className="flex items-center gap-1.5">
+                                <Layers className="w-3.5 h-3.5 text-primary" />
+                                Stock by Cost{product.batches.length > 1 ? ` (${product.batches.length} Batches)` : ""}:
+                              </span>
+                              {product.batches.length > 1 ? (
+                                <Badge variant="outline" className="text-[10px] px-1.5 py-0 bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700">
+                                  Old + New Stock
+                                </Badge>
+                              ) : (
+                                <span className="text-[10px] text-muted-foreground font-normal">Active Lot</span>
+                              )}
+                            </div>
+                            <div className="space-y-1 pt-0.5">
+                              {product.batches.slice(0, 3).map((b, idx) => {
+                                const isOld = idx === 0 && product.batches!.length > 1;
+                                return (
+                                  <div key={b.id} className="flex items-center justify-between text-[11px]">
+                                    <span className="text-muted-foreground">
+                                      {isOld ? "🟢 Old Stock:" : product.batches!.length > 1 ? "🔵 New Stock:" : "Lot:"}{" "}
+                                      <strong className="text-foreground">{b.remainingQty} units</strong>
+                                    </span>
+                                    <span className="font-medium text-foreground">
+                                      @ Rs. {Number(b.cost).toLocaleString()}
+                                    </span>
+                                  </div>
+                                );
+                              })}
+                              {product.batches.length > 3 && (
+                                <p className="text-[10px] text-muted-foreground text-center pt-0.5">
+                                  +{product.batches.length - 3} more batches in queue...
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        )}
 
                         <div className="flex items-center justify-between mb-2">
                           <span className="text-sm text-muted-foreground">
