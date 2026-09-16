@@ -793,12 +793,12 @@ export const PurchaseOrdersTab = () => {
 
       {/* ── Receive Goods Payment Settlement Dialog ───────────────── */}
       <Dialog open={receiveModalOpen} onOpenChange={setReceiveModalOpen}>
-        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Receive Goods &amp; Settle Order</DialogTitle>
             <DialogDescription>
               Confirming stock intake for order <span className="font-bold text-foreground">{targetPo?.orderNumber}</span>.
-              Choose how this purchase is being settled.
+              Review item selling prices and choose payment settlement.
             </DialogDescription>
           </DialogHeader>
 
@@ -810,6 +810,102 @@ export const PurchaseOrdersTab = () => {
                   LKR {Number(targetPo.totalAmount).toLocaleString("en-US", { minimumFractionDigits: 2 })}
                 </span>
               </div>
+
+              {/* Selling Price & Margin Review */}
+              {Object.keys(priceReview).length > 0 && (
+                <div className="border rounded-lg p-3 space-y-3 bg-muted/30">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <Tag className="w-3.5 h-3.5 text-primary" />
+                      <span className="text-xs font-semibold text-foreground">Selling Price Review</span>
+                    </div>
+                    <span className="text-[11px] text-muted-foreground">
+                      Adjust retail prices if cost changed
+                    </span>
+                  </div>
+
+                  <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+                    {Object.values(priceReview).map((item) => {
+                      const costChanged = item.newCost !== item.currentCost;
+                      const costDiff = item.newCost - item.currentCost;
+                      return (
+                        <div
+                          key={item.productId}
+                          className={`p-2.5 rounded-md border text-xs space-y-2 transition-colors ${
+                            costChanged
+                              ? "bg-amber-50/60 dark:bg-amber-950/20 border-amber-300 dark:border-amber-800"
+                              : "bg-background border-border"
+                          }`}
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div>
+                              <p className="font-semibold text-foreground leading-snug">{item.name}</p>
+                              {item.sku && <p className="text-[10px] text-muted-foreground">{item.sku}</p>}
+                            </div>
+                            {costChanged ? (
+                              <Badge variant="outline" className="text-[10px] shrink-0 bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 border-amber-300">
+                                Cost {costDiff > 0 ? `+Rs. ${costDiff.toLocaleString()}` : `-Rs. ${Math.abs(costDiff).toLocaleString()}`}
+                              </Badge>
+                            ) : (
+                              <Badge variant="outline" className="text-[10px] shrink-0 text-muted-foreground">
+                                Cost unchanged
+                              </Badge>
+                            )}
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-2 text-[11px] bg-muted/40 p-2 rounded">
+                            <div>
+                              <span className="text-muted-foreground block text-[10px]">Cost (Old → New):</span>
+                              <span className="font-medium text-foreground">
+                                Rs. {item.currentCost.toLocaleString()} → <strong className="text-primary font-bold">Rs. {item.newCost.toLocaleString()}</strong>
+                              </span>
+                            </div>
+                            <div>
+                              <span className="text-muted-foreground block text-[10px]">Current Shelf Price:</span>
+                              <span className="font-semibold text-foreground">
+                                Rs. {item.currentPrice.toLocaleString()}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-between gap-2 pt-1 border-t border-border/40">
+                            <label className="flex items-center gap-1.5 cursor-pointer select-none text-xs font-medium text-foreground">
+                              <input
+                                type="checkbox"
+                                checked={item.updatePrice}
+                                onChange={(e) =>
+                                  setPriceReview((prev) => ({
+                                    ...prev,
+                                    [item.productId]: { ...item, updatePrice: e.target.checked },
+                                  }))
+                                }
+                                className="rounded border-gray-300 text-primary focus:ring-primary w-3.5 h-3.5"
+                              />
+                              Update retail price:
+                            </label>
+                            <div className="flex items-center gap-1 w-32">
+                              <span className="text-[11px] text-muted-foreground font-medium">Rs.</span>
+                              <Input
+                                type="number"
+                                disabled={!item.updatePrice}
+                                value={item.newPrice}
+                                onChange={(e) =>
+                                  setPriceReview((prev) => ({
+                                    ...prev,
+                                    [item.productId]: { ...item, newPrice: e.target.value },
+                                  }))
+                                }
+                                className="h-7 text-xs font-bold"
+                                placeholder="Price"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
               <div className="grid gap-2">
                 <Label htmlFor="receivePaymentTerm">Payment Settlement *</Label>
