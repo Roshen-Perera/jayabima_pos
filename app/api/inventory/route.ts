@@ -16,6 +16,12 @@ export async function GET(request: NextRequest) {
                 active: !showInactive,
                 ...(supplierId ? { supplierId } : {}),
             },
+            include: {
+                batches: {
+                    where: { remainingQty: { gt: 0 } },
+                    orderBy: { createdAt: 'asc' },
+                },
+            },
             orderBy: { createdAt: 'desc' },
         });
         return new Response(JSON.stringify(products), { status: 200 });
