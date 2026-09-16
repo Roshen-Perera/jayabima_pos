@@ -17,6 +17,7 @@ import {
   Check,
   RotateCcw,
   Tag,
+  History,
 } from "lucide-react";
 import { usePOSStore } from "@/store/posStore";
 import { useState } from "react";
@@ -186,6 +187,12 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                 const originalPrice = item.price; // untouched inventory price
                 const effectivePrice = item.overridePrice ?? originalPrice;
                 const isOverridden = item.overridePrice !== undefined;
+                const hasPreviousPrice =
+                  item.previousPrice !== undefined &&
+                  item.previousPrice > 0 &&
+                  item.previousPrice !== originalPrice;
+                const isSoldAtPreviousPrice =
+                  isOverridden && item.overridePrice === item.previousPrice;
 
                 // Derived values shown in UI
                 const itemOriginalTotal = originalPrice * item.quantity;
@@ -217,9 +224,15 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
 
                           {/* Effective / override price */}
                           {isOverridden && (
-                            <span className="text-xs font-medium text-amber-600">
+                            <span className={`text-xs font-medium ${isSoldAtPreviousPrice ? "text-blue-600 dark:text-blue-400" : "text-amber-600"}`}>
                               Rs. {effectivePrice.toLocaleString()}
                             </span>
+                          )}
+
+                          {isSoldAtPreviousPrice && (
+                            <Badge variant="secondary" className="text-[10px] bg-blue-100 text-blue-800 dark:bg-blue-950/70 dark:text-blue-300 border border-blue-300 dark:border-blue-800">
+                              Old Price Applied
+                            </Badge>
                           )}
 
                           {item.category && (
@@ -306,6 +319,23 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                     {/* Row 3: Action buttons */}
                     {edit.mode === null && (
                       <div className="flex items-center gap-1 pt-1 border-t border-border/50">
+                        {/* 1-Click Old Price button if item has previousPrice */}
+                        {hasPreviousPrice && !isSoldAtPreviousPrice && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-6 text-xs px-2 text-blue-700 dark:text-blue-300 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-950/50 border-blue-300 dark:border-blue-700 flex items-center gap-1"
+                            onClick={() => {
+                              updateItemPrice(item.productId, item.previousPrice);
+                              closeEdit(item.productId);
+                            }}
+                            title={`Sell at old price Rs. ${item.previousPrice?.toLocaleString()}`}
+                          >
+                            <History className="w-3 h-3" />
+                            Old Price: Rs. {item.previousPrice?.toLocaleString()}
+                          </Button>
+                        )}
+
                         {/* Override price button */}
                         <Button
                           variant="ghost"
