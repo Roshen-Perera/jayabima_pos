@@ -79,10 +79,20 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
 
   const handleRemoveItem = (productId: string) => removeFromCart(productId);
 
-  const handleUpdateQuantity = (productId: string, quantity: number) => {
+  const handleUpdateQuantity = (
+    productId: string,
+    quantity: number,
+    stock?: number,
+  ) => {
     if (quantity < 1) {
       handleRemoveItem(productId);
       return;
+    }
+    if (stock !== undefined && quantity > stock) {
+      alert.warning(
+        "Low Stock Warning",
+        `Quantity (${quantity}) exceeds available stock (${stock})`,
+      );
     }
     updateQuantity(productId, quantity);
   };
@@ -238,6 +248,8 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                   item.cost !== undefined &&
                   item.cost > 0 &&
                   effectivePrice < item.cost;
+                const isExceedingStock =
+                  item.stock !== undefined && item.quantity > item.stock;
 
                 // Derived values shown in UI
                 const itemOriginalTotal = originalPrice * item.quantity;
@@ -299,6 +311,17 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                             </Badge>
                           )}
 
+                          {isExceedingStock && (
+                            <Badge
+                              variant="outline"
+                              className="text-[10px] bg-amber-50 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-800 flex items-center gap-1 font-medium"
+                              title={`In stock: ${item.stock}`}
+                            >
+                              <AlertTriangle className="w-2.5 h-2.5 text-amber-600 dark:text-amber-400" />
+                              Exceeds Stock ({item.quantity}/{item.stock})
+                            </Badge>
+                          )}
+
                           {item.category && (
                             <Badge variant="outline" className="text-[10px]">
                               {item.category}
@@ -328,6 +351,7 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                             handleUpdateQuantity(
                               item.productId,
                               item.quantity - 1,
+                              item.stock,
                             )
                           }
                         >
@@ -340,9 +364,14 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                             handleUpdateQuantity(
                               item.productId,
                               parseInt(e.target.value) || 1,
+                              item.stock,
                             )
                           }
-                          className="w-12 h-7 text-center text-sm px-1"
+                          className={`w-12 h-7 text-center text-sm px-1 ${
+                            isExceedingStock
+                              ? "border-amber-500 text-amber-700 dark:text-amber-400 font-semibold"
+                              : ""
+                          }`}
                           min="1"
                         />
                         <Button
@@ -353,11 +382,24 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                             handleUpdateQuantity(
                               item.productId,
                               item.quantity + 1,
+                              item.stock,
                             )
                           }
                         >
                           <Plus className="w-3 h-3" />
                         </Button>
+                        {item.stock !== undefined && (
+                          <span
+                            className={`text-[11px] ml-1 select-none ${
+                              isExceedingStock
+                                ? "text-amber-600 dark:text-amber-400 font-semibold"
+                                : "text-muted-foreground"
+                            }`}
+                            title={`Available shelf stock: ${item.stock}`}
+                          >
+                            / {item.stock}
+                          </span>
+                        )}
                       </div>
 
                       {/* Totals */}

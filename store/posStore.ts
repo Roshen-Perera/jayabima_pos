@@ -1,6 +1,7 @@
 import { Product } from "@/app/inventory/_types/product.types";
 import { Cart, CartItem, HeldTransaction, Sale } from "@/app/pos/_types/pos.types";
 import { create } from "zustand";
+import { alert } from "@/lib/alert";
 
 interface POSState {
     cart: Cart;
@@ -45,12 +46,26 @@ export const usePOSStore = create<POSState>((set, get) => ({
 
         let newItems: CartItem[];
         if (existingItem) {
+            const nextQty = existingItem.quantity + 1;
+            if (existingItem.stock !== undefined && nextQty > existingItem.stock) {
+                alert.warning(
+                    "Low Stock Warning",
+                    `Quantity (${nextQty}) exceeds available stock (${existingItem.stock}) for "${existingItem.name}"`,
+                );
+            }
             newItems = cart.items.map((item) =>
                 item.productId === product.id
-                    ? { ...item, quantity: item.quantity + 1 }
+                    ? { ...item, quantity: nextQty }
                     : item
             );
         } else {
+            const prodStock = product.stock !== undefined ? Number(product.stock) : undefined;
+            if (prodStock !== undefined && prodStock <= 0) {
+                alert.warning(
+                    "Out of Stock Warning",
+                    `"${product.name}" has 0 recorded stock`,
+                );
+            }
             const newItem: CartItem = {
                 id: `cart-${Date.now()}`,
                 productId: product.id,
@@ -58,6 +73,7 @@ export const usePOSStore = create<POSState>((set, get) => ({
                 price: Number(product.price),
                 previousPrice: product.previousPrice ? Number(product.previousPrice) : undefined,
                 cost: product.cost ? Number(product.cost) : undefined,
+                stock: prodStock,
                 quantity: 1,
                 category: product.category,
             };
