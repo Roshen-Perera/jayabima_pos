@@ -10,8 +10,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreVertical, Pencil, RotateCcw, Trash2 } from "lucide-react";
+import { Layers, MoreVertical, Pencil, RotateCcw, Trash2 } from "lucide-react";
 import ProductForm from "./ProductForm";
+import { StockBatchesModal } from "./StockBatchesModal";
 import {
   AlertDialogHeader,
   AlertDialogFooter,
@@ -33,6 +34,7 @@ const ProductActions = ({ product, type = "active" }: ProductActionsProps) => {
   const reactivateProduct = useProductStore((s) => s.reactivateProduct);
   const [showActionAlert, setShowActionAlert] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showBatchesDialog, setShowBatchesDialog] = useState(false);
 
   const handleDeactivate = async () => {
     try {
@@ -66,6 +68,14 @@ const ProductActions = ({ product, type = "active" }: ProductActionsProps) => {
           <DropdownMenuGroup>
             <DropdownMenuItem
               className="flex"
+              onClick={() => setShowBatchesDialog(true)}
+            >
+              <Layers className="w-3 h-3 mr-4 text-primary" />
+              Stock Batches
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              className="flex"
               onClick={() => setShowEditDialog(true)}
             >
               <Pencil className="w-3 h-3 mr-4" />
@@ -91,6 +101,12 @@ const ProductActions = ({ product, type = "active" }: ProductActionsProps) => {
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <StockBatchesModal
+        product={product}
+        open={showBatchesDialog}
+        onOpenChange={setShowBatchesDialog}
+      />
 
       <ProductForm
         product={product}
