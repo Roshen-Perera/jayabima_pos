@@ -68,6 +68,14 @@ const ProductActions = ({ product, type = "active" }: ProductActionsProps) => {
           <DropdownMenuGroup>
             <DropdownMenuItem
               className="flex"
+              onClick={() => setShowBatchesDialog(true)}
+            >
+              <Layers className="w-3 h-3 mr-4 text-primary" />
+              Stock Batches
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              className="flex"
               onClick={() => setShowEditDialog(true)}
             >
               <Pencil className="w-3 h-3 mr-4" />
@@ -93,6 +101,12 @@ const ProductActions = ({ product, type = "active" }: ProductActionsProps) => {
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <StockBatchesModal
+        product={product}
+        open={showBatchesDialog}
+        onOpenChange={setShowBatchesDialog}
+      />
 
       <ProductForm
         product={product}
