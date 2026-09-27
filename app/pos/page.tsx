@@ -103,9 +103,9 @@ export default function POSPage() {
   }, [loadProducts, loadInactiveProducts, loadCustomers]);
 
   return (
-    <div className="flex h-[calc(100vh-7rem)] xl:h-[calc(100vh-7rem)] gap-4 overflow-hidden">
-      {/* LEFT SIDE - Products */}
-      <div className="flex-1 min-w-0 flex flex-col gap-3 overflow-hidden">
+    <div className="flex flex-col xl:flex-row h-[calc(100vh-7rem)] gap-4 overflow-hidden">
+      {/* LEFT SIDE - Products (Equal 50% width) */}
+      <div className="flex-1 xl:w-1/2 min-w-0 flex flex-col gap-3 overflow-hidden h-full">
         {/* Search & Quick-Add */}
         <ProductSearch
           placeholder="Search name/category, or scan/enter SKU and press Enter..."
@@ -159,8 +159,8 @@ export default function POSPage() {
         </div>
       </div>
 
-      {/* RIGHT SIDE - Cart */}
-      <div className="hidden xl:block flex-shrink-0">
+      {/* RIGHT SIDE - Cart (Equal 50% width) */}
+      <div className="hidden xl:flex xl:w-1/2 min-w-0 flex-col overflow-hidden h-full">
         <ShoppingCart onCheckout={() => setIsCheckoutOpen(true)} />
       </div>
 
