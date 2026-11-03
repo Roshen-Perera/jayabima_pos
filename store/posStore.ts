@@ -2,6 +2,7 @@ import { Product } from "@/app/inventory/_types/product.types";
 import { Cart, CartItem, HeldTransaction, Sale } from "@/app/pos/_types/pos.types";
 import { create } from "zustand";
 import { alert } from "@/lib/alert";
+import { playPosBeep } from "@/lib/sound";
 
 interface POSState {
     cart: Cart;
@@ -81,6 +82,7 @@ export const usePOSStore = create<POSState>((set, get) => ({
         }
         set({ cart: { ...cart, items: newItems } });
         get().calculateTotals();
+        playPosBeep();
     },
 
     removeFromCart: (productId: string) => {

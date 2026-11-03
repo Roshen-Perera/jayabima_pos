@@ -20,10 +20,13 @@ import {
   History,
   PauseCircle,
   AlertTriangle,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import { usePOSStore } from "@/store/posStore";
 import { useState, useEffect } from "react";
 import { alert } from "@/lib/alert";
+import { playPosBeep, isSoundMuted, toggleSoundMuted } from "@/lib/sound";
 import CustomerSelector from "./CustomerSelector";
 import HoldCartModal from "./HoldCartModal";
 import HeldTransactionsModal from "./HeldTransactionsModal";
@@ -55,10 +58,29 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
   const [cartDiscountValue, setCartDiscountValue] = useState("");
   const [isHoldModalOpen, setIsHoldModalOpen] = useState(false);
   const [isHeldListModalOpen, setIsHeldListModalOpen] = useState(false);
+  const [soundMuted, setSoundMutedState] = useState(false);
 
   useEffect(() => {
     loadHeldTransactions();
+    setSoundMutedState(isSoundMuted());
+
+    const handleSoundChange = (e: Event) => {
+      const customEvent = e as CustomEvent<{ muted: boolean }>;
+      if (customEvent.detail) {
+        setSoundMutedState(customEvent.detail.muted);
+      }
+    };
+    window.addEventListener("pos_sound_change", handleSoundChange);
+    return () => window.removeEventListener("pos_sound_change", handleSoundChange);
   }, [loadHeldTransactions]);
+
+  const handleToggleSound = () => {
+    const next = toggleSoundMuted();
+    setSoundMutedState(next);
+    if (!next) {
+      playPosBeep();
+    }
+  };
 
   // Per-item edit state keyed by productId
   const [itemEdits, setItemEdits] = useState<Record<string, ItemEditState>>({});
@@ -194,6 +216,27 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
           </Badge>
         </div>
         <div className="flex items-center gap-1.5">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleToggleSound}
+            className={`w-8 h-8 transition-colors ${
+              soundMuted
+                ? "text-muted-foreground/50 hover:text-foreground"
+                : "text-primary hover:text-primary/80"
+            }`}
+            title={
+              soundMuted
+                ? "Audio muted: Click to enable POS beep sound"
+                : "Audio enabled: Click to mute POS beep sound"
+            }
+          >
+            {soundMuted ? (
+              <VolumeX className="w-4 h-4" />
+            ) : (
+              <Volume2 className="w-4 h-4" />
+            )}
+          </Button>
           {heldTransactions.length > 0 && (
             <Button
               variant="outline"
@@ -378,13 +421,14 @@ export default function ShoppingCart({ onCheckout }: ShoppingCartProps) {
                           variant="outline"
                           size="icon"
                           className="w-7 h-7"
-                          onClick={() =>
+                          onClick={() => {
+                            playPosBeep();
                             handleUpdateQuantity(
                               item.productId,
                               item.quantity + 1,
                               item.stock,
-                            )
-                          }
+                            );
+                          }}
                         >
                           <Plus className="w-3 h-3" />
                         </Button>
