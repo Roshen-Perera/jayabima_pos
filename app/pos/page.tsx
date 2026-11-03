@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { alert } from "@/lib/alert";
+import { playErrorBeep } from "@/lib/sound";
 
 export default function POSPage() {
   const { products } = useProductStore();
@@ -76,6 +77,7 @@ export default function POSPage() {
       );
       return true;
     } else {
+      playErrorBeep();
       alert.error(
         "Product Not Found",
         `No product found matching SKU or barcode "${code}"`,
